@@ -2,13 +2,18 @@ inputs:
 
 let
   commonModules = [ 
-    ./modules/common
+    ./modules/common/base-packages.nix
+    ./modules/common/boot.nix
+    ./modules/common/i18n.nix
+    ./modules/common/networking.nix    
     ./users/cmiki
   ];
+  
   desktopModules = [
     ./modules/gui/plasma.nix
     ./modules/audio.nix
     ./modules/ime.nix
+    ./modules/security.nix
   ];
 
   mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
