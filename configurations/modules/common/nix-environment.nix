@@ -7,12 +7,10 @@
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-    binaryCaches = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+    settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   };
 
   nixpkgs.config.allowUnfree = true;
-
-  system.copySystemConfiguration = true;
 
   system.stateVersion = "22.11";
 
