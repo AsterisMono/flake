@@ -1,0 +1,46 @@
+inputs:
+
+let
+  commonModules = [ ./modules/common ]; # Syntax needs to be changed
+  desktopModules = [
+    ./modules/gui/plasma.nix
+    ./modules/audio.nix
+    ./modules/ime.nix
+  ];
+
+  mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
+    name = "amono-${name}";
+    value = inputs.nixpkgs.lib.nixosSystem {
+      system = "${arch}-linux";
+      modules = [
+        ./hardwares/${name}.nix
+        inputs.nur.nixosModules.nur
+        inputs.home-manager.nixosModules.home-manager
+        { networking.hostName = "amono-${name}"; }
+      ] ++ commonModules ++ (if desktop then desktopModules else [ ]) ++ extraModules;
+      specialArgs = {
+        inherit inputs arch;
+        flake = inputs.self;
+        isLinux = true;
+      };
+    };
+  };
+in
+{
+  nixos = builtins.listToAttrs (map mkLinux [
+    {
+      name = "81yn";
+      desktop = true;
+      extraModules = [
+        ./modules/touchpad.nix
+      ];
+    }
+    {
+      name = "nix-vm";
+      desktop = true;
+      extraModules = [
+        # vmtools.nix
+      ];
+    }
+  ]);
+}
