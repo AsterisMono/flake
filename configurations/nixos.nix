@@ -11,6 +11,7 @@ let
   ];
 
   desktopModules = [
+    ./modules/gui/base-packages.nix
     ./modules/gui/plasma.nix
     ./modules/audio.nix
     ./modules/ime.nix
