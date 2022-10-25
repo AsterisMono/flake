@@ -8,6 +8,7 @@
       ./fonts.nix
       ./networking.nix
       ./nix-environment.nix
+      ./security.nix
     ];
 }
 

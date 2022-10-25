@@ -1,7 +1,10 @@
 inputs:
 
 let
-  commonModules = [ ./modules/common ]; # Syntax needs to be changed
+  commonModules = [ 
+    ./modules/common
+    ./users/cmiki
+  ];
   desktopModules = [
     ./modules/gui/plasma.nix
     ./modules/audio.nix
