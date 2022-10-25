@@ -8,7 +8,11 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs: {
-    nixosConfigurations = import ./configurations/nixos.nix inputs;
-  };
+  outputs = inputs:
+    let
+      configurations = import ./configurations inputs;
+    in
+    {
+      nixosConfigurations = configurations.nixos;
+    };
 }
