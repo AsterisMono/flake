@@ -9,6 +9,7 @@
       ./networking.nix
       ./nix-environment.nix
       ./security.nix
+      ./base-packages.nix
     ];
 }
 
