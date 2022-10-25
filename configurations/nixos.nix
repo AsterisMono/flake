@@ -45,12 +45,5 @@ in
         ./modules/touchpad.nix
       ];
     }
-    {
-      name = "nix-vm";
-      desktop = true;
-      extraModules = [
-        # vmtools.nix
-      ];
-    }
   ]);
 }
