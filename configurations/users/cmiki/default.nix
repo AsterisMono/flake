@@ -4,7 +4,7 @@
   imports = [
     ./git.nix
   ];
-  home-manager.users.cmiki.home.stateVersion = "22.05";
+  home-manager.users.cmiki.home.stateVersion = "22.11";
   users.users.cmiki = {
     isNormalUser = true;
     extraGroups = [ "wheel" "video" "docker" "networkmanager" "input" ];

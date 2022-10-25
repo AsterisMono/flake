@@ -5,7 +5,8 @@ let
     ./modules/common/base-packages.nix
     ./modules/common/boot.nix
     ./modules/common/i18n.nix
-    ./modules/common/networking.nix    
+    ./modules/common/networking.nix
+    ./modules/common/nix-environment.nix
     ./users/cmiki
   ];
 
