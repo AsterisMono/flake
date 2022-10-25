@@ -2,6 +2,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    vim wget
+    vim wget kate firefox
   ];
 }
