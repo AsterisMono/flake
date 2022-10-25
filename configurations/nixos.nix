@@ -8,7 +8,7 @@ let
     ./modules/common/networking.nix    
     ./users/cmiki
   ];
-  
+
   desktopModules = [
     ./modules/gui/plasma.nix
     ./modules/audio.nix
@@ -35,7 +35,7 @@ let
   };
 in
 {
-  nixos = builtins.listToAttrs (map mkLinux [
+  configs = builtins.listToAttrs (map mkLinux [
     {
       name = "81yn";
       desktop = true;
