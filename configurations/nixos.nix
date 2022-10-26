@@ -18,7 +18,7 @@ let
     ./modules/audio.nix
     ./modules/ime.nix
     ./modules/security.nix
-    ./modules/proxy/clash.nix
+    ./modules/proxy
     ./modules/desktop-apps/development.nix # TODO: Convert to role-based module
   ];
 
