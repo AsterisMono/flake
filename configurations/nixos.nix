@@ -12,13 +12,14 @@ let
 
   desktopModules = [
     ./modules/gui/base-packages.nix
+    # Desktop Manager and Display Manager are bundled to maximize compatibility.
     ./modules/gui/plasma.nix
-    ./modules/gui/base-packages.nix
     ./modules/gui/fonts.nix
     ./modules/audio.nix
     ./modules/ime.nix
     ./modules/security.nix
     ./modules/proxy/clash.nix
+    ./modules/desktop-apps/development.nix # TODO: Convert to role-based module
   ];
 
   mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {

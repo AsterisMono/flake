@@ -26,7 +26,7 @@ in
   };
 
   programs.git.config = lib.mkIf (config.programs.git.enable == true) {
-      http.proxy = clashProxy;
-      https.proxy = clashProxy;
+    http.proxy = clashProxy;
+    https.proxy = clashProxy;
   };
 }
