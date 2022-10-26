@@ -14,6 +14,7 @@ let
     ./modules/gui/base-packages.nix
     ./modules/gui/plasma.nix
     ./modules/gui/base-packages.nix
+    ./modules/gui/fonts.nix
     ./modules/audio.nix
     ./modules/ime.nix
     ./modules/security.nix

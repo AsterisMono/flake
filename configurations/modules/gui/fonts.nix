@@ -23,7 +23,6 @@
       source-han-mono
       wqy_microhei
       wqy_zenhei
-      san-francisco
       meslo-lg
     ]);
     enableGhostscriptFonts = true;
