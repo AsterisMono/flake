@@ -1,5 +1,7 @@
-{ config, pkgs, lib, ... }:
-
+{ config, pkgs, lib,  ... }:
+let
+  clashProxy = "socks5://127.0.0.1:7891";
+in
 {
   environment.systemPackages = with pkgs; [
     clash clash-geoip
@@ -15,5 +17,16 @@
       ExecStart = ''${pkgs.clash}/bin/clash'';
       Restart = "on-abort";
     };
+  };
+
+  networking.proxy = {
+    httpProxy = clashProxy;
+    httpsProxy = clashProxy;
+    noProxy = "127.0.0.1,localhost,.localdomain";
+  };
+
+  programs.git.config = lib.mkIf (config.programs.git.enable == true) {
+      http.proxy = clashProxy;
+      https.proxy = clashProxy;
   };
 }
