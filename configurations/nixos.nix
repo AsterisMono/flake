@@ -13,9 +13,11 @@ let
   desktopModules = [
     ./modules/gui/base-packages.nix
     ./modules/gui/plasma.nix
+    ./modules/gui/base-packages.nix
     ./modules/audio.nix
     ./modules/ime.nix
     ./modules/security.nix
+    ./modules/proxy.nix
   ];
 
   mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
