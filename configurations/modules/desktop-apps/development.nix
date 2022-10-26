@@ -1,9 +1,10 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, inputs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
     vscode.fhs
     nodejs-16_x
+    nixpkgs-fmt
   ];
 
   # needed for store VS Code auth token

@@ -2,7 +2,8 @@
 
 {
   environment.systemPackages = with pkgs; [
-    vim wget
+    vim
+    wget
   ];
 
   programs.git = {

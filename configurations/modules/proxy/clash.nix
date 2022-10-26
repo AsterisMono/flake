@@ -1,10 +1,11 @@
-{ config, pkgs, lib,  ... }:
+{ config, pkgs, lib, ... }:
 let
   clashProxy = "socks5://127.0.0.1:7891";
 in
 {
   environment.systemPackages = with pkgs; [
-    clash clash-geoip
+    clash
+    clash-geoip
   ];
 
   systemd.services.clash = {

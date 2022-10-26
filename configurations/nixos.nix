@@ -1,7 +1,7 @@
 inputs:
 
 let
-  commonModules = [ 
+  commonModules = [
     ./modules/common/base-packages.nix
     ./modules/common/boot.nix
     ./modules/common/i18n.nix

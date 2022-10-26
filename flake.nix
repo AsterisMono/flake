@@ -9,10 +9,10 @@
   };
 
   outputs = inputs:
-  let
-    nixos = import ./configurations/nixos.nix inputs;
-  in
-  {
-    nixosConfigurations = nixos.configs;
-  };
+    let
+      nixos = import ./configurations/nixos.nix inputs;
+    in
+    {
+      nixosConfigurations = nixos.configs;
+    };
 }
