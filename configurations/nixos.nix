@@ -17,7 +17,7 @@ let
     ./modules/audio.nix
     ./modules/ime.nix
     ./modules/security.nix
-    ./modules/proxy.nix
+    ./modules/proxy/v2raya.nix
   ];
 
   mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
