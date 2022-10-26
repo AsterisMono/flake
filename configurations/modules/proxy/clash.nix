@@ -12,7 +12,7 @@
     serviceConfig = {
       Type = "simple";
       User = "cmiki"; # FIXME
-      ExecStart = ''${pkgs.clash}/usr/bin/clash'';
+      ExecStart = ''${pkgs.clash}/bin/clash'';
       Restart = "on-abort";
     };
   };
