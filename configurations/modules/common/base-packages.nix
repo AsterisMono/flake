@@ -7,6 +7,7 @@
     htop
     neofetch
     killall
+    gnupg
   ];
 
   programs.git = {
