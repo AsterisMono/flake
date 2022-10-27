@@ -40,12 +40,17 @@
   # Kvantum config
   # This will not work DON'T COPY
   home-manager.users.cmiki.xdg = {
-    configFile."kvantum.kvconfig" = {
-      target = "Kvantum/kvantum.kvconfig";
-      text = ''
-        [General]
-        theme=MateriaDark
-      '';
+    configFile = {
+      "plasma-org.kde.plasma.desktop-appletsrc" = {
+        source = ./plasma-org.kde.plasma.desktop-appletsrc;
+      };
+      "kvantum.kvconfig" = {
+        target = "Kvantum/kvantum.kvconfig";
+        text = ''
+          [General]
+          theme=MateriaDark
+        '';
+      };
     };
   };
 

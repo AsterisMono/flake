@@ -13,7 +13,7 @@ let
   desktopModules = [
     ./modules/gui/base-packages.nix
     # Desktop Manager and Display Manager are bundled to maximize compatibility.
-    ./modules/gui/plasma.nix
+    ./modules/gui/plasma
     ./modules/gui/fonts.nix
     ./modules/gui/audio.nix
     ./modules/gui/ime.nix
