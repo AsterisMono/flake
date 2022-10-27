@@ -6,6 +6,7 @@
     wget
     htop
     neofetch
+    killall
   ];
 
   programs.git = {
