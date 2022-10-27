@@ -10,6 +10,9 @@
   environment.systemPackages = with pkgs;[
     libsForQt5.yakuake
     kate
+    materia-kde-theme
+    papirus-icon-theme
+    libsForQt5.qtstyleplugin-kvantum
   ];
 
   # Plasma配置：
