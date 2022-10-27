@@ -3,6 +3,7 @@
 {
   imports = [
     ./git.nix
+    ./firefox
   ];
   home-manager.users.cmiki.home.stateVersion = "22.11";
   users.users.cmiki = {

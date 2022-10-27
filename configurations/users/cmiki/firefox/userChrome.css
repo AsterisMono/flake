@@ -1,0 +1,14 @@
+#TabsToolbar {
+  display: none;
+}
+#sidebar-header {
+  display: none;
+}
+
+#titlebar {
+  display: none;
+}
+
+#nav-bar {
+  margin-top: 4px;
+}
