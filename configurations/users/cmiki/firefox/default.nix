@@ -33,7 +33,46 @@
     profiles = {
       default = {
         name = "Chatnoir Miki";
+        search.engines = {
+          "Nix Packages" = {
+            urls = [{
+              template = "https://search.nixos.org/packages";
+              params = [
+                { name = "channel"; value = "unstable"; }
+                { name = "type"; value = "packages"; }
+                { name = "query"; value = "{searchTerms}"; }
+              ];
+            }];
+
+            icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+            definedAliases = [ "@np" ];
+          };
+
+          "Nix Options" = {
+            urls = [{
+              template = "https://search.nixos.org/options";
+              params = [
+                { name = "channel"; value = "unstable"; }
+                { name = "type"; value = "packages"; }
+                { name = "query"; value = "{searchTerms}"; }
+              ];
+            }];
+
+            icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+            definedAliases = [ "@no" ];
+          };
+
+          "Home-manager Options" = {
+            urls = [{
+              template = "https://mipmip.github.io/home-manager-option-search/?{searchTerms}";
+            }];
+
+            icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+            definedAliases = [ "@hm" ];
+          };
+        };
         search.default = "Google";
+        search.force = true;
         settings = {
           "app.update.auto" = false;
           "fission.autostart" = true;
@@ -48,7 +87,8 @@
           "browser.search.region" = "GB";
           "browser.tabs.inTitlebar" = 1;
         };
-        userChrome = builtins.readFile ./userChrome.css;
+        userChrome = builtins.readFile
+          ./userChrome.css;
       };
     };
     # Firefox extensions

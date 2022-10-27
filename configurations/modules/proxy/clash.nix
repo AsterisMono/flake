@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 let
-  clashProxy = "socks5://127.0.0.1:7891";
+  clashProxy = "http://127.0.0.1:7890";
 in
 {
   environment.systemPackages = with pkgs; [
@@ -29,5 +29,18 @@ in
   programs.git.config = lib.mkIf (config.programs.git.enable == true) {
     http.proxy = clashProxy;
     https.proxy = clashProxy;
+  };
+
+  programs.proxychains = {
+    enable = true;
+    quietMode = true;
+    proxies = {
+      clash = {
+        enable = true;
+        type = "socks5";
+        host = "127.0.0.1";
+        port = 7891;
+      };
+    };
   };
 }

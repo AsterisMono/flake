@@ -15,11 +15,11 @@ let
     # Desktop Manager and Display Manager are bundled to maximize compatibility.
     ./modules/gui/plasma.nix
     ./modules/gui/fonts.nix
-    ./modules/audio.nix
-    ./modules/ime.nix
+    ./modules/gui/audio.nix
+    ./modules/gui/ime.nix
     ./modules/security.nix
     ./modules/proxy
-    ./modules/desktop-apps/development.nix # TODO: Convert to role-based module
+    ./modules/desktop-apps # TODO: Convert to role-based module
   ];
 
   mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {

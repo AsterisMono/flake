@@ -5,6 +5,7 @@
     vscode.fhs
     nodejs-16_x
     nixpkgs-fmt
+    tdesktop
   ];
 
   # needed for store VS Code auth token

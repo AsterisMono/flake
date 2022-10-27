@@ -7,8 +7,9 @@
     desktopManager.plasma5.enable = true;
   };
 
-  environment.systemPackages = [
-    pkgs.libsForQt5.yakuake
+  environment.systemPackages = with pkgs;[
+    libsForQt5.yakuake
+    kate
   ];
 
   # Plasma配置：
