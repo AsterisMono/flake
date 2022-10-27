@@ -100,7 +100,7 @@
         decentraleyes
         sidebery
         wappalyzer
-        switchyomega
+        # switchyomega
         plasma-integration
         form-history-control
         add-custom-search-engine
