@@ -11,12 +11,7 @@ let
   ];
 
   desktopModules = [
-    ./modules/gui/base-packages.nix
-    # Desktop Manager and Display Manager are bundled to maximize compatibility.
-    ./modules/gui/plasma
-    ./modules/gui/fonts.nix
-    ./modules/gui/audio.nix
-    ./modules/gui/ime.nix
+    ./modules/gui
     ./modules/security.nix
     ./modules/proxy
     ./modules/desktop-apps # TODO: Convert to role-based module
