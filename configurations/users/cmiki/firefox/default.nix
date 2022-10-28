@@ -114,6 +114,7 @@
         in
         with extra-addons; [
           i-still-dont-care-about-cookies
+          vimium-ff
         ]
       );
   };

@@ -1,6 +1,11 @@
 { inputs, config, pkgs, lib, ... }:
 
 {
+  imports = [
+    # Disabled - bugs do appear
+    # ./bismuth.nix
+  ];
+
   services.xserver = {
     enable = true;
     displayManager.sddm.enable = true;
@@ -30,7 +35,7 @@
       "kdeglobals"."KDE"."LookAndFeelPackage" = "com.github.varlesh.materia-dark";
       "kcminputrc"."Mouse"."cursorTheme" = "ePapirus";
       "kdeglobals"."KDE"."widgetStyle" = "kvantum-dark";
-      "kwinrc"."org.kde.kdecoration2"."theme" = "Breeze 微风";
+      "kwinrc"."org.kde.kdecoration2"."theme" = lib.mkDefault "Breeze 微风";
       "kwinrc"."org.kde.kdecoration2"."BorderSize" = "None";
       "yakuakerc"."Appearance"."Skin" = "materia-dark";
       "yakuakerc"."Dialogs"."FirstRun" = "false"; # 
