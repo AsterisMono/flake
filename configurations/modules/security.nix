@@ -2,6 +2,7 @@
 {
   security.sudo.extraRules = [
     {
+      # TODO: username variable
       users = [ "cmiki" ];
       commands = [
         {

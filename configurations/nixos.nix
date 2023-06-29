@@ -13,7 +13,6 @@ let
   desktopModules = [
     ./modules/gui
     ./modules/security.nix
-    ./modules/proxy
     ./modules/desktop-apps # TODO: Convert to role-based module
   ];
 
@@ -24,7 +23,12 @@ let
       modules = [
         ./hardwares/${name}.nix
         inputs.nur.nixosModules.nur
-        inputs.home-manager.nixosModules.home-manager
+
+        inputs.home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+        }
+
         { networking.hostName = "amono-${name}"; }
       ] ++ commonModules ++ (if desktop then desktopModules else [ ]) ++ extraModules;
       specialArgs = {
@@ -42,6 +46,14 @@ in
       desktop = true;
       extraModules = [
         ./modules/touchpad.nix
+      ];
+    }
+
+    {
+      name="vm-amberdash";
+      desktop = true;
+      extraModules = [
+        ./modules/vmtools.nix
       ];
     }
   ]);

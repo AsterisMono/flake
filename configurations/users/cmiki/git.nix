@@ -8,8 +8,14 @@
       userEmail = "cmiki@amono.me";
       extraConfig = {
         init.defaultBranch = "main";
-        credential.helper = "store";
         pull.rebase = true;
+      };
+    };
+
+    programs.gh = {
+      enable = true;
+      settings = {
+        git_protocol = "https";
       };
     };
   };
