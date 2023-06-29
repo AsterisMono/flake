@@ -1,13 +1,9 @@
 inputs:
 
 let
-  commonModules = [
-    ./modules/common/base-packages.nix
-    ./modules/common/boot.nix
-    ./modules/common/i18n.nix
-    ./modules/common/networking.nix
-    ./modules/common/nix-environment.nix
-  ];
+  collectFiles = import ../utils/collect-files.nix inputs.nixpkgs.lib;
+
+  commonModules = collectFiles ./modules/common;
 
   desktopModules = [
     ./users/cmiki
