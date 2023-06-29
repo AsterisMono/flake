@@ -7,10 +7,10 @@ let
     ./modules/common/i18n.nix
     ./modules/common/networking.nix
     ./modules/common/nix-environment.nix
-    ./users/cmiki
   ];
 
   desktopModules = [
+    ./users/cmiki
     ./modules/gui
     ./modules/security.nix
     ./modules/desktop-apps # TODO: Convert to role-based module
