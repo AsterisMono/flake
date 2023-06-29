@@ -16,7 +16,7 @@ let
     ./modules/desktop-apps # TODO: Convert to role-based module
   ];
 
-  mkLinux = { name, desktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
     name = "amono-${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
       system = "${arch}-linux";
@@ -30,9 +30,9 @@ let
         }
 
         { networking.hostName = "amono-${name}"; }
-      ] ++ commonModules ++ (if desktop then desktopModules else [ ]) ++ extraModules;
+      ] ++ commonModules ++ (if isDesktop then desktopModules else [ ]) ++ extraModules;
       specialArgs = {
-        inherit inputs arch;
+        inherit isDesktop arch;
         flake = inputs.self;
         isLinux = true;
       };
@@ -43,7 +43,7 @@ in
   configs = builtins.listToAttrs (map mkLinux [
     {
       name = "81yn";
-      desktop = true;
+      isDesktop = true;
       extraModules = [
         ./modules/touchpad.nix
       ];
@@ -51,7 +51,7 @@ in
 
     {
       name="vm-amberdash";
-      desktop = true;
+      isDesktop = true;
       extraModules = [
         ./modules/vmtools.nix
       ];
