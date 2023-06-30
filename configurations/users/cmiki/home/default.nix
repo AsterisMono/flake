@@ -8,6 +8,7 @@ in
 {
   imports = [
     ./nix-index.nix
+    ./apps.nix
   ]
   ++ dev-base-env
   ++ devRoles;

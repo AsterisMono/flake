@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ ... }:
 
 {
   imports = [
@@ -8,10 +8,5 @@
     ./fonts.nix
     ./audio.nix
     ./ime.nix
-  ];
-
-  environment.systemPackages = with pkgs; [
-    vim
-    wget
   ];
 }

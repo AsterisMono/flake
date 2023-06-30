@@ -4,10 +4,16 @@
   services.xserver = {
     enable = true;
     layout = "us";
-    displayManager.gdm.enable = true;
+
+    displayManager.gdm = {
+      enable = true;
+      autoSuspend = false;
+    };
+
     desktopManager.gnome = {
       enable = true;
     };
+
     excludePackages = with pkgs; [
       xterm
     ];
@@ -17,9 +23,13 @@
     gnome-tour
     gnome-connections
     eolie
+    gnome-photos
   ]) ++ (with pkgs.gnome; [
-    epiphany
+    epiphany tali iagno hitori atomix gnome-music
   ]);
+
+  programs.xwayland.enable = true;
+  programs.xwayland.package = pkgs.xwayland;
 
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-kde ];
 
@@ -33,6 +43,9 @@
     arc-theme
     tela-icon-theme
     adw-gtk3
+    gnome.adwaita-icon-theme
+    gnome.gnome-tweaks
+    maia-icon-theme
   ]);
 
   # Override pulseaudio
