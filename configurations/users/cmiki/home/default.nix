@@ -1,10 +1,16 @@
-{ ... }:
+flake:
+let
+  devRoles = [
+    ./dev-roles/nix-language.nix
+  ];
+  dev-base-env = flake.nixUtils.collectFiles ./dev-base-env;
+in
 {
   imports = [
-    ./git.nix
     ./nix-index.nix
-    ./helix.nix
-  ];
+  ]
+  ++ dev-base-env
+  ++ devRoles;
 
   programs.home-manager.enable = true;
 

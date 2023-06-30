@@ -1,9 +1,8 @@
 inputs:
 
 let
-  collectFiles = import ../utils/collect-files.nix inputs.nixpkgs.lib;
-
-  commonModules = collectFiles ./modules/common;
+  flake = inputs.self;
+  commonModules = flake.nixUtils.collectFiles ./modules/common;
 
   desktopModules = [
     ./users/cmiki
@@ -28,8 +27,7 @@ let
         { networking.hostName = "amono-${name}"; }
       ] ++ commonModules ++ (if isDesktop then desktopModules else [ ]) ++ extraModules;
       specialArgs = {
-        inherit isDesktop arch;
-        flake = inputs.self;
+        inherit isDesktop arch flake;
         isLinux = true;
       };
     };
