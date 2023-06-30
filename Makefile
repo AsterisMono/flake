@@ -11,6 +11,9 @@ deploy:
 debug:
 	nixos-rebuild switch --flake . --use-remote-sudo --show-trace --verbose
 
+dryrun:
+	nixos-rebuild dry-run --flake . --use-remote-sudo
+
 update:
 	nix flake update
 

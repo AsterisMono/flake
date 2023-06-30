@@ -3,7 +3,7 @@
 {
   imports = [
     # Desktop Manager and Display Manager are bundled to maximize compatibility.
-    ./plasma
+    ./xfce-i3
 
     ./fonts.nix
     ./audio.nix
