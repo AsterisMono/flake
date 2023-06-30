@@ -50,5 +50,13 @@ in
         ./modules/vmtools.nix
       ];
     }
+
+    {
+      name = "amberdash";
+      isDesktop = true;
+      extraModules = [
+        ./modules/intel-graphics.nix
+      ];
+    }
   ]);
 }
