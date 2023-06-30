@@ -6,9 +6,8 @@ let
 
   desktopModules = [
     ./users/cmiki
-    ./modules/gui
-    ./modules/security.nix
-    ./modules/desktop-apps # TODO: Convert to role-based module
+    ./modules/desktop/gui
+    ./modules/desktop/security.nix
   ];
 
   mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
