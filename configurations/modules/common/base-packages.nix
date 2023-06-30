@@ -5,8 +5,6 @@
     vim
     wget
     curl
-    htop
-    neofetch
     killall
     gnupg
   ];

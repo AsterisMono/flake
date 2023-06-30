@@ -3,7 +3,7 @@ let
   devRoles = [
     ./dev-roles/nix-language.nix
   ];
-  dev-base-env = flake.nixUtils.collectFiles ./dev-base-env;
+  dev-base-env = flake.lib.collectFiles ./dev-base-env;
 in
 {
   imports = [

@@ -2,12 +2,13 @@ inputs:
 
 let
   flake = inputs.self;
-  commonModules = flake.nixUtils.collectFiles ./modules/common;
+  commonModules = flake.lib.collectFiles ./modules/common;
 
   desktopModules = [
     ./users/cmiki
     ./modules/desktop/gui
     ./modules/desktop/security.nix
+    ./modules/desktop/shell-packages.nix
   ];
 
   mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
