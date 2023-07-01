@@ -63,7 +63,7 @@ in
       name = "amberdash";
       isDesktop = true;
       extraModules = [
-        ./modules/intel-graphics.nix
+        ./modules/nvidia.nix
       ];
     }
   ]);
