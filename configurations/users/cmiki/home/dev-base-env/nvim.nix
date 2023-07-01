@@ -10,6 +10,6 @@
   xdg.configFile.nvim.source = nvimConfig;
 
   home.packages = with pkgs; [
-    lua_ls # Lua language server
+    lua-language-server
   ];
 }

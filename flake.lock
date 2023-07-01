@@ -54,10 +54,10 @@
     "nvim-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1688187389,
-        "narHash": "sha256-NaDs2lo/dduB7TL/vXaYxKHbGUrjcU5W9q6irPp6xeY=",
+        "lastModified": 1688187695,
+        "narHash": "sha256-HC9dhguOnvJCxtkO79M9+N+OC4Cv0AwGaDoB5HtRKNk=",
         "ref": "despacito",
-        "rev": "b281ff7877c09222cf46a3a9d86535123d2c5daa",
+        "rev": "efa8d3c1c86dfa293ccdd1e381ae8d7be883fcc2",
         "revCount": 106,
         "type": "git",
         "url": "https://github.com/AsterisMono/nvim-config"
