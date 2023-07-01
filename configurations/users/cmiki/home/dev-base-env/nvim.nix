@@ -1,4 +1,4 @@
-{ nvimConfig, ... }:
+{ nvimConfig, pkgs, ... }:
 
 {
   programs.neovim = {
@@ -8,4 +8,8 @@
   };
 
   xdg.configFile.nvim.source = nvimConfig;
+
+  home.packages = with pkgs; [
+    lua_ls # Lua language server
+  ];
 }

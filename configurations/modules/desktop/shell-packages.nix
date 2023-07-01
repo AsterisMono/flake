@@ -6,5 +6,6 @@
     htop
     neofetch
     gcc
+    ripgrep
   ];
 }
