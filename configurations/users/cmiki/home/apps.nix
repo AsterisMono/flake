@@ -6,6 +6,7 @@
     google-chrome
     firefox
     telegram-desktop
+    libsForQt5.neochat
   ];
 
   # Command-line Apps
