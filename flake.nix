@@ -8,6 +8,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nvim-config = {
+      url = "git+https://github.com/AsterisMono/nvim-config?ref=despacito";
+      flake = false; 
+    };
   };
 
   outputs = inputs:

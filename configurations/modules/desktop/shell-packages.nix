@@ -5,5 +5,6 @@
     gnumake
     htop
     neofetch
+    gcc
   ];
 }

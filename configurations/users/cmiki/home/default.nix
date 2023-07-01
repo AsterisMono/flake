@@ -1,11 +1,15 @@
-flake:
+{ flakeLib, nvimConfig, ... }:
 let
   devRoles = [
     ./dev-roles/nix-language.nix
   ];
-  dev-base-env = flake.lib.collectFiles ./dev-base-env;
+  dev-base-env = flakeLib.collectFiles ./dev-base-env;
 in
 {
+  _module.args = {
+    inherit nvimConfig;
+  };
+
   imports = [
     ./nix-index.nix
     ./apps.nix

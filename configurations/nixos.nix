@@ -11,10 +11,21 @@ let
     ./modules/desktop/shell-packages.nix
   ];
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ] }: {
+  homeManagerSpecialArgs = {
+    flakeLib = flake.lib;
+    nvimConfig = inputs.nvim-config;
+  };
+
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ ] }: {
     name = "amono-${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
       system = "${arch}-linux";
+
+      specialArgs = {
+        inherit isDesktop arch flake;
+        isLinux = true;
+      };
+
       modules = [
         ./hardwares/${name}.nix
         inputs.nur.nixosModules.nur
@@ -22,14 +33,11 @@ let
         inputs.home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = homeManagerSpecialArgs;
         }
 
         { networking.hostName = "amono-${name}"; }
       ] ++ commonModules ++ (if isDesktop then desktopModules else [ ]) ++ extraModules;
-      specialArgs = {
-        inherit isDesktop arch flake;
-        isLinux = true;
-      };
     };
   };
 in
