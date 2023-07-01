@@ -23,5 +23,10 @@
       }
     ];
     shellInit = "set fish_greeting \"\"";
+    shellAliases = {
+      ".." = "cd ../";
+      "c" = "clear";
+      "n" = "nvim";
+    };
   };
 }
