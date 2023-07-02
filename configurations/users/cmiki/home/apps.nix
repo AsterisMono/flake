@@ -15,6 +15,11 @@
     enableFishIntegration = true;
   };
 
+  programs.vscode = {
+    enable = true;
+    package = pkgs.vscode.fhs;
+  };
+
   programs.fish = {
     enable = true;
     plugins = [

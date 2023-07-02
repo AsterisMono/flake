@@ -2,8 +2,9 @@
 
 {
   home.packages = with pkgs; [
-    python311
-    python311Packages.requests
-    python311Packages.virtualenv
+    python310
+    python310Packages.requests
+    python310Packages.virtualenv
+    nodePackages.pyright
   ];
 }
