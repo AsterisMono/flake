@@ -16,4 +16,6 @@
     libsForQt5.yakuake
     kate
   ];
+
+  programs.kdeconnect.enable = true;
 }
