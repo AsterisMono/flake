@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1688168945,
-        "narHash": "sha256-AfBdMc2JU54YKaOAvCR0t3dWQIA1bLKb9vGnaZJUh0E=",
+        "lastModified": 1688220547,
+        "narHash": "sha256-cNKKLPaEOxd6t22Mt3tHGubyylbKGdoi2A3QkMTKes0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "44d1a8542ac92f0ce75d970090216245043a2709",
+        "rev": "89d10f8adce369a80e046c2fd56d1e7b7507bb5b",
         "type": "github"
       },
       "original": {
@@ -38,11 +38,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1688183873,
-        "narHash": "sha256-FPze0lNtf39zNgxjUlPPDO5sqjQ+Ag4whk2fttssb8k=",
+        "lastModified": 1688255096,
+        "narHash": "sha256-63yMmlSWLww3QUHRaTuIfBtBhG88nrQKtglvE0eBBWM=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "3fe146afa1ac5b02fa9143b9ef5a0738e27021c1",
+        "rev": "1da3b1e1af054b664eb6dfa5b7c41c262176584c",
         "type": "github"
       },
       "original": {
@@ -54,11 +54,11 @@
     "nvim-config": {
       "flake": false,
       "locked": {
-        "lastModified": 1688187695,
-        "narHash": "sha256-HC9dhguOnvJCxtkO79M9+N+OC4Cv0AwGaDoB5HtRKNk=",
+        "lastModified": 1688258806,
+        "narHash": "sha256-ZPyUY7N//bmpp4ozmQcjJu90D3VokoKaE4wnh2EMv4k=",
         "ref": "despacito",
-        "rev": "efa8d3c1c86dfa293ccdd1e381ae8d7be883fcc2",
-        "revCount": 106,
+        "rev": "89456e922362a3b743aa3e6edfc6dc69503bc193",
+        "revCount": 107,
         "type": "git",
         "url": "https://github.com/AsterisMono/nvim-config"
       },
