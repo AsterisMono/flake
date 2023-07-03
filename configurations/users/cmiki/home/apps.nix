@@ -48,4 +48,6 @@
       cursor_blink_interval = 0;
     };
   };
+
+  programs.lazygit.enable = true;
 }
