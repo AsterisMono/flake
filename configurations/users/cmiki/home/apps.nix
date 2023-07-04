@@ -7,6 +7,7 @@
     firefox
     telegram-desktop
     libsForQt5.neochat
+    amono-nur.sqlitestudio
   ];
 
   # Command-line Apps

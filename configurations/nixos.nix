@@ -12,6 +12,14 @@ let
     ./modules/desktop/bluetooth.nix
   ];
 
+  myNurPackagesModule = {
+    nixpkgs.overlays = [
+      (final: prev: {
+        amono-nur = inputs.myNurPackages.packages."${prev.system}";
+      })
+    ];
+  };
+
   homeManagerSpecialArgs = {
     flakeLib = flake.lib;
     nvimConfig = inputs.nvim-config;
@@ -30,6 +38,7 @@ let
       modules = [
         ./hardwares/${name}.nix
         inputs.nur.nixosModules.nur
+        myNurPackagesModule
 
         inputs.home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;

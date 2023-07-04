@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1688220547,
-        "narHash": "sha256-cNKKLPaEOxd6t22Mt3tHGubyylbKGdoi2A3QkMTKes0=",
+        "lastModified": 1688409282,
+        "narHash": "sha256-nnVCN5QiZ5+DEc70PRQLEcxqlxtsmeBU1BnpsRPUJlA=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "89d10f8adce369a80e046c2fd56d1e7b7507bb5b",
+        "rev": "c24deeca64538dcbc589ed8da9146e4ca9eb85b7",
         "type": "github"
       },
       "original": {
@@ -20,13 +20,33 @@
         "type": "github"
       }
     },
+    "myNurPackages": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1688456885,
+        "narHash": "sha256-5JxINQGYpyjcaXP9vwLwBz/Re0V5CkHS3eLoXlNRMLU=",
+        "owner": "AsterisMono",
+        "repo": "nur-packages",
+        "rev": "d9723887f7312e79e5a514aad4557999f8a02c77",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsterisMono",
+        "repo": "nur-packages",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1688049487,
-        "narHash": "sha256-100g4iaKC9MalDjUW9iN6Jl/OocTDtXdeAj7pEGIRh4=",
+        "lastModified": 1688231357,
+        "narHash": "sha256-ZOn16X5jZ6X5ror58gOJAxPfFLAQhZJ6nOUeS4tfFwo=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "4bc72cae107788bf3f24f30db2e2f685c9298dc9",
+        "rev": "645ff62e09d294a30de823cb568e9c6d68e92606",
         "type": "github"
       },
       "original": {
@@ -38,11 +58,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1688263683,
-        "narHash": "sha256-le1AtaVTHTrF4rh1xVvGDANpp/d0V3+bDrloA7so3nE=",
+        "lastModified": 1688455504,
+        "narHash": "sha256-jEH4w2Y9IyHvUA5fR6OHUpVluXzm6rWtkEIxjYDz5HM=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "96ee6c89c8989b96121a826d653828e8cb05eeef",
+        "rev": "4ca059c00780a08eda8ed76313b377021684b2c6",
         "type": "github"
       },
       "original": {
@@ -71,6 +91,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "myNurPackages": "myNurPackages",
         "nixpkgs": "nixpkgs",
         "nur": "nur",
         "nvim-config": "nvim-config"
