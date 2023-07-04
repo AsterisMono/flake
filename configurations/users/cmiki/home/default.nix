@@ -1,10 +1,6 @@
 { flakeLib, nvimConfig, ... }:
 let
-  devRoles = [
-    ./dev-roles/nix-language.nix
-    ./dev-roles/frontend.nix
-    ./dev-roles/python.nix
-  ];
+  devRoles = flakeLib.collectFiles ./dev-roles;
   dev-base-env = flakeLib.collectFiles ./dev-base-env;
 in
 {
