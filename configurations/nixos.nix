@@ -9,6 +9,7 @@ let
     ./modules/desktop/gui
     ./modules/desktop/security.nix
     ./modules/desktop/shell-packages.nix
+    ./modules/desktop/bluetooth.nix
   ];
 
   homeManagerSpecialArgs = {
