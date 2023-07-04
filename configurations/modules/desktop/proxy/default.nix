@@ -3,6 +3,6 @@
 {
   # Choose a proxy provider.
   imports = [
-    ./clash.nix
+    ./dae.nix
   ];
 }
