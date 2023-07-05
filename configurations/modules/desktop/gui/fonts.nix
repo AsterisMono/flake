@@ -24,6 +24,7 @@
       wqy_microhei
       wqy_zenhei
       meslo-lg
+      fira-code
     ]);
     enableGhostscriptFonts = true;
     enableDefaultFonts = true;
