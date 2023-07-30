@@ -50,4 +50,9 @@
   };
 
   programs.lazygit.enable = true;
+
+  # Games
+  imports = [
+    ./games/minecraft.nix
+  ];
 }
