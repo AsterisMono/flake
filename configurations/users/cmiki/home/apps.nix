@@ -6,9 +6,7 @@
     google-chrome
     firefox
     telegram-desktop
-    libsForQt5.neochat
     amono-nur.sqlitestudio
-    nheko
   ];
 
   # Command-line Apps
