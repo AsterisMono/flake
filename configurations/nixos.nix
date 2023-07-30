@@ -17,6 +17,7 @@ let
       (final: prev: {
         amono-nur = inputs.myNurPackages.packages."${prev.system}";
       })
+      (import ../overlays/gnome-x11-fractional.nix)
     ];
   };
 

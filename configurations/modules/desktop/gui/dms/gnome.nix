@@ -12,6 +12,11 @@
 
     desktopManager.gnome = {
       enable = true;
+      extraGSettingsOverridePackages = [ pkgs.gnome.mutter ];
+      extraGSettingsOverrides = ''
+        [org.gnome.mutter]
+        experimental-features=['x11-randr-fractional-scaling']
+      '';
     };
 
     excludePackages = with pkgs; [
@@ -40,8 +45,10 @@
     xremap
     blur-my-shell
   ]) ++ (with pkgs; [
-    arc-theme
-    tela-icon-theme
+    pop-gtk-theme
+    pop-icon-theme
+    vimix-icon-theme
+    vimix-gtk-themes
     adw-gtk3
     gnome.adwaita-icon-theme
     gnome.gnome-tweaks
