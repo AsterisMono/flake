@@ -44,6 +44,7 @@
     system-monitor
     xremap
     blur-my-shell
+    kimpanel
   ]) ++ (with pkgs; [
     pop-gtk-theme
     pop-icon-theme
