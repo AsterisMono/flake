@@ -2,6 +2,7 @@
 let
   devRoles = flakeLib.collectFiles ./dev-roles;
   dev-base-env = flakeLib.collectFiles ./dev-base-env;
+  customization = flakeLib.collectFiles ./customization;
 in
 {
   _module.args = {
@@ -13,7 +14,8 @@ in
     ./apps.nix
   ]
   ++ dev-base-env
-  ++ devRoles;
+  ++ devRoles
+  ++ customization;
 
   programs.home-manager.enable = true;
 

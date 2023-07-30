@@ -46,14 +46,8 @@
     blur-my-shell
     kimpanel
   ]) ++ (with pkgs; [
-    pop-gtk-theme
-    pop-icon-theme
-    vimix-icon-theme
-    vimix-gtk-themes
-    adw-gtk3
     gnome.adwaita-icon-theme
     gnome.gnome-tweaks
-    maia-icon-theme
   ]);
 
   # Override pulseaudio
