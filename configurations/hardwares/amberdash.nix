@@ -14,12 +14,25 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/b43476b1-c7ab-4ad0-8237-e955bf57b1d1";
-      fsType = "ext4";
+    { device = "/dev/disk/by-label/NixOS";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "subvol=root" ];
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/disk/by-label/NixOS";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "subvol=home" ];
+    };
+
+  fileSystems."/nix" =
+    { device = "/dev/disk/by-label/NixOS";
+      fsType = "btrfs";
+      options = [ "compress=zstd" "noatime" "subvol=nix" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/7DCE-EEA2";
+    { device = "/dev/disk/by-label/ESP";
       fsType = "vfat";
     };
 
@@ -34,6 +47,6 @@
   # networking.interfaces.wlp0s20f3.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  powerManagement.cpuFreqGovernor = lib.mkDefault "ondemand";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 }
