@@ -30,7 +30,7 @@ let
     ];
   };
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ ] }: {
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ "cmiki" ] }: {
     name = "${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
       system = "${arch}-linux";
@@ -62,13 +62,11 @@ in
         ./modules/desktop/hardware/nvidia.nix
         ./modules/desktop/hardware/bluetooth.nix
       ];
-      users = [ "cmiki" ];
     }
     {
       name = "hifumi";
       isDesktop = true;
       extraModules = [];
-      users = [ "cmiki" ];
     }
   ]);
 }
