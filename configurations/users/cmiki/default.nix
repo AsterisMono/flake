@@ -8,5 +8,5 @@
   };
 
   # Use home-manager on desktops
-  imports = if isDesktop then [ ./home ] else [];
+  home-manager.users.cmiki.imports = if isDesktop then [ ./home ] else [];
 }

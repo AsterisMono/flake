@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nvimConfig, ... }:
 
 {
   # Desktop Apps
@@ -7,6 +7,7 @@
   # firefox
   # telegram-desktop
   # amono-nur.sqlitestudio
+    lua-language-server
   ];
 
   # Command-line Apps
@@ -21,7 +22,6 @@
   };
 
   programs.fish = {
-    enable = true;
     plugins = [
       {
         name = "plugin-git";
@@ -73,8 +73,4 @@
   };
 
   xdg.configFile.nvim.source = nvimConfig;
-
-  home.packages = with pkgs; [
-    lua-language-server
-  ];
 }

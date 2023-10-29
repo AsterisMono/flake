@@ -1,21 +1,17 @@
-{ pkgs, ... }:
-
+{ flakeLib, nvimConfig, ... }: 
+let
+  modules = flakeLib.collectFiles ./modules;
+in
 {
-  home-manager.users.cmiki.imports = 
-    let
-      modules = flakeLib.collectFiles ./modules;
-    in
-    {
-      _module.args = {
-        inherit nvimConfig;
-      };
+  _module.args = {
+    inherit nvimConfig;
+  };
 
-      imports = modules;
+  imports = modules;
 
-      programs.home-manager.enable = true;
+  programs.home-manager.enable = true;
 
-      home.username = "cmiki";
-      home.homeDirectory = "/home/cmiki";
-      home.stateVersion = "23.05";
-    }
+  home.username = "cmiki";
+  home.homeDirectory = "/home/cmiki";
+  home.stateVersion = "23.05";
 }

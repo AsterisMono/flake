@@ -10,4 +10,6 @@
     gcc
     ripgrep
   ];
+
+  programs.fish.enable = true;
 }
