@@ -9,12 +9,16 @@ let
 
 
   commonModules = flake.lib.collectFiles ./modules/common;
-
+  homeManagerModule = inputs.home-manager.nixosModules.home-manager {
+    home-manager.useGlobalPkgs = true;
+    home-manager.useUserPackages = true;
+    home-manager.extraSpecialArgs = homeManagerSpecialArgs;
+  }
   desktopModules = [
     ./modules/desktop/gui
     ./modules/desktop/security.nix
     ./modules/desktop/shell-packages.nix
-    #homeManagerModule
+    homeManagerModule
   ];
 
   myNurPackagesModule = {
@@ -40,12 +44,6 @@ let
         ./hardwares/${name}.nix
         inputs.nur.nixosModules.nur
         myNurPackagesModule
-
-        inputs.home-manager.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = homeManagerSpecialArgs;
-        }
 
         { networking.hostName = "amono-${if isDesktop then "desktop" else "cluster"}-${name}"; }
       ] ++ commonModules
