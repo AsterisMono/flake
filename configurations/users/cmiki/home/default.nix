@@ -1,25 +1,21 @@
-{ flakeLib, nvimConfig, ... }:
-let
-  devRoles = flakeLib.collectFiles ./dev-roles;
-  dev-base-env = flakeLib.collectFiles ./dev-base-env;
-  customization = flakeLib.collectFiles ./customization;
-in
+{ pkgs, ... }:
+
 {
-  _module.args = {
-    inherit nvimConfig;
-  };
+  home-manager.users.cmiki.imports = 
+    let
+      modules = flakeLib.collectFiles ./modules;
+    in
+    {
+      _module.args = {
+        inherit nvimConfig;
+      };
 
-  imports = [
-    ./nix-index.nix
-    ./apps.nix
-  ]
-  ++ dev-base-env
-  ++ devRoles
-  ++ customization;
+      imports = modules;
 
-  programs.home-manager.enable = true;
+      programs.home-manager.enable = true;
 
-  home.username = "cmiki";
-  home.homeDirectory = "/home/cmiki";
-  home.stateVersion = "23.05";
+      home.username = "cmiki";
+      home.homeDirectory = "/home/cmiki";
+      home.stateVersion = "23.05";
+    }
 }
