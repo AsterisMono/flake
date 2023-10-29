@@ -4,9 +4,9 @@
   # Desktop Apps
   home.packages = with pkgs;[
     google-chrome
-    firefox
-    telegram-desktop
-    amono-nur.sqlitestudio
+  # firefox
+  # telegram-desktop
+  # amono-nur.sqlitestudio
   ];
 
   # Command-line Apps
@@ -52,7 +52,7 @@
   programs.lazygit.enable = true;
 
   # Games
-  imports = [
-    ./games/minecraft.nix
-  ];
+  # imports = [
+  #   ./games/minecraft.nix
+  # ];
 }
