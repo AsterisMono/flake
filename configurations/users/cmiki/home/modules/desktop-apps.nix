@@ -22,6 +22,7 @@
   };
 
   programs.fish = {
+    enable = true;
     plugins = [
       {
         name = "plugin-git";
