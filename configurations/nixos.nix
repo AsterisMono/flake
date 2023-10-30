@@ -4,10 +4,8 @@ let
   flake = inputs.self;
   homeManagerSpecialArgs = {
     flakeLib = flake.lib;
-    sshPublicKey = flake.sshPublicKey;
     nvimConfig = inputs.nvim-config;
   };
-
 
   commonModules = flake.lib.collectFiles ./modules/common;
   homeManagerModule = [
@@ -37,12 +35,13 @@ let
       system = "${arch}-linux";
 
       specialArgs = {
-        inherit isDesktop arch flake;
+        inherit isDesktop arch flake system;
         isLinux = true;
       };
 
       modules = [
         ./hardwares/${name}.nix
+        inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         myNurPackagesModule
 

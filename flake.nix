@@ -4,6 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
+    agenix.url = "github:ryantm/agenix";
     myNurPackages = {
       url = "github:AsterisMono/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,6 +29,5 @@
       lib = {
         inherit collectFiles;
       };
-      sshPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIESmYINQDHO1+7FY0mDdcl+UIu2RPuMNOtj242d2N3cf";
     };
 }
