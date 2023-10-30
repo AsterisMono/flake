@@ -9,18 +9,18 @@ let
 
 
   commonModules = flake.lib.collectFiles ./modules/common;
-  homeManagerModule = inputs.home-manager.nixosModules.home-manager {
-    home-manager.useGlobalPkgs = true;
-    home-manager.useUserPackages = true;
-    home-manager.extraSpecialArgs = homeManagerSpecialArgs;
-  };
+  homeManagerModule = [
+    inputs.home-manager.nixosModules.home-manager {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = homeManagerSpecialArgs;
+    }
+  ];
   desktopModules = [
     ./modules/desktop/gui
     ./modules/desktop/security.nix
     ./modules/desktop/shell-packages.nix
-    homeManagerModule
-  ];
-
+  ] ++ homeManagerModule;
   myNurPackagesModule = {
     nixpkgs.overlays = [
       (final: prev: {
