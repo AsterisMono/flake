@@ -35,7 +35,7 @@ let
       system = "${arch}-linux";
 
       specialArgs = {
-        inherit isDesktop arch flake system;
+        inherit isDesktop arch flake;
         isLinux = true;
       };
 

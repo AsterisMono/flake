@@ -1,4 +1,4 @@
-{ system, ... }:
+{ arch, flake, ... }:
 {
-  environment.systemPackages = [ agenix.packages.${system}.default ];
+  environment.systemPackages = [ flake.inputs.agenix.packages."${arch}-linux".default ];
 }
