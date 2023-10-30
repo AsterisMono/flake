@@ -13,7 +13,7 @@ let
     home-manager.useGlobalPkgs = true;
     home-manager.useUserPackages = true;
     home-manager.extraSpecialArgs = homeManagerSpecialArgs;
-  }
+  };
   desktopModules = [
     ./modules/desktop/gui
     ./modules/desktop/security.nix
