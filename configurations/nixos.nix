@@ -4,6 +4,7 @@ let
   flake = inputs.self;
   homeManagerSpecialArgs = {
     flakeLib = flake.lib;
+    sshPublicKey = flake.sshPublicKey;
     nvimConfig = inputs.nvim-config;
   };
 
