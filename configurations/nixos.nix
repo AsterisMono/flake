@@ -28,6 +28,9 @@ let
       (import ../overlays/gnome-x11-fractional.nix)
     ];
   };
+  secretModule = {
+    age.secrets.tailscaleAuthkey.file = ../secrets/tailscale-authkey.age;
+  };
 
   mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ "cmiki" ] }: {
     name = "${name}";
@@ -44,8 +47,9 @@ let
         inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         myNurPackagesModule
+        secretModule
 
-        { networking.hostName = "amono-${if isDesktop then "desktop" else "cluster"}-${name}"; }
+        { networking.hostName = name; }
       ] ++ commonModules
         ++ (if isDesktop then desktopModules else [ ])
         ++ extraModules
@@ -66,7 +70,10 @@ in
     {
       name = "hifumi";
       isDesktop = true;
-      extraModules = [];
+      extraModules = [
+        ./modules/server/openssh.nix
+        ./modules/server/tailscale.nix
+      ];
     }
   ]);
 }

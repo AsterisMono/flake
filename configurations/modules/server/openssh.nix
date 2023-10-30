@@ -5,5 +5,5 @@
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
     settings.PermitRootLogin = "yes";
-  }
+  };
 }
