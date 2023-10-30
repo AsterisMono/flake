@@ -1,7 +1,6 @@
 { ... }:
-
 {
-  programs.helix = {
+  networking.firewall = {
     enable = true;
   };
-} 
+}

@@ -2,16 +2,24 @@ inputs:
 
 let
   flake = inputs.self;
-  commonModules = flake.lib.collectFiles ./modules/common;
+  homeManagerSpecialArgs = {
+    flakeLib = flake.lib;
+    nvimConfig = inputs.nvim-config;
+  };
 
+  commonModules = flake.lib.collectFiles ./modules/common;
+  homeManagerModule = [
+    inputs.home-manager.nixosModules.home-manager {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = homeManagerSpecialArgs;
+    }
+  ];
   desktopModules = [
-    ./users/cmiki
     ./modules/desktop/gui
     ./modules/desktop/security.nix
     ./modules/desktop/shell-packages.nix
-    ./modules/desktop/bluetooth.nix
-  ];
-
+  ] ++ homeManagerModule;
   myNurPackagesModule = {
     nixpkgs.overlays = [
       (final: prev: {
@@ -20,13 +28,11 @@ let
       (import ../overlays/gnome-x11-fractional.nix)
     ];
   };
-
-  homeManagerSpecialArgs = {
-    flakeLib = flake.lib;
-    nvimConfig = inputs.nvim-config;
+  secretModule = {
+    age.secrets.tailscaleAuthkey.file = ../secrets/tailscale-authkey.age;
   };
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ ] }: {
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ "cmiki" ] }: {
     name = "${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
       system = "${arch}-linux";
@@ -38,17 +44,16 @@ let
 
       modules = [
         ./hardwares/${name}.nix
+        inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         myNurPackagesModule
+        secretModule
 
-        inputs.home-manager.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = homeManagerSpecialArgs;
-        }
-
-        { networking.hostName = "amono-${if isDesktop then "desktop" else "cluster"}-${name}"; }
-      ] ++ commonModules ++ (if isDesktop then desktopModules else [ ]) ++ extraModules;
+        { networking.hostName = name; }
+      ] ++ commonModules
+        ++ (if isDesktop then desktopModules else [ ])
+        ++ extraModules
+        ++ (map (u: ./users/${u}) users);
     };
   };
 in
@@ -58,13 +63,17 @@ in
       name = "amberdash";
       isDesktop = true;
       extraModules = [
-        ./modules/nvidia.nix
+        ./modules/desktop/hardware/nvidia.nix
+        ./modules/desktop/hardware/bluetooth.nix
       ];
     }
     {
       name = "hifumi";
       isDesktop = true;
-      extraModules = [];
+      extraModules = [
+        ./modules/server/openssh.nix
+        ./modules/server/tailscale.nix
+      ];
     }
   ]);
 }

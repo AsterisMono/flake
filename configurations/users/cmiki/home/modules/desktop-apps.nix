@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nvimConfig, ... }:
 
 {
   # Desktop Apps
@@ -7,6 +7,7 @@
   # firefox
   # telegram-desktop
   # amono-nur.sqlitestudio
+    lua-language-server
   ];
 
   # Command-line Apps
@@ -51,8 +52,26 @@
 
   programs.lazygit.enable = true;
 
-  # Games
-  # imports = [
-  #   ./games/minecraft.nix
-  # ];
+  programs.gh = {
+    enable = true;
+    settings = {
+      git_protocol = "https";
+    };
+  };
+
+  # Replace command-not-found with nix-index
+  programs.command-not-found.enable = false;
+  programs.nix-index = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  # Neovim
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+    vimAlias = true;
+  };
+
+  xdg.configFile.nvim.source = nvimConfig;
 }

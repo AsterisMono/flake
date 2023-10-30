@@ -1,21 +1,13 @@
-{ flakeLib, nvimConfig, ... }:
+{ flakeLib, nvimConfig, ... }: 
 let
-  devRoles = flakeLib.collectFiles ./dev-roles;
-  dev-base-env = flakeLib.collectFiles ./dev-base-env;
-  customization = flakeLib.collectFiles ./customization;
+  modules = flakeLib.collectFiles ./modules;
 in
 {
   _module.args = {
     inherit nvimConfig;
   };
 
-  imports = [
-    ./nix-index.nix
-    ./apps.nix
-  ]
-  ++ dev-base-env
-  ++ devRoles
-  ++ customization;
+  imports = modules;
 
   programs.home-manager.enable = true;
 
