@@ -1,4 +1,4 @@
-{ pkgs, isDesktop, ... }:
+{ flake, pkgs, isDesktop, ... }:
 {
   users.users.cmiki = {
     isNormalUser = true;
@@ -11,5 +11,12 @@
   };
 
   # Use home-manager on desktops
-  home-manager.users.cmiki.imports = if isDesktop then [ ./home ] else [];
+  home-manager.users.cmiki.imports = if isDesktop then
+    [ ./home ] ++ [
+      flake.inputs.agenix.homeManagerModules.default
+      {
+        age.identityPaths = [ "/home/cmiki/.ssh/id_ed25519" ];
+      }
+    ]
+    else [];
 }
