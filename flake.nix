@@ -14,7 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nvim-config = {
-      url = "git+https://github.com/AsterisMono/nvim-config?ref=despacito";
+      url = "git+https://github.com/AsterisMono/nvim-config?ref=linux";
       flake = false; 
     };
   };
