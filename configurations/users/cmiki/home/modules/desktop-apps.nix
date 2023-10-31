@@ -1,5 +1,10 @@
 { config, pkgs, nvimConfig, ... }:
-
+let
+  lspServers = with pkgs;[
+    lua-language-server
+    nil
+  ];
+in
 {
   # Desktop Apps
   home.packages = with pkgs;[
@@ -7,8 +12,7 @@
   # firefox
   # telegram-desktop
   # amono-nur.sqlitestudio
-    lua-language-server
-  ];
+  ] ++ lspServers;
 
   # Command-line Apps
   programs.starship = {
