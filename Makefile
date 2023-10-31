@@ -7,6 +7,7 @@
 
 deploy:
 	nixos-rebuild switch --flake . --use-remote-sudo
+	echo "systemctl --user start agenix.service"
 
 debug:
 	nixos-rebuild switch --flake . --use-remote-sudo --show-trace --verbose
@@ -19,6 +20,10 @@ update:
 
 history:
 	nix profile history --profile /nix/var/nix/profiles/system
+
+force-deploy:
+	nixos-rebuild switch --flake . --use-remote-sudo --option eval-cache false
+	echo "systemctl --user start agenix.service"
 
 gc:
 	# remove all generations older than 7 days

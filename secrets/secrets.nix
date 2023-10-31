@@ -4,4 +4,5 @@ let
 in
 {
   "tailscale-authkey.age".publicKeys = [ cmiki ];
+  "wakatime-apikey.age".publicKeys = [ cmiki ];
 }  
