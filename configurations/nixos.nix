@@ -17,9 +17,9 @@ let
   ];
   desktopModules = [
     ./modules/desktop/gui
-    ./modules/desktop/security.nix
     ./modules/desktop/shell-packages.nix
   ] ++ homeManagerModule;
+  serverModules = flake.lib.collectFiles ./modules/server;
   myNurPackagesModule = {
     nixpkgs.overlays = [
       (final: prev: {
@@ -69,11 +69,8 @@ in
     }
     {
       name = "hifumi";
-      isDesktop = true;
-      extraModules = [
-        ./modules/server/openssh.nix
-        ./modules/server/tailscale.nix
-      ];
+      isDesktop = false;
+      extraModules = [ ];
     }
   ]);
 }
