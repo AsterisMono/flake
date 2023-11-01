@@ -16,7 +16,7 @@ let
       (final: prev: {
         amono-nur = inputs.myNurPackages.packages."${prev.system}";
       })
-      (import ../overlays/gnome-x11-fractional.nix)
+      (import ${flake}/overlays/gnome-x11-fractional.nix)
     ];
   };
   secretModule = {
@@ -43,9 +43,8 @@ let
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = {
-            flakeLib = flake.lib;
             nvimConfig = inputs.nvim-config;
-            inherit isDesktop;
+            inherit flake isDesktop;
           };
         }
 

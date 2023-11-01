@@ -1,6 +1,6 @@
-{ isDesktop, flakeLib, nvimConfig, ... }: 
+{ isDesktop, flake, nvimConfig, ... }: 
 let
-  modules = flakeLib.collectFiles ./modules;
+  modules = flake.lib.collectFiles ./modules;
 in
 {
   _module.args = {
