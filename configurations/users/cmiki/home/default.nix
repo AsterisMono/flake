@@ -2,14 +2,13 @@
 let
   commonModules = flakeLib.collectFiles ./modules/common;
   desktopModules = flakeLib.collectFiles ./modules/desktop;
-  serverModules = flakeLib.collectFiles ./modules/server;
 in
 {
   _module.args = {
     inherit nvimConfig;
   };
 
-  imports = commonModules ++ (if isDesktop then desktopModules else serverModules);
+  imports = commonModules ++ (if isDesktop then desktopModules else []);
 
   programs.home-manager.enable = true;
 

@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, nvimConfig, ... }:
 let
   lspServers = with pkgs;[
     lua-language-server

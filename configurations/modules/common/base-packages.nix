@@ -6,6 +6,9 @@
     wget
     curl
     killall
+    gnumake
+    gcc
+    ripgrep
   ];
 
   programs.git = {
