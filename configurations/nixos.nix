@@ -23,6 +23,17 @@ let
     age.secrets.tailscaleAuthkey.file = ../secrets/tailscale-authkey.age;
   };
 
+  makeHomeManagerModule = { isDesktop }:
+    if isDesktop then inputs.home-manager.nixosModules.home-manager {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = {
+        nvimConfig = inputs.nvim-config;
+        flake = input.self;
+        inherit isDesktop;
+      };
+    } else { };
+
   mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ "cmiki" ] }: {
     name = "${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
@@ -39,14 +50,7 @@ let
         inputs.nur.nixosModules.nur
         overlayModule
         secretModule
-        inputs.home-manager.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = {
-            nvimConfig = inputs.nvim-config;
-            inherit flake isDesktop;
-          };
-        }
+        makeHomeManagerModule { inherit flake isDesktop; }
 
         { networking.hostName = name; }
       ] ++ commonModules
