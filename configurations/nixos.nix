@@ -16,7 +16,7 @@ let
       (final: prev: {
         amono-nur = inputs.myNurPackages.packages."${prev.system}";
       })
-      (import ${flake}/overlays/gnome-x11-fractional.nix)
+      (import "${flake}/overlays/gnome-x11-fractional.nix")
     ];
   };
   secretModule = {
