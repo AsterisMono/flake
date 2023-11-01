@@ -7,10 +7,11 @@ let
   desktopModules = [
     ./modules/desktop/gui
     ./modules/desktop/shell-packages.nix
+    ./modules/desktop/sudo-nopasswd.nix
   ];
   serverModules = flake.lib.collectFiles ./modules/server;
 
-  myNurPackagesModule = {
+  overlayModule = {
     nixpkgs.overlays = [
       (final: prev: {
         amono-nur = inputs.myNurPackages.packages."${prev.system}";
@@ -36,7 +37,7 @@ let
         ./hardwares/${name}.nix
         inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
-        myNurPackagesModule
+        overlayModule
         secretModule
         inputs.home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
@@ -68,8 +69,8 @@ in
     }
     {
       name = "hifumi";
-      isDesktop = false;
-      extraModules = [ ];
+      isDesktop = true;
+      extraModules = [ ] ++ serverModules;
     }
   ]);
 }
