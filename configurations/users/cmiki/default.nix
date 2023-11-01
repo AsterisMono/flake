@@ -11,12 +11,11 @@
   };
 
   # Use home-manager on desktops
-  home-manager.users.cmiki.imports = if isDesktop then
+  home-manager.users.cmiki.imports = 
     [ ./home ] ++ [
       flake.inputs.agenix.homeManagerModules.default
       {
         age.identityPaths = [ "/home/cmiki/.ssh/id_ed25519" ];
       }
-    ]
-    else [];
+    ];
 }
