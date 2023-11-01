@@ -1,4 +1,4 @@
-{ config, pkgs, nvimConfig, ... }:
+{ ... }:
 let
   lspServers = with pkgs;[
     lua-language-server
@@ -6,23 +6,12 @@ let
   ];
 in
 {
-  # Desktop Apps
-  home.packages = with pkgs;[
-    google-chrome
-  # firefox
-  # telegram-desktop
-  # amono-nur.sqlitestudio
-  ] ++ lspServers;
-
+  home.packages = lspServers;
+  
   # Command-line Apps
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
-  };
-
-  programs.vscode = {
-    enable = true;
-    package = pkgs.vscode.fhs;
   };
 
   programs.fish = {
@@ -38,19 +27,6 @@ in
       ".." = "cd ../";
       "c" = "clear";
       "n" = "nvim";
-    };
-  };
-
-  programs.kitty = {
-    enable = true;
-    shellIntegration = {
-      enableFishIntegration = true; 
-      mode = "no-cursor";
-    };
-    theme = "Afterglow";
-    settings = {
-      cursor_shape = "block";
-      cursor_blink_interval = 0;
     };
   };
 

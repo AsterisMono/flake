@@ -2,24 +2,14 @@ inputs:
 
 let
   flake = inputs.self;
-  homeManagerSpecialArgs = {
-    flakeLib = flake.lib;
-    nvimConfig = inputs.nvim-config;
-  };
 
   commonModules = flake.lib.collectFiles ./modules/common;
-  homeManagerModule = [
-    inputs.home-manager.nixosModules.home-manager {
-      home-manager.useGlobalPkgs = true;
-      home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = homeManagerSpecialArgs;
-    }
-  ];
   desktopModules = [
     ./modules/desktop/gui
     ./modules/desktop/shell-packages.nix
-  ] ++ homeManagerModule;
+  ];
   serverModules = flake.lib.collectFiles ./modules/server;
+
   myNurPackagesModule = {
     nixpkgs.overlays = [
       (final: prev: {
@@ -48,10 +38,19 @@ let
         inputs.nur.nixosModules.nur
         myNurPackagesModule
         secretModule
+        inputs.home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.extraSpecialArgs = {
+            flakeLib = flake.lib;
+            nvimConfig = inputs.nvim-config;
+            inherit isDesktop;
+          };
+        }
 
         { networking.hostName = name; }
       ] ++ commonModules
-        ++ (if isDesktop then desktopModules else [ ])
+        ++ (if isDesktop then desktopModules else serverModules)
         ++ extraModules
         ++ (map (u: ./users/${u}) users);
     };

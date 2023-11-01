@@ -1,13 +1,15 @@
-{ flakeLib, nvimConfig, ... }: 
+{ isDesktop, flakeLib, nvimConfig, ... }: 
 let
-  modules = flakeLib.collectFiles ./modules;
+  commonModules = flakeLib.collectFiles ./modules/common;
+  desktopModules = flakeLib.collectFiles ./modules/desktop;
+  serverModules = flakeLib.collectFiles ./modules/server;
 in
 {
   _module.args = {
     inherit nvimConfig;
   };
 
-  imports = modules;
+  imports = commonModules ++ (if isDesktop then desktopModules else serverModules);
 
   programs.home-manager.enable = true;
 
