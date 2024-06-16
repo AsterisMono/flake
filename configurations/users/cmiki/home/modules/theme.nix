@@ -1,8 +1,20 @@
 { pkgs, osConfig, ... }:
+let
+  cursorPackage = pkgs.numix-cursor-theme;
+  cursorThemeName = "Numix-Cursor";
+  cursorSize = 32;
+in
 {
   home.packages = with pkgs; [
     adw-gtk3
   ];
+
+  # this sets the XCURSOR variables
+  home.pointerCursor = {
+    package = cursorPackage;
+    name = cursorThemeName;
+    size = cursorSize;
+  };
 
   gtk = {
     enable = true;
@@ -13,8 +25,9 @@
     };
 
     cursorTheme = {
-      name = "Numix-Cursor";
-      package = pkgs.numix-cursor-theme;
+      name = cursorThemeName;
+      package = cursorPackage;
+      size = cursorSize;
     };    
   };
 

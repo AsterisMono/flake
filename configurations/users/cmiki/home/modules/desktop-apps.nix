@@ -2,15 +2,11 @@
 {
   # Desktop Apps
   home.packages = with pkgs;[
-    google-chrome
-  # firefox
-  # telegram-desktop
-  # amono-nur.sqlitestudio
+    firefox
   ];
 
   programs.vscode = {
     enable = true;
     package = pkgs.vscode.fhs;
   };
-
 }

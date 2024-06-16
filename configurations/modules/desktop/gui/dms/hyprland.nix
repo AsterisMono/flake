@@ -19,7 +19,7 @@
     hyprpaper
     hyprshot
     kitty
-    kdePackages.polkit-kde-agent-1
+    lxqt.lxqt-policykit
   ];
 
   services.greetd = {
