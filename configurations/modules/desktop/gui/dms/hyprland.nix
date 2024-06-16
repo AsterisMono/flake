@@ -17,7 +17,9 @@
     wofi
     libnotify
     hyprpaper
+    hyprshot
     kitty
+    kdePackages.polkit-kde-agent-1
   ];
 
   services.greetd = {
