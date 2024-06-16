@@ -6,6 +6,7 @@ let
   commonModules = flake.lib.collectFiles ./modules/common;
   desktopModules = [
     ./modules/desktop/gui
+    ./modules/desktop/hardware/bluetooth.nix
     ./modules/desktop/shell-packages.nix
     ./modules/desktop/sudo-nopasswd.nix
   ];
@@ -66,17 +67,11 @@ in
 {
   configs = builtins.listToAttrs (map mkLinux [
     {
-      name = "amberdash";
+      name = "luminara";
       isDesktop = true;
       extraModules = [
-        ./modules/desktop/hardware/nvidia.nix
-        ./modules/desktop/hardware/bluetooth.nix
-      ];
-    }
-    {
-      name = "hifumi";
-      isDesktop = true;
-      extraModules = [ ] ++ serverModules;
+        ./modules/desktop/hardware/amdgpu.nix
+      ]
     }
   ]);
 }
