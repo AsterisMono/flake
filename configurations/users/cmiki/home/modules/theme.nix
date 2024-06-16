@@ -1,5 +1,5 @@
 { pkgs, osConfig, ... }:
-lib.mkIf (osConfig.services.xserver.desktopManager.gnome.enable == true) {
+{
   home.packages = with pkgs; [
     adw-gtk3
   ];
@@ -18,7 +18,7 @@ lib.mkIf (osConfig.services.xserver.desktopManager.gnome.enable == true) {
     };    
   };
 
-  dconf.settings = {
+  dconf.settings = pkgs.lib.mkIf (osConfig.services.xserver.desktopManager.gnome.enable == true) {
       "org/gnome/desktop/interface" = {
         font-name = "更纱黑体 UI SC 11";
         document-font-name = "更纱黑体 UI SC 11";

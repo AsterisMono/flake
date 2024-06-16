@@ -25,6 +25,9 @@
       wqy_zenhei
       meslo-lg
       fira-code
+      font-awesome
+      font-awesome_5
+      font-awesome_4
     ]);
     enableGhostscriptFonts = true;
     enableDefaultPackages = true;
