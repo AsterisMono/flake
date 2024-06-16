@@ -2,8 +2,7 @@
 
 {
   imports = [
-    # Desktop Manager and Display Manager are bundled to maximize compatibility.
-    ./fonts.nix
+    ./fonts
     ./audio.nix
     ./ime.nix
   ];
