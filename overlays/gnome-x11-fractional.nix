@@ -1,5 +1,5 @@
 final: prev: {
-  gnome = prev.gnome.overrideScope'
+  gnome = prev.gnome.overrideScope
     (final': prev': {
       mutter = prev'.mutter.overrideAttrs (old: {
         patches = (old.patches or []) ++ [
