@@ -13,17 +13,4 @@
     package = pkgs.vscode.fhs;
   };
 
-  programs.kitty = {
-    enable = true;
-    shellIntegration = {
-      enableFishIntegration = true; 
-      mode = "no-cursor";
-    };
-    theme = "Afterglow";
-    settings = {
-      cursor_shape = "block";
-      cursor_blink_interval = 0;
-    };
-  };
-
 }

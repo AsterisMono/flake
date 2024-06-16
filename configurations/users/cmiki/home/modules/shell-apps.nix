@@ -3,10 +3,28 @@ let
   lspServers = with pkgs;[
     lua-language-server
     nil
+    nodejs_20
   ];
 in
 {
   home.packages = lspServers;
+
+  programs.kitty = {
+    enable = true;
+    shellIntegration = {
+      enableFishIntegration = true; 
+      mode = "no-cursor";
+    };
+    theme = "Afterglow";
+    settings = {
+      cursor_shape = "block";
+      cursor_blink_interval = 0;
+      background_opacity = "0.7";
+    };
+    font = {
+      name = "FiraCode Nerd Font Mono Ret";
+    };
+  };
   
   # Command-line Apps
   programs.starship = {
@@ -22,11 +40,23 @@ in
         src = pkgs.fishPlugins.plugin-git.src;
       }
     ];
-    shellInit = "set fish_greeting \"\"";
+    shellInit = "set -g fish_greeting";
+    interactiveShellInit = ''
+      set SHELL ${pkgs.fish}/fish
+      set EDITOR nvim
+      set PAGER bat
+
+      zoxide init fish | source
+      starship init fish | source
+      atuin init fish --disable-up-arrow | source
+    '';
     shellAliases = {
       ".." = "cd ../";
-      "c" = "clear";
       "n" = "nvim";
+      "ls" = "eza -l";
+      "l" = "eza -l";
+      "ll" = "eza -al";
+      "cat" = "bat";
     };
   };
 
@@ -62,14 +92,17 @@ in
   programs.atuin = {
     enable = true;
     enableFishIntegration = true;
-  }
+  };
 
   programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
-  }
+  };
+
+  programs.fzf = {
+    enable = true;
+    enableFishIntegration = true;
+  };
 
   programs.bat.enable = true;
-
-  xdg.configFile.nvim.source = nvimConfig;
 }

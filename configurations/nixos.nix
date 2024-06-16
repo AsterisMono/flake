@@ -53,7 +53,6 @@ let
         inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         overlayModule
-        secretModule
 
         { networking.hostName = name; }
       ] ++ commonModules
