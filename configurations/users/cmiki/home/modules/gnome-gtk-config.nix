@@ -1,5 +1,5 @@
-{ pkgs, ... }:
-{
+{ pkgs, osConfig, ... }:
+lib.mkIf (osConfig.services.xserver.desktopManager.gnome.enable == true) {
   home.packages = with pkgs; [
     adw-gtk3
   ];
