@@ -49,7 +49,7 @@ let
       };
 
       modules = [
-        ./modules/hardwares/${name}
+        ./modules/hardwares/${name}.nix
         inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         overlayModule
@@ -71,7 +71,7 @@ in
     {
       name = "luminara";
       isDesktop = true;
-      diskPattern = true;
+      diskPattern = false;
       dmModule = "hyprland";
       extraModules = [
         ./modules/desktop/hardware/amdgpu.nix
