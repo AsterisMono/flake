@@ -45,10 +45,6 @@ in
       set SHELL ${pkgs.fish}/fish
       set EDITOR nvim
       set PAGER bat
-
-      zoxide init fish | source
-      starship init fish | source
-      atuin init fish --disable-up-arrow | source
     '';
     shellAliases = {
       ".." = "cd ../";
@@ -93,6 +89,9 @@ in
   programs.atuin = {
     enable = true;
     enableFishIntegration = true;
+    flags = [
+      "--disable-up-arrow"
+    ];
   };
 
   programs.zoxide = {
