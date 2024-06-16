@@ -31,6 +31,7 @@ let
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = {
+          # FIXME: this is no longer used
           nvimConfig = inputs.nvim-config;
           flake = inputs.self;
           inherit isDesktop;
@@ -38,14 +39,23 @@ let
       }
     ] else [];
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", diskoEnabled ? false, dmModule ? "", extraModules ? [ ], users }: {
-    name = "${name}";
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", diskoEnabled ? false, dmModule ? "", extraModules ? [ ], users }: 
+  let
+    system = "${arch}-linux";
+  in
+  {
+    inherit name;
     value = inputs.nixpkgs.lib.nixosSystem {
-      system = "${arch}-linux";
+      inherit system;
 
       specialArgs = {
         inherit isDesktop arch flake;
         isLinux = true;
+        # Roll unstable software with pkgs-unstable
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
       };
 
       modules = [
@@ -74,7 +84,7 @@ in
       dmModule = "hyprland";
       extraModules = [
         ./modules/desktop/hardware/amdgpu.nix
-        ./modules/extra/distrobox.nix
+        # ./modules/extra/distrobox.nix
       ];
       users = [
         "cmiki"
