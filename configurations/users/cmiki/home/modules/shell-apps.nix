@@ -56,6 +56,7 @@ in
       "l" = "eza -l";
       "ll" = "eza -al";
       "cat" = "bat";
+      "icat" = "kitten icat";
     };
   };
 
