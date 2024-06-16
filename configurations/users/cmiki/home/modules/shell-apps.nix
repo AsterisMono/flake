@@ -16,7 +16,6 @@ in
       enableFishIntegration = true; 
       mode = "no-cursor";
     };
-    theme = "Afterglow";
     settings = {
       cursor_shape = "block";
       cursor_blink_interval = 0;
@@ -25,6 +24,7 @@ in
     font = {
       name = "FiraCode Nerd Font Mono Ret";
     };
+    extraConfig = builtins.readFile ./kitty/everforest.conf;
   };
   
   # Command-line Apps
