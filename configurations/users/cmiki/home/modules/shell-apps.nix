@@ -1,13 +1,14 @@
 { pkgs, nvimConfig, ... }:
 let
-  lspServers = with pkgs;[
+  extraPackages = with pkgs;[
     lua-language-server
     nil
     nodejs_20
+    any-nix-shell
   ];
 in
 {
-  home.packages = lspServers;
+  home.packages = extraPackages;
 
   programs.kitty = {
     enable = true;
@@ -45,6 +46,8 @@ in
       set SHELL ${pkgs.fish}/fish
       set EDITOR nvim
       set PAGER bat
+
+      any-nix-shell fish --info-right | source
     '';
     shellAliases = {
       ".." = "cd ../";
