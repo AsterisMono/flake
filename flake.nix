@@ -2,9 +2,13 @@
   description = "Miki's NixOS Flake";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nur.url = "github:nix-community/NUR";
     agenix.url = "github:ryantm/agenix";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     myNurPackages = {
       url = "github:AsterisMono/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -14,7 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nvim-config = {
-      url = "git+https://github.com/AsterisMono/nvim-config?ref=linux";
+      url = "git+https://github.com/AsterisMono/nvim-config?ref=light";
       flake = false; 
     };
   };

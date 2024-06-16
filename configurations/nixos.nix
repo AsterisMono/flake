@@ -38,7 +38,7 @@ let
       }
     ] else [];
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", dmModule ? false, extraModules ? [ ], users ? [ "cmiki" ] }: {
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", diskPattern ? false, dmModule ? "", extraModules ? [ ], users ? [ "cmiki" ] }: {
     name = "${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
       system = "${arch}-linux";
@@ -49,7 +49,7 @@ let
       };
 
       modules = [
-        ./hardwares/${name}.nix
+        ./modules/hardwares/${name}
         inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         overlayModule
@@ -58,7 +58,8 @@ let
         { networking.hostName = name; }
       ] ++ commonModules
         ++ (if isDesktop then desktopModules else serverModules)
-        ++ (if dmModule then [ ./modules/desktop/gui/dms/${dmModule}.nix ] else [])
+        ++ (if diskPattern then [ inputs.disko.nixosModules.disko ] else [])
+        ++ (if dmModule != "" then [ ./modules/desktop/gui/dms/${dmModule}.nix ] else [])
         ++ getHomeManagerModule isDesktop
         ++ extraModules
         ++ (map (u: ./users/${u}) users);
@@ -70,10 +71,11 @@ in
     {
       name = "luminara";
       isDesktop = true;
+      diskPattern = true;
       dmModule = "hyprland";
       extraModules = [
         ./modules/desktop/hardware/amdgpu.nix
-      ]
+      ];
     }
   ]);
 }
