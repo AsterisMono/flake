@@ -38,7 +38,7 @@ let
       }
     ] else [];
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", extraModules ? [ ], users ? [ "cmiki" ] }: {
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", dmModule ? false, extraModules ? [ ], users ? [ "cmiki" ] }: {
     name = "${name}";
     value = inputs.nixpkgs.lib.nixosSystem {
       system = "${arch}-linux";
@@ -58,6 +58,7 @@ let
         { networking.hostName = name; }
       ] ++ commonModules
         ++ (if isDesktop then desktopModules else serverModules)
+        ++ (if dmModule then [ ./modules/desktop/gui/dms/${dmModule}.nix ] else [])
         ++ getHomeManagerModule isDesktop
         ++ extraModules
         ++ (map (u: ./users/${u}) users);
@@ -69,6 +70,7 @@ in
     {
       name = "luminara";
       isDesktop = true;
+      dmModule = "hyprland";
       extraModules = [
         ./modules/desktop/hardware/amdgpu.nix
       ]
