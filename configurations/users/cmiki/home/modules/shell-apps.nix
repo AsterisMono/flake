@@ -53,5 +53,23 @@ in
     vimAlias = true;
   };
 
+  # Modern unix series
+  programs.eza = {
+    enable = true;
+    enableFishIntegration = true;
+  };
+
+  programs.atuin = {
+    enable = true;
+    enableFishIntegration = true;
+  }
+
+  programs.zoxide = {
+    enable = true;
+    enableFishIntegration = true;
+  }
+
+  programs.bat.enable = true;
+
   xdg.configFile.nvim.source = nvimConfig;
 }
