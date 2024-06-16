@@ -5,7 +5,6 @@
 
   environment.systemPackages = with pkgs; [
     htop
-    neofetch
   ];
 
   programs.fish.enable = true;
