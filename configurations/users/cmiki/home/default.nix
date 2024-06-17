@@ -14,9 +14,12 @@ in
 
   programs.home-manager.enable = true;
 
-  home.username = "cmiki";
-  home.homeDirectory = "/home/cmiki";
-  home.stateVersion = "24.05";
+  home = {
+    username = "cmiki";
+    homeDirectory = "/home/cmiki";
+    language.base = "zh_CN.UTF-8";
+    stateVersion = "24.05";
+  };
 
   xdg.userDirs = {
     enable = true;
