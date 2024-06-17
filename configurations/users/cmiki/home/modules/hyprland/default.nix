@@ -7,6 +7,11 @@ in
     ./waybar.nix
   ];
 
+  environment.systemPackages = with pkgs; [
+    wl-clipboard
+    pavucontrol
+  ];
+
   wayland.windowManager.hyprland = {
     enable = hyprlandEnabled;
     extraConfig = builtins.readFile ./hyprland.conf;
