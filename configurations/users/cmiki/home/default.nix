@@ -17,4 +17,9 @@ in
   home.username = "cmiki";
   home.homeDirectory = "/home/cmiki";
   home.stateVersion = "24.05";
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+  };
 }
