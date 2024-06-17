@@ -25,4 +25,12 @@ in
       ];
     };
   };
+
+  programs.wofi = {
+    enable = true;
+    settings = {
+      no_actions = true;
+    };
+    style = builtins.readFile ./wofi.css;
+  };
 }
