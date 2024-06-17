@@ -3,6 +3,10 @@ let
   hyprlandEnabled = osConfig.programs.hyprland.enable;
 in
 {
+  imports = [
+    ./waybar.nix
+  ];
+
   wayland.windowManager.hyprland = {
     enable = hyprlandEnabled;
     extraConfig = builtins.readFile ./hyprland.conf;
