@@ -1,5 +1,7 @@
 { config, pkgs, lib, ... }:
-
+let
+  torus-font = pkgs.callPackage ../../../../../packages/torus.nix { };
+in
 {
   fonts = {
     fontDir.enable = true;
@@ -8,7 +10,7 @@
         fonts = [ "FiraCode" "Hack" "JetBrainsMono" "UbuntuMono" ];
       })
       # hack-font
-      # inter
+      inter
       # liberation_ttf
       # twemoji-color-font
       noto-fonts
@@ -24,6 +26,7 @@
       font-awesome
       font-awesome_5
       font-awesome_4
+      torus-font
     ]);
     enableGhostscriptFonts = true;
     enableDefaultPackages = true;
