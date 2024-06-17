@@ -20,6 +20,8 @@
     hyprshot
     kitty
     lxqt.lxqt-policykit
+    wl-clipboard
+    pavucontrol
   ];
 
   services.greetd = {
