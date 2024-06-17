@@ -5,6 +5,7 @@ let
     nil
     nodejs_20
     any-nix-shell
+    fastfetch
   ];
 in
 {
