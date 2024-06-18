@@ -84,6 +84,7 @@
             <big>{ =%Y %B}</big>
             <tt><small>{calendar}</small></tt>'';
           format-alt = "{ =%Y-%m-%d}";
+          interval = 60;
         };
         backlight = {
           # "device" = "acpi_video1";
