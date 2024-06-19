@@ -6,6 +6,7 @@ let
     nodejs_20
     any-nix-shell
     fastfetch
+    devenv
   ];
 in
 {
