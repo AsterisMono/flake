@@ -23,6 +23,10 @@
       url = "git+https://github.com/AsterisMono/nvim-config?ref=light";
       flake = false; 
     };
+    secrets = {
+      url = "git+https://github.com/AsterisMono/secrets";
+      flake = false;
+    };
   };
 
   outputs = inputs:

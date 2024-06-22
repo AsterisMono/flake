@@ -9,6 +9,7 @@ let
     ./modules/desktop/hardware/bluetooth.nix
     ./modules/desktop/shell-packages.nix
     ./modules/desktop/sudo-nopasswd.nix
+    ./modules/desktop/proxy/mihomo.nix
   ];
   serverModules = flake.lib.collectFiles ./modules/server;
 
@@ -45,6 +46,7 @@ let
 
       specialArgs = {
         inherit isDesktop arch flake;
+        inherit (inputs) secrets;
         isLinux = true;
         # Roll unstable software with pkgs-unstable
         pkgs-unstable = import inputs.nixpkgs-unstable {
