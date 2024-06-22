@@ -20,9 +20,6 @@ let
       (import "${flake}/overlays/gnome-x11-fractional.nix")
     ];
   };
-  secretModule = {
-    age.secrets.tailscaleAuthkey.file = ../secrets/tailscale-authkey.age;
-  };
 
   getHomeManagerModule = isDesktop:
     if isDesktop then [
@@ -31,8 +28,6 @@ let
         home-manager.useGlobalPkgs = true;
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = {
-          # FIXME: this is no longer used
-          nvimConfig = inputs.nvim-config;
           flake = inputs.self;
           inherit isDesktop;
         };

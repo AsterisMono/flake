@@ -1,4 +1,4 @@
-{ isDesktop, flake, nvimConfig, ... }: 
+{ isDesktop, flake, ... }: 
 let
   specialModules = [
     flake.inputs.nix-index-database.hmModules.nix-index
@@ -6,10 +6,6 @@ let
   modules = ( flake.lib.collectFiles ./modules ) ++ specialModules;
 in
 {
-  _module.args = {
-    inherit nvimConfig;
-  };
-
   imports = modules;
 
   programs.home-manager.enable = true;
