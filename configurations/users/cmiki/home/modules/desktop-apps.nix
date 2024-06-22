@@ -1,4 +1,4 @@
-{ config, pkgs, nvimConfig, ... }:
+{ config, pkgs, ... }:
 {
   # Desktop Apps
   home.packages = with pkgs;[

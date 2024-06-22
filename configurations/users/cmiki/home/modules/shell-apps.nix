@@ -1,4 +1,4 @@
-{ pkgs, nvimConfig, ... }:
+{ pkgs, ... }:
 let
   extraPackages = with pkgs;[
     lua-language-server
