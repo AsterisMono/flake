@@ -60,7 +60,6 @@ let
 
       modules = [
         ./modules/hardwares/${name}.nix
-        inputs.agenix.nixosModules.default
         inputs.nur.nixosModules.nur
         overlayModule
 
