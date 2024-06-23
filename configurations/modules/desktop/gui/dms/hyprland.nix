@@ -25,7 +25,7 @@
     udiskie
     xfce.thunar
     xfce.ristretto
-    blueberry
+    blueman
     cliphist
   ];
 
