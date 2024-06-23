@@ -48,6 +48,7 @@
       };
       DisplayBookmarksToolbar = "never";
       DisablePocket = true;
+      Homepage.StartPage = "previous-session";
       Preferences = {
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "media.ffmpeg.vaapi.enabled" = true;
