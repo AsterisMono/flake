@@ -50,6 +50,12 @@ in
       set PAGER bat
 
       any-nix-shell fish --info-right | source
+
+      if set -q FISH_FORK_PWD_HINT
+        if test (string match -r '^/' $FISH_FORK_PWD_HINT)
+          cd $FISH_FORK_PWD_HINT
+        end
+      end
     '';
     shellAliases = {
       ".." = "cd ../";
@@ -59,6 +65,11 @@ in
       "ll" = "eza -al";
       "cat" = "bat";
       "icat" = "kitten icat";
+    };
+    functions = {
+      fish_title = {
+        body = "echo $(pwd)";
+      };
     };
   };
 
@@ -118,4 +129,6 @@ in
       theme_background = false;
     };
   };
+
+  programs.jq.enable = true;
 }
