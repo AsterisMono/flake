@@ -22,6 +22,11 @@
     lxqt.lxqt-policykit
     wl-clipboard
     pavucontrol
+    udiskie
+    xfce.thunar
+    xfce.ristretto
+    blueberry
+    cliphist
   ];
 
   services.greetd = {
