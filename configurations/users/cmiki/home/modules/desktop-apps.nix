@@ -64,6 +64,7 @@
         "gfx.webrender.all" = true;
         "browser.newtabpage.activity-stream.feeds.topsites" = false;
       };
+      RequestedLocales = "zh-cn,zh,zh-tw,zh-hk,en-us,en";
     };
     profiles.default = {
       isDefault = true;
