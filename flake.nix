@@ -54,12 +54,7 @@
         devenv.shells.default = {
           packages = with pkgs; [ nixpkgs-fmt nil ];
 
-          pre-commit = {
-            src = ./.;
-            hooks = {
-              nixpkgs-fmt.enable = true;
-            };
-          };
+          pre-commit.hooks.nixpkgs-fmt.enable = true;
         };
       };
     };
