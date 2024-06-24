@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, unstablePkgs, ... }:
 {
   # Desktop Apps
   programs.firefox = {
@@ -94,6 +94,6 @@
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode.fhs;
+    package = unstablePkgs.vscode.fhs;
   };
 }
