@@ -52,7 +52,7 @@
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {
         devenv.shells.default = {
-          packages = with pkgs; [ nixpkgs-fmt nil ];
+          packages = with pkgs; [ nixpkgs-fmt nil just ];
 
           pre-commit.hooks.nixpkgs-fmt.enable = true;
         };
