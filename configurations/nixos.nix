@@ -7,7 +7,7 @@ let
   desktopModules = [
     ./modules/desktop/gui
     ./modules/desktop/hardware/bluetooth.nix
-    ./modules/desktop/shell-packages.nix
+    ./modules/desktop/packages-services.nix
     ./modules/desktop/sudo-nopasswd.nix
     ./modules/desktop/proxy/mihomo.nix
   ];
