@@ -27,6 +27,7 @@
     xfce.ristretto
     blueman
     cliphist
+    libsecret
   ];
 
   services.greetd = {
@@ -38,5 +39,7 @@
       };
     };
   };
+
+  services.gnome.gnome-keyring.enable = true;
 
 }

@@ -22,7 +22,13 @@ let
     ];
   };
 
-  getHomeManagerModule = isDesktop:
+  getUnstablePkgs = system:
+    import inputs.nixpkgs-unstable {
+      inherit system;
+      config.allowUnfree = true;
+    };
+
+  getHomeManagerModule = system: isDesktop:
     if isDesktop then [
       inputs.home-manager.nixosModules.home-manager
       {
@@ -30,6 +36,7 @@ let
         home-manager.useUserPackages = true;
         home-manager.extraSpecialArgs = {
           flake = inputs.self;
+          unstablePkgs = getUnstablePkgs system;
           inherit isDesktop;
         };
       }
@@ -47,12 +54,8 @@ let
       specialArgs = {
         inherit isDesktop arch flake;
         inherit (inputs) secrets;
+        unstablePkgs = getUnstablePkgs system;
         isLinux = true;
-        # Roll unstable software with pkgs-unstable
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          inherit system;
-          config.allowUnfree = true;
-        };
       };
 
       modules = [
@@ -65,7 +68,7 @@ let
         ++ (if isDesktop then desktopModules else serverModules)
         ++ (if diskoEnabled then [ inputs.disko.nixosModules.disko ] else [])
         ++ (if dmModule != "" then [ ./modules/desktop/gui/dms/${dmModule}.nix ] else [])
-        ++ getHomeManagerModule isDesktop
+        ++ getHomeManagerModule system isDesktop
         ++ extraModules
         ++ (map (u: ./users/${u}) users);
     };
