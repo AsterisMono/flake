@@ -2,7 +2,6 @@
 let
   extraPackages = with pkgs;[
     lua-language-server
-    nil
     nodejs_20
     any-nix-shell
     fastfetch
