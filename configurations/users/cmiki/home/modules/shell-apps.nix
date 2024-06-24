@@ -132,4 +132,8 @@ in
   };
 
   programs.jq.enable = true;
+
+  programs.direnv = {
+    enable = true;
+  };
 }
