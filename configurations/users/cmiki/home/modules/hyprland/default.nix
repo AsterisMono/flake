@@ -27,10 +27,19 @@ in
   };
 
   programs.wofi = {
-    enable = true;
+    enable = hyprlandEnabled;
     settings = {
       no_actions = true;
     };
     style = builtins.readFile ./wofi.css;
+  };
+
+  services.mako = {
+    enable = hyprlandEnabled;
+    font = "Torus 10";
+    backgroundColor = "#E66868";
+    textColor = "#F3EAD3";
+    borderSize = 0;
+    padding = "10";
   };
 }
