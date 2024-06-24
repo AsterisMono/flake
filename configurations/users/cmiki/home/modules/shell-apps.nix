@@ -7,6 +7,7 @@ let
     any-nix-shell
     fastfetch
     devenv
+    tldr
   ];
 in
 {
