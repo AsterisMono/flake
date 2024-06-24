@@ -1,9 +1,9 @@
-{ isDesktop, flake, ... }: 
+{ isDesktop, flake, ... }:
 let
   specialModules = [
     flake.inputs.nix-index-database.hmModules.nix-index
   ];
-  modules = ( flake.lib.collectFiles ./modules ) ++ specialModules;
+  modules = (flake.lib.collectFiles ./modules) ++ specialModules;
 in
 {
   imports = modules;

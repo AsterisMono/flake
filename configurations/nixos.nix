@@ -40,39 +40,39 @@ let
           inherit isDesktop;
         };
       }
-    ] else [];
+    ] else [ ];
 
-  mkLinux = { name, isDesktop ? false, arch ? "x86_64", diskoEnabled ? false, dmModule ? "", extraModules ? [ ], users }: 
-  let
-    system = "${arch}-linux";
-  in
-  {
-    inherit name;
-    value = inputs.nixpkgs.lib.nixosSystem {
-      inherit system;
+  mkLinux = { name, isDesktop ? false, arch ? "x86_64", diskoEnabled ? false, dmModule ? "", extraModules ? [ ], users }:
+    let
+      system = "${arch}-linux";
+    in
+    {
+      inherit name;
+      value = inputs.nixpkgs.lib.nixosSystem {
+        inherit system;
 
-      specialArgs = {
-        inherit isDesktop arch flake;
-        inherit (inputs) secrets;
-        unstablePkgs = getUnstablePkgs system;
-        isLinux = true;
-      };
+        specialArgs = {
+          inherit isDesktop arch flake;
+          inherit (inputs) secrets;
+          unstablePkgs = getUnstablePkgs system;
+          isLinux = true;
+        };
 
-      modules = [
-        ./modules/hardwares/${name}.nix
-        inputs.nur.nixosModules.nur
-        overlayModule
+        modules = [
+          ./modules/hardwares/${name}.nix
+          inputs.nur.nixosModules.nur
+          overlayModule
 
-        { networking.hostName = name; }
-      ] ++ commonModules
+          { networking.hostName = name; }
+        ] ++ commonModules
         ++ (if isDesktop then desktopModules else serverModules)
-        ++ (if diskoEnabled then [ inputs.disko.nixosModules.disko ] else [])
-        ++ (if dmModule != "" then [ ./modules/desktop/gui/dms/${dmModule}.nix ] else [])
+        ++ (if diskoEnabled then [ inputs.disko.nixosModules.disko ] else [ ])
+        ++ (if dmModule != "" then [ ./modules/desktop/gui/dms/${dmModule}.nix ] else [ ])
         ++ getHomeManagerModule system isDesktop
         ++ extraModules
         ++ (map (u: ./users/${u}) users);
+      };
     };
-  };
 in
 {
   configs = builtins.listToAttrs (map mkLinux [

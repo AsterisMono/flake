@@ -16,7 +16,7 @@ in
   programs.kitty = {
     enable = true;
     shellIntegration = {
-      enableFishIntegration = true; 
+      enableFishIntegration = true;
       mode = "no-cursor";
     };
     settings = {
@@ -29,7 +29,7 @@ in
     };
     extraConfig = builtins.readFile ./kitty/everforest.conf;
   };
-  
+
   # Command-line Apps
   programs.starship = {
     enable = true;

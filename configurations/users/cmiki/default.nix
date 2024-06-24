@@ -11,5 +11,5 @@
   };
 
   # Only use home-manager on desktop
-  imports = if isDesktop then [ ./home-manager.nix ] else [];
+  imports = if isDesktop then [ ./home-manager.nix ] else [ ];
 }

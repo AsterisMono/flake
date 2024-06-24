@@ -1,4 +1,4 @@
-{ config, pkgs, lib,  ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.xserver = {
@@ -30,7 +30,12 @@
     eolie
     gnome-photos
   ]) ++ (with pkgs.gnome; [
-    epiphany tali iagno hitori atomix gnome-music
+    epiphany
+    tali
+    iagno
+    hitori
+    atomix
+    gnome-music
   ]);
 
   programs.xwayland.enable = true;
