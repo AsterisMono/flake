@@ -77,6 +77,7 @@
           display: none;
         }
       '';
+      search.default = "Google";
       search.engines = {
         "Nix Packages" = {
           urls = [{
