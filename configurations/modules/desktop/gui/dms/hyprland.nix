@@ -42,4 +42,6 @@
 
   services.gnome.gnome-keyring.enable = true;
 
+  services.tumbler.enable = true;
+
 }
