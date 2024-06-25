@@ -88,7 +88,7 @@
         };
         backlight = {
           # "device" = "acpi_video1";
-          format = "{percent}% ";
+          format = "{percent}% ";
           format-icons = [ ];
         };
         battery = {
