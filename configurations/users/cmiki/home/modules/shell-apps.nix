@@ -65,6 +65,7 @@ in
       "ll" = "eza -al";
       "cat" = "bat";
       "icat" = "kitten icat";
+      "tree" = "eza --tree";
     };
     functions = {
       fish_title = {
