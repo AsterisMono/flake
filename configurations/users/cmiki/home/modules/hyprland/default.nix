@@ -1,4 +1,4 @@
-{ osConfig, pkgs, ... }:
+{ osConfig, ... }:
 let
   hyprlandEnabled = osConfig.programs.hyprland.enable;
 in
