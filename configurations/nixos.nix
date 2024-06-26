@@ -89,5 +89,17 @@ in
         "cmiki"
       ];
     }
+    {
+      name = "celestia";
+      isDesktop = true;
+      diskoEnabled = false;
+      dmModule = "hyprland";
+      extraModules = [
+        ./modules/desktop/hardware/intel-graphics.nix
+      ];
+      users = [
+        "cmiki"
+      ];
+    }
   ]);
 }
