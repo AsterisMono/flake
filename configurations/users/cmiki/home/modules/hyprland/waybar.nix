@@ -11,7 +11,9 @@
         #"width" = 1920; # Waybar width
         spacing = 4; # Gaps between modules (4px)
         # Choose the order of the modules
-        modules-left = [ ];
+        modules-left = [
+          "hyprland/workspaces"
+        ];
         modules-center = [ ];
         modules-right = [
           "network"
@@ -21,21 +23,21 @@
           "clock"
         ];
         # Modules configuration
-        # "sway/workspaces" = {
-        #     "disable-scroll" = true;
-        #     "all-outputs" = true;
-        #     "format" = "{name} = {icon}";
-        #     "format-icons" = {
-        #         "1" = "";
-        #         "2" = "";
-        #         "3" = "";
-        #         "4" = "";
-        #         "5" = "";
-        #         "urgent" = "";
-        #         "focused" = "";
-        #         "default" = ""
-        #     }
-        # };
+        "hyprland/workspaces" = {
+          disable-scroll = true;
+          all-outputs = true;
+          format = "{name} {windows}";
+          format-window-separator = " ";
+          window-rewrite-default = "";
+          window-rewrite = {
+            "title<.*youtube.*>" = "";
+            "class<firefox>" = "";
+            "class<firefox> title<.*github.*>" = "";
+            "class<firefox> title<.*slack.*>" = "";
+            "class<kitty>" = "";
+            "code" = "󰨞";
+          };
+        };
         keyboard-state = {
           numlock = true;
           capslock = true;
@@ -105,10 +107,9 @@
           # "format-full" = "";
           format-icons = [ "" "" "" "" "" ];
         };
-        "battery#bat2" = { bat = "BAT2"; };
         network = {
           # "interface" = "wlp2*"; # (Optional) To force the use of this interface
-          format-wifi = "    {essid} ({signalStrength}%)";
+          format-wifi = " {essid} ({signalStrength}%)";
           format-ethernet = "󰈀 {ipaddr}/{cidr}";
           tooltip-format = "{ifname} via {gwaddr} 󰈀";
           format-linked = "󰈀 {ifname} (No IP)";
@@ -118,7 +119,7 @@
         };
         pulseaudio = {
           # "scroll-step" = 1; # %; can be a float
-          format = "{volume}% {icon} ";
+          format = "{volume}% {icon}";
           format-bluetooth = "{volume}% {icon}";
           format-bluetooth-muted = "󰆪 {icon}";
           format-muted = "󰆪 {format_source}";
@@ -131,22 +132,29 @@
             phone = "";
             portable = "";
             car = "";
-            default = "";
+            default = [
+              ""
+              ""
+              ""
+            ];
           };
           on-click = "pavucontrol";
         };
-        "custom/media" = {
-          format = "{icon} {}";
-          return-type = "json";
-          max-length = 40;
-          format-icons = {
-            spotify = "";
-            default = "🎜";
-          };
-          escape = true;
-          exec =
-            "$HOME/.config/waybar/mediaplayer.py 2> /dev/null"; # Script in resources folder
-          # "exec" = "$HOME/.config/waybar/mediaplayer.py --player spotify 2> /dev/null" # Filter player based on name
+      };
+      memory = {
+        format = "{percentage}%";
+        interval = 10;
+        states = {
+          warning = 75;
+          critical = 90;
+        };
+      };
+      cpu = {
+        format = "{usage}%";
+        interval = 10;
+        states = {
+          warning = 75;
+          critical = 90;
         };
       };
     };
