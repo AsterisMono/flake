@@ -1,7 +1,7 @@
 * {
   border: none;
   border-radius: 0;
-  font-family: Torus;
+  font-family: Torus, "Font Awesome 6 Free", "Font Awesome 5 Free", "Font Awesome";
   font-size: 15px;
   min-height: 0;
 }
@@ -16,26 +16,65 @@
 #pulseaudio,
 #network,
 #language,
-#backlight {
+#backlight,
+#workspaces,
+#cpu,
+#memory {
   background-color: rgba(46, 52, 64, 0.7);
-  padding: 5px 10px;
   margin: 5px 0px;
+  padding: 6px 12px;
   color: #9DA9A0;
 }
 
+#battery.critical {
+  background-color: #E67E80;
+  color: #2D353B;
+}
 
-#custom-power {
-  border-radius: 5px;
-  margin-right: 10px;
-  margin-top: 5px;
-  margin-bottom: 5px;
-  margin-left: 0px;
-  padding: 5px 10px;
+#workspaces {
+  margin: 5px 0px;
+  padding: 0;
+}
+
+#workspaces button:hover {
+  box-shadow: inherit;
+  text-shadow: inherit;
+}
+
+#workspaces button.active {
+  background-color: #A7C080;
+  color: #2D353B;
+}
+
+#workspaces button.urgent {
+  background-color: #DBBC7F;
+}
+
+#workspaces button.active:first-child:last-child {
+  border-radius: 5px 5px 5px 5px;
+}
+
+#workspaces button.active:first-child {
+  border-radius: 5px 0px 0px 5px;
+}
+
+#workspaces button.active:last-child {
+  border-radius: 0px 5px 5px 0px;
+}
+
+#workspaces button {
+  color: #9DA9A0;
+  padding: 6px 16px;
 }
 
 #clock {
   border-radius: 0px 5px 5px 0px;
   margin-right: 10px;
+}
+
+#workspaces {
+  border-radius: 5px 5px 5px 5px;
+  margin-left: 10px;
 }
 
 #network {
