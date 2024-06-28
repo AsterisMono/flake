@@ -40,7 +40,7 @@
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
   hardware.nvidia.prime = {
-    reverseSync.enable = true;
+    sync.enable = true;
 
     # Make sure to use the correct Bus ID values for your system!
     nvidiaBusId = "PCI:1:0:0";

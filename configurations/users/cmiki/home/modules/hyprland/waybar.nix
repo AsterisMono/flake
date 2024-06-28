@@ -32,6 +32,7 @@
           window-rewrite = {
             "title<.*youtube.*>" = "";
             "class<firefox>" = "";
+            "class<chromium-browser>" = "";
             "class<firefox> title<.*github.*>" = "";
             "class<firefox> title<.*slack.*>" = "";
             "class<kitty>" = "";
