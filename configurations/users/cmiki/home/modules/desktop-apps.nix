@@ -1,5 +1,12 @@
 { pkgs, unstablePkgs, ... }:
+let
+  extraPackages = with pkgs;[
+    dbeaver-bin
+  ];
+in
 {
+  home.packages = extraPackages;
+
   # Desktop Apps
   programs.firefox = {
     enable = true;
