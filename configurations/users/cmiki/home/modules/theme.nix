@@ -1,7 +1,7 @@
 { pkgs, osConfig, ... }:
 let
-  cursorPackage = pkgs.numix-cursor-theme;
-  cursorThemeName = "Numix-Cursor";
+  cursorPackage = pkgs.capitaine-cursors;
+  cursorThemeName = "capitaine-cursors-white";
   cursorSize = 32;
 in
 {
@@ -20,14 +20,19 @@ in
     enable = true;
 
     iconTheme = {
-      name = "Vimix-Jade";
-      package = pkgs.vimix-icon-theme;
+      name = "breeze";
+      package = pkgs.kdePackages.breeze-icons;
     };
 
     cursorTheme = {
       name = cursorThemeName;
       package = cursorPackage;
       size = cursorSize;
+    };
+
+    theme = {
+      name = "Breeze";
+      package = pkgs.kdePackages.breeze-gtk;
     };
   };
 
