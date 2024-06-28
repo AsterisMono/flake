@@ -1,4 +1,4 @@
-{ osConfig, ... }:
+{ osConfig, pkgs, ... }:
 let
   hyprlandEnabled = osConfig.programs.hyprland.enable;
 in
@@ -9,6 +9,14 @@ in
 
   wayland.windowManager.hyprland = {
     enable = hyprlandEnabled;
+    settings = pkgs.lib.mkIf (osConfig.hardware.nvidia.modesetting.enable == true) {
+      env = [
+        "LIBVA_DRIVER_NAME,nvidia"
+        "XDG_SESSION_TYPE,wayland"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+      ];
+    };
     extraConfig = builtins.readFile ./hyprland.conf;
   };
 
