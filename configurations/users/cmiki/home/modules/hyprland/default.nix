@@ -5,10 +5,11 @@ in
 {
   imports = [
     ./waybar.nix
+    ./hyprland-theme.nix
   ];
 
   wayland.windowManager.hyprland = {
-    enable = hyprlandEnabled;
+    enable = true;
     settings = pkgs.lib.mkIf (osConfig.hardware.nvidia.modesetting.enable == true) {
       env = [
         "LIBVA_DRIVER_NAME,nvidia"
@@ -21,7 +22,7 @@ in
   };
 
   services.hyprpaper = {
-    enable = hyprlandEnabled;
+    enable = true;
     settings = {
       splash = false;
       preload = [
@@ -35,7 +36,7 @@ in
   };
 
   programs.wofi = {
-    enable = hyprlandEnabled;
+    enable = true;
     settings = {
       no_actions = true;
     };
@@ -43,7 +44,7 @@ in
   };
 
   services.mako = {
-    enable = hyprlandEnabled;
+    enable = true;
     font = "Torus 10";
     backgroundColor = "#E66868";
     textColor = "#F3EAD3";
