@@ -83,7 +83,7 @@ in
       dmModule = "hyprland";
       extraModules = [
         ./modules/desktop/hardware/amdgpu.nix
-        # ./modules/extra/distrobox.nix
+        ./modules/desktop/docker.nix
       ];
       users = [
         "cmiki"
