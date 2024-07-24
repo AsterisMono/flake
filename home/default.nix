@@ -1,18 +1,14 @@
 { flake, ... }:
-let
-  specialModules = [
-    flake.inputs.nix-index-database.hmModules.nix-index
-  ];
-  modules = [
+
+{
+  imports = [
     ./modules/shell-apps.nix
     ./modules/git.nix
     ./modules/desktop-apps.nix
     ./modules/kitty
     ./modules/hyprland
-  ] ++ specialModules;
-in
-{
-  imports = modules;
+    flake.inputs.nix-index-database.hmModules.nix-index
+  ];
 
   programs.home-manager.enable = true;
 
