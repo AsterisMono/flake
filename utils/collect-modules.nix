@@ -11,11 +11,11 @@ let
   # Collects all files of a directory as a list of strings of paths
   files = dir: lib.collect lib.isString (lib.mapAttrsRecursive (path: type: lib.concatStringsSep "/" path) (getDir dir));
 
-  # Filters out directories that don't end with .nix or are this file, also makes the strings absolute
+  # Makes the strings absolute
   validFiles = dir: map
     (file: dir + "/${file}")
-    (lib.filter
-      (file: lib.hasSuffix ".nix" file && file != "default.nix")
-      (files dir));
+    (files dir);
 in
-path: validFiles path
+path: {
+  imports = validFiles path;
+}

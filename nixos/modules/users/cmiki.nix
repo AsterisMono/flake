@@ -1,4 +1,6 @@
 { flake, pkgs, isDesktop, ... }:
+
+with pkgs.lib;
 {
   users.users.cmiki = {
     isNormalUser = true;
@@ -11,5 +13,8 @@
   };
 
   # Only use home-manager on desktop
-  imports = if isDesktop then [ ./home-manager.nix ] else [ ];
+  home-manager = mkIf isDesktop {
+    users.cmiki.imports = [ ./home ];
+    backupFileExtension = ".bak";
+  };
 }
