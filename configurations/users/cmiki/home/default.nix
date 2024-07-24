@@ -1,6 +1,5 @@
-{ isDesktop, flake, osConfig, ... }:
+{ flake, ... }:
 let
-  hyprlandEnabled = osConfig.programs.hyprland.enable;
   specialModules = [
     flake.inputs.nix-index-database.hmModules.nix-index
   ];
@@ -9,8 +8,8 @@ let
     ./modules/git.nix
     ./modules/desktop-apps.nix
     ./modules/kitty
-  ] ++ specialModules
-  ++ (if hyprlandEnabled then [ ./modules/hyprland ] else [ ]);
+    ./modules/hyprland
+  ] ++ specialModules;
 in
 {
   imports = modules;
