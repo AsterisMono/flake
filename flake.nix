@@ -4,13 +4,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nix-darwin = {
-      url = "github:lnl7/nix-darwin/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nur.url = "github:nix-community/NUR";
     devenv.url = "github:cachix/devenv";
-    nixos-flake.url = "github:srid/nixos-flake";
     flake-parts.url = "github:hercules-ci/flake-parts";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -43,49 +38,15 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
       imports = [
-        inputs.nixos-flake.flakeModule
         inputs.devenv.flakeModule
       ];
 
       flake =
-        let
-          username = "cmiki";
-          nixos = import ./configurations/nixos.nix inputs;
-        in
         {
           lib = {
-            collectModules = import ./utils/collect-modules.nix inputs.nixpkgs.lib;
+            collectFiles = import ./utils/collect-files.nix inputs.nixpkgs.lib;
           };
-          nixosConfigurations = nixos.configs;
-          darwinConfigurations = {
-            momoka = self.nixos-flake.lib.mkMacosSystem {
-              nixpkgs.hostPlatform = "aarch64-darwin";
-              imports = [
-                # self.nixosModules.darwin
-                ({ pkgs, ... }: {
-                  # Used for backwards compatibility, please read the changelog before changing.
-                  # $ darwin-rebuild changelog
-                  system.stateVersion = 4;
-                })
-                self.darwinModules_.home-manager
-                {
-                  home-manager.users.${username} = {
-                    imports = [
-                      # self.homeModules.common
-                      # self.homeModules.darwin
-                    ];
-                    home.stateVersion = "22.11"; # TODO
-                  };
-                }
-              ];
-            };
-          };
-          nixosModules = self.lib.collectModules ./nixos/modules;
-          homeModules = {
-            common = self.lib.collectModules ./homeModules/common;
-            linux = self.lib.collectModules ./homeModules/linux;
-            darwin = self.lib.collectModules ./homeModules/darwin;
-          };
+          nixosConfigurations = import ./configurations self;
         };
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {
