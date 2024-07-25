@@ -81,7 +81,11 @@
             };
           };
           nixosModules = self.lib.collectModules ./nixos/modules;
-          homeModules = self.lib.collectModules ./home/modules;
+          homeModules = {
+            common = self.lib.collectModules ./homeModules/common;
+            linux = self.lib.collectModules ./homeModules/linux;
+            darwin = self.lib.collectModules ./homeModules/darwin;
+          };
         };
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {
