@@ -1,4 +1,4 @@
-{ flake, config, pkgs, lib, ... }:
+{ secrets, ... }:
 let
   clashProxy = "http://127.0.0.1:7890";
 in
@@ -6,7 +6,7 @@ in
   services.mihomo = {
     enable = true;
     tunMode = true;
-    configFile = "${flake.inputs.secrets}/mihomoConfig.yaml";
+    configFile = "${secrets}/mihomoConfig.yaml";
   };
   # iptables based firewall needs to be disabled
   # NixOS employs firewall by default
