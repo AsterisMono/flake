@@ -39,15 +39,6 @@
           installation_mode = "force_installed";
           default_area = "menupanel";
         };
-        "{c581cdce-8e60-44fd-809b-41da097b04eb}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/everforest-medium-dark/latest.xpi";
-          installation_mode = "force_installed";
-        };
-        "addon@darkreader.org" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/darkreader/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
       };
       DisplayBookmarksToolbar = "never";
       DisablePocket = true;
