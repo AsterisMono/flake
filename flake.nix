@@ -44,9 +44,16 @@
       flake =
         {
           lib = {
-            collectFiles = import ./utils/collect-files.nix inputs.nixpkgs.lib;
+            bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
           };
           nixosConfigurations = import ./configurations self;
+          nixosModules = {
+            common = self.lib.bundleModules ./nixosModules/common;
+            desktop = self.lib.bundleModules ./nixosModules/desktop;
+            server = self.lib.bundleModules ./nixosModules/server;
+          };
+          homeModules.home = self.lib.bundleModules ./homeModules;
+          overlays.amono-nur = import ./overlays/amono-nur.nix inputs;
         };
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {

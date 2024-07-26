@@ -18,4 +18,6 @@ let
       (file: lib.hasSuffix ".nix" file && file != "default.nix")
       (files dir));
 in
-path: validFiles path
+path: {
+  imports = validFiles path;
+}
