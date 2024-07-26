@@ -1,28 +1,30 @@
 flake:
 let
-  unstablePkgs = import flake.inputs.nixpkgs-unstable {
-    system = "x86_64-linux";
-    config.allowUnfree = true;
-  };
-  specialArgs = {
-    inherit flake unstablePkgs;
-    inherit (flake.inputs) secrets;
-  };
-  homeModule = {
-    home-manager = {
-      users.cmiki.imports = [ flake.homeModules.home ];
-      useGlobalPkgs = true;
-      useUserPackages = true;
-      backupFileExtension = ".bak";
-      extraSpecialArgs = specialArgs;
-    };
-  };
-  mkLinux = { name, customConfig ? { }, extraModules ? [ ], type ? "desktop" }:
+  mkLinux = { name, system ? "x86_64-linux", type ? "desktop", customConfig ? { }, extraModules ? [ ] }:
+    let
+      unstablePkgs = import flake.inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+      specialArgs = {
+        inherit flake system;
+        inherit (flake.inputs) secrets;
+        unstablePkgs = unstablePkgs;
+      };
+      homeModule = {
+        home-manager = {
+          users.cmiki.imports = [ flake.homeModules.home ];
+          useGlobalPkgs = true;
+          useUserPackages = true;
+          backupFileExtension = ".bak";
+          extraSpecialArgs = specialArgs;
+        };
+      };
+    in
     {
       inherit name;
       value = flake.inputs.nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        inherit specialArgs;
+        inherit specialArgs system;
         modules = [
           ./hardwares/${name}.nix
           ../nixosModules/users/cmiki.nix

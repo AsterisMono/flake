@@ -53,14 +53,19 @@
             server = self.lib.bundleModules ./nixosModules/server;
           };
           homeModules.home = self.lib.bundleModules ./homeModules;
-          overlays.amono-nur = import ./overlays/amono-nur.nix inputs;
+          overlays = {
+            amono-nur = import ./overlays/amono-nur.nix inputs;
+            flake-packages = import ./overlays/flake-packages.nix self;
+          };
         };
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {
         devenv.shells.default = {
           packages = with pkgs; [ nixpkgs-fmt nil just ];
-
           pre-commit.hooks.nixpkgs-fmt.enable = true;
+        };
+        packages = {
+          torus-font = pkgs.callPackage ./packages/torus.nix { };
         };
       };
     };
