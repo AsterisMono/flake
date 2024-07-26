@@ -1,8 +1,4 @@
-{ config, pkgs, lib, ... }:
-let
-  # FIXME: flake reference
-  torus-font = pkgs.callPackage ../../../packages/torus.nix { };
-in
+{ pkgs, ... }:
 {
   fonts = {
     fontDir.enable = true;
@@ -27,7 +23,7 @@ in
       font-awesome
       font-awesome_5
       font-awesome_4
-      torus-font
+      flakePackages.torus-font
     ]);
     enableGhostscriptFonts = true;
     enableDefaultPackages = true;
