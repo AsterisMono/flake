@@ -1,5 +1,4 @@
 flake:
-# home manager modules and nixos modules implictly receive specialArgs: flake.
 let
   nixosModules = flake.lib.collectFiles ../nixosModules;
   homeModules = flake.lib.collectFiles ../homeModules;
@@ -7,16 +6,17 @@ let
     system = "x86_64-linux";
     config.allowUnfree = true;
   };
+  specialArgs = {
+    inherit flake unstablePkgs;
+    inherit (flake.inputs) secrets;
+  };
   homeModule = {
     home-manager = {
       users.cmiki.imports = homeModules;
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = ".bak";
-      extraSpecialArgs = {
-        inherit flake unstablePkgs;
-        inherit (flake.inputs) secrets;
-      };
+      extraSpecialArgs = specialArgs;
     };
   };
   mkLinux = { name, customConfig ? { }, extraModules ? [ ] }:
@@ -24,10 +24,7 @@ let
       inherit name;
       value = flake.inputs.nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        specialArgs = {
-          inherit flake unstablePkgs;
-          inherit (flake.inputs) secrets;
-        };
+        inherit specialArgs;
         modules = [
           ./hardwares/${name}.nix
           flake.inputs.nur.nixosModules.nur
