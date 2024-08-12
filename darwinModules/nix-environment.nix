@@ -23,12 +23,10 @@
   nixpkgs.config.allowUnfree = true;
 
   # do garbage collection weekly to keep disk usage low
-  # TODO: Fix this
-  # nix.gc = {
-  #   automatic = true;
-  #   dates = "weekly";
-  #   options = "--delete-older-than 1w";
-  # };
+  nix = {
+    gc.automatic = true;
+    optimise.automatic = true;
+  };
 
   nix.useDaemon = true;
 
