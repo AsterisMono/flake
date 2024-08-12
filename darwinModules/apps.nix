@@ -31,7 +31,12 @@
     onActivation = {
       autoUpdate = true;
       # 'zap': uninstalls all formulae(and related files) not listed here.
-      # cleanup = "zap";
+      cleanup = "zap";
+      upgrade = true;
+    };
+
+    masApps = {
+      TencentMeeting = 1484048379;
     };
 
     taps = [
@@ -47,6 +52,8 @@
     casks = [
       "google-chrome"
       "iterm2"
+      "arc"
+      "orbstack"
     ];
   };
 }
