@@ -6,4 +6,9 @@
     stateVersion = "24.05";
     homeDirectory = "/home/${username}";
   };
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+  };
 }
