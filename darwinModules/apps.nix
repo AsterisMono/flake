@@ -54,6 +54,7 @@
       "iterm2"
       "arc"
       "orbstack"
+      "font-fira-code-nerd-font"
     ];
   };
 }
