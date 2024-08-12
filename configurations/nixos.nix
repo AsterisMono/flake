@@ -45,7 +45,7 @@ let
 in
 builtins.listToAttrs (map mkLinux [
   {
-    name = "luminara";
+    hostname = "luminara";
     customConfig = {
       desktop = {
         suite = "hyprland";
@@ -54,7 +54,7 @@ builtins.listToAttrs (map mkLinux [
     };
   }
   {
-    name = "celestia";
+    hostname = "celestia";
     customConfig = {
       desktop = {
         suite = "plasma";
