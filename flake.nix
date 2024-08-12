@@ -19,7 +19,7 @@
       url = "github:AsterisMono/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager = {
+    home-manager-nixos = {
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -30,6 +30,15 @@
     secrets = {
       url = "git+https://github.com/AsterisMono/secrets";
       flake = false;
+    };
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+    home-manager-darwin = {
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
   };
 
@@ -46,13 +55,19 @@
           lib = {
             bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
           };
-          nixosConfigurations = import ./configurations self;
+          nixosConfigurations = import ./configurations/nixos.nix self;
+          darwinConfigurations = import ./configurations/darwin.nix self;
           nixosModules = {
             common = self.lib.bundleModules ./nixosModules/common;
             desktop = self.lib.bundleModules ./nixosModules/desktop;
             server = self.lib.bundleModules ./nixosModules/server;
           };
-          homeModules.home = self.lib.bundleModules ./homeModules;
+          darwinModules.darwin = self.lib.bundleModules ./darwinModules;
+          homeModules = {
+            common = self.lib.bundleModules ./homeModules/common;
+            darwin = self.lib.bundleModules ./homeModules/darwin;
+            nixos = self.lib.bundleModules ./homeModules/nixos;
+          };
           overlays = {
             amono-nur = import ./overlays/amono-nur.nix inputs;
             flake-packages = import ./overlays/flake-packages.nix self;

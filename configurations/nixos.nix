@@ -13,7 +13,18 @@ let
       };
       homeModule = {
         home-manager = {
-          users.cmiki.imports = [ flake.homeModules.home ];
+          users.cmiki.imports = [
+            flake.homeModules.common
+            flake.homeModules.nixos
+            {
+              home = {
+                username = "cmiki";
+                language.base = "zh_CN.UTF-8";
+                stateVersion = "24.05";
+                homeDirectory = "/home/cmiki";
+              };
+            }
+          ];
           useGlobalPkgs = true;
           useUserPackages = true;
           backupFileExtension = ".bak";
@@ -32,7 +43,7 @@ let
           flake.nixosModules.${type}
           flake.inputs.nur.nixosModules.nur
           flake.inputs.disko.nixosModules.disko
-          flake.inputs.home-manager.nixosModules.home-manager
+          flake.inputs.home-manager-nixos.nixosModules.home-manager
           homeModule
           { networking.hostName = name; }
           { config.amono = customConfig; }

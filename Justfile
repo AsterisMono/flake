@@ -16,6 +16,12 @@ history:
 force-deploy:
 	nixos-rebuild switch --flake . --use-remote-sudo --option eval-cache false
 
+darwin-bootstrap:
+	nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake .
+
+darwin-deploy:
+	darwin-rebuild switch --flake .
+
 gc:
 	# remove all generations older than 7 days
 	sudo nix profile wipe-history --profile /nix/var/nix/profiles/system  --older-than 7d
