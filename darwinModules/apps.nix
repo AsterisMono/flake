@@ -50,11 +50,26 @@
 
     # `brew install --cask`
     casks = [
+      "visual-studio-code"
+      "cursor"
       "google-chrome"
       "iterm2"
       "arc"
       "orbstack"
       "font-fira-code-nerd-font"
+      "alt-tab"
+      "maccy"
+      "shottr"
+      "raycast"
+      "dbeaver-community"
+      "hiddenbar"
+      "rectangle"
+      "onedrive"
+      "insomnia"
+      "stats"
+      "typora"
+      "insomnia"
+      "1password"
     ];
   };
 }

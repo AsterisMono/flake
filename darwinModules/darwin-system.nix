@@ -10,6 +10,8 @@
 ###################################################################################
 {
 
+  time.timeZone = "Asia/Shanghai";
+
   system = {
     # activationScripts are executed every time you boot the system or run `nixos-rebuild` / `darwin-rebuild`.
     activationScripts.postUserActivation.text = ''
@@ -21,8 +23,22 @@
     defaults = {
       menuExtraClock.Show24Hour = true; # show 24 hour clock
 
-      # other macOS's defaults configuration.
-      # ......
+      dock = {
+        autohide = true;
+        show-recents = false;
+        tilesize = 56;
+      };
+
+      finder = {
+        _FXShowPosixPathInTitle = true; # show full path in finder title
+        AppleShowAllExtensions = true; # show all file extensions
+        FXEnableExtensionChangeWarning = false; # disable warning when changing file extension
+        QuitMenuItem = true; # enable quit menu item
+        ShowPathbar = true; # show path bar
+        ShowStatusBar = true; # show status bar
+      };
+
+      universalaccess.reduceMotion = true;
     };
   };
 
@@ -34,5 +50,7 @@
   programs.zsh.enable = true;
 
   programs.fish.enable = true;
+
+  environment.shells = with pkgs; [ zsh fish ];
 
 }
