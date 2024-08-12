@@ -46,6 +46,11 @@
         InitialKeyRepeat = 25;
       };
     };
+
+    keyboard = {
+      enableKeyMapping = true;
+      swapLeftCtrlAndFn = true;
+    };
   };
 
   # Add ability to used TouchID for sudo authentication
