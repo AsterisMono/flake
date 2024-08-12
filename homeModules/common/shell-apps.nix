@@ -7,6 +7,7 @@ let
     fastfetch
     devenv
     tldr
+    nil
   ];
 in
 {
