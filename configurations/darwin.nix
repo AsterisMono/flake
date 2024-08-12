@@ -10,13 +10,6 @@ let
           users.${username}.imports = [
             flake.homeModules.common
             flake.homeModules.darwin
-            {
-              home = {
-                username = username;
-                homeDirectory = "/Users/${username}";
-                stateVersion = "24.05";
-              };
-            }
           ];
           useGlobalPkgs = true;
           useUserPackages = true;
