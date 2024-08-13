@@ -37,6 +37,9 @@
 
     masApps = {
       TencentMeeting = 1484048379;
+      Wechat = 836500024;
+      NeteaseCloudMusic = 944848654;
+      QQ = 451108668;
     };
 
     taps = [
