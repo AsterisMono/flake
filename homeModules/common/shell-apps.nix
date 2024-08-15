@@ -3,7 +3,7 @@ let
   extraPackages = with pkgs;[
     lua-language-server
     nodejs_20
-    corepack_20
+    yarn
     any-nix-shell
     fastfetch
     devenv
