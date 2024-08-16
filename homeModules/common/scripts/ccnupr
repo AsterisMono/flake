@@ -1,0 +1,65 @@
+#!/bin/bash
+branch=$(git symbolic-ref --short HEAD)
+
+IFS='/' read -ra ADDR <<< "$branch"
+
+jira_key="${ADDR[1]}"
+
+# if the key is empty, prompt the user to check if they are on a wrong branch
+if [ -z "$jira_key" ]; then
+  echo "You are on a wrong branch, please checkout to a branch like 'author/CCNU-123'"
+  exit 1
+fi
+
+echo "Jira issue key: $jira_key"
+
+# Prompt the user to enter a word like "feat" or "fix"
+read -p "Enter the type of change (feat, fix...), or press Enter for 'feat': " type
+
+# If the user entered nothing, choose "feat"
+if [ -z "$type" ]; then
+  type="feat"
+fi
+
+# Ask the user if this issue needs QA verify
+read -p "Does this issue need QA verify? (y/N): " need_qa
+
+# if the user entered nothing, choose "n"
+if [ -z "$need_qa" ]; then
+  need_qa="n"
+fi
+
+# if need, it should be [QA: Verify] else [QA: None]
+# write into a variable called qa_status
+if [ "$need_qa" == "y" ]; then
+  qa_status="Verify"
+else
+  qa_status="None"
+fi
+
+pr_title="${type}:[${jira_key}]"
+pr_content="[QA: ${qa_status}]
+follow:https://ccnu-lab.atlassian.net/browse/${jira_key}"
+
+echo ""
+echo "$pr_title"
+echo "$pr_content" 
+echo ""
+
+# Ask the user if they want to create github pr, use y or n:
+read -p "Create github pr? (y/N): " create_pr
+
+# if the user entered nothing, choose "n"
+if [ -z "$create_pr" ]; then
+  create_pr="n"
+fi
+
+# if create pr, use this command: gh pr create --title "$pr_title" --body "$pr_content"
+if [ "$create_pr" == "y" ]; then
+  gh pr create --title "$pr_title" --body "$pr_content"
+fi
+
+# else print 'aborted'
+if [ "$create_pr" == "n" ]; then
+  echo "aborted"
+fi

@@ -73,6 +73,7 @@
       "typora"
       "insomnia"
       "1password"
+      "chatgpt"
     ];
   };
 }
