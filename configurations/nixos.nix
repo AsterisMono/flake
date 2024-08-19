@@ -55,5 +55,8 @@ builtins.listToAttrs (map mkLinux [
   {
     hostname = "celestia";
     type = "server";
+    customConfig = {
+      server.proxy.enable = true;
+    };
   }
 ])
