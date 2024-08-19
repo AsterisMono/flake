@@ -49,7 +49,8 @@
 
     keyboard = {
       enableKeyMapping = true;
-      swapLeftCtrlAndFn = true;
+      # Skip this when using external keyboard
+      # swapLeftCtrlAndFn = true;
     };
   };
 
