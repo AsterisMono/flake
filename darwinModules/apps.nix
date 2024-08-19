@@ -74,6 +74,7 @@
       "insomnia"
       "1password"
       "chatgpt"
+      "tailscale"
     ];
   };
 }
