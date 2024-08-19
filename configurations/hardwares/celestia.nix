@@ -29,22 +29,18 @@
 
   swapDevices = [ ];
 
-  # Enables DHCP on each ethernet and wireless interface. In case of scripted networking
-  # (the default) this is the recommended approach. When using systemd-networkd it's
-  # still possible to use this option, but it's recommended to use it in conjunction
-  # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
-  networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.eno1.useDHCP = lib.mkDefault true;
+  networking = {
+    useDHCP = false;
+    interfaces.eno1.ipv4 = {
+      addresses = [{ address = "192.168.111.133"; prefixLength = 24; }];
+    };
+    defaultGateway = {
+      address = "192.168.111.1";
+      interface = "eno1";
+    };
+    nameservers = [ "114.114.114.114" ];
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-  hardware.nvidia.prime = {
-    sync.enable = true;
-
-    # Make sure to use the correct Bus ID values for your system!
-    nvidiaBusId = "PCI:1:0:0";
-    intelBusId = "PCI:0:2:0";
-    # amdgpuBusId = "PCI:54:0:0"; For AMD GPU
-  };
 }
