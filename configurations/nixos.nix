@@ -7,7 +7,7 @@ let
         config.allowUnfree = true;
       };
       specialArgs = {
-        inherit flake system hostname username;
+        inherit flake system hostname username type;
         inherit (flake.inputs) secrets;
         unstablePkgs = unstablePkgs;
       };
