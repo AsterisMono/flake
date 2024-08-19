@@ -28,7 +28,7 @@
     optimise.automatic = true;
   };
 
-  nix.useDaemon = true;
+  services.nix-daemon.enable = true;
 
   # Optimise storage
   # you can also optimise the store manually via:
