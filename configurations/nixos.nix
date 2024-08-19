@@ -35,11 +35,10 @@ let
           flake.nixosModules.${type}
           flake.inputs.nur.nixosModules.nur
           flake.inputs.disko.nixosModules.disko
-          flake.inputs.home-manager-nixos.nixosModules.home-manager
-          homeModule
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
-        ] ++ extraModules;
+        ] ++ extraModules
+        ++ (if type == "desktop" then [ flake.inputs.home-manager-nixos.nixosModules.home-manager homeModule ] else [ ]);
       };
     };
 in
@@ -55,11 +54,6 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "celestia";
-    customConfig = {
-      desktop = {
-        suite = "plasma";
-        gpu = "intel";
-      };
-    };
+    type = "server";
   }
 ])
