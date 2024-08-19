@@ -12,4 +12,6 @@
     git.enable = true;
     fish.enable = true;
   };
+
+  users.users.cmiki.shell = lib.mkForce pkgs.bashInteractive;
 }
