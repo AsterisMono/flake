@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # Modern hardware tends to have Bluetooth support.

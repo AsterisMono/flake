@@ -2,7 +2,7 @@
 {
   fonts = {
     fontDir.enable = true;
-    packages = (with pkgs; [
+    packages = with pkgs; [
       (nerdfonts.override {
         fonts = [ "FiraCode" "Hack" "JetBrainsMono" "UbuntuMono" ];
       })
@@ -24,7 +24,7 @@
       font-awesome_5
       font-awesome_4
       flakePackages.torus-font
-    ]);
+    ];
     enableGhostscriptFonts = true;
     enableDefaultPackages = true;
     fontconfig = {
