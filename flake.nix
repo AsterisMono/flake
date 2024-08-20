@@ -5,8 +5,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nur.url = "github:nix-community/NUR";
-    devenv.url = "github:cachix/devenv";
     flake-parts.url = "github:hercules-ci/flake-parts";
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,10 +49,6 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
-      imports = [
-        inputs.devenv.flakeModule
-      ];
-
       flake =
         {
           lib = {
@@ -75,12 +74,19 @@
         };
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {
-        devenv.shells.default = {
-          packages = with pkgs; [ nixpkgs-fmt nil just ];
-          pre-commit.hooks = {
-            nixpkgs-fmt.enable = true;
-            statix.enable = true;
+        checks = {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixpkgs-fmt.enable = true;
+              statix.enable = true;
+            };
           };
+        };
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [ nil just ];
+          inherit (self'.checks.pre-commit-check) shellHook;
+          buildInputs = self'.checks.pre-commit-check.enabledPackages;
         };
         packages = {
           torus-font = pkgs.callPackage ./packages/torus.nix { };
