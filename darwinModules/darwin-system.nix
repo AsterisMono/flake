@@ -27,6 +27,7 @@
         autohide = true;
         show-recents = false;
         tilesize = 56;
+        mineffect = "scale";
       };
 
       finder = {
