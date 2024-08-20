@@ -69,7 +69,8 @@ in
     };
   };
 
-  # Replace command-not-found with nix-index
+  # Replace command-not-found with nix-index and comma
+  programs.nix-index-database.comma.enable = true;
   programs.command-not-found.enable = false;
   programs.nix-index = {
     enable = true;
