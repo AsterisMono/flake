@@ -9,7 +9,7 @@ in
     configFile = "${secrets}/mihomoConfig.yaml";
   };
   networking.proxy = {
-    httpProxy = httpProxy;
+    inherit httpProxy;
     httpsProxy = httpProxy;
     allProxy = socksProxy;
   };

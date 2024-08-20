@@ -7,9 +7,8 @@ let
         config.allowUnfree = true;
       };
       specialArgs = {
-        inherit flake system hostname username type;
+        inherit flake system hostname username type unstablePkgs;
         inherit (flake.inputs) secrets;
-        unstablePkgs = unstablePkgs;
       };
       homeModule = {
         home-manager = {

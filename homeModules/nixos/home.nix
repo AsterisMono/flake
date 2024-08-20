@@ -1,7 +1,7 @@
 { username, ... }:
 {
   home = {
-    username = username;
+    inherit username;
     language.base = "zh_CN.UTF-8";
     stateVersion = "24.05";
     homeDirectory = "/home/${username}";

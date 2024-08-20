@@ -1,7 +1,7 @@
 { username, ... }:
 {
   home = {
-    username = username;
+    inherit username;
     homeDirectory = "/Users/${username}";
     stateVersion = "24.05";
   };
