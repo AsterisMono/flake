@@ -77,7 +77,10 @@
       perSystem = { config, self', inputs', pkgs, system, ... }: {
         devenv.shells.default = {
           packages = with pkgs; [ nixpkgs-fmt nil just ];
-          pre-commit.hooks.nixpkgs-fmt.enable = true;
+          pre-commit.hooks = {
+            nixpkgs-fmt.enable = true;
+            statix.enable = true;
+          };
         };
         packages = {
           torus-font = pkgs.callPackage ./packages/torus.nix { };
