@@ -10,6 +10,7 @@
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    deploy-rs.url = "github:serokell/deploy-rs";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -71,6 +72,18 @@
             amono-nur = import ./overlays/amono-nur.nix inputs;
             flake-packages = import ./overlays/flake-packages.nix self;
           };
+          deploy.nodes = {
+            celestia = {
+              hostname = "celestia";
+              profiles.system = {
+                user = "root";
+                path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.celestia;
+              };
+            };
+          };
+
+          # This is highly advised, and will prevent many possible mistakes
+          checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
         };
 
       perSystem = { config, self', inputs', pkgs, system, ... }: {
@@ -84,7 +97,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ nil just ];
+          packages = with pkgs; [ nil just deploy-rs ];
           inherit (self'.checks.pre-commit-check) shellHook;
           buildInputs = self'.checks.pre-commit-check.enabledPackages;
         };
