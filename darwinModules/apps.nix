@@ -75,6 +75,7 @@
       "1password"
       "chatgpt"
       "tailscale"
+      "firefox"
     ];
   };
 }
