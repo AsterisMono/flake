@@ -71,7 +71,6 @@
       "insomnia"
       "stats"
       "typora"
-      "insomnia"
       "1password"
       "chatgpt"
       "tailscale"
