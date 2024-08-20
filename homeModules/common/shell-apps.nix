@@ -9,7 +9,7 @@ let
     devenv
     tldr
     nil
-    nom # https://github.com/maralorn/nix-output-monitor
+    nix-output-monitor # https://github.com/maralorn/nix-output-monitor
   ];
 in
 {
