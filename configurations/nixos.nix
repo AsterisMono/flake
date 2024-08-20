@@ -16,6 +16,7 @@ let
           users.${username}.imports = [
             flake.homeModules.common
             flake.homeModules.nixos
+            flake.inputs.nix-index-database.hmModules.nix-index
           ];
           useGlobalPkgs = true;
           useUserPackages = true;
