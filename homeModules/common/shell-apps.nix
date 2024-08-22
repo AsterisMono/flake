@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, flake, ... }:
 let
   extraPackages = with pkgs;[
     lua-language-server
@@ -84,6 +84,8 @@ in
     defaultEditor = true;
     vimAlias = true;
   };
+
+  xdg.configFile.nvim.source = flake.inputs.nvim-config;
 
   # Modern unix series
   programs.eza = {
