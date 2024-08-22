@@ -1,7 +1,6 @@
 { pkgs, ... }:
 {
   programs.firefox = {
-    enable = true;
     policies = {
       ExtensionSettings = {
         "uBlock0@raymondhill.net" = {
