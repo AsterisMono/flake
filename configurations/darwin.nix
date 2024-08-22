@@ -5,18 +5,6 @@ let
       specialArgs = {
         inherit flake system hostname username;
       };
-      homeModule = {
-        home-manager = {
-          users.${username}.imports = [
-            flake.homeModules.common
-            flake.homeModules.darwin
-            flake.inputs.nix-index-database.hmModules.nix-index
-          ];
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          extraSpecialArgs = specialArgs;
-        };
-      };
     in
     {
       name = hostname;
@@ -25,7 +13,6 @@ let
         modules = [
           flake.darwinModules.darwin
           flake.inputs.home-manager-darwin.darwinModules.home-manager
-          homeModule
         ] ++ extraModules;
       };
     };

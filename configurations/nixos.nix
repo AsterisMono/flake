@@ -10,19 +10,6 @@ let
         inherit flake system hostname username type unstablePkgs;
         inherit (flake.inputs) secrets;
       };
-      homeModule = {
-        home-manager = {
-          users.${username}.imports = [
-            flake.homeModules.common
-            flake.homeModules.nixos
-            flake.inputs.nix-index-database.hmModules.nix-index
-          ];
-          useGlobalPkgs = true;
-          useUserPackages = true;
-          backupFileExtension = ".bak";
-          extraSpecialArgs = specialArgs;
-        };
-      };
     in
     {
       name = hostname;
@@ -35,10 +22,10 @@ let
           flake.nixosModules.${type}
           flake.inputs.nur.nixosModules.nur
           flake.inputs.disko.nixosModules.disko
+          flake.inputs.home-manager-nixos.nixosModules.home-manager
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
-        ] ++ extraModules
-        ++ (if type == "desktop" then [ flake.inputs.home-manager-nixos.nixosModules.home-manager homeModule ] else [ ]);
+        ] ++ extraModules;
       };
     };
 in
@@ -57,6 +44,10 @@ builtins.listToAttrs (map mkLinux [
     type = "server";
     customConfig = {
       server.proxy.enable = true;
+      homeManager = {
+        enable = true;
+        installGraphicalApps = false;
+      };
     };
   }
 ])
