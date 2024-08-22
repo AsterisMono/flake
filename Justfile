@@ -28,3 +28,6 @@ gc:
 
 	# garbage collect all unused nix store entries
 	sudo nix store gc --debug
+
+explore:
+	nix run github:bluskript/nix-inspect -- -p .
