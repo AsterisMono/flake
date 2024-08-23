@@ -41,12 +41,10 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "celestia";
-    type = "server";
     customConfig = {
-      server.proxy.enable = true;
-      homeManager = {
-        enable = true;
-        installGraphicalApps = false;
+      desktop = {
+        suite = "gnome";
+        gpu = "intel";
       };
     };
   }
