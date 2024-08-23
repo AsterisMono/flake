@@ -44,10 +44,12 @@ builtins.listToAttrs (map mkLinux [
     extraModules = [
       ../nixosModules/users/gylove1994.nix
     ];
+    type = "server";
     customConfig = {
-      desktop = {
-        suite = "gnome";
-        gpu = "intel";
+      server.proxy.enable = true;
+      homeManager = {
+        enable = true;
+        installGraphicalApps = false;
       };
     };
   }
