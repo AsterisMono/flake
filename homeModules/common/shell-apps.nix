@@ -3,12 +3,11 @@ let
   extraPackages = with pkgs;[
     lua-language-server
     nodejs_20
-    yarn
     any-nix-shell
     fastfetch
     devenv
     tldr
-    nil
+    nixd
     nix-output-monitor # https://github.com/maralorn/nix-output-monitor
   ];
 in
