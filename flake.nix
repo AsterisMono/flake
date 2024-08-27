@@ -97,7 +97,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ nil just deploy-rs ];
+          packages = with pkgs; [ nixd just deploy-rs ];
           inherit (self'.checks.pre-commit-check) shellHook;
           buildInputs = self'.checks.pre-commit-check.enabledPackages;
         };
