@@ -9,6 +9,7 @@ let
     tldr
     nixd
     nix-output-monitor # https://github.com/maralorn/nix-output-monitor
+    corepack
   ];
 in
 {
