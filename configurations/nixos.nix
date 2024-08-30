@@ -41,6 +41,9 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "celestia";
+    extraModules = [
+      ../nixosModules/users/gylove1994.nix
+    ];
     customConfig = {
       desktop = {
         suite = "gnome";
