@@ -1,6 +1,6 @@
 flake:
 let
-  mkLinux = { hostname, username ? "cmiki", system ? "x86_64-linux", type ? "desktop", customConfig ? { }, extraModules ? [ ] }:
+  mkLinux = { hostname, username ? "cmiki", extraUsers ? [ ], system ? "x86_64-linux", type ? "desktop", customConfig ? { }, extraModules ? [ ] }:
     let
       unstablePkgs = import flake.inputs.nixpkgs-unstable {
         inherit system;
@@ -25,7 +25,7 @@ let
           flake.inputs.home-manager-nixos.nixosModules.home-manager
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
-        ] ++ extraModules;
+        ] ++ extraModules ++ map (user: ../nixosModules/users/${user}.nix) extraUsers;
       };
     };
 in
@@ -41,9 +41,7 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "celestia";
-    extraModules = [
-      ../nixosModules/users/gylove1994.nix
-    ];
+    extraUsers = [ "gylove1994" ];
     type = "server";
     customConfig = {
       server.proxy.enable = true;
