@@ -10,6 +10,8 @@ let
     nixd
     nix-output-monitor # https://github.com/maralorn/nix-output-monitor
     corepack
+    dust
+    duf
   ];
 in
 {
@@ -128,4 +130,12 @@ in
   };
 
   programs.ripgrep.enable = true;
+
+  programs.fd = {
+    enable = true;
+    ignores = [
+      ".git/"
+      "node_modules/"
+    ];
+  };
 }
