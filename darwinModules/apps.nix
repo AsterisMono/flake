@@ -75,6 +75,7 @@
       "chatgpt"
       "tailscale"
       "firefox"
+      "wireshark"
     ];
   };
 }
