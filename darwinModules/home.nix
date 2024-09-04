@@ -1,4 +1,4 @@
-{ flake, username, ... }@gomeInputs:
+{ flake, username, ... }@homeInputs:
 {
   home-manager = {
     users.${username}.imports = [
@@ -9,7 +9,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      inherit (gomeInputs) flake system hostname username type unstablePkgs secrets;
+      inherit (homeInputs) flake system hostname username type unstablePkgs secrets;
     };
   };
 }
