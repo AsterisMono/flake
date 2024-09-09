@@ -33,8 +33,9 @@ builtins.listToAttrs (map mkLinux [
   {
     hostname = "luminara";
     customConfig = {
+      proxy.enable = true;
       desktop = {
-        suite = "cosmic";
+        suite = "hyprland";
         gpu = "amdgpu";
       };
     };
@@ -44,7 +45,7 @@ builtins.listToAttrs (map mkLinux [
     extraUsers = [ "gylove1994" ];
     type = "server";
     customConfig = {
-      server.proxy.enable = true;
+      proxy.enable = true;
       homeManager = {
         enable = true;
         installGraphicalApps = false;

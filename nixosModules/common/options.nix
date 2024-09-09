@@ -14,5 +14,9 @@ with lib;
         description = "Whether to install graphical apps in home-manager";
       };
     };
+    proxy = {
+      enable = mkEnableOption "Enable proxy";
+      tunMode = mkEnableOption "Enable TUN Mode";
+    };
   };
 }
