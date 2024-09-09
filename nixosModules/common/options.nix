@@ -18,5 +18,10 @@ with lib;
       enable = mkEnableOption "Enable proxy";
       tunMode = mkEnableOption "Enable TUN Mode";
     };
+    tailscale.enable = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Auto register and enable tailscale";
+    };
   };
 }
