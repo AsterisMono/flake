@@ -34,7 +34,7 @@ builtins.listToAttrs (map mkLinux [
     hostname = "luminara";
     customConfig = {
       desktop = {
-        suite = "hyprland";
+        suite = "cosmic";
         gpu = "amdgpu";
       };
     };

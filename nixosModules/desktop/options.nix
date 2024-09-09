@@ -3,7 +3,7 @@ with lib;
 {
   options.amono.desktop = {
     suite = mkOption {
-      type = types.enum [ "plasma" "hyprland" "gnome" ];
+      type = types.enum [ "plasma" "hyprland" "gnome" "cosmic" ];
       default = "plasma";
       description = "Desktop suite to use";
     };

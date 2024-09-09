@@ -44,6 +44,10 @@
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
+    nixos-cosmic = {
+      url = "github:lilyinstarlight/nixos-cosmic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, ... }:
@@ -97,7 +101,7 @@
           };
         };
         devShells.default = pkgs.mkShell {
-          packages = with pkgs; [ nixd just deploy-rs ];
+          packages = with pkgs; [ nixd just deploy-rs nh ];
           inherit (self'.checks.pre-commit-check) shellHook;
           buildInputs = self'.checks.pre-commit-check.enabledPackages;
         };
