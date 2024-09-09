@@ -1,4 +1,10 @@
+build:
+  nh os build .
+
 deploy:
+  nh os switch .
+
+deploy-nonh:
 	nixos-rebuild switch --flake . --use-remote-sudo
 
 debug:
