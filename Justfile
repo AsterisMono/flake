@@ -7,6 +7,9 @@ deploy:
 deploy-nonh:
 	nixos-rebuild switch --flake . --use-remote-sudo
 
+deploy-buildforme:
+  nh os switch . -- -j0 --builders 'ssh://cmiki@celestia'
+
 debug:
 	nixos-rebuild switch --flake . --use-remote-sudo --show-trace --verbose
 
