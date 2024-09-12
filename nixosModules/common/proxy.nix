@@ -5,6 +5,12 @@ let
   cfg = config.amono.proxy;
 in
 {
+  options = {
+    amono.proxy = {
+      enable = mkEnableOption "Enable proxy";
+      tunMode = mkEnableOption "Enable TUN Mode";
+    };
+  };
   config = lib.mkIf cfg.enable {
     services.mihomo = {
       enable = true;
