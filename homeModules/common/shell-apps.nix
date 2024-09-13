@@ -33,7 +33,6 @@ in
     ];
     shellInit = "set -g fish_greeting";
     interactiveShellInit = ''
-      set SHELL ${pkgs.fish}/fish
       set EDITOR nvim
       set PAGER bat
 
