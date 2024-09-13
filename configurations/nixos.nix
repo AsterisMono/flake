@@ -23,6 +23,7 @@ let
           flake.inputs.nur.nixosModules.nur
           flake.inputs.disko.nixosModules.disko
           flake.inputs.home-manager-nixos.nixosModules.home-manager
+          flake.inputs.nixos-cosmic.nixosModules.default
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
         ] ++ extraModules ++ map (user: ../nixosModules/users/${user}.nix) extraUsers;
