@@ -107,6 +107,9 @@
         };
         packages = {
           torus-font = pkgs.callPackage ./packages/torus.nix { };
+          nixos-docs = pkgs.callPackage ./packages/nixos-docs.nix {
+            modules = builtins.attrValues self.nixosModules;
+          };
         };
       };
     };

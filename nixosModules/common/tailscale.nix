@@ -1,8 +1,8 @@
-{ config, pkgs, secrets, ... }:
+{ lib, config, pkgs, secrets, ... }:
 {
   options = {
-    amono.tailscale.enable = mkOption {
-      type = types.bool;
+    amono.tailscale.enable = lib.mkOption {
+      type = lib.types.bool;
       default = true;
       description = "Auto register and enable tailscale";
     };

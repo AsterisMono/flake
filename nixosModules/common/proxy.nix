@@ -7,8 +7,8 @@ in
 {
   options = {
     amono.proxy = {
-      enable = mkEnableOption "Enable proxy";
-      tunMode = mkEnableOption "Enable TUN Mode";
+      enable = lib.mkEnableOption "Enable proxy";
+      tunMode = lib.mkEnableOption "Enable TUN Mode";
     };
   };
   config = lib.mkIf cfg.enable {
