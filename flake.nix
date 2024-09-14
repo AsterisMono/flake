@@ -58,9 +58,7 @@
         ./flakeModules/ilgaak
       ];
 
-      ilgaak = {
-        enable = true;
-      };
+      ilgaak.enable = true;
 
       flake =
         {
