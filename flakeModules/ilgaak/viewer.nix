@@ -13,7 +13,7 @@ let
     }).optionsJSON;
   optionsJSON = "${optionsJSONDrv}/share/doc/nixos/options.json";
 in
-writeShellScriptBin "nixos-docs"
+writeShellScriptBin "run"
   ''
     ${pkgs.jq}/bin/jq -r 'keys - ["_module.args"] | .[]' ${optionsJSON} | ${pkgs.fzf}/bin/fzf --preview='${pkgs.jq}/bin/jq -r -f ${./filter.jq} --arg key {} ${optionsJSON}'
   ''
