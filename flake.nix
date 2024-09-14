@@ -54,6 +54,24 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
+      imports = [
+        ./flakeModules/ilgaak
+      ];
+
+      ilgaak = {
+        enable = true;
+        moduleSets = [
+          {
+            name = "nixos";
+            modules = [
+              self.nixosModules.common
+              self.nixosModules.desktop
+              self.nixosModules.server
+            ];
+          }
+        ];
+      };
+
       flake =
         {
           lib = {
@@ -107,9 +125,6 @@
         };
         packages = {
           torus-font = pkgs.callPackage ./packages/torus { };
-          nixos-docs = pkgs.callPackage ./packages/nixos-docs {
-            modules = builtins.attrValues self.nixosModules;
-          };
         };
       };
     };
