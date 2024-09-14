@@ -60,16 +60,6 @@
 
       ilgaak = {
         enable = true;
-        moduleSets = [
-          {
-            name = "nixos";
-            modules = [
-              self.nixosModules.common
-              self.nixosModules.desktop
-              self.nixosModules.server
-            ];
-          }
-        ];
       };
 
       flake =
