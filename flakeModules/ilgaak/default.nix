@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, self, ... }:
 {
   options = {
     ilgaak = {
@@ -12,6 +12,12 @@
             modules = [
               ./modules/nixos.nix
             ];
+          }
+        ];
+        default = [
+          {
+            name = "nixos";
+            modules = lib.attrValues self.nixosModules;
           }
         ];
       };
