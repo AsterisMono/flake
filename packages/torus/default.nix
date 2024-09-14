@@ -4,7 +4,7 @@ pkgs.stdenv.mkDerivation {
   pname = "torus-font";
   version = "1.0";
 
-  src = ./assets/Torus.zip;
+  src = ./Torus.zip;
 
   unpackPhase = ''
     runHook preUnpack

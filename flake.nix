@@ -106,8 +106,8 @@
           buildInputs = self'.checks.pre-commit-check.enabledPackages;
         };
         packages = {
-          torus-font = pkgs.callPackage ./packages/torus.nix { };
-          nixos-docs = pkgs.callPackage ./packages/nixos-docs.nix {
+          torus-font = pkgs.callPackage ./packages/torus { };
+          nixos-docs = pkgs.callPackage ./packages/nixos-docs {
             modules = builtins.attrValues self.nixosModules;
           };
         };
