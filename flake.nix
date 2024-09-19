@@ -48,6 +48,10 @@
       url = "github:lilyinstarlight/nixos-cosmic";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ilgaak = {
+      url = "github:AsterisMono/ilgaak";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, ... }:
@@ -55,7 +59,7 @@
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
 
       imports = [
-        ./flakeModules/ilgaak
+        inputs.ilgaak.flakeModule
       ];
 
       ilgaak.enable = true;

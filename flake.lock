@@ -128,6 +128,24 @@
     },
     "flake-parts_2": {
       "inputs": {
+        "nixpkgs-lib": "nixpkgs-lib_2"
+      },
+      "locked": {
+        "lastModified": 1726153070,
+        "narHash": "sha256-HO4zgY0ekfwO5bX0QH/3kJ/h4KvUDFZg8YpkNwIbg1U=",
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "rev": "bcef6817a8b2aa20a5a6dbb19b43e63c5bf8619a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "hercules-ci",
+        "repo": "flake-parts",
+        "type": "github"
+      }
+    },
+    "flake-parts_3": {
+      "inputs": {
         "nixpkgs-lib": [
           "nixos-cosmic",
           "nix-update",
@@ -211,6 +229,27 @@
         "type": "github"
       }
     },
+    "ilgaak": {
+      "inputs": {
+        "flake-parts": "flake-parts_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1726742465,
+        "narHash": "sha256-ab9Pe92MvcJplkYHyq3R5iV34Pkg/1pq63MhSS11TjE=",
+        "owner": "AsterisMono",
+        "repo": "ilgaak",
+        "rev": "10004d09915120c2519cf47fe20e9ddfc2aaf479",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AsterisMono",
+        "repo": "ilgaak",
+        "type": "github"
+      }
+    },
     "myNurPackages": {
       "inputs": {
         "nixpkgs": [
@@ -253,7 +292,7 @@
     },
     "nix-update": {
       "inputs": {
-        "flake-parts": "flake-parts_2",
+        "flake-parts": "flake-parts_3",
         "nixpkgs": [
           "nixos-cosmic",
           "nixpkgs"
@@ -331,6 +370,18 @@
       }
     },
     "nixpkgs-lib": {
+      "locked": {
+        "lastModified": 1725233747,
+        "narHash": "sha256-Ss8QWLXdr2JCBPcYChJhz4xJm+h/xjl4G0c0XlP6a74=",
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/356624c12086a18f2ea2825fed34523d60ccc4e3.tar.gz"
+      },
+      "original": {
+        "type": "tarball",
+        "url": "https://github.com/NixOS/nixpkgs/archive/356624c12086a18f2ea2825fed34523d60ccc4e3.tar.gz"
+      }
+    },
+    "nixpkgs-lib_2": {
       "locked": {
         "lastModified": 1725233747,
         "narHash": "sha256-Ss8QWLXdr2JCBPcYChJhz4xJm+h/xjl4G0c0XlP6a74=",
@@ -469,6 +520,7 @@
         "flake-parts": "flake-parts",
         "home-manager-darwin": "home-manager-darwin",
         "home-manager-nixos": "home-manager-nixos",
+        "ilgaak": "ilgaak",
         "myNurPackages": "myNurPackages",
         "nix-index-database": "nix-index-database",
         "nixos-cosmic": "nixos-cosmic",
