@@ -1,2 +1,0 @@
-def bold(s): "\u001b[1m\(s)\u001b[0m"; 
-.[$key] | "\(bold("Name")): \($key)\n\n\(bold("Description")): \(.description)\n\n\(bold("Type")): \(.type)\n\n\(bold("Default")): \(.default.text)\n\n\(bold("Example")): \(.example.text)"
