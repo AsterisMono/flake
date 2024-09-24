@@ -1,3 +1,6 @@
+bootstrap:
+	nix --extra-experimental-features nix-command --extra-experimental-features flakes run 'github:nix-community/disko#disko-install' -- --flake github:AsterisMono/flake#stellarbase --disk main /dev/vda
+
 build:
   nh os build .
 
