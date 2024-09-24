@@ -53,4 +53,11 @@ builtins.listToAttrs (map mkLinux [
       };
     };
   }
+  {
+    hostname = "stellarbase";
+    type = "server";
+    customConfig = {
+      homeManager.enable = false;
+    };
+  }
 ])
