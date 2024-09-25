@@ -63,7 +63,7 @@ builtins.listToAttrs (map mkLinux [
   {
     hostname = "stellarbase";
     type = "server";
-    payloads = [ "docker" ];
+    payloads = [ "docker" "stellarbase-caddy" ];
     customConfig = { };
   }
 ])
