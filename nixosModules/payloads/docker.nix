@@ -1,6 +1,7 @@
 { lib, config, secrets, ... }:
 {
   virtualisation.docker.enable = true;
+  virtualisation.oci-containers.backend = "docker";
   virtualisation.oci-containers.containers.new-relic-docker-agent = lib.mkIf config.amono.server.newRelicAgent.enable {
     image = "newrelic/infrastructure:latest";
     volumes = [
