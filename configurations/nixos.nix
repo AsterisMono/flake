@@ -32,6 +32,10 @@ let
     };
 in
 builtins.listToAttrs (map mkLinux [
+  # home-manager is implicitly enabled for desktops but not servers
+  # new-relic infra agent is enabled by default for all servers
+  # tailscale is enabled for all machines
+  # proxy is enabled by default for all desktops, and by enabling proxy USTC substituter will be used
   {
     hostname = "luminara";
     customConfig = {
@@ -40,7 +44,6 @@ builtins.listToAttrs (map mkLinux [
         suite = "hyprland";
         gpu = "amdgpu";
       };
-      # home-manager is implicitly enabled for desktop
     };
   }
   {
