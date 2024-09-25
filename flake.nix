@@ -72,6 +72,7 @@
         {
           lib = {
             bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
+            collectModules = import ./utils/collect-modules.nix inputs.nixpkgs.lib;
           };
           nixosConfigurations = import ./configurations/nixos.nix self;
           darwinConfigurations = import ./configurations/darwin.nix self;
