@@ -1,4 +1,4 @@
-_:
+{ pkgs, ... }:
 {
   environment.systemPackages = [ pkgs.rclone ];
   fileSystems."/var/lib/vrchat-library" = {
