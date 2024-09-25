@@ -72,7 +72,7 @@
         {
           lib = {
             bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
-            collectModules = import ./utils/collect-modules.nix inputs.nixpkgs.lib;
+            collectPayloads = import ./utils/collect-payloads.nix inputs.nixpkgs.lib;
           };
           nixosConfigurations = import ./configurations/nixos.nix self;
           darwinConfigurations = import ./configurations/darwin.nix self;
@@ -80,7 +80,7 @@
             common = self.lib.bundleModules ./nixosModules/common;
             desktop = self.lib.bundleModules ./nixosModules/desktop;
             server = self.lib.bundleModules ./nixosModules/server;
-          };
+          } // self.lib.collectPayloads ./nixosModules/payloads;
           darwinModules.darwin = self.lib.bundleModules ./darwinModules;
           homeModules = {
             common = self.lib.bundleModules ./homeModules/common;

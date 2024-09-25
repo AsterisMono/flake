@@ -1,6 +1,6 @@
 flake:
 let
-  mkLinux = { hostname, username ? "cmiki", extraUsers ? [ ], system ? "x86_64-linux", type ? "desktop", customConfig ? { }, extraModules ? [ ] }:
+  mkLinux = { hostname, username ? "cmiki", extraUsers ? [ ], system ? "x86_64-linux", type ? "desktop", customConfig ? { }, extraModules ? [ ], payloads ? [ ] }:
     let
       unstablePkgs = import flake.inputs.nixpkgs-unstable {
         inherit system;
@@ -27,7 +27,9 @@ let
           flake.inputs.nix-relic.nixosModules.newrelic-infra
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
-        ] ++ extraModules ++ map (user: ../nixosModules/users/${user}.nix) extraUsers;
+        ] ++ extraModules
+        ++ map (payload: flake.nixosModules."payload-${payload}") payloads
+        ++ map (user: ../nixosModules/users/${user}.nix) extraUsers;
       };
     };
 in
@@ -61,6 +63,7 @@ builtins.listToAttrs (map mkLinux [
   {
     hostname = "stellarbase";
     type = "server";
+    payloads = [ "docker" ];
     customConfig = { };
   }
 ])
