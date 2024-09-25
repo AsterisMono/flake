@@ -66,7 +66,7 @@
         inputs.ilgaak.flakeModule
       ];
 
-      ilgaak.enable = true;
+      ilgaak.enable = false;
 
       flake =
         {
