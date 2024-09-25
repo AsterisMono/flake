@@ -1,11 +1,12 @@
-{ pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   nix = {
     package = pkgs.nixVersions.latest;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
-      substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+      # If proxy is enabled, use mirror to speed up nix binary cache
+      substituters = lib.optionals config.amono.proxy.enable [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
       extra-substituters = [
         "https://asterismono.cachix.org"
         "https://devenv.cachix.org"
