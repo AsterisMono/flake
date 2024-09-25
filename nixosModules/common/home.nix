@@ -1,4 +1,4 @@
-{ config, lib, flake, username, ... }@homeInputs:
+{ config, lib, flake, username, type, ... }@homeInputs:
 let
   cfg = config.amono.homeManager;
 in
@@ -8,12 +8,12 @@ with lib;
     amono.homeManager = {
       enable = mkOption {
         type = types.bool;
-        default = true;
+        default = type == "desktop";
         description = "Whether to use home-manager";
       };
       installGraphicalApps = mkOption {
         type = types.bool;
-        default = true;
+        default = type == "desktop";
         description = "Whether to install graphical apps in home-manager";
       };
     };
