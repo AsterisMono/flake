@@ -290,26 +290,6 @@
         "type": "github"
       }
     },
-    "nix-relic": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1719118415,
-        "narHash": "sha256-pMk9NBkOuGnoinjQZtwD2Wgl6fZdseUphTgyUUFuAIc=",
-        "owner": "DavSanchez",
-        "repo": "Nix-Relic",
-        "rev": "99ed0c2b7f25849ea58bb58f8da3dbe8815cdb4a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "DavSanchez",
-        "repo": "Nix-Relic",
-        "type": "github"
-      }
-    },
     "nix-update": {
       "inputs": {
         "flake-parts": "flake-parts_3",
@@ -543,7 +523,6 @@
         "ilgaak": "ilgaak",
         "myNurPackages": "myNurPackages",
         "nix-index-database": "nix-index-database",
-        "nix-relic": "nix-relic",
         "nixos-cosmic": "nixos-cosmic",
         "nixpkgs": "nixpkgs_2",
         "nixpkgs-darwin": "nixpkgs-darwin",
