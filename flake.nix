@@ -87,6 +87,7 @@
             flake-packages = import ./overlays/flake-packages.nix self;
           };
           deploy = {
+            interactiveSudo = true;
             nodes = {
               celestia = {
                 hostname = "celestia";
