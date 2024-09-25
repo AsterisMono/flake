@@ -86,12 +86,21 @@
             amono-nur = import ./overlays/amono-nur.nix inputs;
             flake-packages = import ./overlays/flake-packages.nix self;
           };
-          deploy.nodes = {
-            celestia = {
-              hostname = "celestia";
-              profiles.system = {
-                user = "root";
-                path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.celestia;
+          deploy = {
+            nodes = {
+              celestia = {
+                hostname = "celestia";
+                profiles.system = {
+                  user = "root";
+                  path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.celestia;
+                };
+              };
+              stellarbase = {
+                hostname = "stellarbase";
+                profiles.system = {
+                  user = "root";
+                  path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.stellarbase;
+                };
               };
             };
           };
