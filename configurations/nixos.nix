@@ -40,6 +40,7 @@ builtins.listToAttrs (map mkLinux [
         suite = "hyprland";
         gpu = "amdgpu";
       };
+      # home-manager is implicitly enabled for desktop
     };
   }
   {
@@ -57,8 +58,6 @@ builtins.listToAttrs (map mkLinux [
   {
     hostname = "stellarbase";
     type = "server";
-    customConfig = {
-      homeManager.enable = false;
-    };
+    customConfig = { };
   }
 ])
