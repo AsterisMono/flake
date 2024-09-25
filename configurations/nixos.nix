@@ -24,7 +24,6 @@ let
           flake.inputs.disko.nixosModules.disko
           flake.inputs.home-manager-nixos.nixosModules.home-manager
           flake.inputs.nixos-cosmic.nixosModules.default
-          flake.inputs.nix-relic.nixosModules.newrelic-infra
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
         ] ++ extraModules
@@ -35,7 +34,6 @@ let
 in
 builtins.listToAttrs (map mkLinux [
   # home-manager is implicitly enabled for desktops but not servers
-  # new-relic infra agent is enabled by default for all servers
   # tailscale is enabled for all machines
   # proxy is enabled by default for all desktops, and by enabling proxy USTC substituter will be used
   {
