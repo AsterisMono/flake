@@ -7,7 +7,7 @@
       description = "Auto register and enable tailscale";
     };
   };
-  config = {
+  config = lib.mkIf config.amono.tailscale.enable {
     environment.systemPackages = [ pkgs.tailscale ];
     services.tailscale.enable = true;
     networking.firewall = {
