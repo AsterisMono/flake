@@ -24,6 +24,7 @@ let
           flake.inputs.disko.nixosModules.disko
           flake.inputs.home-manager-nixos.nixosModules.home-manager
           flake.inputs.nixos-cosmic.nixosModules.default
+          flake.inputs.nix-relic.nixosModules.newrelic-infra
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
         ] ++ extraModules ++ map (user: ../nixosModules/users/${user}.nix) extraUsers;

@@ -52,6 +52,10 @@
       url = "github:AsterisMono/ilgaak";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-relic = {
+      url = "github:DavSanchez/Nix-Relic";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, ... }:
