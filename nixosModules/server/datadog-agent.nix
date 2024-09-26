@@ -7,5 +7,8 @@
     apiKeyFile = "${secrets}/dd-api-key.txt";
     enableTraceAgent = true;
     enableLiveProcessCollection = true;
+    extraIntegrations = {
+      docker = pythonPackages: [ ]; # docker integration is written in go
+    };
   };
 }
