@@ -26,7 +26,7 @@
   nixpkgs.config.allowUnfree = true;
 
   # do not need to keep too much generations
-  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
 
   # do garbage collection weekly to keep disk usage low
   nix.gc = {
