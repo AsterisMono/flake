@@ -66,4 +66,6 @@
 
   environment.shells = with pkgs; [ zsh fish ];
 
+  system.stateVersion = 5;
+
 }
