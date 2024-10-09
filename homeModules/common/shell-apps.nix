@@ -86,7 +86,7 @@ in
     vimAlias = true;
   };
 
-  xdg.configFile.nvim.source = flake.inputs.nvim-config;
+  # xdg.configFile.nvim.source = flake.inputs.nvim-config;
 
   # Modern unix series
   programs.eza = {
