@@ -2,8 +2,12 @@ flake:
 let
   mkDarwin = { hostname, username ? "cmiki", system ? "aarch64-darwin", customConfig ? { }, extraModules ? [ ] }:
     let
+      unstablePkgs = import flake.inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
       specialArgs = {
-        inherit flake system hostname username;
+        inherit flake system hostname username unstablePkgs;
       };
     in
     {
