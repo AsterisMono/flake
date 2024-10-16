@@ -1,7 +1,6 @@
 { pkgs, unstablePkgs, ... }:
 let
   extraPackages = with pkgs;[
-    lua-language-server
     nodejs_20
     any-nix-shell
     fastfetch
@@ -12,6 +11,8 @@ let
     corepack
     dust
     duf
+    typescript # tsserver
+    biome # prettier substitute
   ];
 in
 {
