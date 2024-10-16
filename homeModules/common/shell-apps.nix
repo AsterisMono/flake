@@ -1,4 +1,4 @@
-{ pkgs, flake, ... }:
+{ pkgs, unstablePkgs, ... }:
 let
   extraPackages = with pkgs;[
     lua-language-server
@@ -84,6 +84,7 @@ in
     enable = true;
     defaultEditor = true;
     vimAlias = true;
+    package = unstablePkgs.neovim-unwrapped;
   };
 
   # xdg.configFile.nvim.source = flake.inputs.nvim-config;
