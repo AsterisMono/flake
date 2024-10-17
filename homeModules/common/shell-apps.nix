@@ -6,13 +6,16 @@ let
     fastfetch
     devenv
     tldr
-    nixd
     nix-output-monitor # https://github.com/maralorn/nix-output-monitor
     corepack
     dust
     duf
+
+    # Language servers
+    nixd
     typescript # tsserver
-    biome # prettier substitute
+    unstablePkgs.biome # prettier substitute
+    vscode-langservers-extracted
   ];
 in
 {
