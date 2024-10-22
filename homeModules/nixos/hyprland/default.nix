@@ -1,7 +1,4 @@
 { config, lib, osConfig, pkgs, ... }:
-
-with lib;
-
 let
   cfg = config.amonoHome.hyprland;
   cursorPackage = pkgs.capitaine-cursors;
@@ -9,10 +6,10 @@ let
   cursorSize = 32;
 in
 {
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     wayland.windowManager.hyprland = {
       enable = true;
-      settings = mkIf osConfig.hardware.nvidia.modesetting.enable {
+      settings = lib.mkIf osConfig.hardware.nvidia.modesetting.enable {
         env = [
           "LIBVA_DRIVER_NAME,nvidia"
           "XDG_SESSION_TYPE,wayland"

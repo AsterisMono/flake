@@ -1,20 +1,18 @@
 { config, lib, ... }:
 
-with lib;
-
 let
   cfg = config.amonoHome.waybar;
 in
 {
   options.amonoHome.waybar = {
-    enable = mkOption {
-      type = types.bool;
+    enable = lib.mkOption {
+      type = lib.types.bool;
       default = config.amonoHome.hyprland.enable;
       description = "是否启用 Waybar";
     };
   };
 
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     programs.waybar = {
       enable = true;
       settings = {

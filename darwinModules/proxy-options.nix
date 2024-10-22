@@ -3,15 +3,15 @@
 , config
 , ...
 }:
-with lib; let
+let
   cfg = config.networking;
-  opt = options.networking;
+  opt = lib.options.networking;
 in
 {
   options = {
     networking.proxy = {
       default = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         default = null;
         description = lib.mdDoc ''
           This option specifies the default value for httpProxy, httpsProxy, ftpProxy and rsyncProxy.
@@ -20,9 +20,9 @@ in
       };
 
       httpProxy = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         inherit (cfg.proxy) default;
-        defaultText = literalExpression "config.${opt.proxy.default}";
+        defaultText = lib.literalExpression "config.${opt.proxy.default}";
         description = lib.mdDoc ''
           This option specifies the http_proxy environment variable.
         '';
@@ -30,9 +30,9 @@ in
       };
 
       httpsProxy = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         inherit (cfg.proxy) default;
-        defaultText = literalExpression "config.${opt.proxy.default}";
+        defaultText = lib.literalExpression "config.${opt.proxy.default}";
         description = lib.mdDoc ''
           This option specifies the https_proxy environment variable.
         '';
@@ -40,9 +40,9 @@ in
       };
 
       ftpProxy = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         inherit (cfg.proxy) default;
-        defaultText = literalExpression "config.${opt.proxy.default}";
+        defaultText = lib.literalExpression "config.${opt.proxy.default}";
         description = lib.mdDoc ''
           This option specifies the ftp_proxy environment variable.
         '';
@@ -50,9 +50,9 @@ in
       };
 
       rsyncProxy = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         inherit (cfg.proxy) default;
-        defaultText = literalExpression "config.${opt.proxy.default}";
+        defaultText = lib.literalExpression "config.${opt.proxy.default}";
         description = lib.mdDoc ''
           This option specifies the rsync_proxy environment variable.
         '';
@@ -60,9 +60,9 @@ in
       };
 
       allProxy = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         inherit (cfg.proxy) default;
-        defaultText = literalExpression "config.${opt.proxy.default}";
+        defaultText = lib.literalExpression "config.${opt.proxy.default}";
         description = lib.mdDoc ''
           This option specifies the all_proxy environment variable.
         '';
@@ -70,7 +70,7 @@ in
       };
 
       noProxy = lib.mkOption {
-        type = types.nullOr types.str;
+        type = lib.types.nullOr lib.types.str;
         default = null;
         description = lib.mdDoc ''
           This option specifies the no_proxy environment variable.
@@ -81,7 +81,7 @@ in
       };
 
       envVars = lib.mkOption {
-        type = types.attrs;
+        type = lib.types.attrs;
         internal = true;
         default = { };
         description = lib.mdDoc ''
@@ -93,27 +93,27 @@ in
 
   config = {
     networking.proxy.envVars =
-      optionalAttrs (cfg.proxy.default != null)
+      lib.optionalAttrs (cfg.proxy.default != null)
         {
           # other options already fallback to proxy.default
           no_proxy = "127.0.0.1,localhost";
         }
-      // optionalAttrs (cfg.proxy.httpProxy != null) {
+      // lib.optionalAttrs (cfg.proxy.httpProxy != null) {
         http_proxy = cfg.proxy.httpProxy;
       }
-      // optionalAttrs (cfg.proxy.httpsProxy != null) {
+      // lib.optionalAttrs (cfg.proxy.httpsProxy != null) {
         https_proxy = cfg.proxy.httpsProxy;
       }
-      // optionalAttrs (cfg.proxy.rsyncProxy != null) {
+      // lib.optionalAttrs (cfg.proxy.rsyncProxy != null) {
         rsync_proxy = cfg.proxy.rsyncProxy;
       }
-      // optionalAttrs (cfg.proxy.ftpProxy != null) {
+      // lib.optionalAttrs (cfg.proxy.ftpProxy != null) {
         ftp_proxy = cfg.proxy.ftpProxy;
       }
-      // optionalAttrs (cfg.proxy.allProxy != null) {
+      // lib.optionalAttrs (cfg.proxy.allProxy != null) {
         all_proxy = cfg.proxy.allProxy;
       }
-      // optionalAttrs (cfg.proxy.noProxy != null) {
+      // lib.optionalAttrs (cfg.proxy.noProxy != null) {
         no_proxy = cfg.proxy.noProxy;
       };
 

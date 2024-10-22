@@ -2,23 +2,22 @@
 let
   cfg = config.amono.homeManager;
 in
-with lib;
 {
   options = {
     amono.homeManager = {
-      enable = mkOption {
-        type = types.bool;
+      enable = lib.mkOption {
+        type = lib.types.bool;
         default = type == "desktop";
         description = "Whether to use home-manager";
       };
-      installGraphicalApps = mkOption {
-        type = types.bool;
+      installGraphicalApps = lib.mkOption {
+        type = lib.types.bool;
         default = type == "desktop";
         description = "Whether to install graphical apps in home-manager";
       };
     };
   };
-  config = mkIf cfg.enable {
+  config = lib.mkIf cfg.enable {
     home-manager = {
       users.${username}.imports = [
         flake.homeModules.common

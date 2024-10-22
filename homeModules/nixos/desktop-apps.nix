@@ -4,9 +4,8 @@ let
     dbeaver-bin
   ];
 in
-with lib;
 {
-  config = mkIf osConfig.amono.homeManager.installGraphicalApps {
+  config = lib.mkIf osConfig.amono.homeManager.installGraphicalApps {
     home.packages = extraPackages;
 
     programs.vscode = {
