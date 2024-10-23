@@ -29,17 +29,17 @@
 
   swapDevices = [ ];
 
-  # networking = {
-  #  useDHCP = false;
-  #  interfaces.eno1.ipv4 = {
-  #    addresses = [{ address = "192.168.111.133"; prefixLength = 24; }];
-  #  };
-  #  defaultGateway = {
-  #    address = "192.168.111.1";
-  #    interface = "eno1";
-  #  };
-  #  nameservers = [ "114.114.114.114" ];
-  # };
+  networking = {
+    useDHCP = false;
+    interfaces.eno1.ipv4 = {
+      addresses = [{ address = "192.168.111.133"; prefixLength = 24; }];
+    };
+    defaultGateway = {
+      address = "192.168.111.1";
+      interface = "eno1";
+    };
+    nameservers = [ "114.114.114.114" ];
+  };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
