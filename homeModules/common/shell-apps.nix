@@ -14,7 +14,6 @@ let
     # Language servers
     nixd
     typescript # tsserver
-    unstablePkgs.biome # prettier substitute
     vscode-langservers-extracted
   ];
 in
