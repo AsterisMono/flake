@@ -12,9 +12,6 @@ _:
       "neko.amono.me".extraConfig = ''
         reverse_proxy 127.0.0.1:8340
       '';
-      "mtx.amono.me".extraConfig = ''
-        reverse_proxy 127.0.0.1:8554
-      '';
     };
   };
 
