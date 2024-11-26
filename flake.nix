@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nur.url = "github:nix-community/NUR";
     flake-parts.url = "github:hercules-ci/flake-parts";
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -17,10 +16,6 @@
     };
     disko = {
       url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    myNurPackages = {
-      url = "github:AsterisMono/nur-packages";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager-nixos = {
@@ -43,10 +38,6 @@
     home-manager-darwin = {
       url = "github:nix-community/home-manager/release-24.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
-    };
-    nixos-cosmic = {
-      url = "github:lilyinstarlight/nixos-cosmic";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     ilgaak = {
       url = "github:AsterisMono/ilgaak";
@@ -84,7 +75,6 @@
             nixos = self.lib.bundleModules ./homeModules/nixos;
           };
           overlays = {
-            amono-nur = import ./overlays/amono-nur.nix inputs;
             flake-packages = import ./overlays/flake-packages.nix self;
           };
           deploy = {

@@ -20,10 +20,8 @@ let
           ../nixosModules/users/${username}.nix
           flake.nixosModules.common
           flake.nixosModules.${type}
-          flake.inputs.nur.nixosModules.nur
           flake.inputs.disko.nixosModules.disko
           flake.inputs.home-manager-nixos.nixosModules.home-manager
-          flake.inputs.nixos-cosmic.nixosModules.default
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
         ] ++ extraModules
