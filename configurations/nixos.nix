@@ -46,13 +46,11 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "celestia";
-    extraUsers = [ "gylove1994" ];
-    type = "server";
     customConfig = {
       proxy.enable = true;
-      homeManager = {
-        enable = true;
-        installGraphicalApps = false;
+      desktop = {
+        suite = "plasma";
+        gpu = "intel";
       };
     };
   }
