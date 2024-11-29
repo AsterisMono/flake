@@ -61,7 +61,9 @@
             bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
             collectPayloads = import ./utils/collect-payloads.nix inputs.nixpkgs.lib;
           };
-          nixosConfigurations = import ./configurations/nixos.nix self;
+          nixosConfigurations = (import ./configurations/nixos.nix self) // {
+            installer = import ./configurations/installer.nix self;
+          };
           darwinConfigurations = import ./configurations/darwin.nix self;
           nixosModules = {
             common = self.lib.bundleModules ./nixosModules/common;
