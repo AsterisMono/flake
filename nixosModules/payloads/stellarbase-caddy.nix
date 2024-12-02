@@ -12,6 +12,9 @@ _:
       "neko.amono.me".extraConfig = ''
         reverse_proxy 127.0.0.1:8340
       '';
+      "whisper.amono.me".extraConfig = ''
+        reverse_proxy 127.0.0.1:6777
+      '';
     };
   };
 
