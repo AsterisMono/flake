@@ -57,7 +57,7 @@ builtins.listToAttrs (map mkLinux [
   {
     hostname = "stellarbase";
     type = "server";
-    payloads = [ "docker" "stellarbase-caddy" "vrchat-rclone" ];
+    payloads = [ "docker" "stellarbase-caddy" "onedrive-rclone" ];
     customConfig = { };
   }
 ])
