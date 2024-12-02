@@ -1,7 +1,8 @@
 { lib, config, secrets, ... }:
 let
-  httpProxy = "http://127.0.0.1:7890";
-  socksProxy = "socks5://127.0.0.1:7890";
+  proxy = "127.0.0.1:${toString cfg.port}";
+  httpProxy = "http://${proxy}";
+  socksProxy = "socks5://${proxy}";
   cfg = config.amono.proxy;
 in
 {
@@ -9,6 +10,9 @@ in
     amono.proxy = {
       enable = lib.mkEnableOption "Enable proxy";
       tunMode = lib.mkEnableOption "Enable TUN Mode";
+      port = lib.mkOption {
+        default = 7890;
+      };
     };
   };
   config = lib.mkIf cfg.enable {
