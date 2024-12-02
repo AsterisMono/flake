@@ -5,11 +5,8 @@ in
 {
   config = lib.mkIf (cfg == "amdgpu") {
     boot.initrd.kernelModules = [ "amdgpu" ];
-    hardware.opengl = {
-      # Mesa
+    hardware.graphics = {
       enable = true;
-      # Vulkan
-      driSupport = true;
 
       extraPackages = with pkgs; [
         vaapiVdpau
