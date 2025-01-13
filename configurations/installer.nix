@@ -11,5 +11,12 @@ flake.inputs.nixpkgs.lib.nixosSystem {
       amono.proxy.enable = true;
     })
     ../nixosModules/common/proxy.nix
+    ../nixosModules/common/nix-environment.nix
+    ({ pkgs, ... }: {
+      environment.systemPackages = with pkgs; [
+        git
+        gh
+      ];
+    })
   ];
 }
