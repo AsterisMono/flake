@@ -54,7 +54,7 @@
       isDefault = true;
       name = "Brunette";
       userChrome = ''
-        #titlebar {
+        #TabsToolbar {
           display: none;
         }
         #sidebar-header {
