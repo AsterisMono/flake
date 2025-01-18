@@ -13,7 +13,7 @@ in
           # "position" = "bottom"; # Waybar position (top|bottom|left|right)
           # height = 30; # Waybar height (to be removed for auto height)
           #"width" = 1920; # Waybar width
-          spacing = 4; # Gaps between modules (4px)
+          spacing = 0; # Gaps between modules (4px)
           # Choose the order of the modules
           modules-left = [
             "hyprland/workspaces"
@@ -21,9 +21,13 @@ in
           modules-center = [ ];
           modules-right = [
             "network"
+            "custom/separator"
             "pulseaudio"
+            "custom/separator"
             "backlight"
+            "custom/separator"
             "battery"
+            "custom/separator"
             "clock"
           ];
           # Modules configuration
@@ -39,47 +43,14 @@ in
               "class<chromium-browser>" = "";
               "class<firefox> title<.*github.*>" = "";
               "class<firefox> title<.*slack.*>" = "";
-              "class<kitty>" = "";
+              "class<Alacritty>" = "";
               "code" = "󰨞";
             };
           };
-          keyboard-state = {
-            numlock = true;
-            capslock = true;
-            format = "{name} {icon}";
-            format-icons = {
-              locked = "";
-              unlocked = "";
-            };
-          };
-          mpd = {
-            format =
-              "{stateIcon} {consumeIcon}{randomIcon}{repeatIcon}{singleIcon}{artist} - {album} - {title} ({elapsedTime =%M =%S}/{totalTime =%M =%S}) ⸨{songPosition}|{queueLength}⸩ {volume}% ";
-            format-disconnected = "Disconnected ";
-            format-stopped =
-              "{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}Stopped ";
-            unknown-tag = "N/A";
-            interval = 2;
-            consume-icons = { on = " "; };
-            random-icons = {
-              off = ''<span color="#f53c3c"></span> '';
-              on = " ";
-            };
-            repeat-icons = { on = " "; };
-            single-icons = { on = "1 "; };
-            state-icons = {
-              paused = "";
-              playing = "";
-            };
-            tooltip-format = "MPD (connected)";
-            tooltip-format-disconnected = "MPD (disconnected)";
-          };
-          idle_inhibitor = {
-            format = "{icon}";
-            format-icons = {
-              "activated" = "";
-              "deactivated" = "";
-            };
+          "custom/separator" = {
+            "format" = "|";
+            "interval" = "once";
+            "tooltip" = false;
           };
           tray = {
             # "icon-size" = 21;
@@ -164,7 +135,7 @@ in
         };
       };
 
-      style = builtins.readFile ./waybar-style.css;
+      style = lib.mkAfter (builtins.readFile ./waybar-style.css);
     };
   };
 }

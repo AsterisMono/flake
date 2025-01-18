@@ -1,12 +1,48 @@
+/* Override Stylix default settings */
+.modules-left #workspaces button {
+  border-bottom: 0;
+}
+.modules-left #workspaces button.focused,
+.modules-left #workspaces button.active {
+  border-bottom: 0;
+}
+#wireplumber,
+#pulseaudio,
+#sndio,
+#wireplumber.muted,
+#pulseaudio.muted,
+#sndio.muted,
+#upower,
+#battery,
+#upower.charging,
+#battery.Charging,
+#network,
+#network.disconnected,
+#user,
+#clock,
+#backlight,
+#cpu,
+#disk,
+#idle_inhibitor,
+#temperature,
+#mpd,
+#language,
+#keyboard-state,
+#memory,
+#window {
+  padding: 0;
+}
+
 * {
   border: none;
   border-radius: 0;
-  font-family: Torus, "Font Awesome 6 Free", "Font Awesome 5 Free", "Font Awesome";
+  font-family: Torus, "Font Awesome 6 Free", "Font Awesome 5 Free",
+    "Font Awesome";
   font-size: 15px;
   min-height: 0;
 }
 
-#waybar {
+window#waybar {
   background: transparent;
 }
 
@@ -20,15 +56,32 @@
 #workspaces,
 #cpu,
 #memory {
-  background-color: rgba(46, 52, 64, 0.7);
+  background-color: @base00;
   margin: 5px 0px;
-  padding: 6px 12px;
-  color: #9DA9A0;
+  padding: 6px 6px;
+  color: @base05;
+}
+
+/* First child */
+#network {
+  padding: 6px 6px 6px 12px;
+}
+
+/* Last child */
+#clock {
+  padding: 6px 12px 6px 6px;
+}
+
+#custom-separator {
+  background-color: @base00;
+  margin: 5px 0px;
+  padding: 6px 3px;
+  color: @base03;
 }
 
 #battery.critical {
-  background-color: #E67E80;
-  color: #2D353B;
+  background-color: @base0F;
+  color: @base01;
 }
 
 #workspaces {
@@ -42,12 +95,13 @@
 }
 
 #workspaces button.active {
-  background-color: #A7C080;
-  color: #2D353B;
+  background-color: @base0D;
+  color: @base01;
 }
 
 #workspaces button.urgent {
-  background-color: #DBBC7F;
+  background-color: @base08;
+  color: @base01;
 }
 
 #workspaces button.active:first-child:last-child {
@@ -63,7 +117,7 @@
 }
 
 #workspaces button {
-  color: #9DA9A0;
+  color: @base05;
   padding: 6px 16px;
 }
 
