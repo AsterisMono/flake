@@ -3,7 +3,7 @@
   options = {
     amono.tailscale.enable = lib.mkOption {
       type = lib.types.bool;
-      default = true;
+      default = false;
       description = "Auto register and enable tailscale";
     };
   };

@@ -10,7 +10,7 @@
 
   programs.fish.enable = true;
 
-  services.flatpak.enable = true;
+  services.flatpak.enable = false;
 
   environment.systemPackages = with pkgs; [
     xdg-user-dirs

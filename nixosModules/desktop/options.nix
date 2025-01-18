@@ -11,5 +11,6 @@
       default = "amdgpu";
       description = "GPU to use";
     };
+    niri.enable = lib.mkEnableOption "Enable Niri";
   };
 }
