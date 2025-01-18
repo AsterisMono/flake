@@ -20,8 +20,8 @@ in
       lxqt.lxqt-policykit
       wl-clipboard
       libsecret
-      qt5-wayland
-      qt6-wayland
+      libsForQt5.qt5.qtwayland
+      kdePackages.qtwayland
       # Applications
       hyprshot
       cliphist
