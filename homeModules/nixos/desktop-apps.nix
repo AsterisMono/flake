@@ -2,6 +2,8 @@
 let
   extraPackages = with pkgs;[
     dbeaver-bin
+    fractal
+    unstablePkgs.code-cursor
   ];
 in
 {
@@ -21,8 +23,5 @@ in
         "--enable-wayland-ime"
       ];
     };
-
-    programs.kitty.enable = true;
-    programs.firefox.enable = true;
   };
 }

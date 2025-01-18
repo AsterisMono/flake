@@ -25,12 +25,14 @@ in
       # Applications
       hyprshot
       cliphist
+      wl-clip-persist
       pavucontrol
       udiskie
       blueman
       nautilus
       nautilus-open-any-terminal
-      wl-clip-persist
+      loupe
+      amberol
     ];
 
     services.greetd = {
