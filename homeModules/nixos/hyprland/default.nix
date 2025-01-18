@@ -7,14 +7,6 @@ in
     wayland.windowManager.hyprland = {
       enable = true;
       systemd.enable = false; # uwsm
-      settings = lib.mkIf osConfig.hardware.nvidia.modesetting.enable {
-        env = [
-          "LIBVA_DRIVER_NAME,nvidia"
-          "XDG_SESSION_TYPE,wayland"
-          "GBM_BACKEND,nvidia-drm"
-          "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-        ];
-      };
       extraConfig = builtins.readFile ./hyprland.conf;
     };
 
