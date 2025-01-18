@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  cfg = config.amono.desktop.suite;
+  cfg = config.amono.desktop.plasma.enable;
 in
 {
-  config = lib.mkIf (cfg == "plasma") {
+  config = lib.mkIf cfg {
     services = {
       displayManager = {
         sddm = {

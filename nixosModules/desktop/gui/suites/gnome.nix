@@ -1,9 +1,9 @@
 { config, pkgs, lib, ... }:
 let
-  cfg = config.amono.desktop.suite;
+  cfg = config.amono.desktop.gnome.enable;
 in
 {
-  config = lib.mkIf (cfg == "gnome") {
+  config = lib.mkIf cfg {
     services.xserver = {
       enable = true;
 

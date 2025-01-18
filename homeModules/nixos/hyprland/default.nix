@@ -1,12 +1,12 @@
-{ config, lib, osConfig, pkgs, ... }:
+{ lib, osConfig, pkgs, ... }:
 let
-  cfg = config.amonoHome.hyprland;
+  cfg = osConfig.amono.desktop.hyprland.enable;
   cursorPackage = pkgs.capitaine-cursors;
   cursorThemeName = "capitaine-cursors-white";
   cursorSize = 32;
 in
 {
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf cfg {
     wayland.windowManager.hyprland = {
       enable = true;
       settings = lib.mkIf osConfig.hardware.nvidia.modesetting.enable {

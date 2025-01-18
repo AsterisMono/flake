@@ -40,7 +40,7 @@ builtins.listToAttrs (map mkLinux [
     customConfig = {
       proxy.enable = true;
       desktop = {
-        suite = "hyprland";
+        hyprland.enable = true;
         gpu = "amdgpu";
       };
     };
@@ -50,7 +50,7 @@ builtins.listToAttrs (map mkLinux [
     customConfig = {
       proxy.enable = true;
       desktop = {
-        suite = "plasma";
+        plasma.enable = true;
         gpu = "intel";
       };
     };
