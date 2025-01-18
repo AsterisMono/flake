@@ -1,9 +1,9 @@
 { config, pkgs, lib, ... }:
 let
-  cfg = config.amono.desktop.suite;
+  cfg = config.amono.desktop.hyprland.enable;
 in
 {
-  config = lib.mkIf (cfg == "hyprland") {
+  config = lib.mkIf cfg {
     programs.hyprland = {
       enable = true;
       xwayland.enable = true;
