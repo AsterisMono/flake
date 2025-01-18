@@ -6,6 +6,7 @@ in
   config = lib.mkIf cfg {
     programs.hyprland = {
       enable = true;
+      withUWSM = true;
       xwayland.enable = true;
     };
 
@@ -14,32 +15,26 @@ in
     };
 
     environment.systemPackages = with pkgs;[
-      waybar
-      mako
-      wofi
+      # Libraries
       libnotify
-      hyprpaper
-      hyprshot
-      kitty
       lxqt.lxqt-policykit
       wl-clipboard
+      libsecret
+      qt5-wayland
+      qt6-wayland
+      # Applications
+      hyprshot
+      cliphist
       pavucontrol
       udiskie
-      xfce.thunar
-      xfce.ristretto
       blueman
-      cliphist
-      libsecret
+      nautilus
+      nautilus-open-any-terminal
+      wl-clip-persist
     ];
 
     services.greetd = {
       enable = true;
-      settings = {
-        default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland";
-          user = "greeter";
-        };
-      };
     };
 
     services.gnome.gnome-keyring.enable = true;

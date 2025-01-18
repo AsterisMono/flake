@@ -30,6 +30,14 @@
         vscode.enable = false;
         neovim.enable = false;
       };
+      stylix.iconTheme = {
+        enable = true;
+        package = pkgs.papirus-icon-theme.override {
+          color = "yellow";
+        };
+        light = "Papirus";
+        dark = "Papirus";
+      };
     }
   ];
 }

@@ -6,6 +6,7 @@ in
   config = lib.mkIf cfg {
     wayland.windowManager.hyprland = {
       enable = true;
+      systemd.enable = false; # uwsm
       settings = lib.mkIf osConfig.hardware.nvidia.modesetting.enable {
         env = [
           "LIBVA_DRIVER_NAME,nvidia"
