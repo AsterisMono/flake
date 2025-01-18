@@ -22,6 +22,7 @@
         name = "FiraCode Nerd Font Mono Ret";
       };
     };
+    cursor.size = 24;
     opacity.terminal = 0.9;
   };
   home-manager.sharedModules = [
