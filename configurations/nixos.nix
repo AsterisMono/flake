@@ -21,6 +21,7 @@ let
           flake.nixosModules.common
           flake.nixosModules.${type}
           flake.inputs.disko.nixosModules.disko
+          flake.inputs.niri.nixosModules.niri
           flake.inputs.home-manager-nixos.nixosModules.home-manager
           { networking.hostName = hostname; }
           { config.amono = customConfig; }
@@ -35,7 +36,7 @@ builtins.listToAttrs (map mkLinux [
   # tailscale is enabled for all machines
   # proxy is enabled by default for all desktops, and by enabling proxy USTC substituter will be used
   {
-    hostname = "luminara";
+    hostname = "lunaria";
     customConfig = {
       proxy.enable = true;
       desktop = {
