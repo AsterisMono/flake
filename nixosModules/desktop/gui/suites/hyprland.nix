@@ -23,11 +23,11 @@ in
       libsForQt5.qt5.qtwayland
       kdePackages.qtwayland
       # Applications
+      hyprpaper
       hyprshot
       cliphist
       wl-clip-persist
       pavucontrol
-      udiskie
       blueman
       nautilus
       nautilus-open-any-terminal
@@ -35,12 +35,13 @@ in
       amberol
     ];
 
-    services.greetd = {
+    services.xserver.displayManager.gdm = {
       enable = true;
     };
 
     services.gnome.gnome-keyring.enable = true;
+    security.pam.services.gdm-password.enableGnomeKeyring = true;
 
-    services.tumbler.enable = true;
+    services.udisks2.enable = true;
   };
 }

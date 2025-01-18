@@ -28,5 +28,7 @@ in
       borderSize = 0;
       padding = "10";
     };
+
+    services.udiskie.enable = true;
   };
 }
