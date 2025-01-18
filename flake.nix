@@ -44,6 +44,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     niri.url = "github:sodiboo/niri-flake";
+    stylix.url = "github:danth/stylix/release-24.11";
   };
 
   outputs = inputs@{ self, ... }:
