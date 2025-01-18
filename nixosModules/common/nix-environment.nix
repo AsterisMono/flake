@@ -1,8 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ flake, config, pkgs, lib, ... }:
 
 {
   nix = {
     package = pkgs.nixVersions.latest;
+    channel.enable = false;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       # If proxy is enabled, use mirror to speed up nix binary cache
@@ -21,7 +22,11 @@
         "cmiki"
       ];
     };
+    # Suppress nix-shell channel errors on a flake system
+    nixPath = [ "/etc/nix/path" ];
   };
+
+  environment.etc."nix/path/nixpkgs".source = flake.inputs.nixpkgs;
 
   nixpkgs.config.allowUnfree = true;
 
