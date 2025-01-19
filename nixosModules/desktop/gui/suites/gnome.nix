@@ -19,19 +19,18 @@ in
       ];
     };
 
-    environment.gnome.excludePackages = (with pkgs; [
+    environment.gnome.excludePackages = with pkgs; [
       gnome-tour
-      gnome-connections
       eolie
-      gnome-photos
-    ]) ++ (with pkgs.gnome; [
       epiphany
-      tali
-      iagno
-      hitori
-      atomix
-      gnome-music
-    ]);
+      gnome-maps
+      simple-scan
+      yelp
+    ];
+
+    environment.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+    };
 
     programs.xwayland.enable = true;
     programs.xwayland.package = pkgs.xwayland;
@@ -46,20 +45,11 @@ in
       blur-my-shell
       kimpanel
     ]) ++ (with pkgs; [
-      pop-gtk-theme
-      pop-icon-theme
-      vimix-icon-theme
-      vimix-gtk-themes
-      adw-gtk3
-      gnome.adwaita-icon-theme
-      gnome.gnome-tweaks
-      maia-icon-theme
+      gnome-tweaks
     ]);
 
     # Override pulseaudio
     # I have no idea who enabled this
     hardware.pulseaudio.enable = lib.mkForce false;
-
-    qt.platformTheme = "gnome";
   };
 }

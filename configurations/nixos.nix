@@ -41,7 +41,7 @@ builtins.listToAttrs (map mkLinux [
     customConfig = {
       proxy.enable = true;
       desktop = {
-        hyprland.enable = true;
+        gnome.enable = true;
         gpu = "amdgpu";
       };
     };
