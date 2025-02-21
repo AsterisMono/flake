@@ -48,12 +48,10 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "celestia";
+    type = "server";
     customConfig = {
       proxy.enable = true;
-      desktop = {
-        plasma.enable = true;
-        gpu = "intel";
-      };
+      homeManager.enable = true;
     };
   }
   {
