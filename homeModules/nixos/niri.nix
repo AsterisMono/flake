@@ -1,6 +1,6 @@
-{ config, lib, osConfig, pkgs, ... }:
+{ config, lib, osConfig, pkgs, type, ... }:
 let
-  cfg = osConfig.amono.desktop.niri.enable;
+  cfg = if type == "desktop" then osConfig.amono.desktop.niri.enable else false;
 in
 {
   config = lib.mkIf cfg {

@@ -1,6 +1,6 @@
-{ lib, osConfig, pkgs, ... }:
+{ lib, osConfig, pkgs, type, ... }:
 let
-  cfg = osConfig.amono.desktop.hyprland.enable;
+  cfg = if type == "desktop" then osConfig.amono.desktop.hyprland.enable else false;
 in
 {
   config = lib.mkIf cfg {
