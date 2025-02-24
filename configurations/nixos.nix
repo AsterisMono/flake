@@ -21,7 +21,6 @@ let
           flake.nixosModules.common
           flake.nixosModules.${type}
           flake.inputs.disko.nixosModules.disko
-          flake.inputs.niri.nixosModules.niri
           flake.inputs.stylix.nixosModules.stylix
           flake.inputs.home-manager-nixos.nixosModules.home-manager
           { networking.hostName = hostname; }
