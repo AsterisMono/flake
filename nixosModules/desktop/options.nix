@@ -9,6 +9,5 @@
     plasma.enable = lib.mkEnableOption "Enable KDE Plasma";
     gnome.enable = lib.mkEnableOption "Enable Gnome";
     hyprland.enable = lib.mkEnableOption "Enable Hyprland";
-    niri.enable = lib.mkEnableOption "Enable Niri, a scrollable-tiling window manager.";
   };
 }
