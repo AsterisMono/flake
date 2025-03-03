@@ -61,8 +61,11 @@ builtins.listToAttrs (map mkLinux [
   }
   {
     hostname = "calendula";
-    type = "server";
-    payloads = [ ];
-    customConfig = { };
+    customConfig = {
+      proxy.enable = true;
+      desktop = {
+        gnome.enable = true;
+      };
+    };
   }
 ])
