@@ -3,7 +3,6 @@ _:
   # Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-  boot.supportedFilesystems = [ "ntfs" ]; # ntfs-3g
   boot.loader.systemd-boot.configurationLimit = 5;
 
   # No need for fonts and documentation on a server
