@@ -59,4 +59,10 @@ builtins.listToAttrs (map mkLinux [
     payloads = [ "docker" "stellarbase-caddy" "onedrive-rclone" ];
     customConfig = { };
   }
+  {
+    hostname = "calendula";
+    type = "server";
+    payloads = [ ];
+    customConfig = { };
+  }
 ])
