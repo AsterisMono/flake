@@ -46,10 +46,19 @@ in
       kimpanel
     ]) ++ (with pkgs; [
       gnome-tweaks
+    ]) ++ (with pkgs.gnome; [
+      gnome-remote-desktop
     ]);
 
     # Override pulseaudio
     # I have no idea who enabled this
     hardware.pulseaudio.enable = lib.mkForce false;
+
+    # RDP Support
+    services.gnome.gnome-remote-desktop.enable = true;
+
+    services.xrdp.enable = true;
+    services.xrdp.defaultWindowManager = "${pkgs.gnome.gnome-session}/bin/gnome-session";
+    services.xrdp.openFirewall = true;
   };
 }
