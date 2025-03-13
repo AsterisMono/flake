@@ -47,6 +47,7 @@ in
     ]) ++ (with pkgs; [
       gnome-tweaks
       gnome-remote-desktop
+      gnome-browser-connector
     ]);
 
     # Override pulseaudio
