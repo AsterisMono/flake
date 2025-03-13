@@ -1,10 +1,23 @@
-{ osConfig, lib, pkgs, unstablePkgs, ... }:
+{
+  osConfig,
+  lib,
+  pkgs,
+  unstablePkgs,
+  ...
+}:
 let
-  extraPackages = with pkgs;[
-    dbeaver-bin
-    fractal
-    unstablePkgs.code-cursor
-  ];
+  extraPackages =
+    with pkgs;
+    [
+      dbeaver-bin
+      fractal
+    ]
+    ++ (with unstablePkgs; [
+      code-cursor
+      warp-terminal
+      xpipe
+      telegram-desktop
+    ]);
 in
 {
   config = lib.mkIf osConfig.amono.homeManager.installGraphicalApps {
