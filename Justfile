@@ -7,6 +7,9 @@ build:
 deploy:
   nh os switch .
 
+deploy-boot:
+	nh os boot .
+
 deploy-nonh:
 	nixos-rebuild switch --flake . --use-remote-sudo
 
