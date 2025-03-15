@@ -71,8 +71,7 @@
   nixpkgs.config.cudaSupport = lib.mkForce true;
 
   environment.systemPackages = with pkgs; [
-    cudaPackages.cudatoolkit
-    vllm
+    networkmanager
   ];
 
   disko.devices = {
