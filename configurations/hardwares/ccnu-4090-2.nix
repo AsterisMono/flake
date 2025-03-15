@@ -70,10 +70,10 @@
 
   nixpkgs.config.cudaSupport = lib.mkForce true;
 
-  virtualisation.docker = {
-    enable = true;
-    enableNvidia = true;
-  };
+  environment.systemPackages = with pkgs; [
+    cudaPackages.cudatoolkit
+    vllm
+  ];
 
   disko.devices = {
     disk = {
