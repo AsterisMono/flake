@@ -70,7 +70,10 @@
 
   nixpkgs.config.cudaSupport = lib.mkForce true;
 
-  networking.networkmanager.enable = true;
+  networking.wireless = {
+    enable = true;
+    userControlled.enable = true;
+  };
 
   disko.devices = {
     disk = {
