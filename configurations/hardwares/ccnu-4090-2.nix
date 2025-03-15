@@ -68,8 +68,8 @@
   };
 
   environment.systemPackages = with pkgs; [
-    cudaPackages.cudatoolkit
-    cudaPackages.cudnn
+    cudaPackages_12_1.cudatoolkit
+    cudaPackages_12_1.cudnn
   ];
 
   nixpkgs.config.cudaSupport = lib.mkForce true;
