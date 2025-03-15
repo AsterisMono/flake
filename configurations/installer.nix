@@ -6,17 +6,23 @@ flake.inputs.nixpkgs.lib.nixosSystem {
     inherit (flake.inputs) secrets;
   };
   modules = [
-    ({ modulesPath, ... }: {
-      imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
-      amono.proxy.enable = true;
-    })
+    (
+      { modulesPath, ... }:
+      {
+        imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
+        amono.proxy.enable = true;
+      }
+    )
     ../nixosModules/common/proxy.nix
     ../nixosModules/common/nix-environment.nix
-    ({ pkgs, ... }: {
-      environment.systemPackages = with pkgs; [
-        git
-        gh
-      ];
-    })
+    (
+      { pkgs, ... }:
+      {
+        environment.systemPackages = with pkgs; [
+          git
+          gh
+        ];
+      }
+    )
   ];
 }

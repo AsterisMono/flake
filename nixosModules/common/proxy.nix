@@ -1,4 +1,9 @@
-{ lib, config, secrets, ... }:
+{
+  lib,
+  config,
+  secrets,
+  ...
+}:
 let
   proxy = "127.0.0.1:${toString cfg.port}";
   httpProxy = "http://${proxy}";

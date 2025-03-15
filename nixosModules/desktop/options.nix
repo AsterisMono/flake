@@ -2,7 +2,11 @@
 {
   options.amono.desktop = {
     gpu = lib.mkOption {
-      type = lib.types.enum [ "intel" "nvidia" "amdgpu" ];
+      type = lib.types.enum [
+        "intel"
+        "nvidia"
+        "amdgpu"
+      ];
       default = "amdgpu";
       description = "GPU to use";
     };

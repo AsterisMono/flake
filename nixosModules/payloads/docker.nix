@@ -1,4 +1,9 @@
-{ options, lib, config, ... }:
+{
+  options,
+  lib,
+  config,
+  ...
+}:
 {
   options.amono.payload.docker.enableWatchTower = {
     type = lib.types.bool;

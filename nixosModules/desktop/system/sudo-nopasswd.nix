@@ -1,5 +1,4 @@
-_:
-{
+_: {
   security.sudo.extraRules = [
     {
       # TODO: username variable

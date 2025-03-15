@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.amono.desktop.hyprland.enable;
 in
@@ -14,7 +19,7 @@ in
       NIXOS_OZONE_WL = "1";
     };
 
-    environment.systemPackages = with pkgs;[
+    environment.systemPackages = with pkgs; [
       # Libraries
       libnotify
       lxqt.lxqt-policykit

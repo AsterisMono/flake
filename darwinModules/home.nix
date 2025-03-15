@@ -9,7 +9,15 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      inherit (homeInputs) flake system hostname username type unstablePkgs secrets;
+      inherit (homeInputs)
+        flake
+        system
+        hostname
+        username
+        type
+        unstablePkgs
+        secrets
+        ;
     };
   };
 }
