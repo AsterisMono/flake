@@ -4,7 +4,12 @@
     fontDir.enable = true;
     packages = with pkgs; [
       (nerdfonts.override {
-        fonts = [ "FiraCode" "Hack" "JetBrainsMono" "UbuntuMono" ];
+        fonts = [
+          "FiraCode"
+          "Hack"
+          "JetBrainsMono"
+          "UbuntuMono"
+        ];
       })
       # hack-font
       inter

@@ -64,7 +64,10 @@
 
   programs.fish.enable = true;
 
-  environment.shells = with pkgs; [ zsh fish ];
+  environment.shells = with pkgs; [
+    zsh
+    fish
+  ];
 
   system.stateVersion = 5;
 

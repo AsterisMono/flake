@@ -1,4 +1,9 @@
-{ osConfig, lib, type, ... }:
+{
+  osConfig,
+  lib,
+  type,
+  ...
+}:
 
 let
   cfg = if type == "desktop" then osConfig.amono.desktop.hyprland.enable else false;
@@ -81,7 +86,13 @@ in
             format-alt = "{time} {icon}";
             # "format-good" = ""; # An empty format will hide the module
             # "format-full" = "";
-            format-icons = [ "" "" "" "" "" ];
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
           };
           network = {
             # "interface" = "wlp2*"; # (Optional) To force the use of this interface

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 let
   cfg = config.amono.desktop.gnome.enable;
 in
@@ -37,18 +42,20 @@ in
 
     xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
 
-    environment.systemPackages = (with pkgs.gnomeExtensions; [
-      appindicator
-      dash-to-dock
-      system-monitor
-      xremap
-      blur-my-shell
-      kimpanel
-    ]) ++ (with pkgs; [
-      gnome-tweaks
-      gnome-remote-desktop
-      gnome-browser-connector
-    ]);
+    environment.systemPackages =
+      (with pkgs.gnomeExtensions; [
+        appindicator
+        dash-to-dock
+        system-monitor
+        xremap
+        blur-my-shell
+        kimpanel
+      ])
+      ++ (with pkgs; [
+        gnome-tweaks
+        gnome-remote-desktop
+        gnome-browser-connector
+      ]);
 
     # Override pulseaudio
     # I have no idea who enabled this

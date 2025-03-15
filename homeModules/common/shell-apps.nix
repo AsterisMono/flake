@@ -1,6 +1,6 @@
 { pkgs, unstablePkgs, ... }:
 let
-  extraPackages = with pkgs;[
+  extraPackages = with pkgs; [
     nodejs_20
     any-nix-shell
     fastfetch

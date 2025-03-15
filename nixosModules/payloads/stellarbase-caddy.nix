@@ -1,5 +1,4 @@
-_:
-{
+_: {
   services.caddy = {
     enable = true;
     globalConfig = ''
@@ -12,5 +11,8 @@ _:
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
 }

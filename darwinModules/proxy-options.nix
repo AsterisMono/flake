@@ -1,7 +1,8 @@
 # Copy & pasted https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/config/networking.nix
-{ lib
-, config
-, ...
+{
+  lib,
+  config,
+  ...
 }:
 let
   cfg = config.networking;
@@ -93,11 +94,10 @@ in
 
   config = {
     networking.proxy.envVars =
-      lib.optionalAttrs (cfg.proxy.default != null)
-        {
-          # other options already fallback to proxy.default
-          no_proxy = "127.0.0.1,localhost";
-        }
+      lib.optionalAttrs (cfg.proxy.default != null) {
+        # other options already fallback to proxy.default
+        no_proxy = "127.0.0.1,localhost";
+      }
       // lib.optionalAttrs (cfg.proxy.httpProxy != null) {
         http_proxy = cfg.proxy.httpProxy;
       }

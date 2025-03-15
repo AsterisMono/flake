@@ -1,13 +1,26 @@
 flake:
 let
-  mkDarwin = { hostname, username ? "cmiki", system ? "aarch64-darwin", customConfig ? { }, extraModules ? [ ] }:
+  mkDarwin =
+    {
+      hostname,
+      username ? "cmiki",
+      system ? "aarch64-darwin",
+      customConfig ? { },
+      extraModules ? [ ],
+    }:
     let
       unstablePkgs = import flake.inputs.nixpkgs-unstable {
         inherit system;
         config.allowUnfree = true;
       };
       specialArgs = {
-        inherit flake system hostname username unstablePkgs;
+        inherit
+          flake
+          system
+          hostname
+          username
+          unstablePkgs
+          ;
       };
     in
     {
@@ -21,8 +34,10 @@ let
       };
     };
 in
-builtins.listToAttrs (map mkDarwin [
-  {
-    hostname = "Oryx";
-  }
-])
+builtins.listToAttrs (
+  map mkDarwin [
+    {
+      hostname = "Oryx";
+    }
+  ]
+)

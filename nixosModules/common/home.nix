@@ -1,4 +1,11 @@
-{ config, lib, flake, username, type, ... }@homeInputs:
+{
+  config,
+  lib,
+  flake,
+  username,
+  type,
+  ...
+}@homeInputs:
 let
   cfg = config.amono.homeManager;
 in
@@ -28,7 +35,15 @@ in
       useUserPackages = true;
       backupFileExtension = ".bak";
       extraSpecialArgs = {
-        inherit (homeInputs) flake system hostname username type unstablePkgs secrets;
+        inherit (homeInputs)
+          flake
+          system
+          hostname
+          username
+          type
+          unstablePkgs
+          secrets
+          ;
       };
     };
   };
