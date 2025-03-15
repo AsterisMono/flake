@@ -93,7 +93,6 @@ builtins.listToAttrs (
       hostname = "ccnu-4090-2";
       type = "server";
       customConfig = { };
-      pkgs = flake.inputs.nixpkgs-unstable;
     }
   ]
 )
