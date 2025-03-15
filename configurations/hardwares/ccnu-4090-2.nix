@@ -68,10 +68,6 @@
     package = config.boot.kernelPackages.nvidiaPackages.latest;
   };
 
-  environment.systemPackages = with pkgs; [
-    cudaPackages_12_7.cudatoolkit
-  ];
-
   nixpkgs.config.cudaSupport = lib.mkForce true;
 
   virtualisation.docker = {
