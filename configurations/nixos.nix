@@ -10,6 +10,7 @@ let
       customConfig ? { },
       extraModules ? [ ],
       payloads ? [ ],
+      pkgs ? flake.inputs.nixpkgs,
     }:
     let
       unstablePkgs = import flake.inputs.nixpkgs-unstable {
@@ -30,7 +31,7 @@ let
     in
     {
       name = hostname;
-      value = flake.inputs.nixpkgs.lib.nixosSystem {
+      value = pkgs.lib.nixosSystem {
         inherit specialArgs system;
         modules =
           [
@@ -92,6 +93,7 @@ builtins.listToAttrs (
       hostname = "ccnu-4090-2";
       type = "server";
       customConfig = { };
+      pkgs = flake.inputs.nixpkgs-unstable;
     }
   ]
 )
