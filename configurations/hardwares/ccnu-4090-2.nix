@@ -70,9 +70,7 @@
 
   nixpkgs.config.cudaSupport = lib.mkForce true;
 
-  environment.systemPackages = with pkgs; [
-    networkmanager
-  ];
+  networking.networkmanager.enable = true;
 
   disko.devices = {
     disk = {
