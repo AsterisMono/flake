@@ -91,6 +91,7 @@ builtins.listToAttrs (
     {
       hostname = "ccnu-4090-2";
       type = "server";
+      payloads = [ "docker" ];
       customConfig = { };
     }
   ]
