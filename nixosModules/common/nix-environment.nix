@@ -1,14 +1,26 @@
-{ flake, config, pkgs, lib, ... }:
+{
+  flake,
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   nix = {
     package = pkgs.nixVersions.latest;
     channel.enable = false;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       # If proxy is enabled, use mirror to speed up nix binary cache
-      substituters = lib.optionals config.amono.proxy.enable [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+      substituters = lib.optionals config.amono.proxy.enable [
+        "https://mirrors.ustc.edu.cn/nix-channels/store"
+      ];
       extra-substituters = [
+        "https://nix-community.cachix.org"
         "https://asterismono.cachix.org"
         "https://devenv.cachix.org"
         "https://cosmic.cachix.org"
@@ -17,6 +29,7 @@
         "asterismono.cachix.org-1:GgkakezDphTbi2w+ksIkuk+LfIbD32IbsxrpmnDpPvo="
         "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
         "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
       trusted-users = [
         "cmiki"
