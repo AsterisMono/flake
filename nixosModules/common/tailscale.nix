@@ -40,7 +40,7 @@
 
       # have the job run this shell script
       script = with pkgs; ''
-        secret=${builtins.readFile "${secrets}/tailscaleAuthKey"}
+        secret=${secrets.tailscaleAuthKey}
         # wait for tailscaled to settle
         sleep 2
 
