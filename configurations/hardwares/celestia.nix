@@ -13,6 +13,7 @@
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
+    secrets.nixosModules.wireless
   ];
 
   boot.initrd.availableKernelModules = [

@@ -28,7 +28,7 @@
     };
     secrets = {
       url = "git+https://github.com/AsterisMono/secrets";
-      flake = false;
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
     darwin = {

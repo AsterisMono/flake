@@ -24,7 +24,7 @@ in
     services.mihomo = {
       enable = true;
       inherit (cfg) tunMode;
-      configFile = "${secrets}/mihomoConfig.yaml";
+      configFile = secrets.mihomoConfig;
     };
     networking.proxy = lib.mkIf (!cfg.tunMode) {
       inherit httpProxy;
