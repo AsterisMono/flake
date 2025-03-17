@@ -57,4 +57,9 @@
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+  # MW310UH wireless dongle
+  services.udev.extraRules = ''
+    ACTION=="add", SUBSYSTEM=="usb", ATTRS{idVendor}=="0bda", ATTRS{idProduct}=="a192", RUN+="${pkgs.usb-modeswitch}/bin/usb_modeswitch -v 0bda -p a192 -K"
+  '';
 }
