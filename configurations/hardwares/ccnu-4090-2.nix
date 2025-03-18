@@ -2,7 +2,6 @@
   modulesPath,
   lib,
   config,
-  pkgs,
   ...
 }:
 
@@ -69,11 +68,6 @@
   };
 
   nixpkgs.config.cudaSupport = lib.mkForce true;
-
-  networking.wireless = {
-    enable = true;
-    userControlled.enable = true;
-  };
 
   disko.devices = {
     disk = {
