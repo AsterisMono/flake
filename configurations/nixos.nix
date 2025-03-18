@@ -93,7 +93,7 @@ builtins.listToAttrs (
       hostname = "ccnu-4090-2";
       type = "server";
       customConfig = { };
-      payloads = [ "vllm" ];
+      payloads = [ ];
       pkgs = flake.inputs.nixpkgs-unstable;
     }
   ]
