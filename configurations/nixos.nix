@@ -73,6 +73,7 @@ builtins.listToAttrs (
         proxy.enable = true;
         homeManager.enable = true;
       };
+      payloads = [ "docker" ];
     }
     {
       hostname = "stellarbase";
