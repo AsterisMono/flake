@@ -61,7 +61,7 @@ builtins.listToAttrs (
       customConfig = {
         proxy.enable = true;
         desktop = {
-          gnome.enable = true;
+          plasma.enable = true;
           gpu = "amdgpu";
         };
       };
@@ -85,7 +85,7 @@ builtins.listToAttrs (
       customConfig = {
         proxy.enable = true;
         desktop = {
-          gnome.enable = true;
+          plasma.enable = true;
         };
       };
     }
