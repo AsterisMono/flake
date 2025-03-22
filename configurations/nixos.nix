@@ -97,5 +97,16 @@ builtins.listToAttrs (
       payloads = [ ];
       pkgs = flake.inputs.nixpkgs-unstable;
     }
+    {
+      hostname = "fervorine";
+      type = "desktop";
+      customConfig = {
+        proxy.enable = true;
+        desktop = {
+          plasma.enable = true;
+          gpu = "amdgpu";
+        };
+      };
+    }
   ]
 )
