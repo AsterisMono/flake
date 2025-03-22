@@ -17,6 +17,7 @@ let
       warp-terminal
       xpipe
       telegram-desktop
+      obsidian
     ]);
 in
 {
