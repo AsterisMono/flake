@@ -69,6 +69,7 @@
         };
         nixosConfigurations = import ./configurations/nixos.nix self;
         darwinConfigurations = import ./configurations/darwin.nix self;
+        installer = import ./configurations/installer.nix self;
         nixosModules = {
           common = self.lib.bundleModules ./nixosModules/common;
           desktop = self.lib.bundleModules ./nixosModules/desktop;

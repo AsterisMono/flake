@@ -1,15 +1,16 @@
 flake:
 
-flake.inputs.nixpkgs.lib.nixosSystem {
+flake.inputs.nixpkgs.lib.nixosSystem rec {
   system = "x86_64-linux";
   specialArgs = {
     inherit (flake.inputs) secrets;
+    inherit flake system;
   };
   modules = [
     (
       { modulesPath, ... }:
       {
-        imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
+        imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-plasma5.nix") ];
         amono.proxy.enable = true;
       }
     )

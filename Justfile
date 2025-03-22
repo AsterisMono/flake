@@ -46,3 +46,6 @@ gc:
 
 explore:
 	nix run github:bluskript/nix-inspect -- -p .
+
+build-installer:
+  nix build .#installer.config.system.build.isoImage
