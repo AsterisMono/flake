@@ -98,7 +98,7 @@ builtins.listToAttrs (
       pkgs = flake.inputs.nixpkgs-unstable;
     }
     {
-      hostname = "fervorine";
+      hostname = "zinnia";
       type = "desktop";
       customConfig = {
         proxy.enable = true;
