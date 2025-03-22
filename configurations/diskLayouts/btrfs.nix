@@ -1,5 +1,4 @@
-{ ... }:
-{
+_: {
   disko.devices = {
     disk = {
       main = {
@@ -27,19 +26,25 @@
                 type = "btrfs";
                 extraArgs = [ "-f" ]; # Override existing partition
                 subvolumes = {
-                    "@" = { };
-                    "@root" = {
-                        mountpoint = "/";
-                        mountOptions = [ "compress=zstd" "noatime" ];
-                    };
-                    "@home" = {
-                        mountpoint = "/home";
-                        mountOptions = [ "compress=zstd" ];
-                    };
-                    "@nix" = {
-                        mountpoint = "/nix";
-                        mountOptions = [ "compress=zstd" "noatime" ];
-                    };
+                  "@" = { };
+                  "@root" = {
+                    mountpoint = "/";
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
+                  };
+                  "@home" = {
+                    mountpoint = "/home";
+                    mountOptions = [ "compress=zstd" ];
+                  };
+                  "@nix" = {
+                    mountpoint = "/nix";
+                    mountOptions = [
+                      "compress=zstd"
+                      "noatime"
+                    ];
+                  };
                 };
               };
             };
