@@ -93,9 +93,10 @@ builtins.listToAttrs (
     {
       hostname = "ccnu-4090-2";
       type = "server";
-      customConfig = { };
+      customConfig = {
+        homeManager.enable = true;
+      };
       payloads = [ ];
-      pkgs = flake.inputs.nixpkgs-unstable;
     }
     {
       hostname = "zinnia";
