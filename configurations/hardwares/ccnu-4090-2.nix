@@ -71,15 +71,6 @@
 
   nixpkgs.config.cudaSupport = lib.mkForce true;
 
-  services.ollama = {
-    enable = true;
-    openFirewall = true;
-    loadModels = [
-      "qwen2.5:32b"
-    ];
-    acceleration = "cuda";
-  };
-
   disko.devices = {
     disk = {
       main = {
