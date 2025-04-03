@@ -18,17 +18,17 @@
         description = "Enable tailscale SSH";
       };
       advertiseTags = lib.mkOption {
-        type = lib.types.listOf lib.types.string;
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "Tags to advertise";
       };
       advertiseRoutes = lib.mkOption {
-        type = lib.types.listOf lib.types.string;
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "Routes to advertise";
       };
       extraUpFlags = lib.mkOption {
-        type = lib.types.listOf lib.types.string;
+        type = lib.types.listOf lib.types.str;
         default = [ ];
         description = "Extra flags to pass to tailscale up";
       };
