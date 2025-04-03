@@ -49,6 +49,7 @@
         ++ lib.optionals config.amono.tailscale.ssh.enable [
           "--ssh"
         ];
+      useRoutingFeatures = if config.amono.tailscale.advertiseRoutes != [ ] then "both" else "client";
     };
     networking.firewall = {
       trustedInterfaces = [ "tailscale0" ];
