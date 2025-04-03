@@ -79,7 +79,7 @@ builtins.listToAttrs (
         homeManager.enable = true;
         tailscale = {
           advertiseTags = [ "tag:gpu" ];
-          advertiseRoutes = [ "127.0.0.0/16" ];
+          advertiseRoutes = [ "172.0.0.0/16" ];
         };
       };
       payloads = [ ];
