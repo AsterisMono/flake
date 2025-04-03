@@ -67,28 +67,10 @@ builtins.listToAttrs (
       };
     }
     {
-      hostname = "celestia";
-      type = "server";
-      customConfig = {
-        proxy.enable = true;
-        homeManager.enable = true;
-      };
-      payloads = [ "docker" ];
-    }
-    {
       hostname = "stellarbase";
       type = "server";
       payloads = [ "docker" ];
       customConfig = { };
-    }
-    {
-      hostname = "calendula";
-      customConfig = {
-        proxy.enable = true;
-        desktop = {
-          plasma.enable = true;
-        };
-      };
     }
     {
       hostname = "ccnu-4090-2";
