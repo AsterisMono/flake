@@ -77,6 +77,10 @@ builtins.listToAttrs (
       type = "server";
       customConfig = {
         homeManager.enable = true;
+        tailscale = {
+          advertiseTags = [ "tag:gpu" ];
+          advertiseRoutes = [ "127.0.0.0/16" ];
+        };
       };
       payloads = [ ];
     }
