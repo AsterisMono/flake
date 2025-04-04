@@ -30,7 +30,7 @@
       pickupRoutes = lib.mkOption {
         type = lib.types.bool;
         default = true;
-        description = "Enablle subnet routes";
+        description = "Enable subnet routes";
       };
       extraUpFlags = lib.mkOption {
         type = lib.types.listOf lib.types.str;
