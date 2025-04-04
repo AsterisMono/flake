@@ -27,6 +27,11 @@
         default = [ ];
         description = "Routes to advertise";
       };
+      pickupRoutes = lib.mkOption {
+        type = lib.types.bool;
+        default = true;
+        description = "Enablle subnet routes";
+      };
       extraUpFlags = lib.mkOption {
         type = lib.types.listOf lib.types.str;
         default = [ ];
@@ -48,6 +53,9 @@
         ]
         ++ lib.optionals config.amono.tailscale.ssh.enable [
           "--ssh"
+        ]
+        ++ lib.optionals config.amono.tailscale.pickupRoutes [
+          "--accept-routes"
         ];
       useRoutingFeatures = if config.amono.tailscale.advertiseRoutes != [ ] then "both" else "client";
     };
