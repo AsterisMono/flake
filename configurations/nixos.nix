@@ -36,6 +36,7 @@ let
         modules =
           [
             ./hardwares/${hostname}.nix
+            ../nixosModules/users/${username}.nix
             flake.nixosModules.common
             flake.nixosModules.${type}
             flake.inputs.disko.nixosModules.disko
