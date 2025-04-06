@@ -15,7 +15,7 @@ flake.inputs.nixpkgs.lib.nixosSystem rec {
         amono.tailscale = {
           enable = true;
           ssh.enable = true;
-          advertiseTags = [ "installer" ];
+          advertiseTags = [ "tag:installer" ];
           isEphemeral = true;
         };
       }
