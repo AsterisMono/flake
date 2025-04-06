@@ -39,6 +39,6 @@ in
     # However NixOS config networking.firewall doesn't support declarative ip-range rules, only ports
     # sus
     # TODO: use priority
-    networking.firewall.enable = !cfg.tunMode;
+    networking.firewall.enable = lib.mkForce (!cfg.tunMode);
   };
 }
