@@ -7,6 +7,7 @@
 {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
+    ../diskLayouts/simple.nix
   ];
 
   boot.initrd.availableKernelModules = [
