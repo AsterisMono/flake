@@ -36,6 +36,14 @@
       upgrade = true;
     };
 
+    taps = [
+      "siderolabs/tap"
+    ];
+
+    brews = [
+      "siderolabs/tap/talosctl"
+    ];
+
     # `brew install --cask`
     casks = [
       "visual-studio-code"
