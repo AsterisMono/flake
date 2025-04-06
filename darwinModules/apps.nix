@@ -43,10 +43,6 @@
       QQ = 451108668;
     };
 
-    taps = [
-      "homebrew/services"
-    ];
-
     # `brew install`
     brews = [
       # "aria2"  # download tool
