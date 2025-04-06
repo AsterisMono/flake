@@ -39,5 +39,8 @@ builtins.listToAttrs (
     {
       hostname = "Oryx";
     }
+    {
+      hostname = "Fervorine";
+    }
   ]
 )
