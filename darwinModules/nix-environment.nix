@@ -32,7 +32,4 @@
   };
 
   services.nix-daemon.enable = true;
-
-  # Fvk Sequoia I'm not upgrading
-  ids.uids.nixbld = 300;
 }
