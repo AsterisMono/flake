@@ -50,7 +50,6 @@
       "shottr"
       "raycast"
       "dbeaver-community"
-      "hiddenbar"
       "rectangle"
       "jordanbaird-ice"
       "onedrive"
@@ -59,6 +58,8 @@
       "typora"
       "tailscale"
       "firefox"
+      "warp"
+      "obsidian"
     ];
   };
 }
