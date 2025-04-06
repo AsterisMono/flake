@@ -95,5 +95,15 @@ builtins.listToAttrs (
         };
       };
     }
+    {
+      hostname = "ivy";
+      type = "server";
+      customConfig = {
+        proxy = {
+          enable = true;
+          tunMode = true;
+        };
+      };
+    }
   ]
 )
