@@ -1,6 +1,8 @@
 {
   lib,
   modulesPath,
+  secrets,
+  pkgs,
   ...
 }:
 
@@ -28,4 +30,16 @@
   networking.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  # This really should be moved to elsewhere.
+  services.github-runners = {
+    picea = {
+      enable = true;
+      url = "https://github.com/AsterisMono/flake";
+      tokenFile = secrets.flakeRunnerPAT;
+      extraPackages = with pkgs; [
+        deploy-rs
+      ];
+    };
+  };
 }
