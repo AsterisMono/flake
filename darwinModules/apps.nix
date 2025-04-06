@@ -36,18 +36,6 @@
       upgrade = true;
     };
 
-    masApps = {
-      TencentMeeting = 1484048379;
-      Wechat = 836500024;
-      NeteaseCloudMusic = 944848654;
-      QQ = 451108668;
-    };
-
-    # `brew install`
-    brews = [
-      # "aria2"  # download tool
-    ];
-
     # `brew install --cask`
     casks = [
       "visual-studio-code"
