@@ -25,6 +25,10 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
+    imports = [
+      ../nixosModules/users/${username}.nix
+    ];
+
     home-manager = {
       users.${username}.imports = [
         flake.homeModules.common

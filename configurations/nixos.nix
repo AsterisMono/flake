@@ -36,7 +36,6 @@ let
         modules =
           [
             ./hardwares/${hostname}.nix
-            ../nixosModules/users/${username}.nix
             flake.nixosModules.common
             flake.nixosModules.${type}
             flake.inputs.disko.nixosModules.disko
@@ -102,6 +101,16 @@ builtins.listToAttrs (
         proxy = {
           enable = true;
           tunMode = true;
+        };
+      };
+    }
+    {
+      hostname = "picea";
+      type = "server";
+      customConfig = {
+        proxy.enable = true;
+        tailscale = {
+          advertiseTags = [ "tag:ci" ];
         };
       };
     }
