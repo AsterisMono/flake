@@ -10,6 +10,7 @@ let
     corepack
     dust
     duf
+    kubectl
 
     # Language servers
     nixd
