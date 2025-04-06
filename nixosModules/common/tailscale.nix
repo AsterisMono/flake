@@ -37,12 +37,21 @@
         default = [ ];
         description = "Extra flags to pass to tailscale up";
       };
+      isEphemeral = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Is this machine ephemeral";
+      };
     };
   };
   config = lib.mkIf config.amono.tailscale.enable {
     services.tailscale = {
       enable = true;
-      authKeyFile = secrets.tailscaleAuthKey;
+      authKeyFile =
+        if config.amono.tailscale.isEphemeral then
+          secrets.tailscaleKeys.ephemeral
+        else
+          secrets.tailscaleKeys.reusable;
       extraUpFlags =
         config.amono.tailscale.extraUpFlags
         ++ lib.optionals (config.amono.tailscale.advertiseRoutes != [ ]) [
