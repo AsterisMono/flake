@@ -28,4 +28,8 @@
   networking.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+
+  # This really, really shouldn't be here
+  # TODO: Refactor
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 }
