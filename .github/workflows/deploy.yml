@@ -28,7 +28,7 @@ jobs:
       - name: Add SSH known hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ inputs.name }} >> ~/.ssh/known_hosts
+          ssh-keyscan -v -H ${{ inputs.name }} >> ~/.ssh/known_hosts
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31.1.0
