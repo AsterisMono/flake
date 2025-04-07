@@ -662,11 +662,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1744019698,
-        "narHash": "sha256-yYLTTL3dwByfugMI1rlodUs6diF5NCl6ou367owAfbo=",
+        "lastModified": 1744032981,
+        "narHash": "sha256-TX4AgqGYdqvSEoqnlvEZ3rdsLObu+syyTstjkcTIDDc=",
         "ref": "refs/heads/main",
-        "rev": "c3781926e7f0de7dff83bfd1dfed2ba0be425752",
-        "revCount": 20,
+        "rev": "74d9ad52e11ddcc1b8f9ca95eb5f02fe5b6f6991",
+        "revCount": 21,
         "type": "git",
         "url": "https://github.com/AsterisMono/secrets"
       },
