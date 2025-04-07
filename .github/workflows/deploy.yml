@@ -25,10 +25,9 @@ jobs:
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
 
-      - name: Establish SSH connection
+      - name: Add SSH known hosts
         run: |
           mkdir -p ~/.ssh
-          tailscale ping ${{ inputs.name }} && \
           ssh-keyscan -v -H ${{ inputs.name }} >> ~/.ssh/known_hosts
 
       - name: Install Nix
