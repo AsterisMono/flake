@@ -20,7 +20,7 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      # Checks-outs your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
           path: "flake"
@@ -52,4 +52,9 @@ jobs:
 
       - name: Deploy
         working-directory: ./flake
-        run: nix run nixpkgs#nixos-rebuild -- --flake .#${{ inputs.name }} --target-host root@${{ inputs.name }} switch
+        run: |
+          nix run nixpkgs#nixos-rebuild -- \
+            --flake .#${{ inputs.name }} \
+            --target-host root@${{ inputs.name }} \
+            switch \
+            --override-input secrets ../secrets
