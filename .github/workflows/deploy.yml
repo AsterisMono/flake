@@ -52,4 +52,4 @@ jobs:
 
       - name: Deploy
         working-directory: ./flake
-        run: nixos-rebuild switch --flake .#${{ inputs.name }} --target-host root@${{ inputs.name }} switch
+        run: nix run nixpkgs#nixos-rebuild -- --flake .#${{ inputs.name }} --target-host root@${{ inputs.name }} switch
