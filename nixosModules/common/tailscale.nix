@@ -57,8 +57,12 @@
         ++ lib.optionals (config.amono.tailscale.advertiseRoutes != [ ]) [
           "--advertise-routes=${lib.strings.concatStringsSep "," config.amono.tailscale.advertiseRoutes}"
         ]
-        ++ lib.optionals (config.amono.tailscale.advertiseTags != [ ]) [
-          "--advertise-tags=${lib.strings.concatStringsSep "," config.amono.tailscale.advertiseTags}"
+        ++ [
+          "--advertise-tags=tag:nixos${
+            lib.optionalString (
+              config.amono.tailscale.advertiseTags != [ ]
+            ) ",${lib.strings.concatStringsSep "," config.amono.tailscale.advertiseTags}"
+          }"
         ]
         ++ lib.optionals config.amono.tailscale.ssh.enable [
           "--ssh"
