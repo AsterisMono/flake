@@ -50,6 +50,6 @@ jobs:
           token: ${{ secrets.SECRETS_PAT }}
           path: "secrets"
 
-      - name: Run flake check
+      - name: Deploy
         working-directory: ./flake
-        run: nix flake check . --override-input secrets ../secrets
+        run: nixos-rebuild switch --flake .#${{ inputs.name }} --target-host root@${{ inputs.name }} switch
