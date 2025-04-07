@@ -1,8 +1,5 @@
-# This is a basic workflow to help you get started with Actions
-
 name: System Deployment
 
-# Controls when the workflow will run
 on:
   workflow_dispatch:
     inputs:
@@ -11,16 +8,12 @@ on:
         description: Which machine to deploy
         required: true
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  deploy:
+    name: Deploy system to ${{ inputs.name }}
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-outs your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
         with:
           path: "flake"
@@ -31,6 +24,11 @@ jobs:
           oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
           oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
           tags: tag:ci
+
+      - name: Add SSH known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ inputs.name }} >> ~/.ssh/known_hosts
 
       - name: Install Nix
         uses: cachix/install-nix-action@v31.1.0
