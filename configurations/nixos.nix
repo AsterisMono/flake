@@ -103,6 +103,9 @@ builtins.listToAttrs (
           enable = true;
           tunMode = true;
         };
+        tailscale = {
+          advertiseRoutes = [ "198.18.0.1/16" ];
+        };
       };
     }
     {
@@ -112,7 +115,6 @@ builtins.listToAttrs (
         proxy.enable = true;
         tailscale = {
           advertiseTags = [ "tag:ci" ];
-          advertiseRoutes = [ "198.18.0.1/16" ];
         };
       };
     }
