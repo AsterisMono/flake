@@ -112,6 +112,7 @@ builtins.listToAttrs (
         proxy.enable = true;
         tailscale = {
           advertiseTags = [ "tag:ci" ];
+          advertiseRoutes = [ "198.18.0.1/16" ];
         };
       };
     }
