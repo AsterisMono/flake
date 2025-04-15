@@ -1,4 +1,4 @@
-name: System Deployment
+name: Irrigation
 
 on:
   workflow_dispatch:
