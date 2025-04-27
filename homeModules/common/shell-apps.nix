@@ -38,7 +38,6 @@ in
     shellInit = "set -g fish_greeting";
     interactiveShellInit = ''
       set EDITOR nvim
-      set PAGER bat
 
       any-nix-shell fish --info-right | source
 
@@ -54,8 +53,6 @@ in
       "ls" = "eza -l";
       "l" = "eza -l";
       "ll" = "eza -al";
-      "cat" = "bat";
-      "icat" = "kitten icat";
       "tree" = "eza --tree";
     };
     functions = {
