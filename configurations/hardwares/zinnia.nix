@@ -9,7 +9,7 @@
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-    ../diskLayouts/btrfs.nix
+    ../diskLayouts/simple.nix
   ];
 
   boot.initrd.availableKernelModules = [
