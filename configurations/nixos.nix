@@ -57,7 +57,8 @@ builtins.listToAttrs (
     # tailscale is enabled for all machines
     # proxy is enabled by default for all desktops, and by enabling proxy USTC substituter will be used
     {
-      hostname = "lunaria";
+      hostname = "zinnia";
+      type = "desktop";
       customConfig = {
         proxy.enable = true;
         desktop = {
@@ -83,17 +84,6 @@ builtins.listToAttrs (
         };
       };
       payloads = [ ];
-    }
-    {
-      hostname = "zinnia";
-      type = "desktop";
-      customConfig = {
-        proxy.enable = true;
-        desktop = {
-          plasma.enable = true;
-          gpu = "amdgpu";
-        };
-      };
     }
     {
       hostname = "ivy";
