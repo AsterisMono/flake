@@ -36,13 +36,9 @@
       upgrade = true;
     };
 
-    taps = [
-      "siderolabs/tap"
-    ];
+    taps = [ ];
 
-    brews = [
-      "siderolabs/tap/talosctl"
-    ];
+    brews = [ ];
 
     # `brew install --cask`
     casks = [
@@ -68,6 +64,7 @@
       "firefox"
       "warp"
       "obsidian"
+      "telegram-desktop"
     ];
   };
 }
