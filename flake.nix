@@ -176,49 +176,4 @@
         };
       }
     );
-
-  # outputs =
-  #   inputs@{ self, flake-utils, ... }:
-  #   inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-  #     flake = {
-  #       lib = {
-  #         bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
-  #         collectPayloads = import ./utils/collect-payloads.nix inputs.nixpkgs.lib;
-  #       };
-  #       nixosConfigurations = import ./configurations/nixos.nix self;
-  #       darwinConfigurations = import ./configurations/darwin.nix self;
-  #       installer = import ./configurations/installer.nix self;
-  #       nixosModules = {
-  #         common = self.lib.bundleModules ./nixosModules/common;
-  #         desktop = self.lib.bundleModules ./nixosModules/desktop;
-  #         server = self.lib.bundleModules ./nixosModules/server;
-  #       } // self.lib.collectPayloads ./nixosModules/payloads;
-  #       darwinModules.darwin = self.lib.bundleModules ./darwinModules;
-  #       homeModules = {
-  #         common = self.lib.bundleModules ./homeModules/common;
-  #         darwin = self.lib.bundleModules ./homeModules/darwin;
-  #         nixos = self.lib.bundleModules ./homeModules/nixos;
-  #       };
-  #       overlays = {
-  #         flake-packages = import ./overlays/flake-packages.nix self;
-  #       };
-  #       deploy = {
-  #         interactiveSudo = true;
-  #         nodes = {
-  #           celestia = {
-  #             hostname = "celestia";
-  #             profiles.system = {
-  #               user = "root";
-  #               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.celestia;
-  #             };
-  #           };
-  #           stellarbase = {
-  #             hostname = "stellarbase";
-  #             profiles.system = {
-  #               user = "root";
-  #               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.stellarbase;
-  #             };
-  #           };
-  #         };
-  #       };
 }

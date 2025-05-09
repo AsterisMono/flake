@@ -43,6 +43,7 @@
       "warp"
       "obsidian"
       "telegram-desktop"
+      "chatgpt"
     ];
   };
 }
