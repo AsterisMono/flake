@@ -162,7 +162,6 @@
             };
           };
         };
-        # // (builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib);
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
