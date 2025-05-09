@@ -1,14 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, hostname, ... }:
 
-###################################################################################
-#
-#  macOS's System configuration
-#
-#  All the configuration options are documented here:
-#    https://daiderd.com/nix-darwin/manual/index.html#sec-options
-#
-###################################################################################
 {
+  networking.hostName = hostname;
+  networking.computerName = hostname;
 
   time.timeZone = "Asia/Shanghai";
 
@@ -21,6 +15,7 @@
     '';
 
     defaults = {
+      smb.NetBIOSName = hostname;
       menuExtraClock.Show24Hour = true; # show 24 hour clock
 
       dock = {

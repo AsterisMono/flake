@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+_:
 
 {
   time.timeZone = "Asia/Shanghai";
