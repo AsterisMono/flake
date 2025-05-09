@@ -111,27 +111,32 @@
         directory = ./nixosConfigurations;
       };
 
-      darwinConfigurations = builtins.map (
-        hostname:
-        let
-          system = "aarch64-darwin";
-          unstablePkgs = import inputs.nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        in
-        inputs.darwin.lib.darwinSystem {
-          specialArgs = {
-            inherit (self) inputs darwinModules homeModules;
-            inherit (inputs) secrets;
-            inherit unstablePkgs system hostname;
-          };
-          modules = self.darwinModules // [
-            inputs.home-manager-darwin.darwinModules.home-manager
-            { hostname = lib.mkDefault hostname; }
-          ];
-        }
-      ) darwinMachines;
+      darwinConfigurations = builtins.listToAttrs (
+        builtins.map (
+          hostname:
+          let
+            system = "aarch64-darwin";
+            unstablePkgs = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          in
+          {
+            name = hostname;
+            value = inputs.darwin.lib.darwinSystem {
+              inherit system;
+              specialArgs = {
+                inherit (self) inputs homeModules;
+                inherit (inputs) secrets;
+                inherit unstablePkgs system hostname;
+              };
+              modules = (builtins.attrValues self.darwinModules) ++ [
+                inputs.home-manager-darwin.darwinModules.home-manager
+              ];
+            };
+          }
+        ) darwinMachines
+      );
 
       overlays = {
         flake-packages = import ./overlays/flake-packages.nix self;

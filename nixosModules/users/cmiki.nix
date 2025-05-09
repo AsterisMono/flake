@@ -5,6 +5,9 @@
   inputs,
   ...
 }@homeInputs:
+let
+  username = "cmiki";
+in
 {
   options = {
     noa.homeManager = {
@@ -49,8 +52,10 @@
           unstablePkgs
           secrets
           ;
-        username = "cmiki";
+        inherit username;
       };
     };
+
+    nix.settings.trusted-users = [ "username" ];
   };
 }
