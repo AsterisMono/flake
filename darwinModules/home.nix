@@ -1,20 +1,23 @@
-{ flake, username, ... }@homeInputs:
+{
+  homeModules,
+  username,
+  inputs,
+  ...
+}@homeInputs:
 {
   home-manager = {
     users.${username}.imports = [
-      flake.homeModules.common
-      flake.homeModules.darwin
-      flake.inputs.nix-index-database.hmModules.nix-index
+      homeModules.common
+      homeModules.darwin
+      inputs.nix-index-database.hmModules.nix-index
     ];
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
       inherit (homeInputs)
-        flake
+        inputs
         system
         hostname
-        username
-        type
         unstablePkgs
         secrets
         ;

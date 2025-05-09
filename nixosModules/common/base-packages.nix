@@ -1,7 +1,5 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 
@@ -12,10 +10,5 @@
     curl
     killall
     gnumake
-    gcc
   ];
-
-  programs.git = {
-    enable = true;
-  };
 }
