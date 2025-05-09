@@ -1,10 +1,10 @@
 {
-  description = "Miki's NixOS Flake";
+  description = "Noa's NixOS Flake";
 
   inputs = {
+    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-24.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    flake-parts.url = "github:hercules-ci/flake-parts";
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -22,10 +22,6 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nvim-config = {
-      url = "git+https://github.com/AsterisMono/nvim-config?ref=light";
-      flake = false;
-    };
     secrets = {
       url = "git+https://github.com/AsterisMono/secrets";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -39,110 +35,145 @@
       url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
-    ilgaak = {
-      url = "github:AsterisMono/ilgaak";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     stylix.url = "github:danth/stylix/release-24.11";
+    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
   };
 
   outputs =
-    inputs@{ self, ... }:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
+    inputs@{
+      self,
+      flake-utils,
+      nixpkgs,
+      ...
+    }:
+    let
+      inherit (inputs.nixpkgs) lib;
+      # This recursive attrset pattern is forbidden, but we use it here anyway.
+      #
+      # The following flake output attributes must be NixOS modules:
+      # - nixosModule
+      # - nixosModules.name
+      modulesFromDirectoryRecursive =
+        _dirPath:
+        lib.packagesFromDirectoryRecursive {
+          callPackage = path: _: import path;
+          directory = _dirPath;
+        };
+      darwinMachines = [
+        "Oryx"
+        "Fervorine"
       ];
+    in
+    {
+      nixosModules = modulesFromDirectoryRecursive ./nixosModules;
 
-      imports = [
-        inputs.ilgaak.flakeModule
-      ];
+      darwinModules = modulesFromDirectoryRecursive ./darwinModules;
 
-      ilgaak.enable = false;
+      homeModules = modulesFromDirectoryRecursive ./homeModules;
 
-      flake = {
-        lib = {
-          bundleModules = import ./utils/bundle-modules.nix inputs.nixpkgs.lib;
-          collectPayloads = import ./utils/collect-payloads.nix inputs.nixpkgs.lib;
-        };
-        nixosConfigurations = import ./configurations/nixos.nix self;
-        darwinConfigurations = import ./configurations/darwin.nix self;
-        installer = import ./configurations/installer.nix self;
-        nixosModules = {
-          common = self.lib.bundleModules ./nixosModules/common;
-          desktop = self.lib.bundleModules ./nixosModules/desktop;
-          server = self.lib.bundleModules ./nixosModules/server;
-        } // self.lib.collectPayloads ./nixosModules/payloads;
-        darwinModules.darwin = self.lib.bundleModules ./darwinModules;
-        homeModules = {
-          common = self.lib.bundleModules ./homeModules/common;
-          darwin = self.lib.bundleModules ./homeModules/darwin;
-          nixos = self.lib.bundleModules ./homeModules/nixos;
-        };
-        overlays = {
-          flake-packages = import ./overlays/flake-packages.nix self;
-        };
-        deploy = {
-          interactiveSudo = true;
-          nodes = {
-            celestia = {
-              hostname = "celestia";
-              profiles.system = {
-                user = "root";
-                path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.celestia;
-              };
+      nixosConfigurations = lib.packagesFromDirectoryRecursive {
+        callPackage =
+          path: _:
+          let
+            system = "x86_64-linux";
+            hostname = lib.removeSuffix ".nix" (builtins.baseNameOf path);
+            unstablePkgs = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
             };
-            stellarbase = {
-              hostname = "stellarbase";
-              profiles.system = {
-                user = "root";
-                path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.stellarbase;
-              };
+          in
+          lib.nixosSystem {
+            inherit system;
+            specialArgs = {
+              inherit (self)
+                inputs
+                nixosModules
+                homeModules
+                overlays
+                ;
+              inherit (inputs) secrets;
+              inherit unstablePkgs system hostname;
             };
+            modules =
+              [
+                path
+                self.nixosModules.common
+                inputs.disko.nixosModules.disko
+                inputs.stylix.nixosModules.stylix
+                inputs.home-manager-nixos.nixosModules.home-manager
+              ]
+              ++ lib.optionals (hostname != "installer") [
+                inputs.nixos-facter-modules.nixosModules.facter
+                {
+                  facter.reportPath = lib.mkDefault ./hardwares/${hostname}.json;
+                }
+              ];
           };
-        };
-
-        # This is highly advised, and will prevent many possible mistakes
-        checks = builtins.mapAttrs (
-          system: deployLib: deployLib.deployChecks self.deploy
-        ) inputs.deploy-rs.lib;
+        directory = ./nixosConfigurations;
       };
 
-      perSystem =
-        {
-          config,
-          self',
-          inputs',
-          pkgs,
-          system,
-          ...
-        }:
-        {
-          checks = {
-            pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
-              src = ./.;
-              hooks = {
-                nixfmt-rfc-style.enable = true;
-                statix.enable = true;
+      darwinConfigurations = builtins.listToAttrs (
+        builtins.map (
+          hostname:
+          let
+            system = "aarch64-darwin";
+            unstablePkgs = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          in
+          {
+            name = hostname;
+            value = inputs.darwin.lib.darwinSystem {
+              inherit system;
+              specialArgs = {
+                inherit (self) inputs homeModules;
+                inherit (inputs) secrets;
+                inherit unstablePkgs system hostname;
               };
+              modules = (builtins.attrValues self.darwinModules) ++ [
+                inputs.home-manager-darwin.darwinModules.home-manager
+              ];
+            };
+          }
+        ) darwinMachines
+      );
+
+      overlays = {
+        flake-packages = import ./overlays/flake-packages.nix self;
+      };
+    }
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+      in
+      rec {
+        packages = {
+          torus-font = pkgs.callPackage ./packages/torus { };
+        };
+
+        checks = {
+          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixfmt-rfc-style.enable = true;
+              statix.enable = true;
             };
           };
-          devShells.default = pkgs.mkShell {
-            packages = with pkgs; [
-              nixd
-              just
-              deploy-rs
-              nh
-              nixfmt-rfc-style
-            ];
-            inherit (self'.checks.pre-commit-check) shellHook;
-            buildInputs = self'.checks.pre-commit-check.enabledPackages;
-          };
-          packages = {
-            torus-font = pkgs.callPackage ./packages/torus { };
-          };
         };
-    };
+
+        devShells.default = pkgs.mkShell {
+          packages = with pkgs; [
+            nixd
+            just
+            deploy-rs
+            nh
+            nixfmt-rfc-style
+          ];
+          inherit (checks.pre-commit-check) shellHook;
+          buildInputs = checks.pre-commit-check.enabledPackages;
+        };
+      }
+    );
 }
