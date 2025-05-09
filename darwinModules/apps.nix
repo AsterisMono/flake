@@ -44,6 +44,7 @@
       "obsidian"
       "telegram-desktop"
       "chatgpt"
+      "bitwarden"
     ];
   };
 }

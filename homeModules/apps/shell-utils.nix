@@ -1,4 +1,10 @@
-{ pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  system,
+  ...
+}:
 let
   extraPackages = with pkgs; [
     any-nix-shell
@@ -43,17 +49,21 @@ in
       }
     ];
     shellInit = "set -g fish_greeting";
-    interactiveShellInit = ''
-      set EDITOR nvim
+    interactiveShellInit =
+      ''
+        set EDITOR nvim
 
-      any-nix-shell fish --info-right | source
+        any-nix-shell fish --info-right | source
 
-      if set -q FISH_FORK_PWD_HINT
-        if test (string match -r '^/' $FISH_FORK_PWD_HINT)
-          cd $FISH_FORK_PWD_HINT
+        if set -q FISH_FORK_PWD_HINT
+          if test (string match -r '^/' $FISH_FORK_PWD_HINT)
+            cd $FISH_FORK_PWD_HINT
+          end
         end
-      end
-    '';
+      ''
+      + lib.optionalString (system == "aarch64-darwin") ''
+        export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
+      '';
     shellAliases = {
       ".." = "cd ../";
       "n" = "nvim";

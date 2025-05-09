@@ -1,10 +1,7 @@
-{ lib, hostname, ... }:
-{
+_: {
   imports = [
-    ./base-packages.nix
+    ./base.nix
     ./i18n.nix
     ./nix-environment.nix
   ];
-
-  networking.hostName = lib.mkDefault hostname;
 }

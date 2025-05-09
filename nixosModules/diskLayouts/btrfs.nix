@@ -1,9 +1,10 @@
-_: {
+{ lib, ... }:
+{
   disko.devices = {
     disk = {
       main = {
         type = "disk";
-        device = "/dev/disk/by-diskseq/1";
+        device = lib.mkDefault "/dev/sda";
         content = {
           type = "gpt";
           partitions = {
