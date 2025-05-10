@@ -6,7 +6,6 @@ install hostname target:
     --flake .#{{hostname}} \
     --target-host {{target}} \
     --disko-mode disko \
-    --build-on-remote
 
 bootstrap hostname disk:
   nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{hostname}} --disk main {{disk}}
