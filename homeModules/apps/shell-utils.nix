@@ -114,6 +114,7 @@ in
       update_check = false;
       style = "compact";
       prefers_reduced_motion = true;
+      sync.records = true;
     };
   };
 
