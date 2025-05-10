@@ -49,7 +49,7 @@ in
       ] ++ config.noa.homeManager.modules;
       useGlobalPkgs = true;
       useUserPackages = true;
-      backupFileExtension = ".bak";
+      backupFileExtension = "hm-bak";
       extraSpecialArgs = {
         inherit (homeInputs)
           inputs

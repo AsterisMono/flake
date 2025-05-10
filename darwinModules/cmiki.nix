@@ -21,6 +21,7 @@
     ];
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "hm-bak";
     extraSpecialArgs = {
       inherit (homeInputs)
         inputs

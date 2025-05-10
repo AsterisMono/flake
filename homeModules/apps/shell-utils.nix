@@ -109,6 +109,12 @@ in
     flags = [
       "--disable-up-arrow"
     ];
+    settings = {
+      auto_sync = true;
+      update_check = false;
+      style = "compact";
+      prefers_reduced_motion = true;
+    };
   };
 
   programs.zoxide = {
