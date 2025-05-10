@@ -1,7 +1,6 @@
 { nixosModules, ... }:
 {
   imports = with nixosModules; [
-    common
     server.base
     diskLayouts.simple
     proxy
