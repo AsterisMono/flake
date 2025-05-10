@@ -10,8 +10,11 @@
 
   disko.devices.disk.main.device = "/dev/sda";
 
-  noa.homeManager.enable = true;
-  noa.homeManager.modules = with homeModules; [
-    apps.shell-utils
-  ];
+  noa = {
+    nix.enableUSTCSubstituter = true;
+    homeManager.enable = true;
+    homeManager.modules = with homeModules; [
+      apps.shell-utils
+    ];
+  };
 }

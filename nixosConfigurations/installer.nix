@@ -15,6 +15,8 @@
       users.cmiki
     ]);
 
+  noa.nix.enableUSTCSubstituter = true;
+
   environment.systemPackages = with pkgs; [
     git
     gh
