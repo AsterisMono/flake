@@ -28,4 +28,6 @@ in
       "quay.io".endpoint = [ "https://quay.m.daocloud.io" ];
     };
   };
+
+  noa.nix.enableUSTCSubstituter = true;
 }

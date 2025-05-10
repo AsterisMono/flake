@@ -25,7 +25,9 @@
 
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
-  noa.tailscale.advertiseRoutes = [ "198.18.0.1/16" ];
-
-  noa.proxy.tunMode = true;
+  noa = {
+    nix.enableUSTCSubstituter = true;
+    tailscale.advertiseRoutes = [ "198.18.0.1/16" ];
+    proxy.tunMode = true;
+  };
 }
