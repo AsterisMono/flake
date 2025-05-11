@@ -27,7 +27,7 @@
 
   noa = {
     nix.enableUSTCSubstituter = true;
-    tailscale.advertiseRoutes = [ "198.18.0.1/16" ];
+    tailscale.advertiseRoutes = [ "198.18.0.0/16" ];
     proxy.tunMode = true;
   };
 }
