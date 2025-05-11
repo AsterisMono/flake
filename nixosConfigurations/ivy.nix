@@ -12,7 +12,7 @@
     useDHCP = false;
     interfaces.enp6s18.ipv4.addresses = [
       {
-        address = "192.168.31.100";
+        address = "192.168.31.101";
         prefixLength = 24;
       }
     ];
