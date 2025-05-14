@@ -17,4 +17,7 @@
       apps.shell-utils
     ];
   };
+
+  # For VSCode Remote SSH
+  programs.nix-ld.enable = true;
 }
