@@ -10,7 +10,7 @@ nixosConfig
       inherit (nixosConfig.config.nixpkgs) system;
       modules = [
         (
-          { modulesPath, pkgs }:
+          { modulesPath, pkgs, ... }:
           {
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
             isoImage = {
