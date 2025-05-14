@@ -21,7 +21,7 @@ nixosConfig
                 }
               ];
               storeContents = [
-                nixosConfig.system.build.toplevel
+                nixosConfig.config.system.build.toplevel
               ];
               includeSystemBuildDependencies = true;
             };
