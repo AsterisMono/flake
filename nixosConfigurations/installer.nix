@@ -17,11 +17,6 @@
 
   noa.nix.enableUSTCSubstituter = true;
 
-  environment.systemPackages = with pkgs; [
-    git
-    gh
-  ];
-
   users.users.root = {
     isSystemUser = true;
     shell = pkgs.bashInteractive;
