@@ -13,6 +13,15 @@ nixosConfig
           { modulesPath, pkgs, ... }:
           {
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
+
+            environment.defaultPackages = with pkgs; [
+              nixos-facter
+              nixos-anywhere
+              just
+              disko
+              nh
+            ];
+
             isoImage = {
               contents = [
                 {
@@ -25,6 +34,7 @@ nixosConfig
               ];
               includeSystemBuildDependencies = true;
             };
+
             users.users.root = {
               isSystemUser = true;
               shell = pkgs.bashInteractive;
