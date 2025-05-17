@@ -6,8 +6,8 @@
 let
   getInputDrvs =
     pkgs: flakeLock:
-    map (
-      { name, value }:
+    lib.attrsets.mapAttrsToList (
+      name: value:
       # Reuse flake inputs
       if builtins.hasAttr name flake.inputs then
         flake.inputs."${name}"
