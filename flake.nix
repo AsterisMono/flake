@@ -150,7 +150,6 @@
 
       lib = {
         withOfflineInstaller = import ./utils/withOfflineInstaller.nix;
-        mkOfflineFlake = import ./utils/mkOfflineFlake.nix;
       };
     }
     // flake-utils.lib.eachDefaultSystem (

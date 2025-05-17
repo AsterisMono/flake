@@ -3,6 +3,29 @@
   nixosConfig,
   lib,
 }:
+let
+  getInputDrvs =
+    pkgs: flakeLock:
+    builtins.mapAttrs (
+      name: value:
+      # Reuse flake inputs
+      if builtins.hasAttr name flake.inputs then
+        flake.inputs."${name}"
+      else if name == "root" then
+        flake
+      else if value.locked.type == "github" then
+        pkgs.fetchFromGitHub {
+          inherit (value.locked) owner repo rev;
+          hash = value.locked.narHash;
+        }
+      else
+        pkgs.fetchgit {
+          inherit (value.locked) url rev;
+          hash = value.locked.narHash;
+        }
+    ) flakeLock.nodes;
+  flakeLock = lib.importJSON "${flake}/flake.lock";
+in
 nixosConfig
 // {
   offlineInstaller =
@@ -22,29 +45,18 @@ nixosConfig
               nh
             ];
 
-            isoImage =
-              let
-                offlineFlake = flake.lib.mkOfflineFlake { inherit flake pkgs; };
-              in
-              {
-                contents = [
-                  {
-                    source = flake.outPath;
-                    target = "/flake";
-                  }
-                  {
-                    source = pkgs.writeTextFile {
-                      name = "overrideFlags";
-                      text = offlineFlake.overrideFlags;
-                    };
-                    target = "/overrideFlags";
-                  }
-                ];
-                storeContents = [
-                  nixosConfig.config.system.build.toplevel
-                ] ++ offlineFlake.collectedInputDrvs;
-                includeSystemBuildDependencies = false;
-              };
+            isoImage = {
+              contents = [
+                {
+                  source = flake.outPath;
+                  target = "/flake";
+                }
+              ];
+              storeContents = [
+                nixosConfig.config.system.build.toplevel
+              ] ++ (getInputDrvs pkgs flakeLock);
+              includeSystemBuildDependencies = false;
+            };
 
             users.users.root = {
               isSystemUser = true;
