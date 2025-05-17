@@ -22,18 +22,25 @@ nixosConfig
               nh
             ];
 
-            isoImage = {
-              contents = [
-                {
-                  source = flake.outPath;
-                  target = "/flake";
-                }
-              ];
-              storeContents = [
-                nixosConfig.config.system.build.toplevel
-              ];
-              includeSystemBuildDependencies = true;
-            };
+            isoImage =
+              let
+                offlineFlake = flake.lib.mkOfflineFlake { inherit flake pkgs; };
+              in
+              {
+                contents = [
+                  {
+                    source = pkgs.writeTextFile {
+                      name = "overrideFlags";
+                      text = offlineFlake.overrideFlags;
+                    };
+                    target = "/offline";
+                  }
+                ];
+                storeContents = [
+                  nixosConfig.config.system.build.toplevel
+                ] ++ offlineFlake.collectedInputDrvs;
+                includeSystemBuildDependencies = true;
+              };
 
             users.users.root = {
               isSystemUser = true;
