@@ -29,11 +29,15 @@ nixosConfig
               {
                 contents = [
                   {
+                    source = flake.outPath;
+                    target = "/flake";
+                  }
+                  {
                     source = pkgs.writeTextFile {
                       name = "overrideFlags";
                       text = offlineFlake.overrideFlags;
                     };
-                    target = "/offline";
+                    target = "/overrideFlags";
                   }
                 ];
                 storeContents = [
