@@ -82,33 +82,38 @@
               config.allowUnfree = true;
             };
           in
-          lib.nixosSystem {
-            inherit system;
-            specialArgs = {
-              inherit (self)
-                inputs
-                nixosModules
-                homeModules
-                overlays
-                ;
-              inherit (inputs) secrets;
-              inherit unstablePkgs system hostname;
+          self.lib.withOfflineInstaller {
+            flake = self;
+            inherit lib;
+            nixosConfig = lib.nixosSystem {
+              inherit system;
+              specialArgs = {
+                inherit (self)
+                  inputs
+                  nixosModules
+                  homeModules
+                  overlays
+                  ;
+                inherit (inputs) secrets;
+                inherit unstablePkgs system hostname;
+              };
+              modules =
+                [
+                  path
+                  self.nixosModules.common
+                  inputs.disko.nixosModules.disko
+                  inputs.stylix.nixosModules.stylix
+                  inputs.home-manager-nixos.nixosModules.home-manager
+                ]
+                ++ lib.optionals (hostname != "installer") [
+                  inputs.nixos-facter-modules.nixosModules.facter
+                  {
+                    facter.reportPath = lib.mkDefault ./hardwares/${hostname}.json;
+                  }
+                ];
             };
-            modules =
-              [
-                path
-                self.nixosModules.common
-                inputs.disko.nixosModules.disko
-                inputs.stylix.nixosModules.stylix
-                inputs.home-manager-nixos.nixosModules.home-manager
-              ]
-              ++ lib.optionals (hostname != "installer") [
-                inputs.nixos-facter-modules.nixosModules.facter
-                {
-                  facter.reportPath = lib.mkDefault ./hardwares/${hostname}.json;
-                }
-              ];
           };
+
         directory = ./nixosConfigurations;
       };
 
@@ -141,6 +146,10 @@
 
       overlays = {
         flake-packages = import ./overlays/flake-packages.nix self;
+      };
+
+      lib = {
+        withOfflineInstaller = import ./utils/withOfflineInstaller.nix;
       };
     }
     // flake-utils.lib.eachDefaultSystem (
