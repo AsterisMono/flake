@@ -39,7 +39,7 @@ nixosConfig
                 storeContents = [
                   nixosConfig.config.system.build.toplevel
                 ] ++ offlineFlake.collectedInputDrvs;
-                includeSystemBuildDependencies = true;
+                includeSystemBuildDependencies = false;
               };
 
             users.users.root = {

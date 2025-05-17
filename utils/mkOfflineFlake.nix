@@ -9,7 +9,10 @@ let
       value
       // {
         drv =
-          if name == "root" then
+          # Reuse flake inputs
+          if builtins.hasAttr name flake.inputs then
+            flake.inputs."${name}"
+          else if name == "root" then
             flake
           else if value.locked.type == "github" then
             pkgs.fetchFromGitHub {
