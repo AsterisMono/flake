@@ -97,20 +97,17 @@
                 inherit (inputs) secrets;
                 inherit unstablePkgs system hostname;
               };
-              modules =
-                [
-                  path
-                  self.nixosModules.common
-                  inputs.disko.nixosModules.disko
-                  inputs.stylix.nixosModules.stylix
-                  inputs.home-manager-nixos.nixosModules.home-manager
-                ]
-                ++ lib.optionals (hostname != "installer") [
-                  inputs.nixos-facter-modules.nixosModules.facter
-                  {
-                    facter.reportPath = lib.mkDefault ./hardwares/${hostname}.json;
-                  }
-                ];
+              modules = [
+                path
+                self.nixosModules.common
+                inputs.disko.nixosModules.disko
+                inputs.stylix.nixosModules.stylix
+                inputs.home-manager-nixos.nixosModules.home-manager
+                inputs.nixos-facter-modules.nixosModules.facter
+                {
+                  facter.reportPath = lib.mkDefault ./hardwares/${hostname}.json;
+                }
+              ];
             };
           };
 
