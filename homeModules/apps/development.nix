@@ -5,7 +5,7 @@ in
 {
   home.packages = with pkgs; [
     nodejs_22
-    corepack
+    corepack_22
     kubectl
     devenv
 
