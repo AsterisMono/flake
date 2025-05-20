@@ -1,24 +1,11 @@
 # Noa's NixOS Flake
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/AsterisMono/flake)
+
 A modular and reproducible personal setup for both NixOS and Darwin systems.
 
-## Useful outputs
+## Current state
 
-```nix
-# A utility function for bundling multiple module files into a single module
-lib.bundleModules
-```
+This flake went under major refactoring earlier this year, and unfortunately the docs are not available yet.
 
-## Usage
-
-Interactive exploration:
-
-```bash
-just explore
-```
-
-To bootstrap a fresh darwin system, run:
-
-```bash
-just darwin-bootstrap
-```
+In the meantime, please consider consuming [DeepWiki](https://deepwiki.com/AsterisMono/flake) for guidance and reference materials.
