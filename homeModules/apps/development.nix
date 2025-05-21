@@ -11,6 +11,7 @@ in
 
     # Language servers
     nixd
+    nixfmt-rfc-style
     typescript # tsserver
     vscode-langservers-extracted
 
