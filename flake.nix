@@ -148,6 +148,10 @@
       lib = {
         withOfflineInstaller = import ./lib/withOfflineInstaller.nix;
       };
+
+      templates = builtins.mapAttrs (p: _: { path = ./templates/${p}; }) (
+        lib.attrsets.filterAttrs (p: t: t == "directory") (builtins.readDir ./templates)
+      );
     }
     // flake-utils.lib.eachDefaultSystem (
       system:
