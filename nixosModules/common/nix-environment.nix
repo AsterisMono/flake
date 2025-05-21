@@ -12,6 +12,9 @@
     nix = {
       package = pkgs.nixVersions.latest;
       channel.enable = false;
+      registry = {
+        noa.flake = inputs.self;
+      };
       settings = {
         experimental-features = [
           "nix-command"

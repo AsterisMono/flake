@@ -1,8 +1,15 @@
-{ pkgs, ... }:
+{
+  inputs,
+  pkgs,
+  ...
+}:
 
 {
   nix = {
     package = pkgs.nixVersions.latest;
+    registry = {
+      noa.flake = inputs.self;
+    };
     settings = {
       experimental-features = [
         "nix-command"

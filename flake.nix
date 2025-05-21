@@ -88,8 +88,8 @@
             nixosConfig = lib.nixosSystem {
               inherit system;
               specialArgs = {
+                inherit inputs;
                 inherit (self)
-                  inputs
                   nixosModules
                   homeModules
                   overlays
@@ -129,7 +129,8 @@
             value = inputs.darwin.lib.darwinSystem {
               inherit system;
               specialArgs = {
-                inherit (self) inputs homeModules;
+                inherit inputs;
+                inherit (self) homeModules;
                 inherit (inputs) secrets;
                 inherit unstablePkgs system hostname;
               };
