@@ -18,20 +18,10 @@ jobs:
         with:
           path: "flake"
 
-      - name: Tailscale
-        uses: tailscale/github-action@v3
-        with:
-          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
-          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
-          tags: tag:ci
-
       - name: Add SSH known hosts
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -v -T 30 -H ${{ inputs.name }} >> ~/.ssh/known_hosts
-
-      - name: Install Nix
-        uses: cachix/install-nix-action@v31.1.0
 
       - name: Extract secrets.rev from flake.lock
         id: extract-secrets-rev
