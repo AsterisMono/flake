@@ -1,4 +1,9 @@
-{ nixosModules, homeModules, ... }:
+{
+  secrets,
+  nixosModules,
+  homeModules,
+  ...
+}:
 {
   imports = with nixosModules; [
     server.base
@@ -20,4 +25,13 @@
 
   # For VSCode Remote SSH
   programs.nix-ld.enable = true;
+
+  services.github-runners = {
+    flake-ci = {
+      enable = true;
+      name = "flake-ci-zinnia";
+      tokenFile = secrets.flakeRunnerToken;
+      url = "https://github.com/AsterisMono/flake";
+    };
+  };
 }
