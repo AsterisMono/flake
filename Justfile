@@ -32,7 +32,7 @@ darwin-bootstrap:
 	nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake .
 
 darwin-deploy:
-	darwin-rebuild switch --flake .
+	sudo darwin-rebuild switch --flake .
 
 gc:
 	# remove all generations older than 7 days
