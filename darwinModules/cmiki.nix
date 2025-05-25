@@ -35,4 +35,6 @@
   };
 
   nix.settings.trusted-users = [ "cmiki" ];
+
+  system.primaryUser = "cmiki";
 }

@@ -34,6 +34,4 @@
     gc.automatic = true;
     optimise.automatic = true;
   };
-
-  services.nix-daemon.enable = true;
 }
