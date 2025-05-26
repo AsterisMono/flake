@@ -29,7 +29,7 @@ history:
 	nix profile history --profile /nix/var/nix/profiles/system
 
 darwin-bootstrap:
-	nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake .
+	sudo nix --extra-experimental-features nix-command --extra-experimental-features flakes run nix-darwin -- switch --flake .
 
 darwin-deploy:
 	nh darwin switch .
@@ -40,6 +40,3 @@ gc:
 
 	# garbage collect all unused nix store entries
 	sudo nix store gc --debug
-
-build-installer:
-  nix build .#nixosConfigurations.installer.config.system.build.isoImage
