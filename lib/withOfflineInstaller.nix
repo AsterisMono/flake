@@ -38,7 +38,6 @@ nixosConfig
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
 
             environment.defaultPackages = with pkgs; [
-              nixos-facter
               nixos-anywhere
               just
               disko

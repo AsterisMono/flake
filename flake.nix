@@ -36,7 +36,6 @@
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
     stylix.url = "github:danth/stylix/release-25.05";
-    nixos-facter-modules.url = "github:numtide/nixos-facter-modules";
   };
 
   outputs =
@@ -99,14 +98,11 @@
               };
               modules = [
                 path
+                ./hardwares/${hostname}.nix
                 self.nixosModules.common
                 inputs.disko.nixosModules.disko
                 inputs.stylix.nixosModules.stylix
                 inputs.home-manager-nixos.nixosModules.home-manager
-                inputs.nixos-facter-modules.nixosModules.facter
-                {
-                  facter.reportPath = lib.mkDefault ./hardwares/${hostname}.json;
-                }
               ];
             };
           };
