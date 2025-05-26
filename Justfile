@@ -11,7 +11,7 @@ bootstrap hostname disk:
   nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{hostname}} --disk main {{disk}}
 
 generate-hardware-config hostname target:
-  ssh {{target}} "nix --extra-experimental-features flakes --extra-experimental-features nix-command run github:numtide/nixos-facter" > ./hardwares/{{hostname}}.json
+  ssh {{target}} "nixos-generate-config --show-hardware-config --no-filesystems" > ./hardwares/{{hostname}}.nix
 
 build:
   nh os build .
