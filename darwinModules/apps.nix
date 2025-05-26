@@ -27,6 +27,7 @@
       "arc"
       "orbstack"
       "font-fira-code-nerd-font"
+      "font-maple-mono-nf-cn"
       "alt-tab"
       "maccy"
       "shottr"
