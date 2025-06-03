@@ -1,16 +1,16 @@
 {
-  secrets,
   nixosModules,
   homeModules,
   ...
 }:
 {
   imports = with nixosModules; [
-    server.base
     diskLayouts.btrfs
     proxy
     tailscale
     users.cmiki
+    desktop.base
+    desktop.guiSuites.plasma
   ];
 
   disko.devices.disk.main.device = "/dev/sda";
@@ -20,18 +20,8 @@
     homeManager.enable = true;
     homeManager.modules = with homeModules; [
       apps.shell-utils
+      apps.development
+      apps.desktop-apps
     ];
-  };
-
-  # For VSCode Remote SSH
-  programs.nix-ld.enable = true;
-
-  services.github-runners = {
-    flake-ci = {
-      enable = true;
-      name = "flake-ci-zinnia";
-      tokenFile = secrets.flakeRunnerToken;
-      url = "https://github.com/AsterisMono/flake";
-    };
   };
 }
