@@ -2,12 +2,9 @@ _: {
   # Access
   users.users.root.hashedPassword = "$y$j9T$Or7mqutFE5iEFtJb4QmdR1$N0yuyRzIOavwnsnrkK4yR5Msg1oQ0RAXpKVN/LpV3p.";
 
-  services.openssh = {
-    enable = true;
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = false;
-    settings.PermitRootLogin = "yes";
-  };
+  imports = [
+    ./ssh.nix
+  ];
 
   networking.firewall = {
     enable = true;
