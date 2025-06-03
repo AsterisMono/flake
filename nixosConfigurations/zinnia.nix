@@ -11,6 +11,7 @@
     users.cmiki
     desktop.base
     desktop.guiSuites.plasma
+    server.ssh
   ];
 
   disko.devices.disk.main.device = "/dev/sda";
