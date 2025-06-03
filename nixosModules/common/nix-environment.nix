@@ -54,9 +54,7 @@
     environment.etc."nix/path/nixpkgs".source = inputs.nixpkgs;
 
     nixpkgs = {
-      config = {
-        allowUnfree = true;
-      };
+      config.allowUnfree = true;
       overlays = [
         overlays.flake-packages
       ];
