@@ -3,14 +3,7 @@
   fonts = {
     fontDir.enable = true;
     packages = with pkgs; [
-      (nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "Hack"
-          "JetBrainsMono"
-          "UbuntuMono"
-        ];
-      })
+      nerd-fonts.fira-code
       # hack-font
       inter
       # liberation_ttf
