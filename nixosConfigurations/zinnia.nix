@@ -21,7 +21,6 @@
     homeManager.modules = with homeModules; [
       apps.shell-utils
       apps.development
-      apps.desktop-apps
     ];
   };
 }
