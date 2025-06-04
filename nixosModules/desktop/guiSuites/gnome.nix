@@ -21,7 +21,6 @@
 
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
-    eolie
     epiphany
     gnome-maps
     simple-scan
