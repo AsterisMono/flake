@@ -54,7 +54,7 @@
 
   # Override pulseaudio
   # I have no idea who enabled this
-  hardware.pulseaudio.enable = lib.mkForce false;
+  services.pulseaudio.enable = lib.mkForce false;
 
   # RDP Support
   services.gnome.gnome-remote-desktop.enable = true;
