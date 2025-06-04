@@ -10,7 +10,7 @@
     tailscale
     users.cmiki
     desktop.base
-    desktop.guiSuites.plasma
+    desktop.guiSuites.gnome
     server.ssh
   ];
 
