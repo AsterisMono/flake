@@ -19,7 +19,7 @@ build:
 deploy:
   nh os switch .
 
-deploy-boot:
+boot:
 	nh os boot .
 
 dryrun:
@@ -40,3 +40,6 @@ gc:
 
 	# garbage collect all unused nix store entries
 	sudo nix store gc --debug
+
+update-iterm2:
+  cp ~/.config/iterm2/com.googlecode.iterm2.plist ./homeModules/iterm2/com.googlecode.iterm2.plist
