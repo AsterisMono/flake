@@ -44,12 +44,12 @@ in
 
   programs.fish = {
     enable = true;
-    plugins = [
-      {
-        name = "plugin-git";
-        inherit (pkgs.fishPlugins.plugin-git) src;
-      }
-    ];
+    plugins =
+      with pkgs.fishPlugins;
+      map (x: { inherit (x) name src; }) [
+        plugin-git
+        fzf-fish
+      ];
     shellInit = "set -g fish_greeting";
     interactiveShellInit =
       ''
