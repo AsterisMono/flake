@@ -35,7 +35,6 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
     };
-    stylix.url = "github:danth/stylix/release-25.05";
   };
 
   outputs =
@@ -101,7 +100,6 @@
                 ./hardwares/${hostname}.nix
                 self.nixosModules.common
                 inputs.disko.nixosModules.disko
-                inputs.stylix.nixosModules.stylix
                 inputs.home-manager-nixos.nixosModules.home-manager
               ];
             };
