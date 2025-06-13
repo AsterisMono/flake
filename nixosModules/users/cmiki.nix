@@ -21,8 +21,7 @@ in
   };
 
   config = {
-    # TODO: Change username
-    users.users.cmiki = {
+    users.users."${username}" = {
       isNormalUser = true;
       description = "Noa Virellia";
       extraGroups = [
@@ -43,7 +42,7 @@ in
     programs.fish.enable = config.noa.homeManager.enable;
 
     home-manager = lib.mkIf config.noa.homeManager.enable {
-      users.cmiki.imports = [
+      users."${username}".imports = [
         inputs.nix-index-database.hmModules.nix-index
         homeModules.base
       ] ++ config.noa.homeManager.modules;
@@ -62,6 +61,6 @@ in
       };
     };
 
-    nix.settings.trusted-users = [ "username" ];
+    nix.settings.trusted-users = [ username ];
   };
 }
