@@ -2062,8 +2062,12 @@ The script should do this: \(ai.prompt)</string>
 	<string>96322C70-2A61-4226-93FF-DEA58F950156</string>
 	<key>DimInactiveSplitPanes</key>
 	<false/>
+	<key>DimOnlyText</key>
+	<false/>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
+	<key>HideScrollbar</key>
+	<true/>
 	<key>HotkeyMigratedFromSingleToMulti</key>
 	<true/>
 	<key>NeverBlockSystemShutdown</key>
@@ -3594,6 +3598,8 @@ The script should do this: \(ai.prompt)</string>
 	<real>0.40000000000000002</real>
 	<key>TabStyleWithAutomaticOption</key>
 	<integer>5</integer>
+	<key>UseBorder</key>
+	<false/>
 	<key>VisualIndicatorForEsc</key>
 	<false/>
 </dict>
