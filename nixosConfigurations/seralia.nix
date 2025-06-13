@@ -4,9 +4,10 @@
 }:
 {
   imports = with nixosModules; [
-    server.base
     diskLayouts.btrfs
-    tailscale
+    roles.server
+    services.tailscale
+    services.ssh
   ];
 
   disko.devices.disk.main.device = "/dev/vda";

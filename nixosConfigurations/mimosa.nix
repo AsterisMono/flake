@@ -4,9 +4,10 @@ let
 in
 {
   imports = with nixosModules; [
-    server.base
     diskLayouts.btrfs
-    tailscale
+    roles.server
+    services.tailscale
+    services.ssh
     users.cmiki
   ];
 

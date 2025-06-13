@@ -1,10 +1,11 @@
 { nixosModules, ... }:
 {
   imports = with nixosModules; [
-    server.base
     diskLayouts.simple
-    proxy
-    tailscale
+    roles.server
+    services.proxy
+    services.tailscale
+    services.ssh
     users.cmiki
   ];
 
