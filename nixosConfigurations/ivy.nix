@@ -9,7 +9,7 @@
     users.cmiki
   ];
 
-  systemd.network.links."10-wired" = {
+  systemd.network.networks."10-wired" = {
     matchConfig.Driver = "virtio_net";
     networkConfig = {
       DHCP = "no";
