@@ -30,5 +30,5 @@ in
     };
   };
 
-  noa.nix.enableUSTCSubstituter = true;
+  noa.nix.enableMirrorSubstituter = true;
 }

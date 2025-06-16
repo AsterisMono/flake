@@ -40,7 +40,7 @@
   };
 
   noa = {
-    nix.enableUSTCSubstituter = true;
+    nix.enableMirrorSubstituter = true;
     homeManager.enable = true;
     homeManager.modules = with homeModules; [
       apps.shell-utils

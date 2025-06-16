@@ -20,7 +20,9 @@
           "nix-command"
           "flakes"
         ];
-        substituters = lib.mkIf config.noa.nix.enableUSTCSubstituter [
+        substituters = lib.mkIf config.noa.nix.enableMirrorSubstituter [
+          "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+          "https://mirror.sjtu.edu.cn/nix-channels/store"
           "https://mirrors.ustc.edu.cn/nix-channels/store"
         ];
         extra-substituters = [
@@ -64,6 +66,6 @@
   };
 
   options = {
-    noa.nix.enableUSTCSubstituter = lib.mkEnableOption "Enable USTC Mirror for cache.nixos.org";
+    noa.nix.enableMirrorSubstituter = lib.mkEnableOption "Enable mirror for cache.nixos.org";
   };
 }
