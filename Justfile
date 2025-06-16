@@ -54,11 +54,8 @@ updatekeys:
 rdeploy:
   deploy
 
-rdeploy-darwin:
-  deploy --remote-build --skip-checks
-
 rdeploy-host hostname:
   deploy .#{{hostname}}
 
-rdeploy-host-darwin hostname:
-  deploy --remote-build --skip-checks .#{{hostname}}
+rdeploy-host-bare hostname target:
+  nixos-rebuild --flake .#{{hostname}} --target-host {{target}} switch --use-remote-sudo
