@@ -22,4 +22,7 @@
   ];
 
   networking.hostName = lib.mkDefault hostname;
+
+  # This is too slow
+  documentation.man.generateCaches = false;
 }
