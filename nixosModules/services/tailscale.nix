@@ -39,13 +39,19 @@
   };
 
   config = {
+    sops.secrets.ts_authkey = {
+      format = "yaml";
+      sopsFile = "${secrets}/tailscale.yaml";
+      restartUnits = [
+        "tailscaled.service"
+        "tailscaled-autoconnect.service"
+      ];
+    };
+
     services.tailscale = {
       enable = true;
-      authKeyFile =
-        if config.noa.tailscale.isEphemeral then
-          secrets.tailscaleKeys.ephemeral
-        else
-          secrets.tailscaleKeys.reusable;
+      authKeyFile = config.sops.secrets.ts_authkey.path;
+      authKeyParameters.ephemeral = config.noa.tailscale.isEphemeral;
       extraUpFlags =
         config.noa.tailscale.extraUpFlags
         ++ lib.optionals (config.noa.tailscale.advertiseRoutes != [ ]) [

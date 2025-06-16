@@ -28,7 +28,6 @@
         system
         hostname
         unstablePkgs
-        secrets
         ;
       username = "cmiki";
     };

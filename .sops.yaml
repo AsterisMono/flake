@@ -1,0 +1,15 @@
+keys:
+  - &noa age10rmq9vcjjpxpl7qx2qc9nh6xvr0ktdjphq7w6mz9zwlz6kxxfprqfrz7gk
+  - &host_zinnia age1c74akxues9dluu7pzu3m0ne9n7tve05yxkxauadgdkpwp9cr2pusctujau
+  - &host_seralia age1vfnd3vq40q5kvh68ftwyh6wxfkf5906xejt4689nvrq99vrslprqtpumg7
+  - &host_ivy age1m30c4r89jj4vecpsc8tkn35wmm6rrc6sxga6vh9w73wq3vef0q0sm863c0
+  - &host_mimosa age184zgthaq8renp27nkjvp8hcfpmmxrkwsq75ndt7593x6wq6fq3fqq5jufs
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *noa
+          - *host_zinnia
+          - *host_seralia
+          - *host_ivy
+          - *host_mimosa

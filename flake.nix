@@ -22,10 +22,6 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    secrets = {
-      url = "git+https://github.com/AsterisMono/secrets";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
     darwin = {
       url = "github:lnl7/nix-darwin/nix-darwin-25.05";
@@ -34,6 +30,10 @@
     home-manager-darwin = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -92,8 +92,8 @@
                   homeModules
                   overlays
                   ;
-                inherit (inputs) secrets;
                 inherit unstablePkgs system hostname;
+                secrets = ./secrets;
               };
               modules = [
                 path
@@ -101,6 +101,7 @@
                 self.nixosModules.common
                 inputs.disko.nixosModules.disko
                 inputs.home-manager-nixos.nixosModules.home-manager
+                inputs.sops-nix.nixosModules.sops
               ];
             };
           };
@@ -136,6 +137,23 @@
         ) darwinMachines
       );
 
+      deploy.nodes = lib.packagesFromDirectoryRecursive {
+        callPackage =
+          path: _:
+          let
+            hostname = lib.removeSuffix ".nix" (builtins.baseNameOf path);
+          in
+          {
+            inherit hostname;
+            profiles.system = {
+              user = "root";
+              path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${hostname}";
+            };
+            remoteBuild = true;
+          };
+        directory = ./nixosConfigurations;
+      };
+
       overlays = {
         flake-packages = import ./overlays/flake-packages.nix self;
       };
@@ -144,9 +162,10 @@
         withOfflineInstaller = import ./lib/withOfflineInstaller.nix;
       };
 
-      templates = builtins.mapAttrs (p: _: { path = ./templates/${p}; }) (
-        lib.attrsets.filterAttrs (p: t: t == "directory") (builtins.readDir ./templates)
-      );
+      templates = builtins.mapAttrs (p: _: {
+        path = ./templates/${p};
+        description = "${p} template";
+      }) (lib.attrsets.filterAttrs (p: t: t == "directory") (builtins.readDir ./templates));
     }
     // flake-utils.lib.eachDefaultSystem (
       system:
@@ -166,7 +185,7 @@
               statix.enable = true;
             };
           };
-        };
+        } // inputs.deploy-rs.lib."${system}".deployChecks self.deploy;
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
@@ -175,6 +194,8 @@
             deploy-rs
             nh
             nixfmt-rfc-style
+            ssh-to-age
+            sops
           ];
           inherit (checks.pre-commit-check) shellHook;
           buildInputs = checks.pre-commit-check.enabledPackages;
