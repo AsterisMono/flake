@@ -2,31 +2,39 @@ name: Irrigation
 
 on:
   workflow_dispatch:
-    inputs:
-      name:
-        type: string
-        description: Which machine to deploy
-        required: true
 
 jobs:
-  deploy:
-    name: Deploy system to ${{ inputs.name }}
+  generate-matrix:
+    name: "Generate host matrix"
     runs-on: self-hosted
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Run flake checks
+        run: nix flake check
+
+      - name: List NixOS configurations
+        id: set-matrix
+        run: |
+          hosts=$(find nixosConfigurations -type f -name '*.nix' \
+            | sed -E 's|nixosConfigurations/||; s/\.nix$//' \
+            | nix run nixpkgs#jq -- -R -s -c 'split("\n") | map(select(length > 0)) | {hostname: .}')
+          echo "matrix=$hosts"
+          echo "matrix=$hosts" >> $GITHUB_OUTPUT
+
+  deploy:
+    needs: generate-matrix
+    name: Deploy system to ${{ matrix.hostname }}
+    runs-on: self-hosted
+    strategy:
+      matrix: ${{ fromJson(needs.generate-matrix.outputs.matrix) }}
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: "flake"
-
-      - name: Add SSH known hosts
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -v -T 30 -H ${{ inputs.name }} >> ~/.ssh/known_hosts
 
       - name: Deploy
-        working-directory: ./flake
         run: |
-          nix run nixpkgs#nixos-rebuild -- \
-            --flake .#${{ inputs.name }} \
-            --target-host root@${{ inputs.name }} \
-            switch
+          nix shell nixpkgs#openssh nixpkgs#deploy-rs -c deploy -s .#${{ matrix.hostname }}
