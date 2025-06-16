@@ -18,7 +18,4 @@
 
   services.k3s.enable = true;
   services.k3s.role = "server";
-
-  # For deploy-rs.
-  noa.nix.enableUSTCSubstituter = true;
 }
