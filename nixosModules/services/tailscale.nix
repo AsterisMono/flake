@@ -8,7 +8,7 @@
   options.noa.tailscale = {
     ssh.enable = lib.mkOption {
       type = lib.types.bool;
-      default = false;
+      default = config.services.openssh.enable;
       description = "Enable tailscale SSH";
     };
     advertiseTags = lib.mkOption {
