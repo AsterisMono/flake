@@ -50,3 +50,15 @@ scan-age-key target:
 
 updatekeys:
   sops updatekeys secrets/* -y
+
+rdeploy:
+  deploy
+
+rdeploy-darwin:
+  deploy --remote-build --skip-checks
+
+rdeploy-host hostname:
+  deploy .#{{hostname}}
+
+rdeploy-host-darwin hostname:
+  deploy --remote-build --skip-checks .#{{hostname}}

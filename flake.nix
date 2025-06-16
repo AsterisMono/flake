@@ -149,7 +149,6 @@
               user = "root";
               path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."${hostname}";
             };
-            remoteBuild = true;
           };
         directory = ./nixosConfigurations;
       };
