@@ -29,5 +29,4 @@ jobs:
           nix run nixpkgs#nixos-rebuild -- \
             --flake .#${{ inputs.name }} \
             --target-host root@${{ inputs.name }} \
-            switch \
-            --override-input secrets ../secrets
+            switch

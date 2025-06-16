@@ -31,11 +31,6 @@
       default = [ ];
       description = "Extra flags to pass to tailscale up";
     };
-    isEphemeral = lib.mkOption {
-      type = lib.types.bool;
-      default = false;
-      description = "Is this machine ephemeral";
-    };
   };
 
   config = {
@@ -51,7 +46,6 @@
     services.tailscale = {
       enable = true;
       authKeyFile = config.sops.secrets.ts_authkey.path;
-      authKeyParameters.ephemeral = config.noa.tailscale.isEphemeral;
       extraUpFlags =
         config.noa.tailscale.extraUpFlags
         ++ lib.optionals (config.noa.tailscale.advertiseRoutes != [ ]) [
