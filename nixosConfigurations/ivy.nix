@@ -9,19 +9,14 @@
     users.cmiki
   ];
 
-  networking = {
-    useDHCP = false;
-    interfaces.enp6s18.ipv4.addresses = [
-      {
-        address = "192.168.31.101";
-        prefixLength = 24;
-      }
-    ];
-    defaultGateway = {
-      address = "192.168.31.1";
-      interface = "enp6s18";
+  systemd.network.links."10-wired" = {
+    matchConfig.Driver = "virtio_net";
+    networkConfig = {
+      DHCP = "no";
+      Address = "192.168.31.101/24";
+      Gateway = "192.168.31.1";
+      DNS = "114.114.114.114";
     };
-    nameservers = [ "114.114.114.114" ];
   };
 
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
