@@ -22,7 +22,7 @@
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
 
   noa = {
-    nix.enableUSTCSubstituter = true;
+    nix.enableMirrorSubstituter = true;
     tailscale.advertiseRoutes = [ "198.18.0.0/16" ];
     proxy.tunMode = true;
   };
