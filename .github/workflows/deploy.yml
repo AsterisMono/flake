@@ -23,21 +23,6 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -v -T 30 -H ${{ inputs.name }} >> ~/.ssh/known_hosts
 
-      - name: Extract secrets.rev from flake.lock
-        id: extract-secrets-rev
-        working-directory: ./flake
-        run: |
-          rev=$(jq -r '.nodes.secrets.locked.rev' flake.lock)
-          echo "rev=$rev" >> $GITHUB_OUTPUT
-
-      - name: Checkout secrets
-        uses: actions/checkout@v4
-        with:
-          repository: "AsterisMono/secrets"
-          ref: ${{ steps.extract-secrets-rev.outputs.rev }}
-          token: ${{ secrets.SECRETS_PAT }}
-          path: "secrets"
-
       - name: Deploy
         working-directory: ./flake
         run: |

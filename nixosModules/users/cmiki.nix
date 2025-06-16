@@ -55,7 +55,6 @@ in
           system
           hostname
           unstablePkgs
-          secrets
           ;
         inherit username;
       };

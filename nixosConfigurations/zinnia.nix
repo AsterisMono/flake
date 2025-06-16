@@ -5,13 +5,12 @@
 }:
 {
   imports = with nixosModules; [
-    roles.desktop
+    roles.server
     diskLayouts.btrfs
     services.proxy
     services.tailscale
     services.ssh
     users.cmiki
-    desktop.guiSuites.gnome
   ];
 
   disko.devices.disk.main.device = "/dev/sda";

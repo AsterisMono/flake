@@ -19,10 +19,17 @@ in
   };
 
   config = {
+    sops.secrets.mihomoConfig = {
+      format = "yaml";
+      sopsFile = "${secrets}/mihomoConfig.yaml";
+      key = "";
+      restartUnits = [ "mihomo.service" ];
+    };
+
     services.mihomo = {
       enable = true;
       inherit (cfg) tunMode;
-      configFile = secrets.mihomoConfig;
+      configFile = config.sops.secrets.mihomoConfig.path;
     };
 
     networking.proxy = lib.mkIf (!cfg.tunMode) {

@@ -5,6 +5,7 @@ install hostname target:
   nix run github:nix-community/nixos-anywhere -- \
     --flake .#{{hostname}} \
     --target-host {{target}} \
+    --copy-host-keys \
     --disko-mode disko \
 
 bootstrap hostname disk:
@@ -43,3 +44,9 @@ gc:
 
 update-iterm2:
   cp ~/.config/iterm2/com.googlecode.iterm2.plist ./homeModules/iterm2/com.googlecode.iterm2.plist
+
+scan-age-key target:
+  ssh {{target}} cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age
+
+updatekeys:
+  sops updatekeys secrets/* -y
