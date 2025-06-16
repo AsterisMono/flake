@@ -30,7 +30,12 @@
       enable = true;
       name = "irrigation";
       tokenFile = config.sops.secrets.ci_runner_token.path;
+      user = "cmiki";
       url = "https://github.com/AsterisMono/flake";
+      serviceOverrides = {
+        # Allow read-only access to .ssh
+        ProtectHome = "read-only";
+      };
     };
   };
 
@@ -41,5 +46,6 @@
       apps.shell-utils
       apps.development
     ];
+    proxy.tunMode = true;
   };
 }
