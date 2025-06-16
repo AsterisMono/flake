@@ -18,9 +18,13 @@ jobs:
 
       - name: List NixOS configurations
         id: set-matrix
+        env:
+          EXCLUDE_HOSTS: "zinnia"
         run: |
+          exclude_pattern=$(echo "$EXCLUDE_HOSTS" | tr ',' '\n' | sed 's/^/^/; s/$/$/' | paste -sd'|' -)
           hosts=$(find nixosConfigurations -type f -name '*.nix' \
             | sed -E 's|nixosConfigurations/||; s/\.nix$//' \
+            | grep -Ev "$exclude_pattern" \
             | nix run nixpkgs#jq -- -R -s -c 'split("\n") | map(select(length > 0)) | {hostname: .}')
           echo "matrix=$hosts"
           echo "matrix=$hosts" >> $GITHUB_OUTPUT
