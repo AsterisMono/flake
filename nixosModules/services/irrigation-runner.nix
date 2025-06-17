@@ -1,6 +1,11 @@
 { config, secretsPath, ... }:
 {
-  users.extraUsers.github.isSystemUser = true;
+  users.groups.github = { };
+
+  users.extraUsers.github = {
+    isSystemUser = true;
+    group = "github";
+  };
 
   sops.secrets.ci_runner_token = {
     format = "yaml";
