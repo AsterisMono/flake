@@ -182,8 +182,9 @@
         pkgs = nixpkgs.legacyPackages.${system};
       in
       rec {
-        packages = {
-          torus-font = pkgs.callPackage ./packages/torus { };
+        packages = lib.packagesFromDirectoryRecursive {
+          inherit (pkgs) callPackage;
+          directory = ./packages;
         };
 
         checks = {
