@@ -87,13 +87,18 @@
             nixosConfig = lib.nixosSystem {
               inherit system;
               specialArgs = {
-                inherit inputs secretsPath;
+                inherit
+                  inputs
+                  secretsPath
+                  unstablePkgs
+                  system
+                  hostname
+                  ;
                 inherit (self)
                   nixosModules
                   homeModules
                   overlays
                   ;
-                inherit unstablePkgs system hostname;
               };
               modules = [
                 path
@@ -124,9 +129,14 @@
             value = inputs.darwin.lib.darwinSystem {
               inherit system;
               specialArgs = {
-                inherit inputs secretsPath;
+                inherit
+                  inputs
+                  secretsPath
+                  unstablePkgs
+                  system
+                  hostname
+                  ;
                 inherit (self) homeModules;
-                inherit unstablePkgs system hostname;
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
                 inputs.home-manager-darwin.darwinModules.home-manager
