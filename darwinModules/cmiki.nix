@@ -1,39 +1,59 @@
 {
   homeModules,
   inputs,
+  lib,
   ...
-}@homeInputs:
+}@osSpecialArgs:
+let
+  username = "cmiki";
+in
 {
-  # "Yes, I think the status quo is that you shouldn’t use the users.users.* arguments on your main user, but frankly I forget why."
-  # https://github.com/LnL7/nix-darwin/issues/811
-  users.users.cmiki = {
-    home = "/Users/cmiki";
-    description = "Noa Virellia";
+  options = {
+    noa.homeManager.modules = lib.mkOption {
+      default = [ ];
+      description = "Extra modules for home-manager";
+    };
   };
 
-  home-manager = {
-    users.cmiki.imports = [
-      inputs.nix-index-database.hmModules.nix-index
-      homeModules.base
+  config = {
+    # "Yes, I think the status quo is that you shouldn’t use the users.users.* arguments on your main user, but frankly I forget why."
+    # https://github.com/LnL7/nix-darwin/issues/811
+    users.users."${username}" = {
+      home = "/Users/cmiki";
+      description = "Noa Virellia";
+    };
+
+    home-manager = {
+      sharedModules = [
+        inputs.nix-index-database.hmModules.nix-index
+        inputs.sops-nix.homeManagerModules.sops
+      ];
+      users."${username}".imports = [
+        homeModules.base
+      ];
+      useGlobalPkgs = true;
+      useUserPackages = true;
+      backupFileExtension = "hm-bak";
+      extraSpecialArgs = {
+        inherit (osSpecialArgs)
+          inputs
+          system
+          hostname
+          unstablePkgs
+          secretsPath
+          ;
+        username = "cmiki";
+      };
+    };
+
+    nix.settings.trusted-users = [ username ];
+
+    system.primaryUser = username;
+
+    noa.homeManager.modules = [
       homeModules.iterm2
       homeModules.apps.shell-utils
       homeModules.apps.development
     ];
-    useGlobalPkgs = true;
-    useUserPackages = true;
-    backupFileExtension = "hm-bak";
-    extraSpecialArgs = {
-      inherit (homeInputs)
-        inputs
-        system
-        hostname
-        unstablePkgs
-        ;
-      username = "cmiki";
-    };
   };
-
-  nix.settings.trusted-users = [ "cmiki" ];
-
-  system.primaryUser = "cmiki";
 }

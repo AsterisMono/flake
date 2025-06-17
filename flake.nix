@@ -46,6 +46,7 @@
     }:
     let
       inherit (inputs.nixpkgs) lib;
+      secretsPath = ./secrets;
       # This recursive attrset pattern is forbidden, but we use it here anyway.
       #
       # The following flake output attributes must be NixOS modules:
@@ -86,14 +87,13 @@
             nixosConfig = lib.nixosSystem {
               inherit system;
               specialArgs = {
-                inherit inputs;
+                inherit inputs secretsPath;
                 inherit (self)
                   nixosModules
                   homeModules
                   overlays
                   ;
                 inherit unstablePkgs system hostname;
-                secrets = ./secrets;
               };
               modules = [
                 path
@@ -124,9 +124,8 @@
             value = inputs.darwin.lib.darwinSystem {
               inherit system;
               specialArgs = {
-                inherit inputs;
+                inherit inputs secretsPath;
                 inherit (self) homeModules;
-                inherit (inputs) secrets;
                 inherit unstablePkgs system hostname;
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
