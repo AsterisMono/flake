@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  secrets,
+  secretsPath,
   ...
 }:
 let
@@ -21,7 +21,7 @@ in
   config = {
     sops.secrets.mihomoConfig = {
       format = "yaml";
-      sopsFile = "${secrets}/mihomoConfig.yaml";
+      sopsFile = "${secretsPath}/mihomoConfig.yaml";
       key = "";
       restartUnits = [ "mihomo.service" ];
     };

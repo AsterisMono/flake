@@ -13,6 +13,7 @@ let
     nix-output-monitor # https://github.com/maralorn/nix-output-monitor
     dust
     duf
+    cachix
   ];
 in
 {
@@ -120,6 +121,10 @@ in
     };
   };
 
+  sops.secrets.atuin_key = {
+    path = "${config.home.homeDirectory}/.local/share/atuin/key";
+  };
+
   programs.zoxide = {
     enable = true;
     enableFishIntegration = true;
@@ -149,5 +154,18 @@ in
       ".git/"
       "node_modules/"
     ];
+  };
+
+  # Cachix
+  sops.secrets.cachix_auth_token = { };
+  sops.templates."cachix.dhall" = {
+    content = ''
+      { authToken =
+          "${config.sops.placeholder.cachix_auth_token}"
+      , hostname = "https://cachix.org"
+      , binaryCaches = [] : List { name : Text, secretKey : Text }
+      }
+    '';
+    path = "${config.home.homeDirectory}/.config/cachix/cachix.dhall";
   };
 }

@@ -1,7 +1,7 @@
 {
   lib,
   config,
-  secrets,
+  secretsPath,
   ...
 }:
 {
@@ -36,7 +36,7 @@
   config = {
     sops.secrets.ts_authkey = {
       format = "yaml";
-      sopsFile = "${secrets}/tailscale.yaml";
+      sopsFile = "${secretsPath}/tailscale.yaml";
       restartUnits = [
         "tailscaled.service"
         "tailscaled-autoconnect.service"

@@ -2,7 +2,7 @@
   config,
   nixosModules,
   homeModules,
-  secrets,
+  secretsPath,
   ...
 }:
 {
@@ -19,7 +19,7 @@
 
   sops.secrets.ci_runner_token = {
     format = "yaml";
-    sopsFile = "${secrets}/github.yaml";
+    sopsFile = "${secretsPath}/github.yaml";
     restartUnits = [
       "github-runner-irrigation.service"
     ];

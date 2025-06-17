@@ -5,7 +5,7 @@
   inputs,
   homeModules,
   ...
-}@homeInputs:
+}@osSpecialArgs:
 let
   username = "cmiki";
 in
@@ -42,19 +42,23 @@ in
     programs.fish.enable = config.noa.homeManager.enable;
 
     home-manager = lib.mkIf config.noa.homeManager.enable {
-      users."${username}".imports = [
+      sharedModules = [
         inputs.nix-index-database.hmModules.nix-index
+        inputs.sops-nix.homeManagerModules.sops
+      ];
+      users."${username}".imports = [
         homeModules.base
-      ] ++ config.noa.homeManager.modules;
+      ];
       useGlobalPkgs = true;
       useUserPackages = true;
       backupFileExtension = "hm-bak";
       extraSpecialArgs = {
-        inherit (homeInputs)
+        inherit (osSpecialArgs)
           inputs
           system
           hostname
           unstablePkgs
+          secretsPath
           ;
         inherit username;
       };
