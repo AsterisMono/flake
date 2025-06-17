@@ -1,8 +1,6 @@
 {
-  config,
   nixosModules,
   homeModules,
-  secretsPath,
   ...
 }:
 {
@@ -12,32 +10,11 @@
     services.proxy
     services.tailscale
     services.ssh
+    services.irrigation-runner
     users.cmiki
   ];
 
   disko.devices.disk.main.device = "/dev/sda";
-
-  sops.secrets.ci_runner_token = {
-    format = "yaml";
-    sopsFile = "${secretsPath}/github.yaml";
-    restartUnits = [
-      "github-runner-irrigation.service"
-    ];
-  };
-
-  services.github-runners = {
-    irrigation = {
-      enable = true;
-      name = "irrigation";
-      tokenFile = config.sops.secrets.ci_runner_token.path;
-      user = "cmiki";
-      url = "https://github.com/AsterisMono/flake";
-      serviceOverrides = {
-        # Allow read-only access to .ssh
-        ProtectHome = "read-only";
-      };
-    };
-  };
 
   noa = {
     nix.enableMirrorSubstituter = true;
