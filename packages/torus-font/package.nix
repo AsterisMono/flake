@@ -1,6 +1,5 @@
-{ pkgs }:
-
-pkgs.stdenv.mkDerivation {
+{ stdenvNoCC, unzip }:
+stdenvNoCC.mkDerivation {
   pname = "torus-font";
   version = "1.0";
 
@@ -8,7 +7,7 @@ pkgs.stdenv.mkDerivation {
 
   unpackPhase = ''
     runHook preUnpack
-    ${pkgs.unzip}/bin/unzip $src
+    ${unzip}/bin/unzip $src
 
     runHook postUnpack
   '';
