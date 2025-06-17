@@ -41,4 +41,4 @@ jobs:
 
       - name: Deploy
         run: |
-          nix shell nixpkgs#openssh nixpkgs#deploy-rs -c deploy -s .#${{ matrix.hostname }}
+          nix shell nixpkgs#openssh nixpkgs#deploy-rs -c deploy --ssh-opts "-o StrictHostKeyChecking=no" -s .#${{ matrix.hostname }}
