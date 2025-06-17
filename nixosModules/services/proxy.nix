@@ -45,7 +45,6 @@ in
     # Effectively breaking tun mode
     # However NixOS config networking.firewall doesn't support declarative ip-range rules, only ports
     # sus
-    # TODO: use priority
     networking.firewall.enable = lib.mkForce (!cfg.tunMode);
   };
 }
