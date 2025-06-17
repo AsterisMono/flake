@@ -42,7 +42,7 @@ in
           unstablePkgs
           secretsPath
           ;
-        username = "cmiki";
+        inherit username;
       };
     };
 
