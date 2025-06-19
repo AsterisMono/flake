@@ -36,8 +36,6 @@ in
     enableTransience = true;
   };
 
-  xdg.configFile."starship.toml".source = ./starship.toml;
-
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
