@@ -192,6 +192,7 @@ in
         "autolock location=\"https://github.com/fresh2dev/zellij-autolock/releases/latest/download/zellij-autolock.wasm\"" =
           {
             is_enabled = true;
+            reaction_seconds = "1.0";
             triggers = "nvim|vim|zoxide|atuin";
           };
       };
