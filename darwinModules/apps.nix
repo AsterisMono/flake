@@ -46,6 +46,7 @@
       "telegram-desktop"
       "chatgpt"
       "bitwarden"
+      "ghostty"
     ];
   };
 }

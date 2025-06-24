@@ -15,6 +15,7 @@ themes {
 }
 
 theme "rose-pine-dawn"
+default_shell "fish"
 
 plugins {
     autolock location="https://github.com/fresh2dev/zellij-autolock/releases/latest/download/zellij-autolock.wasm" {
