@@ -29,6 +29,7 @@
         show-recents = false;
         tilesize = 56;
         mineffect = "scale";
+        launchanim = false;
       };
 
       finder = {
