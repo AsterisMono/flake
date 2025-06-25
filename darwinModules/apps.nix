@@ -47,6 +47,7 @@
       "chatgpt"
       "bitwarden"
       "ghostty"
+      "marta"
     ];
   };
 }
