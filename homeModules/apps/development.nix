@@ -14,6 +14,7 @@ in
     nixfmt-rfc-style
     typescript # tsserver
     vscode-langservers-extracted
+    yaml-language-server
 
     # Scripts
     ccnupr
