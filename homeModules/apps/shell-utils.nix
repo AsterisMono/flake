@@ -41,6 +41,8 @@ in
     nix-direnv.enable = true;
   };
 
+  sops.secrets.gemini_api_key = { };
+
   programs.fish = {
     enable = true;
     plugins =
@@ -61,6 +63,8 @@ in
             cd $FISH_FORK_PWD_HINT
           end
         end
+
+        export AVANTE_GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})
       ''
       + lib.optionalString (system == "aarch64-darwin") ''
         export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
