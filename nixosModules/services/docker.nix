@@ -4,14 +4,18 @@
   ...
 }:
 {
-  options.noa.docker.enableWatchTower = {
-    type = lib.types.bool;
-    default = false;
-    description = "Enable WatchTower to auto update docker images";
+  options.noa.docker = {
+    enableWatchTower = lib.mkEnableOption "Watchtower auto update";
+    useRegistryMirror = lib.mkEnableOption "Registry mirror";
   };
 
   config = {
-    virtualisation.docker.enable = true;
+    virtualisation.docker = {
+      enable = true;
+      daemon.settings = lib.mkIf config.noa.docker.useRegistryMirror {
+        registry-mirrors = [ "https://docker.1ms.run" ];
+      };
+    };
     virtualisation.oci-containers.backend = "docker";
     virtualisation.oci-containers.containers.watch-tower = lib.mkIf config.noa.docker.enableWatchTower {
       image = "containrrr/watchtower";
