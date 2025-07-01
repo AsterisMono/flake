@@ -18,6 +18,8 @@ in
 
     # Scripts
     ccnupr
+
+    unstablePkgs.gemini-cli
   ];
 
   # Neovim
