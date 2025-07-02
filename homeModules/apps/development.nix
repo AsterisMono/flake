@@ -15,6 +15,7 @@ in
     typescript # tsserver
     vscode-langservers-extracted
     yaml-language-server
+    yamlfmt
 
     # Scripts
     ccnupr
