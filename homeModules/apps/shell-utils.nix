@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  unstablePkgs,
   lib,
   system,
   ...
@@ -184,5 +185,11 @@ in
   programs.yazi = {
     enable = true;
     enableFishIntegration = true;
+  };
+
+  programs.pay-respects = {
+    enable = true;
+    enableFishIntegration = true;
+    package = unstablePkgs.pay-respects;
   };
 }
