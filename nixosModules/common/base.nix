@@ -12,6 +12,8 @@
     curl
     killall
     gnumake
+
+    isd # isd is a tool for managing systemd services
   ];
 
   boot.supportedFilesystems = [
