@@ -10,7 +10,6 @@ let
   extraPackages = with pkgs; [
     any-nix-shell
     fastfetch
-    tldr
     nix-output-monitor # https://github.com/maralorn/nix-output-monitor
     dust
     duf
@@ -159,6 +158,8 @@ in
       "node_modules/"
     ];
   };
+
+  programs.tealdeer.enable = true;
 
   # Cachix
   sops.secrets.cachix_auth_token = { };
