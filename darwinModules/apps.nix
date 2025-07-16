@@ -39,7 +39,7 @@
       "insomnia"
       "stats"
       "typora"
-      "tailscale"
+      "tailscale-app"
       "firefox"
       "warp"
       "obsidian"
