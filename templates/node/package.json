@@ -1,0 +1,22 @@
+{
+  "name": "{{projectName}}",
+  "type": "module",
+  "version": "1.0.0",
+  "packageManager": "pnpm@10.8.1",
+  "description": "{{description}}",
+  "author": "{{author}}",
+  "license": "GPL-3.0-only",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts"
+  },
+  "dependencies": {
+    "@asterismono/monologger": "^0.1.0"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.17.0",
+    "@types/node": "^24.0.14",
+    "eslint": "^9.31.0",
+    "tsx": "^4.20.3"
+  }
+}
