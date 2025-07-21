@@ -50,6 +50,7 @@ in
       map (x: { inherit (x) name src; }) [
         plugin-git
         fzf-fish
+        puffer
       ];
     shellInit = "set -g fish_greeting";
     interactiveShellInit =
