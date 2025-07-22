@@ -1,33 +1,53 @@
 {
   pkgs,
   unstablePkgs,
+  system,
+  lib,
   ...
 }:
 let
-  extraPackages =
-    with pkgs;
-    [
-      dbeaver-bin
-      fractal
-    ]
-    ++ (with unstablePkgs; [
-      code-cursor
-      warp-terminal
-      xpipe
-      telegram-desktop
-      obsidian
-    ]);
+  isDarwin = system == "aarch64-darwin";
+  homePackages = with unstablePkgs; [
+    dbeaver-bin
+    code-cursor
+    telegram-desktop
+    obsidian
+    bitwarden-desktop
+  ];
+  darwinOnlyPackages = with unstablePkgs; [
+    ice-bar
+    google-chrome # chromium is not available on darwin
+    arc-browser
+    alt-tab-macos
+    maccy
+    shottr
+    raycast
+    rectangle
+    ice-bar
+    insomnia
+    stats
+    tailscale
+    chatgpt
+  ];
 in
 {
-  home.packages = extraPackages;
+  home.packages = homePackages ++ lib.optionals isDarwin darwinOnlyPackages;
+
+  programs.ghostty = {
+    enable = true;
+    enableFishIntegration = true;
+    package = if isDarwin then unstablePkgs.ghostty-bin else unstablePkgs.ghostty;
+  };
+
+  xdg.configFile."ghostty/config".source = ./ghostty.config;
 
   programs.vscode = {
     enable = true;
-    package = unstablePkgs.vscode.fhs;
+    package = if isDarwin then unstablePkgs.vscode else unstablePkgs.vscode-fhs;
   };
 
   programs.chromium = {
-    enable = true;
+    enable = !isDarwin;
     commandLineArgs = [
       "--enable-features=UseOzonePlatform"
       "--ozone-platform=wayland"

@@ -181,8 +181,6 @@ in
 
   xdg.configFile."zellij/config.kdl".source = ./zellij-config.kdl;
 
-  xdg.configFile."ghostty/config".source = ./ghostty.config;
-
   programs.yazi = {
     enable = true;
     enableFishIntegration = true;

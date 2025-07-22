@@ -15,7 +15,11 @@
         "nix-command"
         "flakes"
       ];
-      substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
+      substituters = [
+        "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+        "https://mirror.sjtu.edu.cn/nix-channels/store"
+        "https://mirrors.ustc.edu.cn/nix-channels/store"
+      ];
       extra-substituters = [
         "https://asterismono.cachix.org"
         "https://devenv.cachix.org"
