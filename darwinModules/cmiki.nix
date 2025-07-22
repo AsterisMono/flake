@@ -25,7 +25,7 @@ in
 
     home-manager = {
       sharedModules = [
-        inputs.nix-index-database.hmModules.nix-index
+        inputs.nix-index-database.homeModules.nix-index
         inputs.sops-nix.homeManagerModules.sops
       ];
       users."${username}".imports = [
@@ -50,10 +50,10 @@ in
 
     system.primaryUser = username;
 
-    noa.homeManager.modules = [
-      homeModules.iterm2
-      homeModules.apps.shell-utils
-      homeModules.apps.development
+    noa.homeManager.modules = with homeModules.apps; [
+      shell-utils
+      development
+      desktop-apps
     ];
   };
 }
