@@ -17,7 +17,6 @@ let
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
     google-chrome # chromium is not available on darwin
-    arc-browser
     alt-tab-macos
     maccy
     shottr
