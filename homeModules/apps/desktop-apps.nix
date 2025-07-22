@@ -93,16 +93,28 @@ in
           installation_mode = "force_installed";
           default_area = "menupanel";
         };
+        "{d3598eb6-77e5-4fa8-b137-8b6b0d687560}" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/minimalist-ros%C3%A9-pine/latest.xpi";
+          installation_mode = "force_installed";
+        };
+        "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/refined-github-/latest.xpi";
+          installation_mode = "force_installed";
+          default_area = "menupanel";
+        };
       };
       DisplayBookmarksToolbar = "never";
       DisablePocket = true;
       Homepage.StartPage = "previous-session";
-      Preferences = {
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        "media.ffmpeg.vaapi.enabled" = true;
-        "gfx.webrender.all" = true;
-        "browser.newtabpage.activity-stream.feeds.topsites" = false;
-      };
+      Preferences =
+        {
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+          "browser.newtabpage.activity-stream.feeds.topsites" = false;
+        }
+        // lib.optionalAttrs (!isDarwin) {
+          "media.ffmpeg.vaapi.enabled" = true;
+          "gfx.webrender.all" = true;
+        };
       RequestedLocales = "zh-cn,zh,zh-tw,zh-hk,en-us,en";
     };
     profiles.default = {
