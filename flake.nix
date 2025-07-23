@@ -136,7 +136,10 @@
                   system
                   hostname
                   ;
-                inherit (self) homeModules;
+                inherit (self)
+                  homeModules
+                  overlays
+                  ;
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
                 inputs.home-manager-darwin.darwinModules.home-manager
@@ -179,7 +182,10 @@
     // flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = nixpkgs.legacyPackages.${system};
+        pkgs = import inputs.nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+        };
       in
       rec {
         packages = lib.packagesFromDirectoryRecursive {

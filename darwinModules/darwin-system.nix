@@ -4,8 +4,11 @@
   hostname,
   ...
 }:
-
 {
+  environment.systemPackages = with pkgs; [
+    git
+  ];
+
   networking.hostName = hostname;
   networking.computerName = hostname;
 
