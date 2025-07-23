@@ -20,7 +20,6 @@
 
     # `brew install --cask`
     casks = [
-      "orbstack" # to be packaged
       "typora" # to be packaged (darwin)
     ];
   };

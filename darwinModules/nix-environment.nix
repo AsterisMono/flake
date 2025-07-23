@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  overlays,
   ...
 }:
 
@@ -31,7 +32,12 @@
     };
   };
 
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config.allowUnfree = true;
+    overlays = [
+      overlays.flake-packages
+    ];
+  };
 
   # do garbage collection weekly to keep disk usage low
   nix = {

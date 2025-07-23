@@ -28,6 +28,17 @@ stdenvNoCC.mkDerivation (finalAttrs: {
   installPhase = ''
     runHook preInstall
 
+    # Fix "this app is damaged and can't be opened"
+    #
+    # When extracting an APFS .dmg with 7zz (7-Zip), it may incorrectly turn
+    # macOS extended attributes (like quarantine or macl) into real files:
+    #   Info.plist:com.apple.quarantine
+    #   Info.plist:com.apple.macl
+    #
+    # These bogus files corrupt the .app bundle and prevent it from launching.
+    # Delete them to restore proper behavior.
+    find OrbStack.app -name '*:com.apple.*' -delete
+
     mkdir -p "$out/Applications"
     cp -R OrbStack.app "$out/Applications"
 
