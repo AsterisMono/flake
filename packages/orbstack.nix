@@ -9,7 +9,7 @@
   _7zz,
 }:
 
-stdenvNoCC.mkDerivation (finalAttrs: {
+stdenvNoCC.mkDerivation {
   pname = "orbstack";
   version = "1.11.3";
 
@@ -79,4 +79,4 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     platforms = lib.platforms.darwin;
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
   };
-})
+}
