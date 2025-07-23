@@ -27,6 +27,7 @@ let
     stats
     tailscale
     chatgpt
+    pkgs.flakePackages.orbstack
   ];
 in
 {
