@@ -8,7 +8,6 @@
   common-updater-scripts,
   _7zz,
 }:
-
 stdenvNoCC.mkDerivation {
   pname = "orbstack";
   version = "1.11.3";
