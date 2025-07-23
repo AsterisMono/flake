@@ -45,22 +45,20 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     runHook postInstall
   '';
 
-  # passthru.updateScript = lib.getExe (writeShellApplication {
-  #   name = "shottr-update-script";
-  #   runtimeInputs = [
-  #     cacert
-  #     common-updater-scripts
-  #     curl
-  #     pup
-  #   ];
-  #   text = ''
-  #     version="$(curl -s https://shottr.cc/newversion.html \
-  #       | pup 'a[href*="Shottr-"] attr{href}' \
-  #       | sed -E 's|/dl/Shottr-||' \
-  #       | sed -E 's|\.dmg||')"
-  #     update-source-version shottr "$version"
-  #   '';
-  # });
+  passthru.updateScript = lib.getExe (writeShellApplication {
+    name = "orbstack-update-script";
+    runtimeInputs = [
+      cacert
+      common-updater-scripts
+      curl
+      pup
+    ];
+    text = ''
+      source_url="$(curl -L -I https://orbstack.dev/download/stable/latest/arm64 | grep -i "location:" | awk '{print $2}')"
+      version="$(echo "$source_url" | sed -E 's|.*/OrbStack_v||' | sed -E 's|_[0-9]+_arm64\.dmg||')"
+      update-source-version orbstack "$version" "$source_url"
+    '';
+  });
 
   meta = {
     changelog = "https://docs.orbstack.dev/release-notes";
