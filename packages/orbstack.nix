@@ -6,7 +6,6 @@
   cacert,
   curl,
   common-updater-scripts,
-  pup,
   _7zz,
 }:
 
@@ -62,7 +61,6 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       cacert
       common-updater-scripts
       curl
-      pup
     ];
     text = ''
       source_url="$(curl -L -I https://orbstack.dev/download/stable/latest/arm64 | grep -i "location:" | awk '{print $2}')"
