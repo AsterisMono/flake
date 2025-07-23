@@ -4,7 +4,6 @@
   overlays,
   ...
 }:
-
 {
   nix = {
     package = pkgs.nixVersions.latest;
