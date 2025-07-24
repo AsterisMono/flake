@@ -103,6 +103,16 @@ in
           installation_mode = "force_installed";
           default_area = "menupanel";
         };
+        "jid1-BoFifL9Vbdl2zQ@jetpack" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
+          installation_mode = "force_installed";
+          default_area = "menupanel";
+        };
+        "{74145f27-f039-47ce-a470-a662b129930a}" = {
+          install_url = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+          installation_mode = "force_installed";
+          default_area = "menupanel";
+        };
       };
       DisplayBookmarksToolbar = "never";
       DisablePocket = true;
