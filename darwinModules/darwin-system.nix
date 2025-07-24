@@ -81,5 +81,7 @@
     nerd-fonts.fira-code
   ];
 
+  services.tailscale.enable = true;
+
   system.stateVersion = 5;
 }

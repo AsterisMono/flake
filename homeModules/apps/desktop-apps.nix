@@ -25,8 +25,8 @@ let
     ice-bar
     insomnia
     stats
-    tailscale
     chatgpt
+    pkgs.tailscale
     pkgs.flakePackages.orbstack
   ];
 in
