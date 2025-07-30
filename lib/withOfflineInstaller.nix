@@ -53,7 +53,8 @@ nixosConfig
               ];
               storeContents = [
                 nixosConfig.config.system.build.toplevel
-              ] ++ (getInputDrvs pkgs flakeLock);
+              ]
+              ++ (getInputDrvs pkgs flakeLock);
               includeSystemBuildDependencies = false;
             };
 

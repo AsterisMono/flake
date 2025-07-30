@@ -53,23 +53,22 @@ in
         puffer
       ];
     shellInit = "set -g fish_greeting";
-    interactiveShellInit =
-      ''
-        set EDITOR nvim
+    interactiveShellInit = ''
+      set EDITOR nvim
 
-        any-nix-shell fish --info-right | source
+      any-nix-shell fish --info-right | source
 
-        if set -q FISH_FORK_PWD_HINT
-          if test (string match -r '^/' $FISH_FORK_PWD_HINT)
-            cd $FISH_FORK_PWD_HINT
-          end
+      if set -q FISH_FORK_PWD_HINT
+        if test (string match -r '^/' $FISH_FORK_PWD_HINT)
+          cd $FISH_FORK_PWD_HINT
         end
+      end
 
-        export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})
-      ''
-      + lib.optionalString (system == "aarch64-darwin") ''
-        export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
-      '';
+      export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})
+    ''
+    + lib.optionalString (system == "aarch64-darwin") ''
+      export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
+    '';
     shellAliases = {
       ".." = "cd ../";
       "n" = "nvim";
