@@ -119,16 +119,15 @@ in
       OfferToSaveLogins = false;
       PasswordManagerEnabled = false;
       Homepage.StartPage = "previous-session";
-      Preferences =
-        {
-          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-          "browser.newtabpage.activity-stream.feeds.topsites" = false;
-          "browser.ctrlTab.sortByRecentlyUsed" = true;
-        }
-        // lib.optionalAttrs (!isDarwin) {
-          "media.ffmpeg.vaapi.enabled" = true;
-          "gfx.webrender.all" = true;
-        };
+      Preferences = {
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+        "browser.newtabpage.activity-stream.feeds.topsites" = false;
+        "browser.ctrlTab.sortByRecentlyUsed" = true;
+      }
+      // lib.optionalAttrs (!isDarwin) {
+        "media.ffmpeg.vaapi.enabled" = true;
+        "gfx.webrender.all" = true;
+      };
       RequestedLocales = "zh-cn,zh,zh-tw,zh-hk,en-us,en";
     };
     profiles.default = {
