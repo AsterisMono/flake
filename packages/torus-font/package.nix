@@ -1,4 +1,8 @@
-{ stdenvNoCC, unzip }:
+{
+  lib,
+  stdenvNoCC,
+  unzip,
+}:
 stdenvNoCC.mkDerivation {
   pname = "torus-font";
   version = "1.0";
@@ -19,4 +23,9 @@ stdenvNoCC.mkDerivation {
 
     runHook postInstall
   '';
+
+  meta = {
+    description = "Torus Font";
+    platforms = lib.platforms.all;
+  };
 }

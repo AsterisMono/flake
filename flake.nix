@@ -189,10 +189,12 @@
         };
       in
       rec {
-        packages = lib.packagesFromDirectoryRecursive {
-          inherit (pkgs) callPackage;
-          directory = ./packages;
-        };
+        packages = lib.filterAttrs (pname: package: builtins.elem system package.meta.platforms) (
+          lib.packagesFromDirectoryRecursive {
+            inherit (pkgs) callPackage;
+            directory = ./packages;
+          }
+        );
 
         checks = {
           pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
