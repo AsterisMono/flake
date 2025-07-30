@@ -143,6 +143,7 @@
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
                 inputs.home-manager-darwin.darwinModules.home-manager
+                inputs.sops-nix.darwinModules.sops
               ];
             };
           }
@@ -201,7 +202,8 @@
               statix.enable = true;
             };
           };
-        } // inputs.deploy-rs.lib."${system}".deployChecks self.deploy;
+        }
+        // inputs.deploy-rs.lib."${system}".deployChecks self.deploy;
 
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
