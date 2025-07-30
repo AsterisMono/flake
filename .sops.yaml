@@ -4,6 +4,7 @@ keys:
   - &host_seralia age1vfnd3vq40q5kvh68ftwyh6wxfkf5906xejt4689nvrq99vrslprqtpumg7
   - &host_ivy age1m30c4r89jj4vecpsc8tkn35wmm6rrc6sxga6vh9w73wq3vef0q0sm863c0
   - &host_mimosa age1garpt27lnsj4mjvnm7ytszwmzl4e845y554z3k2308sngkzzm4yqadyyp2
+  - &host_darwin_oryx age1e2488lstgy5dgj65qs7l7mxqwzrk7wgnpsmga8e9h98r8ts6cv7qltt940
 creation_rules:
   - path_regex: secrets/home.yaml$
     key_groups:
@@ -18,3 +19,4 @@ creation_rules:
           - *host_seralia
           - *host_ivy
           - *host_mimosa
+          - *host_darwin_oryx
