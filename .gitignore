@@ -4,3 +4,5 @@
 result
 .secrets
 .DS_Store
+
+.decrypted*
