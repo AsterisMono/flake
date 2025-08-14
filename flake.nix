@@ -35,6 +35,7 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    wrapper-manager.url = "github:viperML/wrapper-manager";
   };
 
   outputs =
@@ -183,9 +184,16 @@
     // flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = import inputs.nixpkgs {
+        pkgs = import inputs.nixpkgs-unstable {
           inherit system;
           config.allowUnfree = true;
+          overlays = [
+            (final: prev: {
+              lib = prev.lib // {
+                wrapped = inputs.wrapper-manager.lib.wrapWith pkgs;
+              };
+            })
+          ];
         };
       in
       rec {
