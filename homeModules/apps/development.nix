@@ -1,4 +1,8 @@
-{ pkgs, unstablePkgs, ... }:
+{
+  pkgs,
+  unstablePkgs,
+  ...
+}:
 let
   ccnupr = pkgs.writeShellScriptBin "ccnupr" (builtins.readFile ./scripts/ccnupr);
 in
