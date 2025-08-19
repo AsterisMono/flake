@@ -21,7 +21,6 @@
       font-awesome
       font-awesome_5
       font-awesome_4
-      flakePackages.torus-font
     ];
     enableGhostscriptFonts = true;
     enableDefaultPackages = true;
