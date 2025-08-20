@@ -25,6 +25,7 @@
         apps.shell-utils
         apps.desktop-apps
         apps.development
+        niri
       ];
     };
   };
