@@ -15,4 +15,6 @@
   environment.systemPackages = with pkgs; [
     xdg-user-dirs
   ];
+
+  sops.age.keyFile = "/home/cmiki/.config/sops/age/keys.txt";
 }

@@ -36,6 +36,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     wrapper-manager.url = "github:viperML/wrapper-manager";
+    niri.url = "github:sodiboo/niri-flake";
   };
 
   outputs =
