@@ -54,4 +54,7 @@
       };
     };
   };
+
+  # To make sops-nix happy
+  fileSystems."/home".neededForBoot = true;
 }
