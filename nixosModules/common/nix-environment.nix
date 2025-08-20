@@ -28,13 +28,9 @@
         extra-substituters = [
           "https://nix-community.cachix.org"
           "https://asterismono.cachix.org"
-          "https://devenv.cachix.org"
-          "https://cosmic.cachix.org"
         ];
         trusted-public-keys = [
           "asterismono.cachix.org-1:GgkakezDphTbi2w+ksIkuk+LfIbD32IbsxrpmnDpPvo="
-          "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
-          "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
         ];
       };
