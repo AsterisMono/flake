@@ -6,7 +6,6 @@
 }:
 {
   programs.niri = {
-    enable = true;
     package = pkgs.niri;
     settings = {
       hotkey-overlay.skip-at-startup = true;
@@ -77,7 +76,7 @@
 
           "Mod+Shift+S".action = screenshot;
           "Mod+Shift+P".action = screenshot-window;
-          "Mod+Shift+Ctrl+P".action = screenshot-screen;
+          # "Mod+Shift+Ctrl+P".action = screenshot-screen;
 
           "Mod+Shift+E".action = quit;
 
