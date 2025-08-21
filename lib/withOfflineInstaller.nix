@@ -37,6 +37,11 @@ nixosConfig
           {
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
 
+            nix.settings.experimental-features = [
+              "nix-command"
+              "flakes"
+            ];
+
             nix.settings.substituters = [
               "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
               "https://mirror.sjtu.edu.cn/nix-channels/store"
