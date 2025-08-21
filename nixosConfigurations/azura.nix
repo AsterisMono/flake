@@ -4,6 +4,8 @@
   ...
 }:
 {
+  # Azura - the still heart beneath the storm
+
   imports = with nixosModules; [
     roles.desktop
     diskLayouts.btrfs
