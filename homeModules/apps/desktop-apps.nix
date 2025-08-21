@@ -167,4 +167,7 @@ in
       };
     };
   };
+
+  # fcitx5 config
+  xdg.configFile."fcitx5".source = ./fcitx5;
 }
