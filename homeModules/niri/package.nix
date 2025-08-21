@@ -18,23 +18,26 @@
       clipboard.disable-primary = true;
       prefer-no-csd = true;
 
+      outputs = {
+        "Xiaomi Corporation Mi Monitor 5877500021251".scale = 1.75;
+      };
+
       layout = {
         default-column-width.proportion = 0.5;
         # https://github.com/YaLTeR/niri/wiki/Overview#backdrop-customization
         background-color = "transparent";
+        always-center-single-column = true;
       };
 
       cursor = {
         hide-when-typing = true;
       };
 
-      spawn-at-startup = [
-        { command = [ "waybar" ]; }
-      ];
-
       input = {
         workspace-auto-back-and-forth = true;
       };
+
+      overview.workspace-shadow.enable = false;
 
       binds =
         with config.lib.niri.actions;
@@ -49,14 +52,14 @@
             action = close-window;
             repeat = false;
           };
-          "Mod+O".action = {
+          "Mod+O" = {
             action = toggle-overview;
             repeat = false;
           };
 
           "Mod+H".action = focus-column-left;
-          "Mod+J".action = focus-window-down;
-          "Mod+K".action = focus-window-up;
+          "Mod+J".action = focus-window-or-workspace-down;
+          "Mod+K".action = focus-window-or-workspace-up;
           "Mod+L".action = focus-column-right;
 
           "Mod+Shift+H".action = move-column-left;
@@ -68,6 +71,9 @@
           "Mod+Ctrl+J".action = focus-monitor-down;
           "Mod+Ctrl+K".action = focus-monitor-up;
           "Mod+Ctrl+L".action = focus-monitor-right;
+
+          "Mod+U".action = focus-workspace-down;
+          "Mod+I".action = focus-workspace-up;
 
           "Mod+Shift+Ctrl+H".action = move-column-to-monitor-left;
           "Mod+Shift+Ctrl+J".action = move-column-to-monitor-down;
@@ -130,10 +136,13 @@
 
       window-rules = [
         {
-          matches = [ { app-id = "alacritty"; } ];
-          default-column-width = {
-            proportion = 0.5;
+          geometry-corner-radius = {
+            bottom-left = 8.0;
+            bottom-right = 8.0;
+            top-left = 8.0;
+            top-right = 8.0;
           };
+          clip-to-geometry = true;
         }
         {
           matches = [
@@ -171,15 +180,34 @@
 
   programs.alacritty = {
     enable = true;
+    settings = {
+      window = {
+        decorations = "None";
+        opacity = 0.85;
+        dynamic_padding = true;
+      };
+      font = {
+        normal = {
+          family = "FiraCode Nerd Font Mono";
+          style = "Retina";
+        };
+        bold = {
+          family = "FiraCode Nerd Font Mono";
+          style = "SemiBold";
+        };
+      };
+      cursor = {
+        style = {
+          shape = "Beam";
+          blinking = "Never";
+        };
+        unfocused_hollow = false;
+      };
+    };
   };
 
   services.mako = {
     enable = true;
-  };
-
-  programs.waybar = {
-    enable = true;
-    systemd.enable = true;
   };
 
   systemd.user.services = {
@@ -198,7 +226,7 @@
 
             text = ''
               wallpaper=${assetsPath}/wallpaper-azura.jpg
-              swaybg -i "$wallpaper"
+              swaybg -i "$wallpaper" -m fill
             '';
           };
         in
@@ -216,5 +244,7 @@
     brightnessctl
     swaybg
     wl-clip-persist
+    nautilus
+    nautilus-open-any-terminal
   ];
 }

@@ -13,9 +13,5 @@
     package = pkgs.niri;
   };
 
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    enableHidpi = true;
-  };
+  services.xserver.displayManager.gdm.enable = true;
 }
