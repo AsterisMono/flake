@@ -49,6 +49,7 @@
     let
       inherit (inputs.nixpkgs) lib;
       secretsPath = ./secrets;
+      assetsPath = ./assets;
       # This recursive attrset pattern is forbidden, but we use it here anyway.
       #
       # The following flake output attributes must be NixOS modules:
@@ -60,6 +61,18 @@
           callPackage = path: _: import path;
           directory = _dirPath;
         };
+      globalSpecialArgs = {
+        inherit
+          inputs
+          secretsPath
+          assetsPath
+          ;
+        inherit (self)
+          nixosModules
+          homeModules
+          overlays
+          ;
+      };
       darwinMachines = [
         "Oryx"
         "Fervorine"
@@ -88,19 +101,8 @@
             inherit lib;
             nixosConfig = lib.nixosSystem {
               inherit system;
-              specialArgs = {
-                inherit
-                  inputs
-                  secretsPath
-                  unstablePkgs
-                  system
-                  hostname
-                  ;
-                inherit (self)
-                  nixosModules
-                  homeModules
-                  overlays
-                  ;
+              specialArgs = globalSpecialArgs // {
+                inherit hostname system unstablePkgs;
               };
               modules = [
                 path
@@ -130,18 +132,8 @@
             name = hostname;
             value = inputs.darwin.lib.darwinSystem {
               inherit system;
-              specialArgs = {
-                inherit
-                  inputs
-                  secretsPath
-                  unstablePkgs
-                  system
-                  hostname
-                  ;
-                inherit (self)
-                  homeModules
-                  overlays
-                  ;
+              specialArgs = globalSpecialArgs // {
+                inherit hostname system unstablePkgs;
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
                 inputs.home-manager-darwin.darwinModules.home-manager
