@@ -2,21 +2,34 @@
   config,
   lib,
   pkgs,
+  assetsPath,
   ...
 }:
+# https://github.com/jetjinser/flake/blob/master/hosts/dorothy/desktop/niri.nix
+# Thank you jinser!
 {
   programs.niri = {
     package = pkgs.niri;
     settings = {
       hotkey-overlay.skip-at-startup = true;
       clipboard.disable-primary = true;
+      prefer-no-csd = true;
+
+      layout = {
+        default-column-width.proportion = 0.5;
+        # https://github.com/YaLTeR/niri/wiki/Overview#backdrop-customization
+        background-color = "transparent";
+      };
+
+      cursor = {
+        hide-when-typing = true;
+      };
 
       spawn-at-startup = [
         { command = [ "waybar" ]; }
       ];
 
       input = {
-        warp-mouse-to-focus.enable = true;
         workspace-auto-back-and-forth = true;
       };
 
@@ -82,7 +95,55 @@
 
           "XF86AudioRaiseVolume".action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%+";
           "XF86AudioLowerVolume".action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%-";
+          "XF86AudioMute".action = sh "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
         };
+
+      layer-rules = [
+        {
+          matches = [ { namespace = "^notifications$"; } ];
+          block-out-from = "screencast";
+        }
+        # https://github.com/sodiboo/niri-flake/pull/1063
+        {
+          matches = [ { namespace = "^wallpaper$"; } ];
+          place-within-backdrop = true;
+        }
+      ];
+
+      window-rules = [
+        {
+          matches = [ { app-id = "alacritty"; } ];
+          default-column-width = {
+            proportion = 0.5;
+          };
+        }
+        {
+          matches = [
+            { app-id = "^org\.telegram\.desktop$"; }
+            { app-id = "^QQ$"; }
+          ];
+          block-out-from = "screencast";
+        }
+        {
+          matches = [
+            {
+              app-id = "^QQ$";
+              title = "^(图片查看)|(视频播放)器$";
+            }
+            {
+              app-id = "^org\.telegram\.desktop$";
+              title = "^Media viewer$";
+            }
+            {
+              app-id = "^firefox$";
+              title = "^Picture-in-Picture$";
+            }
+          ];
+          open-floating = true;
+          default-window-height.proportion = 0.65;
+          default-column-width.proportion = 0.65;
+        }
+      ];
     };
   };
 
@@ -100,6 +161,34 @@
 
   programs.waybar = {
     enable = true;
+  };
+
+  systemd.user.services = {
+    swaybg = {
+      Unit = {
+        Description = "swaybg - show wallpaper";
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
+        Requisite = [ "graphical-session.target" ];
+      };
+      Service =
+        let
+          show = pkgs.writeShellApplication {
+            name = "show-wallpaper";
+            runtimeInputs = [ pkgs.swaybg ];
+
+            text = ''
+              wallpaper=${assetsPath}/wallpaper-azura.jpg
+              swaybg -i "$wallpaper"
+            '';
+          };
+        in
+        {
+          ExecStart = lib.getExe' show "show-wallpaper";
+          Restart = "on-failure";
+        };
+      Install.WantedBy = [ "graphical-session.target" ];
+    };
   };
 
   home.packages = with pkgs; [
