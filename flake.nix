@@ -43,7 +43,6 @@
     inputs@{
       self,
       flake-utils,
-      nixpkgs,
       ...
     }:
     let
