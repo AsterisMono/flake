@@ -8,16 +8,14 @@
 
   niri-flake.cache.enable = false;
 
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-  };
-
   programs.niri = {
     enable = true;
     package = pkgs.niri;
   };
 
-  services.xserver.displayManager.gdm = {
+  services.displayManager.sddm = {
     enable = true;
+    wayland.enable = true;
+    enableHidpi = true;
   };
 }

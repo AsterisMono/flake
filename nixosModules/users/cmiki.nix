@@ -59,6 +59,7 @@ in
           hostname
           unstablePkgs
           secretsPath
+          assetsPath
           ;
         inherit username;
       };

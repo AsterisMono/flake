@@ -6,8 +6,11 @@
   ...
 }:
 # https://github.com/jetjinser/flake/blob/master/hosts/dorothy/desktop/niri.nix
-# Thank you jinser!
+# https://github.com/ryan4yin/nix-config/tree/main/home/linux/gui/niri
+# Thank you jinser & ryan4yin!
 {
+  imports = [ ../utils/wayland.nix ];
+
   programs.niri = {
     package = pkgs.niri;
     settings = {
@@ -42,8 +45,14 @@
         {
           "Mod+D".action = spawn "fuzzel";
           "Mod+Q".action = spawn "alacritty";
-          "Mod+C".action = close-window;
-          "Mod+O".action = toggle-overview;
+          "Mod+C" = {
+            action = close-window;
+            repeat = false;
+          };
+          "Mod+O".action = {
+            action = toggle-overview;
+            repeat = false;
+          };
 
           "Mod+H".action = focus-column-left;
           "Mod+J".action = focus-window-down;
@@ -93,9 +102,18 @@
 
           "Mod+Shift+E".action = quit;
 
-          "XF86AudioRaiseVolume".action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%+";
-          "XF86AudioLowerVolume".action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%-";
-          "XF86AudioMute".action = sh "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          "XF86AudioRaiseVolume" = {
+            action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%+";
+            allow-when-locked = true;
+          };
+          "XF86AudioLowerVolume" = {
+            action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%-";
+            allow-when-locked = true;
+          };
+          "XF86AudioMute" = {
+            action = sh "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
+            allow-when-locked = true;
+          };
         };
 
       layer-rules = [
@@ -161,6 +179,7 @@
 
   programs.waybar = {
     enable = true;
+    systemd.enable = true;
   };
 
   systemd.user.services = {
