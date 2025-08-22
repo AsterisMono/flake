@@ -55,6 +55,8 @@ nixosConfig
               nh
             ];
 
+            networking.networkmanager.enable = true;
+
             isoImage = {
               contents = [
                 {
