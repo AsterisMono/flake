@@ -37,6 +37,7 @@
     };
     wrapper-manager.url = "github:viperML/wrapper-manager";
     niri.url = "github:sodiboo/niri-flake";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   outputs =
