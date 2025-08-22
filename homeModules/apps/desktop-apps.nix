@@ -13,6 +13,8 @@ let
     telegram-desktop
     obsidian
     bitwarden-desktop
+    slack
+    neovide
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
