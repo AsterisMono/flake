@@ -17,3 +17,4 @@ fi
 
 rm "$origin"
 cp "$source" "$origin"
+chmod 755 "$origin"
