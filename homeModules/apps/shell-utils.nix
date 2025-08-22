@@ -72,8 +72,6 @@ in
       end
 
       export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})
-    ''
-    + lib.optionalString (system == "aarch64-darwin") ''
       export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
     '';
     shellAliases = {
