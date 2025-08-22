@@ -29,7 +29,8 @@
         always-center-single-column = true;
         focus-ring = {
           width = 2;
-          active-color = "#907aa9";
+          active.color = "#9ccfd8";
+          urgent.color = "#eb6f92";
         };
       };
 
@@ -124,6 +125,8 @@
             action = sh "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
             allow-when-locked = true;
           };
+
+          "Ctrl+Mod+Delete".action = sh (lib.getExe pkgs.swaylock-effects);
         };
 
       layer-rules = [
@@ -287,6 +290,74 @@
         Install.WantedBy = [ "graphical-session.target" ];
       };
     };
+
+  qt = {
+    enable = true;
+    platformTheme.name = "adwaita";
+    style.name = "adwaita";
+  };
+
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.adw-gtk3;
+      name = "adw-gtk3";
+    };
+    font = {
+      name = "Noto Sans";
+      size = 11;
+    };
+    iconTheme = {
+      package = pkgs.tela-icon-theme;
+      name = "Tela-light";
+    };
+  };
+
+  programs.swaylock = {
+    enable = true;
+    package = pkgs.swaylock-effects;
+    settings = {
+      daemonize = true;
+      clock = true;
+      timestr = "%k:%M";
+      datestr = "%Y-%m-%d";
+      show-failed-attempts = true;
+      indicator = true;
+      screenshots = true;
+      effect-blur = "5x5";
+    };
+  };
+
+  services.swayidle =
+    let
+      swaylock = lib.getExe pkgs.swaylock-effects;
+    in
+    {
+      enable = true;
+      events = [
+        {
+          event = "before-sleep";
+          command = swaylock;
+        }
+        {
+          event = "lock";
+          command = swaylock;
+        }
+      ];
+      timeouts = [
+        {
+          timeout = 600;
+          command = swaylock;
+        }
+      ];
+    };
+
+  home.pointerCursor = {
+    gtk.enable = true;
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Modern-Ice";
+    size = 24;
+  };
 
   home.packages = with pkgs; [
     libnotify
