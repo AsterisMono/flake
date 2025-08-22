@@ -15,7 +15,6 @@
     package = pkgs.niri;
     settings = {
       hotkey-overlay.skip-at-startup = true;
-      clipboard.disable-primary = true;
       prefer-no-csd = true;
 
       outputs = {
@@ -28,6 +27,10 @@
         # https://github.com/YaLTeR/niri/wiki/Overview#backdrop-customization
         background-color = "transparent";
         always-center-single-column = true;
+        focus-ring = {
+          width = 2;
+          active-color = "#907aa9";
+        };
       };
 
       cursor = {
