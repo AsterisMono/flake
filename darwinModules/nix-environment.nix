@@ -33,9 +33,7 @@
 
   nixpkgs = {
     config.allowUnfree = true;
-    overlays = [
-      overlays.flake-packages
-    ];
+    inherit overlays;
   };
 
   # do garbage collection weekly to keep disk usage low

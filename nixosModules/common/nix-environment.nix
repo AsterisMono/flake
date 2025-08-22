@@ -50,9 +50,7 @@
 
     nixpkgs = {
       config.allowUnfree = true;
-      overlays = [
-        overlays.flake-packages
-      ];
+      inherit overlays;
     };
 
     system.stateVersion = "24.05";

@@ -161,9 +161,10 @@
         directory = ./nixosConfigurations;
       };
 
-      overlays = {
-        flake-packages = import ./overlays/flake-packages.nix self;
-      };
+      overlays = [
+        (import ./overlays/flake-packages.nix self)
+        (import ./overlays/wrapper-lib.nix self)
+      ];
 
       lib = {
         withOfflineInstaller = import ./lib/withOfflineInstaller.nix;
@@ -180,13 +181,7 @@
         pkgs = import inputs.nixpkgs-unstable {
           inherit system;
           config.allowUnfree = true;
-          overlays = [
-            (final: prev: {
-              lib = prev.lib // {
-                wrapped = inputs.wrapper-manager.lib.wrapWith pkgs;
-              };
-            })
-          ];
+          inherit (self) overlays;
         };
       in
       rec {
