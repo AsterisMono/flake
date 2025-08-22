@@ -20,6 +20,7 @@
 
       outputs = {
         "Xiaomi Corporation Mi Monitor 5877500021251".scale = 1.75;
+        "eDP-1".scale = 2;
       };
 
       layout = {
