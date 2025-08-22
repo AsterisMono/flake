@@ -38,8 +38,6 @@
         workspace-auto-back-and-forth = true;
       };
 
-      overview.workspace-shadow.enable = false;
-
       binds =
         with config.lib.niri.actions;
         let
@@ -73,13 +71,15 @@
           "Mod+Ctrl+K".action = focus-monitor-up;
           "Mod+Ctrl+L".action = focus-monitor-right;
 
-          "Mod+U".action = focus-workspace-down;
-          "Mod+I".action = focus-workspace-up;
-
           "Mod+Shift+Ctrl+H".action = move-column-to-monitor-left;
           "Mod+Shift+Ctrl+J".action = move-column-to-monitor-down;
           "Mod+Shift+Ctrl+K".action = move-column-to-monitor-up;
           "Mod+Shift+Ctrl+L".action = move-column-to-monitor-right;
+
+          "Mod+U".action = focus-workspace-down;
+          "Mod+I".action = focus-workspace-up;
+          "Mod+Shift+U".action = move-column-to-workspace-down;
+          "Mod+Shift+I".action = move-column-to-workspace-up;
 
           "Mod+BracketLeft".action = consume-or-expel-window-left;
           "Mod+BracketRight".action = consume-or-expel-window-right;
@@ -183,7 +183,6 @@
     enable = true;
     settings = {
       window = {
-        decorations = "None";
         opacity = 0.85;
         dynamic_padding = true;
       };
@@ -202,7 +201,6 @@
           shape = "Beam";
           blinking = "Never";
         };
-        unfocused_hollow = false;
       };
     };
   };
@@ -211,33 +209,81 @@
     enable = true;
   };
 
-  systemd.user.services = {
-    swaybg = {
-      Unit = {
-        Description = "swaybg - show wallpaper";
-        PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
-        Requisite = [ "graphical-session.target" ];
-      };
-      Service =
-        let
-          show = pkgs.writeShellApplication {
-            name = "show-wallpaper";
-            runtimeInputs = [ pkgs.swaybg ];
+  # Wallpaper
+  services.swww.enable = true;
 
-            text = ''
-              wallpaper=${assetsPath}/wallpaper-azura.jpg
-              swaybg -i "$wallpaper" -m fill
-            '';
-          };
-        in
-        {
-          ExecStart = lib.getExe' show "show-wallpaper";
-          Restart = "on-failure";
+  systemd.user.services =
+    let
+      wallpaper = "${assetsPath}/wallpaper-azura.jpg";
+      blurredWallpaper = pkgs.callPackage (
+        { imagemagick, stdenvNoCC }:
+        stdenvNoCC.mkDerivation {
+          pname = "wallpaper-blurred";
+          version = "1";
+
+          src = wallpaper;
+
+          dontUnpack = true;
+          dontInstall = true;
+          dontCheck = true;
+
+          buildPhase = ''
+            ${lib.getExe' imagemagick "magick"} $src -blur 0x32 $out
+          '';
+        }
+      ) { };
+    in
+    {
+      # Swaybg: blurred overview
+      swaybg = {
+        Unit = {
+          Description = "swaybg - show wallpaper";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+          Requisite = [ "graphical-session.target" ];
         };
-      Install.WantedBy = [ "graphical-session.target" ];
+        Service =
+          let
+            show = pkgs.writeShellApplication {
+              name = "swaybg-show-wallpaper";
+
+              text = ''
+                ${lib.getExe pkgs.swaybg} -i "${blurredWallpaper}" -m fill
+              '';
+            };
+          in
+          {
+            ExecStart = lib.getExe show;
+            Restart = "on-failure";
+          };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
+
+      # swww: workspace wallpaper
+      swww-instance = {
+        Unit = {
+          Description = "swww - show wallpaper";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+          Requisite = [ "graphical-session.target" ];
+        };
+        Service =
+          let
+            show = pkgs.writeShellApplication {
+              name = "swww-show-wallpaper";
+
+              text = ''
+                ${lib.getExe pkgs.swww} img ${wallpaper}
+              '';
+            };
+          in
+          {
+            ExecStart = lib.getExe show;
+            Type = "oneshot";
+          };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
     };
-  };
 
   home.packages = with pkgs; [
     libnotify
