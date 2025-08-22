@@ -4,7 +4,8 @@
   ...
 }:
 let
-  ccnupr = pkgs.writeShellScriptBin "ccnupr" (builtins.readFile ./scripts/ccnupr);
+  ccnupr = pkgs.writeShellScriptBin "ccnupr" (builtins.readFile ./scripts/ccnupr.sh);
+  realize = pkgs.writeShellScriptBin "realize" (builtins.readFile ./scripts/realize.sh);
 in
 {
   home.packages = with pkgs; [
@@ -22,6 +23,7 @@ in
 
     # Scripts
     ccnupr
+    realize
 
     unstablePkgs.gemini-cli
   ];

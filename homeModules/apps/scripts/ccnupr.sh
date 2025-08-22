@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 branch=$(git symbolic-ref --short HEAD)
 
 IFS='/' read -ra ADDR <<< "$branch"
