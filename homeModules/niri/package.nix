@@ -183,6 +183,9 @@
 
   programs.fuzzel = {
     enable = true;
+    settings = {
+      main.icon-theme = "Tela-light";
+    };
   };
 
   programs.alacritty = {
