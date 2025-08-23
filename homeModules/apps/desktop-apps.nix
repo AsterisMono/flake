@@ -9,7 +9,6 @@ let
   isDarwin = system == "aarch64-darwin";
   homePackages = with unstablePkgs; [
     dbeaver-bin
-    code-cursor
     telegram-desktop
     obsidian
     bitwarden-desktop
