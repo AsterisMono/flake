@@ -3,7 +3,6 @@
   pkgs,
   unstablePkgs,
   lib,
-  system,
   ...
 }:
 let
@@ -42,6 +41,8 @@ in
     enableFishIntegration = true;
     enableTransience = true;
   };
+
+  xdg.configFile."starship.toml".source = ./starship.toml;
 
   programs.direnv = {
     enable = true;
