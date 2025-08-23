@@ -1,4 +1,4 @@
-right_format = '$memory_usage/ $battery/ $time'
+right_format = '$memory_usage$battery$time'
 
 [character]
 format = '$symbol '
@@ -9,9 +9,12 @@ error_symbol = '[](fg:#5BCEFA)[](bg:#F5A9B8 fg:#5BCEFA)[](bg:#FFFFFF fg
 threshold = 100
 style = 'bold green'
 
+[battery]
+format = '[$symbol$percentage]($style) / '
+
 [memory_usage]
 disabled = false
-format = '[$ram_pct]($style) '
+format = '[$ram_pct]($style) / '
 threshold = -1
 symbol = ''
 
