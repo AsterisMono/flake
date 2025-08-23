@@ -131,6 +131,25 @@
           "Mod+Shift+P".action = screenshot-window;
           # "Mod+Shift+Ctrl+P".action = screenshot-screen;
 
+          "Alt+V".action =
+            let
+              cliphist-fuzzel = pkgs.writeShellApplication {
+                name = "cliphist-fuzzel";
+                runtimeInputs = with pkgs; [
+                  cliphist
+                  imagemagick
+                  fuzzel
+                  gawk
+                ];
+                bashOptions = [
+                  "nounset"
+                  "pipefail"
+                ];
+                text = builtins.readFile ./cliphist-fuzzel.sh;
+              };
+            in
+            sh (lib.getExe cliphist-fuzzel);
+
           "Mod+Shift+E".action = quit;
 
           "XF86AudioRaiseVolume" = {
@@ -313,6 +332,11 @@
         Install.WantedBy = [ "graphical-session.target" ];
       };
     };
+
+  services.cliphist = {
+    enable = true;
+    allowImages = true;
+  };
 
   qt = {
     enable = true;
