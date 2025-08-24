@@ -14,6 +14,11 @@
   programs.niri = {
     package = pkgs.niri;
     settings = {
+      environment = {
+        LANG = "zh_CN.UTF-8";
+        LANGUAGE = "zh_CN:en_US";
+      };
+
       hotkey-overlay.skip-at-startup = true;
       prefer-no-csd = true;
 
