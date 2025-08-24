@@ -9,7 +9,6 @@
     diskLayouts.btrfs
     services.proxy
     services.tailscale
-    services.ssh
     services.irrigation-runner
     users.cmiki
   ];

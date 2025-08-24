@@ -7,7 +7,6 @@ in
     diskLayouts.btrfs
     roles.server
     services.tailscale
-    services.ssh
     users.cmiki
   ];
 

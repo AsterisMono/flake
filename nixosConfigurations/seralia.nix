@@ -9,7 +9,6 @@
     diskLayouts.btrfs
     roles.server
     services.tailscale
-    services.ssh
     services.docker
   ];
 

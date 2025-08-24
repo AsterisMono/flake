@@ -1,21 +1,40 @@
 _: {
-  # Access
-  users.users.root.hashedPassword = "$y$j9T$Or7mqutFE5iEFtJb4QmdR1$N0yuyRzIOavwnsnrkK4yR5Msg1oQ0RAXpKVN/LpV3p.";
-
-  networking.firewall = {
-    enable = true;
-  };
-
   # Boot
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.systemd-boot.configurationLimit = 5;
 
   # No need for fonts and documentation on a server
+  documentation.man.enable = true;
+  documentation.dev.enable = false;
+  documentation.doc.enable = false;
   documentation.nixos.enable = false;
   fonts.fontconfig.enable = false;
 
+  programs.vim = {
+    enable = true;
+    defaultEditor = true;
+  };
+  programs.git.enable = true;
+
   users.mutableUsers = false;
+
+  # Access
+  users.users.root = {
+    initialHashedPassword = "$y$j9T$Or7mqutFE5iEFtJb4QmdR1$N0yuyRzIOavwnsnrkK4yR5Msg1oQ0RAXpKVN/LpV3p.";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOz0CMmkGSXv4H77rmrmvadltAlwAZeVimxGoUAfArs"
+    ];
+  };
+  networking.firewall = {
+    enable = true;
+  };
+  services.openssh = {
+    enable = true;
+    settings.PasswordAuthentication = false;
+    settings.KbdInteractiveAuthentication = false;
+    settings.PermitRootLogin = "prohibit-password";
+  };
 
   systemd = {
     # Given that our systems are headless, emergency mode is useless.
