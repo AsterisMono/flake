@@ -2,6 +2,7 @@
 {
   imports = with nixosModules; [
     roles.server
+    services.tailscale
   ];
 
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
