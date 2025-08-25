@@ -13,6 +13,7 @@ let
     dust
     duf
     cachix
+    asciinema
   ];
   neovide = pkgs.lib.wrapped {
     basePackage = pkgs.neovide;
