@@ -89,8 +89,8 @@
         callPackage =
           path: _:
           let
-            system = "x86_64-linux";
             hostname = lib.removeSuffix ".nix" (builtins.baseNameOf path);
+            system = if hostname == "ivy" then "aarch64-linux" else "x86_64-linux";
             unstablePkgs = import inputs.nixpkgs-unstable {
               inherit system;
               config.allowUnfree = true;
