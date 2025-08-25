@@ -56,7 +56,6 @@
       "rockchip_vdec"
     ];
     tmp.useTmpfs = true;
-    supportedFilesystems.f2fs = true;
   };
 
   boot.initrd = {
