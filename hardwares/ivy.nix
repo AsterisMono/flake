@@ -42,6 +42,8 @@
   boot = {
     loader = {
       timeout = 1;
+      systemd-boot.enable = lib.mkForce false;
+      efi.canTouchEfiVariables = lib.mkForce false;
       grub.enable = false;
       generic-extlinux-compatible = {
         enable = true;

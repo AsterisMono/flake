@@ -70,8 +70,8 @@
         inherit (self)
           nixosModules
           homeModules
-          overlays
           ;
+        overlays = lib.attrValues self.overlays;
       };
       darwinMachines = [
         "Oryx"
@@ -161,10 +161,10 @@
         directory = ./nixosConfigurations;
       };
 
-      overlays = [
-        (import ./overlays/flake-packages.nix self)
-        (import ./overlays/wrapper-lib.nix self)
-      ];
+      overlays = {
+        flake-packages = import ./overlays/flake-packages.nix self;
+        wrapper-lib = import ./overlays/wrapper-lib.nix self;
+      };
 
       lib = {
         withOfflineInstaller = import ./lib/withOfflineInstaller.nix;
@@ -181,7 +181,7 @@
         pkgs = import inputs.nixpkgs-unstable {
           inherit system;
           config.allowUnfree = true;
-          inherit (self) overlays;
+          overlays = lib.attrValues self.overlays;
         };
       in
       rec {

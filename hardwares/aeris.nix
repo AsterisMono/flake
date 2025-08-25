@@ -11,7 +11,7 @@
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     inputs.nixos-hardware.nixosModules.gpd-win-max-2-2023
-    nixosModules.desktop.hardware.amdgpu
+    nixosModules.hardware.amdgpu
   ];
 
   boot.initrd.availableKernelModules = [
