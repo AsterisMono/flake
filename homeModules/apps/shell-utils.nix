@@ -84,6 +84,7 @@ in
       "ll" = "eza -al";
       "tree" = "eza --tree";
       "gg" = "lazygit";
+      "rec" = "asciinema rec";
     };
     functions = {
       fish_title = {
