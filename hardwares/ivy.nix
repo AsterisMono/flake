@@ -113,12 +113,12 @@
       cd /sys/class/leds/nanopi-r2s:green:wan
       echo netdev > trigger
       echo 1 | tee link tx rx >/dev/null
-      echo eth0 > device_name
+      echo end0 > device_name
 
       cd /sys/class/leds/nanopi-r2s:green:lan
       echo netdev > trigger
       echo 1 | tee link tx rx >/dev/null
-      echo eth1 > device_name
+      echo enu1 > device_name
     '';
   };
   systemd.services."setup-sys-led" = {
