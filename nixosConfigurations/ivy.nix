@@ -5,8 +5,6 @@
     services.tailscale
   ];
 
-  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
-
   noa.nix.enableMirrorSubstituter = true;
 
   environment.systemPackages = with pkgs; [
