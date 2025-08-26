@@ -24,7 +24,21 @@
 
       outputs = {
         "Xiaomi Corporation Mi Monitor 5877500021251".scale = 1.75;
-        "eDP-1".scale = 2;
+        "PNP(AOC) U27V4 VDOP5HA000781" = {
+          scale = 1.5;
+          position.x = 0;
+          position.y = 0;
+        };
+        "PNP(AOC) U27V4 HDKM3HA008442" = {
+          scale = 1.5;
+          position.x = 2560;
+          position.y = 0;
+        };
+        "Japan Display Inc. GPD1001H 0x00000001" = {
+          scale = 2;
+          position.x = 3840;
+          position.y = 1440;
+        };
       };
 
       layout = {
