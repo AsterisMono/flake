@@ -71,6 +71,7 @@
 
         cursor = {
           hide-when-typing = true;
+          size = 32;
         };
 
         input = {
@@ -519,9 +520,8 @@
 
   home.pointerCursor = {
     gtk.enable = true;
-    package = pkgs.bibata-cursors;
-    name = "Bibata-Modern-Ice";
-    size = 24;
+    package = pkgs.rose-pine-cursor;
+    name = "BreezeX-RosePineDawn-Linux";
   };
 
   home.packages = with pkgs; [
