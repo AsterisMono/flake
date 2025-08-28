@@ -319,7 +319,6 @@
 
         spawn-at-startup = lib.optionals isAeris [
           { command = [ "firefox" ]; }
-          { command = [ "slack" ]; }
           { command = [ "Telegram" ]; }
           {
             command = [

@@ -12,7 +12,6 @@ let
     telegram-desktop
     obsidian
     bitwarden-desktop
-    slack
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
