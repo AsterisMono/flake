@@ -120,6 +120,7 @@ in
 
   programs.atuin = {
     enable = true;
+    daemon.enable = true;
     enableFishIntegration = true;
     flags = [
       "--disable-up-arrow"
