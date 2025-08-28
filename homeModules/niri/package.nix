@@ -345,8 +345,9 @@
   programs.alacritty = {
     enable = true;
     settings = {
+      general.import = [ ./alacritty-rosepine.toml ];
       window = {
-        opacity = 0.85;
+        opacity = 0.9;
         dynamic_padding = true;
       };
       font = {
