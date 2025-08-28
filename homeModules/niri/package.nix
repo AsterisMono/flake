@@ -15,7 +15,7 @@
   programs.niri =
     let
       monitors = {
-        gpdBuiltin = "Japan Display Inc. GPD1001H 0x00000001";
+        sysmon = "Japan Display Inc. GPD1001H 0x00000001";
         aocLeft = "PNP(AOC) U27V4 VDOP5HA000781";
         aocRight = "PNP(AOC) U27V4 HDKM3HA008442";
         xiaomi = "Xiaomi Corporation Mi Monitor 5877500021251";
@@ -49,7 +49,7 @@
             position.x = 2560;
             position.y = 0;
           };
-          "${monitors.gpdBuiltin}" = {
+          "${monitors.sysmon}" = {
             scale = 2;
             position.x = 3840;
             position.y = 1440;
@@ -312,7 +312,7 @@
         workspaces = lib.optionalAttrs isAeris {
           "00-sysmon" = {
             name = "sysmon";
-            open-on-output = monitors.gpdBuiltin;
+            open-on-output = monitors.sysmon;
           };
           "01-browser" = {
             name = "browser";
@@ -337,14 +337,11 @@
           { command = [ "Telegram" ]; }
           {
             command = [
-              "alacritty"
-              "-T"
-              "btop"
-              "-e"
-              "btop"
+              "sh"
+              "-c"
+              "(niri msg outputs | grep -q '${monitors.sysmon}') && [ \"$(niri msg outputs | grep -c '^Output')\" -gt 1 ] && alacritty -T btop -e btop"
             ];
           }
-          { command = [ "code" ]; }
           { command = [ "bitwarden" ]; }
         ];
       };
