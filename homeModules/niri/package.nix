@@ -273,7 +273,7 @@
             matches = [
               { app-id = "^Bitwarden$"; }
             ];
-            open-on-workspace = "misc";
+            open-on-workspace = "tray";
             default-column-width.proportion = 0.5;
           }
           {
@@ -283,22 +283,22 @@
                 title = "^btop$";
               }
             ];
-            open-on-workspace = "sysmon";
+            open-on-workspace = "tray";
             default-column-width.proportion = 1.0;
           }
           {
             matches = [
               { app-id = "^code$"; }
+              { app-id = "^neovide$"; }
             ];
             open-on-workspace = "code";
+            open-focused = true;
             default-column-width.proportion = 0.5;
           }
           {
             matches = builtins.map (l: l // { at-startup = true; }) [
               { app-id = "^firefox$"; }
-              { app-id = "^Slack$"; }
               { app-id = "^org\.telegram\.desktop$"; }
-              { app-id = "^code$"; }
               {
                 app-id = "^Alacritty$";
                 title = "^btop$";
@@ -322,26 +322,16 @@
             name = "code";
             open-on-output = monitors.aocRight;
           };
-          "03-misc" = {
-            name = "misc";
-            open-on-output = monitors.aocLeft;
-          };
-          "99-sysmon" = {
-            name = "sysmon";
+          "99-tray" = {
+            name = "tray";
             open-on-output = monitors.sysmon;
           };
         };
 
         spawn-at-startup = lib.optionals isAeris [
+          { command = lib.strings.splitString " " "alacritty -T btop -e btop"; }
           { command = [ "firefox" ]; }
           { command = [ "Telegram" ]; }
-          {
-            command = [
-              "sh"
-              "-c"
-              "(niri msg outputs | grep -q '${monitors.sysmon}') && [ \"$(niri msg outputs | grep -c '^Output')\" -gt 1 ] && alacritty -T btop -e btop"
-            ];
-          }
           { command = [ "bitwarden" ]; }
         ];
       };
