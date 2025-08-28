@@ -310,25 +310,25 @@
         ];
 
         workspaces = lib.optionalAttrs isAeris {
-          "00-sysmon" = {
-            name = "sysmon";
-            open-on-output = monitors.sysmon;
-          };
-          "01-browser" = {
+          "00-browser" = {
             name = "browser";
             open-on-output = monitors.aocLeft;
           };
-          "02-chat" = {
+          "01-chat" = {
             name = "chat";
             open-on-output = monitors.aocLeft;
           };
-          "03-code" = {
+          "02-code" = {
             name = "code";
             open-on-output = monitors.aocRight;
           };
-          "04-misc" = {
+          "03-misc" = {
             name = "misc";
             open-on-output = monitors.aocLeft;
+          };
+          "99-sysmon" = {
+            name = "sysmon";
+            open-on-output = monitors.sysmon;
           };
         };
 
