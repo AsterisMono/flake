@@ -258,7 +258,7 @@
             matches = [
               { app-id = "^firefox$"; }
             ];
-            open-on-workspace = "01-browser";
+            open-on-workspace = "browser";
             default-column-width.proportion = 1.0;
           }
           {
@@ -266,14 +266,14 @@
               { app-id = "^Slack$"; }
               { app-id = "^org\.telegram\.desktop$"; }
             ];
-            open-on-workspace = "02-chat";
+            open-on-workspace = "chat";
             default-column-width.proportion = 0.5;
           }
           {
             matches = [
               { app-id = "^Bitwarden$"; }
             ];
-            open-on-workspace = "03-misc";
+            open-on-workspace = "misc";
             default-column-width.proportion = 0.5;
           }
           {
@@ -283,14 +283,14 @@
                 title = "^btop$";
               }
             ];
-            open-on-workspace = "01-sysmon";
+            open-on-workspace = "sysmon";
             default-column-width.proportion = 1.0;
           }
           {
             matches = [
               { app-id = "^code$"; }
             ];
-            open-on-workspace = "01-code";
+            open-on-workspace = "code";
             default-column-width.proportion = 0.5;
           }
           {
@@ -310,11 +310,26 @@
         ];
 
         workspaces = lib.optionalAttrs isAeris {
-          "01-browser".open-on-output = monitors.aocLeft;
-          "02-chat".open-on-output = monitors.aocLeft;
-          "03-misc".open-on-output = monitors.aocLeft;
-          "01-code".open-on-output = monitors.aocRight;
-          "01-sysmon".open-on-output = monitors.gpdBuiltin;
+          "00-sysmon" = {
+            name = "sysmon";
+            open-on-output = monitors.gpdBuiltin;
+          };
+          "01-browser" = {
+            name = "browser";
+            open-on-output = monitors.aocLeft;
+          };
+          "02-chat" = {
+            name = "chat";
+            open-on-output = monitors.aocLeft;
+          };
+          "03-code" = {
+            name = "code";
+            open-on-output = monitors.aocRight;
+          };
+          "04-misc" = {
+            name = "misc";
+            open-on-output = monitors.aocLeft;
+          };
         };
 
         spawn-at-startup = lib.optionals isAeris [
