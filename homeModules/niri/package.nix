@@ -3,7 +3,6 @@
   lib,
   pkgs,
   assetsPath,
-  hostname,
   ...
 }:
 # https://github.com/jetjinser/flake/blob/master/hosts/dorothy/desktop/niri.nix
@@ -20,7 +19,6 @@
         aocRight = "PNP(AOC) U27V4 HDKM3HA008442";
         xiaomi = "Xiaomi Corporation Mi Monitor 5877500021251";
       };
-      isAeris = hostname == "aeris";
     in
     {
       package = pkgs.niri;
@@ -252,9 +250,6 @@
             default-window-height.proportion = 0.65;
             default-column-width.proportion = 0.65;
           }
-
-        ]
-        ++ lib.optionals isAeris [
           {
             matches = [
               { app-id = "^firefox$"; }
@@ -310,7 +305,7 @@
           }
         ];
 
-        workspaces = lib.optionalAttrs isAeris {
+        workspaces = {
           "00-browser" = {
             name = "browser";
             open-on-output = monitors.aocLeft;
@@ -329,7 +324,7 @@
           };
         };
 
-        spawn-at-startup = lib.optionals isAeris [
+        spawn-at-startup = [
           { command = lib.strings.splitString " " "alacritty -T btop -e btop"; }
           { command = [ "firefox" ]; }
           { command = [ "Telegram" ]; }
