@@ -151,7 +151,11 @@ in
 
   programs.btop = {
     enable = true;
+    themes = {
+      rose-pine = builtins.readFile ./btop-rosepine.theme;
+    };
     settings = {
+      color_theme = "rose-pine";
       theme_background = false;
     };
   };
