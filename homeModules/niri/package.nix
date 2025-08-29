@@ -205,8 +205,8 @@
               action = sh "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
               allow-when-locked = true;
             };
-            "XF86MonBrightnessUp".action = sh "brightnessctl s 10%+";
-            "XF86MonBrightnessDown".action = sh "brightnessctl s 10%-";
+            "XF86MonBrightnessUp".action = sh "brightnessctl s 5%+";
+            "XF86MonBrightnessDown".action = sh "brightnessctl s 5%-";
 
             "Ctrl+Mod+Delete".action = sh (lib.getExe pkgs.swaylock-effects);
           };
@@ -392,23 +392,9 @@
   systemd.user.services =
     let
       wallpaper = "${assetsPath}/wallpaper-azura.jpg";
-      blurredWallpaper = pkgs.callPackage (
-        { imagemagick, stdenvNoCC }:
-        stdenvNoCC.mkDerivation {
-          pname = "wallpaper-blurred";
-          version = "1";
-
-          src = wallpaper;
-
-          dontUnpack = true;
-          dontInstall = true;
-          dontCheck = true;
-
-          buildPhase = ''
-            ${lib.getExe' imagemagick "magick"} $src -blur 0x32 $out
-          '';
-        }
-      ) { };
+      blurredWallpaper = pkgs.runCommand "wallpaper-blurred" { } ''
+        ${lib.getExe' pkgs.imagemagick "magick"} ${wallpaper} -blur 0x32 $out
+      '';
     in
     {
       # Swaybg: blurred overview
