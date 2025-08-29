@@ -205,6 +205,8 @@
               action = sh "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
               allow-when-locked = true;
             };
+            "XF86MonBrightnessUp".action = sh "brightnessctl s 10%+";
+            "XF86MonBrightnessDown".action = sh "brightnessctl s 10%-";
 
             "Ctrl+Mod+Delete".action = sh (lib.getExe pkgs.swaylock-effects);
           };
