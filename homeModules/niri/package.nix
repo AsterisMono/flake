@@ -165,6 +165,13 @@
             "Mod+Shift+P".action = screenshot-window;
             # "Mod+Shift+Ctrl+P".action = screenshot-screen;
 
+            "Mod+1".action = focus-workspace "browser";
+            "Mod+2".action = focus-workspace "chat";
+            "Mod+3".action = focus-workspace "code";
+            "Mod+0".action = focus-workspace "tray";
+
+            "Mod+M".action = sh "makoctl dismiss --all";
+
             "Alt+V".action =
               let
                 cliphist-fuzzel = pkgs.writeShellApplication {
@@ -306,15 +313,15 @@
         ];
 
         workspaces = {
-          "00-browser" = {
+          "01-browser" = {
             name = "browser";
             open-on-output = monitors.aocLeft;
           };
-          "01-chat" = {
+          "02-chat" = {
             name = "chat";
             open-on-output = monitors.aocLeft;
           };
-          "02-code" = {
+          "03-code" = {
             name = "code";
             open-on-output = monitors.aocRight;
           };
