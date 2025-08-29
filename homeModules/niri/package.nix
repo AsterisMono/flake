@@ -292,7 +292,6 @@
           {
             matches = [
               { app-id = "^code$"; }
-              { app-id = "^neovide$"; }
             ];
             open-on-workspace = "code";
             open-focused = true;

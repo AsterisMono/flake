@@ -15,13 +15,6 @@ let
     cachix
     asciinema
   ];
-  neovide = pkgs.lib.wrapped {
-    basePackage = pkgs.neovide;
-    prependFlags = [
-      "--fork"
-      "--no-multigrid"
-    ];
-  };
 in
 {
   home.packages = extraPackages;
@@ -79,7 +72,7 @@ in
     '';
     shellAliases = {
       ".." = "cd ../";
-      "n" = "${lib.getExe neovide}";
+      "n" = "nvim";
       "ls" = "eza -l";
       "l" = "eza -l";
       "ll" = "eza -al";
