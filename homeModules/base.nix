@@ -16,6 +16,10 @@ in
 
   home = {
     inherit username homeDirectory;
+    sessionVariables = {
+      LANG = "zh_CN.UTF-8";
+      LANGUAGE = "zh_CN:en_US";
+    };
     stateVersion = "24.05";
   };
 
