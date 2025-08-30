@@ -10,6 +10,7 @@
     roles.desktop
     diskLayouts.btrfs
     desktop.guiSuites.niri
+    desktop.guiSuites.gnome
     hardware.bluetooth
     services.proxy
     services.tailscale
