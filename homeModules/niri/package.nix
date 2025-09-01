@@ -259,7 +259,7 @@
               { app-id = "^firefox$"; }
             ];
             open-on-workspace = "browser";
-            default-column-width.proportion = 1.0;
+            default-column-width.proportion = 0.5;
           }
           {
             matches = [
