@@ -15,8 +15,7 @@
     let
       monitors = {
         sysmon = "Japan Display Inc. GPD1001H 0x00000001";
-        aocLeft = "PNP(AOC) U27V4 VDOP5HA000781";
-        aocRight = "PNP(AOC) U27V4 HDKM3HA008442";
+        superwide = "Beihai Century Joint Innovation Technology Co.,Ltd C34SKN Unknown";
         xiaomi = "Xiaomi Corporation Mi Monitor 5877500021251";
       };
     in
@@ -31,21 +30,21 @@
             scale = 1.75;
             focus-at-startup = true;
           };
-          "${monitors.aocLeft}" = {
-            scale = 1.5;
+          "${monitors.superwide}" = {
+            scale = 1;
+            mode = {
+              width = 3440;
+              height = 1440;
+              refresh = 100.002;
+            };
             position.x = 0;
             position.y = 0;
             focus-at-startup = true;
           };
-          "${monitors.aocRight}" = {
-            scale = 1.5;
-            position.x = 2560;
-            position.y = 0;
-          };
           "${monitors.sysmon}" = {
             scale = 2;
-            position.x = 3840;
-            position.y = 1440;
+            position.x = 3440;
+            position.y = 0;
           };
         };
 
@@ -162,7 +161,6 @@
 
             "Mod+1".action = focus-workspace "browser";
             "Mod+2".action = focus-workspace "chat";
-            "Mod+3".action = focus-workspace "code";
             "Mod+0".action = focus-workspace "tray";
 
             "Mod+M".action = sh "makoctl dismiss --all";
@@ -287,14 +285,6 @@
             default-column-width.proportion = 1.0;
           }
           {
-            matches = [
-              { app-id = "^code$"; }
-            ];
-            open-on-workspace = "code";
-            open-focused = true;
-            default-column-width.proportion = 0.5;
-          }
-          {
             matches = builtins.map (l: l // { at-startup = true; }) [
               { app-id = "^firefox$"; }
               { app-id = "^org\.telegram\.desktop$"; }
@@ -311,15 +301,11 @@
         workspaces = {
           "01-browser" = {
             name = "browser";
-            open-on-output = monitors.aocLeft;
+            open-on-output = monitors.superwide;
           };
           "02-chat" = {
             name = "chat";
-            open-on-output = monitors.aocLeft;
-          };
-          "03-code" = {
-            name = "code";
-            open-on-output = monitors.aocRight;
+            open-on-output = monitors.superwide;
           };
           "99-tray" = {
             name = "tray";
