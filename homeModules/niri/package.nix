@@ -10,6 +10,7 @@
 # Thank you jinser & ryan4yin!
 {
   imports = [ ../utils/wayland.nix ];
+  imports = [ ./pawbar ];
 
   programs.niri =
     let
