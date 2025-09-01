@@ -202,6 +202,7 @@
           "*.svg" = "default";
         };
         "workbench.iconTheme" = "file-icons-colourless";
+        "workbench.layoutControl.enabled" = false;
         "workbench.secondarySideBar.defaultVisibility" = "hidden";
         "workbench.settings.applyToAllProfiles" = [
           "workbench.colorCustomizations"
