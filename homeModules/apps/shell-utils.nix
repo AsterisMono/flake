@@ -2,7 +2,6 @@
   config,
   pkgs,
   unstablePkgs,
-  lib,
   ...
 }:
 let
@@ -36,8 +35,6 @@ in
     enableFishIntegration = true;
     enableTransience = true;
   };
-
-  xdg.configFile."starship.toml".source = ./starship.toml;
 
   programs.direnv = {
     enable = true;
@@ -143,16 +140,7 @@ in
 
   programs.bat.enable = true;
 
-  programs.btop = {
-    enable = true;
-    themes = {
-      rose-pine = builtins.readFile ./btop-rosepine.theme;
-    };
-    settings = {
-      color_theme = "rose-pine";
-      theme_background = false;
-    };
-  };
+  programs.btop.enable = true;
 
   programs.jq.enable = true;
 

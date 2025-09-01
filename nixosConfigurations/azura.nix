@@ -9,7 +9,9 @@
   imports = with nixosModules; [
     roles.desktop
     diskLayouts.btrfs
-    desktop.guiSuites.niri
+    gui.suites.niri
+    gui.suites.gnome
+    gui.stylix
     hardware.bluetooth
     services.proxy
     services.tailscale
@@ -26,6 +28,7 @@
         apps.shell-utils
         apps.desktop-apps
         apps.development
+        roles.desktop
         niri
       ];
     };

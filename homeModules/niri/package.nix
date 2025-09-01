@@ -2,14 +2,12 @@
   config,
   lib,
   pkgs,
-  assetsPath,
   ...
 }:
 # https://github.com/jetjinser/flake/blob/master/hosts/dorothy/desktop/niri.nix
 # https://github.com/ryan4yin/nix-config/tree/main/home/linux/gui/niri
 # Thank you jinser & ryan4yin!
 {
-  imports = [ ../utils/wayland.nix ];
   imports = [ ./pawbar ];
 
   programs.niri =
@@ -54,18 +52,10 @@
           # https://github.com/YaLTeR/niri/wiki/Overview#backdrop-customization
           background-color = "transparent";
           always-center-single-column = true;
-          focus-ring = {
-            width = 2;
-            active.color = "#9ccfd8";
-            urgent.color = "#eb6f92";
-            inactive.color = "#e0def4";
-          };
+          border.width = 2;
         };
 
-        cursor = {
-          hide-when-typing = true;
-          size = 32;
-        };
+        cursor.hide-when-typing = true;
 
         input = {
           workspace-auto-back-and-forth = true;
@@ -79,7 +69,7 @@
           in
           {
             "Mod+D".action = spawn "fuzzel";
-            "Mod+Q".action = spawn "alacritty";
+            "Mod+Q".action = spawn "kitty";
             "Mod+C" = {
               action = close-window;
               repeat = false;
@@ -277,10 +267,7 @@
           }
           {
             matches = [
-              {
-                app-id = "^Alacritty$";
-                title = "^btop$";
-              }
+              { app-id = "^sysmon$"; }
             ];
             open-on-workspace = "tray";
             default-column-width.proportion = 1.0;
@@ -289,10 +276,7 @@
             matches = builtins.map (l: l // { at-startup = true; }) [
               { app-id = "^firefox$"; }
               { app-id = "^org\.telegram\.desktop$"; }
-              {
-                app-id = "^Alacritty$";
-                title = "^btop$";
-              }
+              { app-id = "^sysmon$"; }
               { app-id = "^Bitwarden$"; }
             ];
             open-focused = false;
@@ -315,7 +299,7 @@
         };
 
         spawn-at-startup = [
-          { command = lib.strings.splitString " " "alacritty -T btop -e btop"; }
+          { command = lib.strings.splitString " " "kitty --class sysmon btop"; }
           { command = [ "firefox" ]; }
           { command = [ "Telegram" ]; }
           { command = [ "bitwarden" ]; }
@@ -330,50 +314,23 @@
     };
   };
 
-  programs.alacritty = {
+  programs.kitty = {
     enable = true;
     settings = {
-      general.import = [ ./alacritty-rosepine.toml ];
-      window = {
-        opacity = 0.9;
-        dynamic_padding = true;
-      };
-      font = {
-        normal = {
-          family = "FiraCode Nerd Font Mono";
-          style = "Retina";
-        };
-        bold = {
-          family = "FiraCode Nerd Font Mono";
-          style = "SemiBold";
-        };
-      };
-      cursor = {
-        style = {
-          shape = "Beam";
-          blinking = "Never";
-        };
-      };
+      cursor_shape = "beam";
+      cursor_blink_interval = 0;
+      cursor_beam_thickness = 1.2;
     };
   };
 
-  services.mako = {
-    enable = true;
-    settings = {
-      background-color = "#26233a";
-      text-color = "#e0def4";
-      border-color = "#524f67";
-      progress-color = "over #31748f";
-      "urgency=high".border-color = "#eb6f92";
-    };
-  };
+  services.mako.enable = true;
 
   # Wallpaper
   services.swww.enable = true;
 
   systemd.user.services =
     let
-      wallpaper = "${assetsPath}/wallpaper-azura.jpg";
+      wallpaper = config.stylix.image;
       blurredWallpaper = pkgs.runCommand "wallpaper-blurred" { } ''
         ${lib.getExe' pkgs.imagemagick "magick"} ${wallpaper} -blur 0x32 $out
       '';
@@ -435,28 +392,6 @@
     allowImages = true;
   };
 
-  qt = {
-    enable = true;
-    platformTheme.name = "adwaita";
-    style.name = "adwaita";
-  };
-
-  gtk = {
-    enable = true;
-    theme = {
-      package = pkgs.adw-gtk3;
-      name = "adw-gtk3";
-    };
-    font = {
-      name = "Noto Sans";
-      size = 11;
-    };
-    iconTheme = {
-      package = pkgs.tela-icon-theme;
-      name = "Tela-light";
-    };
-  };
-
   programs.swaylock = {
     enable = true;
     package = pkgs.swaylock-effects;
@@ -495,12 +430,6 @@
         }
       ];
     };
-
-  home.pointerCursor = {
-    gtk.enable = true;
-    package = pkgs.rose-pine-cursor;
-    name = "BreezeX-RosePineDawn-Linux";
-  };
 
   home.packages = with pkgs; [
     libnotify

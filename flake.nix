@@ -38,6 +38,14 @@
     wrapper-manager.url = "github:viperML/wrapper-manager";
     niri.url = "github:sodiboo/niri-flake";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    stylix = {
+      url = "github:nix-community/stylix/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -94,6 +102,7 @@
             unstablePkgs = import inputs.nixpkgs-unstable {
               inherit system;
               config.allowUnfree = true;
+              overlays = lib.attrValues self.overlays;
             };
           in
           self.lib.withOfflineInstaller {
@@ -111,6 +120,7 @@
                 inputs.disko.nixosModules.disko
                 inputs.home-manager-nixos.nixosModules.home-manager
                 inputs.sops-nix.nixosModules.sops
+                inputs.stylix.nixosModules.stylix
               ];
             };
           };
@@ -126,6 +136,7 @@
             unstablePkgs = import inputs.nixpkgs-unstable {
               inherit system;
               config.allowUnfree = true;
+              overlays = lib.attrValues self.overlays;
             };
           in
           {
@@ -164,6 +175,7 @@
       overlays = {
         flake-packages = import ./overlays/flake-packages.nix self;
         wrapper-lib = import ./overlays/wrapper-lib.nix self;
+        nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
       };
 
       lib = {

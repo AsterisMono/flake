@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   fonts = {
     fontDir.enable = true;
@@ -21,20 +21,17 @@
     enableDefaultPackages = true;
 
     fontconfig.defaultFonts = {
-      serif = [
-        "Noto Serif CJK SC"
+      serif = lib.mkAfter [
         "Noto Serif"
         "Symbols Nerd Font"
         "Noto Color Emoji"
       ];
-      sansSerif = [
-        "Noto Sans CJK SC"
+      sansSerif = lib.mkAfter [
         "Noto Sans"
         "Symbols Nerd Font"
         "Noto Color Emoji"
       ];
-      monospace = [
-        "FiraCode Nerd Font Mono"
+      monospace = lib.mkAfter [
         "Noto Sans Mono CJK SC"
         "Symbols Nerd Font Mono"
         "Noto Color Emoji"
