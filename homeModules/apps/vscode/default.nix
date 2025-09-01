@@ -156,6 +156,7 @@
         "search.smartCase" = true;
         "security.workspace.trust.untrustedFiles" = "open";
         "terminal.integrated.allowChords" = false;
+        "terminal.integrated.cursorBlinking" = false;
         "terminal.integrated.cursorStyle" = "line";
         "terminal.integrated.cursorStyleInactive" = "line";
         "terminal.integrated.cursorWidth" = 2;

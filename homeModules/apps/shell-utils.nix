@@ -76,6 +76,7 @@ in
       "tree" = "eza --tree";
       "gg" = "lazygit";
       "rec" = "asciinema rec";
+      "code" = "codium";
     };
     functions = {
       fish_title = {
