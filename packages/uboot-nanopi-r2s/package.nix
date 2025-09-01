@@ -1,11 +1,10 @@
 {
   buildUBoot,
   armTrustedFirmwareRK3328,
-  lib,
-}@args:
+}:
 # Taken from: https://github.com/EHfive/flakes/blob/main/packages/uboot-nanopi-r2s/default.nix
 let
-  armTrustedFirmwareRK3328 = args.armTrustedFirmwareRK3328.overrideAttrs (_: {
+  armTrustedFirmwareRK3328' = armTrustedFirmwareRK3328.overrideAttrs (_: {
     NIX_LDFLAGS = "--no-warn-execstack --no-warn-rwx-segments";
     enableParallelBuilding = true;
   });
@@ -16,7 +15,7 @@ buildUBoot {
     ./expand-kernel-image-addr-space.patch
   ];
   extraMeta.platforms = [ "aarch64-linux" ];
-  BL31 = "${armTrustedFirmwareRK3328}/bl31.elf";
+  BL31 = "${armTrustedFirmwareRK3328'}/bl31.elf";
   enableParallelBuilding = true;
   filesToInstall = [
     "u-boot.itb"
