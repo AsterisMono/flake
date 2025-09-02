@@ -307,5 +307,17 @@ in
             )}
           '';
       };
+
+    systemd.tmpfiles.settings = {
+      "10-birdlogs" = {
+        "/var/log/bird" = {
+          d = {
+            user = "bird";
+            group = "bird";
+            mode = "0755";
+          };
+        };
+      };
+    };
   };
 }
