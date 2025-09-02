@@ -293,18 +293,21 @@ in
                 };
             }
 
-            ${lib.concatLines (
-              lib.mapAttrsToList (asn: values: ''
-                protocol bgp dn42_${lib.toLower asn} from dnpeers {
-                    neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)} % 'dn42_${lib.toLower asn}' as ${lib.removePrefix "AS" asn};
-                    direct;
-                    ipv4 {
-                      import none;
-                      export none;
-                    };
-                }
-              '') cfg.peers
-            )}
+            ${
+              # FIXME: the interface suffix (for fe80 local-links) is ignored for now.
+              lib.concatLines (
+                lib.mapAttrsToList (asn: values: ''
+                  protocol bgp dn42_${lib.toLower asn} from dnpeers {
+                      neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)} as ${lib.removePrefix "AS" asn};
+                      direct;
+                      ipv4 {
+                        import none;
+                        export none;
+                      };
+                  }
+                '') cfg.peers
+              )
+            }
           '';
       };
 
@@ -320,4 +323,8 @@ in
       };
     };
   };
+
+  # TODO: mount the router ip on a dummy interface.
+
+  # TODO: automatic ROA updates.
 }
