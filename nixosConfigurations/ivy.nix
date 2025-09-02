@@ -47,6 +47,12 @@
   noa.dn42 = {
     enable = true;
     waitForInterface = "enu1";
+    asInfo = {
+      asn = "AS4242420833";
+      routerIp = "fdec:a476:db6e::fade:cafe";
+      routerId = "224.6.107.225";
+      subnet = "fdec:a476:db6e::/48";
+    };
     peers = {
       "AS4242422323" = {
         endpoint = "home.kagura.lolicon.cyou:20833";
