@@ -218,6 +218,13 @@ in
             #                 Header end                   #
             ################################################
 
+            log syslog { warning, error, fatal };
+            log "/var/log/bird/remote.log" { remote };
+            log "/var/log/bird/bugs.log" { bug };
+            log "/var/log/bird/trace.log" { trace };
+            log "/var/log/bird/debug.log" { debug };
+            log "/var/log/bird/info.log" { info };
+
             router id ${asInfo.routerId};
 
             protocol device {
