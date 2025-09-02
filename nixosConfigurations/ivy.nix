@@ -9,6 +9,7 @@
   imports = with nixosModules; [
     roles.server
     services.tailscale
+    services.dn42
   ];
 
   noa.nix.enableMirrorSubstituter = true;
@@ -23,6 +24,7 @@
     traceroute
     tcpdump
     conntrack-tools
+    wireguard-tools
   ];
 
   sops.secrets.cloudflare-ddns-apikey = {
@@ -40,5 +42,18 @@
     username = "token";
     passwordFile = config.sops.secrets.cloudflare-ddns-apikey.path;
     domains = [ "ivy.requiem.garden" ];
+  };
+
+  noa.dn42 = {
+    enable = true;
+    waitForInterface = "enu1";
+    peers = {
+      "AS4242422323" = {
+        endpoint = "home.kagura.lolicon.cyou:20833";
+        pubkey = "z3XndJnzBW9D+S6flQ+nlJH+WlrCcGtImdN4kUb/LGM=";
+        tunnelLocalAddr = "ee80:759::0833/64";
+        tunnelPeerAddr = "ee80:759::2323/64";
+      };
+    };
   };
 }
