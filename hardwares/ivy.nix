@@ -129,4 +129,18 @@
       echo default-on > /sys/class/leds/nanopi-r2s:red:sys/trigger
     '';
   };
+
+  networking.useDHCP = false;
+
+  systemd.network = {
+    enable = true;
+    networks."10-wan" = {
+      matchConfig.Name = "enu1";
+      networkConfig = {
+        DHCP = "ipv4";
+        IPv6AcceptRA = true;
+      };
+      linkConfig.RequiredForOnline = "routable";
+    };
+  };
 }
