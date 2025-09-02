@@ -58,4 +58,4 @@ rdeploy-host hostname:
   deploy .#{{hostname}}
 
 rdeploy-host-bare hostname target:
-  nixos-rebuild --flake .#{{hostname}} --target-host {{target}} switch --use-remote-sudo
+  nixos-rebuild --flake .#{{hostname}} --target-host {{target}} switch --use-remote-sudo -v -L
