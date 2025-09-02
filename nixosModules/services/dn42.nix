@@ -40,6 +40,9 @@ let
       };
     };
   };
+  mkDn42AsnSuffix = asn: lib.removePrefix "AS424242" asn;
+  mkDn42WgIfname = asn: "dn42wg${lib.removePrefix "AS424242" asn}";
+  mkDn42WgPort = asn: lib.toInt "2${mkDn42AsnSuffix asn}";
   generateSopsAccess = asn: values: {
     "peers/${asn}/my_private_key" = {
       format = "yaml";
@@ -51,9 +54,8 @@ let
   generateNetworkdConfig =
     asn: values:
     let
-      asnSuffix = lib.removePrefix "AS424242" asn;
       networkdEntry = "peer-${asn}";
-      ifname = "dn42wg${asnSuffix}";
+      ifname = mkDn42WgIfname asn;
     in
     {
       netdevs."${lib.toLower networkdEntry}" = {
@@ -62,7 +64,7 @@ let
           Kind = "wireguard";
         };
         wireguardConfig = {
-          ListenPort = lib.toInt "2${asnSuffix}";
+          ListenPort = mkDn42WgPort asn;
           PrivateKeyFile = config.sops.secrets."peers/${asn}/my_private_key".path;
         };
         wireguardPeers = [
@@ -86,7 +88,6 @@ let
           Description = "Wireguard tunnel to DN42 peer ${asn}";
           DHCP = "no";
           IPv6AcceptRA = false;
-          IPv4ReversePathFilter = "no"; # required if sysctl item `net.ipv4.conf.default.rp_filter` is not 0
           KeepConfiguration = "yes";
           BindCarrier = cfg.waitForInterface;
         };
@@ -124,7 +125,22 @@ in
   };
 
   config = lib.mkIf (cfg.enable && cfg.peers != { }) {
+    boot.kernel.sysctl = {
+      "net.ipv4.ip_forward" = 1;
+      "net.ipv6.conf.default.forwarding" = 1;
+      "net.ipv6.conf.all.forwarding" = 1;
+      "net.ipv4.conf.default.rp_filter" = 0;
+      "net.ipv4.conf.all.rp_filter" = 0;
+    };
     sops.secrets = lib.concatMapAttrs generateSopsAccess cfg.peers;
     systemd.network = lib.concatMapAttrs generateNetworkdConfig cfg.peers;
+    networking.firewall =
+      let
+        asns = lib.attrNames cfg.peers;
+      in
+      {
+        trustedInterfaces = map mkDn42WgIfname asns;
+        allowedUDPPorts = map mkDn42WgPort asns;
+      };
   };
 }
