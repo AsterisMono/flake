@@ -298,6 +298,11 @@ in
                 local as OWNAS;
                 path metric 1;
 
+                ipv4 {
+                  import none;
+                  export none;
+                };
+
                 ipv6 {   
                     import filter {
                       if is_valid_network() && !is_self_net() then {
@@ -319,11 +324,7 @@ in
                 lib.mapAttrsToList (asn: values: ''
                   protocol bgp dn42_${lib.toLower asn} from dnpeers {
                       neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)} as ${lib.removePrefix "AS" asn};
-                      direct;
-                      ipv4 {
-                        import none;
-                        export none;
-                      };
+                      # interface ?
                   }
                 '') cfg.peers
               )
