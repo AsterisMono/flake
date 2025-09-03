@@ -183,7 +183,26 @@ in
       "net.ipv4.conf.all.rp_filter" = 0;
     };
     sops.secrets = lib.concatMapAttrs generateSopsAccess cfg.peers;
-    systemd.network = lib.concatMapAttrs generateNetworkdConfig cfg.peers;
+    systemd.network =
+      let
+        dummyIfname = "dn42dummy0";
+      in
+      lib.recursiveUpdate (lib.concatMapAttrs generateNetworkdConfig cfg.peers) {
+        netdevs."${dummyIfname}" = {
+          netdevConfig = {
+            Name = dummyIfname;
+            Kind = "dummy";
+          };
+        };
+        networks."dn42" = {
+          matchConfig = {
+            Name = dummyIfname;
+          };
+          networkConfig = {
+            Address = [ cfg.asInfo.routerIp ];
+          };
+        };
+      };
     networking.firewall =
       let
         asns = lib.attrNames cfg.peers;
@@ -192,6 +211,7 @@ in
         trustedInterfaces = map mkDn42WgIfname asns;
         allowedUDPPorts = map mkDn42WgPort asns;
       };
+
     # Bird
     services.bird =
       let
@@ -328,8 +348,6 @@ in
       advertiseRoutes = [ "fd00::/8" ];
     };
   };
-
-  # TODO: mount the router ip on a dummy interface.
 
   # TODO: automatic ROA updates.
 }
