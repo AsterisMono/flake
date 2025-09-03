@@ -216,7 +216,6 @@
       extensions = with unstablePkgs.vscode-marketplace; [
         aaron-bond.better-comments
         alefragnani.project-manager
-        arrterian.nix-env-selector
         astro-build.astro-vscode
         bierner.markdown-mermaid
         bradlc.vscode-tailwindcss
@@ -234,6 +233,7 @@
         file-icons.file-icons
         fill-labs.dependi
         frhtylcn.pythonsnippets
+        golang.go
         gruntfuggly.todo-tree
         ibm.output-colorizer
         jnoortheen.nix-ide
