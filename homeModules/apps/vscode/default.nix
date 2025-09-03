@@ -258,6 +258,7 @@
         ms-vsliveshare.vsliveshare
         mylesmurphy.prettify-ts
         naumovs.color-highlight
+        openai.chatgpt
         orta.vscode-jest
         pranaygp.vscode-css-peek
         prisma.prisma
