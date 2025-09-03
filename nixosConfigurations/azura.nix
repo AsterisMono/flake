@@ -15,6 +15,7 @@
     hardware.bluetooth
     services.proxy
     services.tailscale
+    services.docker
     users.cmiki
   ];
 
@@ -32,6 +33,7 @@
         niri
       ];
     };
+    docker.useRegistryMirror = true;
   };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
