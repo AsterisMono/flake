@@ -322,6 +322,11 @@ in
         };
       };
     };
+
+    noa.tailscale = {
+      advertiseTags = [ "dn42" ];
+      advertiseRoutes = [ "fd00::/8" ];
+    };
   };
 
   # TODO: mount the router ip on a dummy interface.
