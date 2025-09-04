@@ -26,7 +26,7 @@
 
         outputs = {
           "${monitors.xiaomi}" = {
-            scale = 1.75;
+            scale = 1.5;
             focus-at-startup = true;
           };
           "${monitors.superwide}" = {
