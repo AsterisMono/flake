@@ -51,7 +51,10 @@ in
         Description = "A kitten-panel based desktop panel for your desktop";
         Documentation = "https://github.com/codelif/pawbar";
         PartOf = [ "graphical-session.target" ];
-        After = [ "graphical-session.target" ];
+        After = [
+          "graphical-session.target"
+          "pipewire-pulse.service"
+        ];
         Requisite = [ "graphical-session.target" ];
         X-Restart-Triggers = "${config.xdg.configFile."pawbar/pawbar.yaml".source}";
       };
