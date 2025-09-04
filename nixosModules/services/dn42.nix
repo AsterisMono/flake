@@ -186,11 +186,10 @@ in
     systemd.network =
       let
         dummyIfname = "dn42dummy0";
+        merge = lib.foldl (a: b: lib.recursiveUpdate a b) { };
       in
       lib.recursiveUpdate
-        (lib.zipAttrsWith (_: values: (lib.foldl (a: b: lib.recursiveUpdate a b) { }) values) (
-          lib.mapAttrsToList generateNetworkdConfig cfg.peers
-        ))
+        (lib.zipAttrsWith (_: merge) (lib.mapAttrsToList generateNetworkdConfig cfg.peers))
         {
           netdevs."${dummyIfname}" = {
             netdevConfig = {
