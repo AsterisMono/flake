@@ -60,6 +60,12 @@
         tunnelLocalAddr = "ee80:759::0833/64";
         tunnelPeerAddr = "ee80:759::2323/64";
       };
+      "AS4242420994" = {
+        endpoint = "hgt0ae5n23e.sn.mynetname.net:20833";
+        pubkey = "oJStkRIo8cO4IGj/+Tdi2FcK/eDg1NR4dF9ZNIqPyVg=";
+        tunnelLocalAddr = "ee80:5::0833/64";
+        tunnelPeerAddr = "ee80:5::0994/64";
+      };
     };
   };
 }
