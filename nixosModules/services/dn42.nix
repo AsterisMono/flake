@@ -321,17 +321,16 @@ in
                 };
             }
 
-            ${
-              # FIXME: the interface suffix (for fe80 local-links) is ignored for now.
-              lib.concatLines (
-                lib.mapAttrsToList (asn: values: ''
-                  protocol bgp dn42_${lib.toLower asn} from dnpeers {
-                      neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)} as ${lib.removePrefix "AS" asn};
-                      # interface ?
-                  }
-                '') cfg.peers
-              )
-            }
+            ${lib.concatLines (
+              lib.mapAttrsToList (asn: values: ''
+                protocol bgp dn42_${lib.toLower asn} from dnpeers {
+                    neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)} as ${lib.removePrefix "AS" asn};
+                    ${lib.optionalString (
+                      (lib.hasPrefix "fe80::" values.tunnelPeerAddr) && (lib.hasSuffix "/64" values.tunnelPeerAddr)
+                    ) "interface ${mkDn42WgIfname asn};"}
+                }
+              '') cfg.peers
+            )}
           '';
       };
 
