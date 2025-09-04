@@ -82,6 +82,16 @@ in
       fish_title = {
         body = "echo $(pwd)";
       };
+      pb = {
+        body = ''
+          if test (count $argv) -ne 1
+              echo "Usage: pb <filename>"
+              return 1
+          end
+          set file $argv[1]
+          curl -F "file=@$file" https://0x0.st
+        '';
+      };
     };
   };
 
