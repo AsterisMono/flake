@@ -187,22 +187,26 @@ in
       let
         dummyIfname = "dn42dummy0";
       in
-      lib.recursiveUpdate (lib.concatMapAttrs generateNetworkdConfig cfg.peers) {
-        netdevs."${dummyIfname}" = {
-          netdevConfig = {
-            Name = dummyIfname;
-            Kind = "dummy";
+      lib.recursiveUpdate
+        (lib.zipAttrsWith (_: values: (lib.foldl (a: b: lib.recursiveUpdate a b) { }) values) (
+          lib.mapAttrsToList generateNetworkdConfig cfg.peers
+        ))
+        {
+          netdevs."${dummyIfname}" = {
+            netdevConfig = {
+              Name = dummyIfname;
+              Kind = "dummy";
+            };
+          };
+          networks."dn42" = {
+            matchConfig = {
+              Name = dummyIfname;
+            };
+            networkConfig = {
+              Address = [ cfg.asInfo.routerIp ];
+            };
           };
         };
-        networks."dn42" = {
-          matchConfig = {
-            Name = dummyIfname;
-          };
-          networkConfig = {
-            Address = [ cfg.asInfo.routerIp ];
-          };
-        };
-      };
     networking.firewall =
       let
         asns = lib.attrNames cfg.peers;
