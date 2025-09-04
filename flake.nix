@@ -178,7 +178,7 @@
 
       overlays = {
         flake-packages = import ./overlays/flake-packages.nix self;
-        wrapper-lib = import ./overlays/wrapper-lib.nix self;
+        extended-lib = import ./overlays/extended-lib.nix self;
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
       };
 

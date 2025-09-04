@@ -34,6 +34,7 @@ in
     ./vscode
     ./firefox
     ./fcitx5
+    ./wemeet
   ];
 
   home.packages = homePackages ++ lib.optionals isDarwin darwinOnlyPackages;
