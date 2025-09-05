@@ -28,25 +28,30 @@ let
     pkgs.tailscale
     pkgs.flakePackages.orbstack
   ];
+  chromiumModule = _: {
+    programs.chromium = {
+      enable = !isDarwin;
+      commandLineArgs = [
+        "--enable-features=UseOzonePlatform"
+        "--ozone-platform=wayland"
+        "--enable-wayland-ime"
+      ];
+    };
+  };
+  linuxOnlyModules = [
+    ./fcitx5
+    ./wemeet
+    chromiumModule
+  ];
 in
 {
   imports = [
     ./vscode
     ./firefox
-    ./fcitx5
-    ./wemeet
-  ];
+  ]
+  ++ lib.optionals (!isDarwin) linuxOnlyModules;
 
   home.packages = homePackages ++ lib.optionals isDarwin darwinOnlyPackages;
 
   xdg.configFile."ghostty/config".source = ./ghostty.config;
-
-  programs.chromium = {
-    enable = !isDarwin;
-    commandLineArgs = [
-      "--enable-features=UseOzonePlatform"
-      "--ozone-platform=wayland"
-      "--enable-wayland-ime"
-    ];
-  };
 }
