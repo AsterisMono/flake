@@ -1,6 +1,6 @@
 # Noa's NixOS Flake
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/AsterisMono/flake)
+[![built with garnix](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2FAsterisMono%2Fflake%3Fbranch%3Dmain)](https://garnix.io/repo/AsterisMono/flake)
 
 A modular and reproducible personal setup for both NixOS and Darwin systems.
 
