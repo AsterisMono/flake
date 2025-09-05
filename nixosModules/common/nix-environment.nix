@@ -27,11 +27,11 @@
         ];
         extra-substituters = [
           "https://nix-community.cachix.org"
-          "https://asterismono.cachix.org"
+          "https://cache.garnix.io"
         ];
         trusted-public-keys = [
-          "asterismono.cachix.org-1:GgkakezDphTbi2w+ksIkuk+LfIbD32IbsxrpmnDpPvo="
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         ];
       };
 

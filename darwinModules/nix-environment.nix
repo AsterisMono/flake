@@ -21,12 +21,12 @@
         "https://mirrors.ustc.edu.cn/nix-channels/store"
       ];
       extra-substituters = [
-        "https://asterismono.cachix.org"
-        "https://devenv.cachix.org"
+        "https://nix-community.cachix.org"
+        "https://cache.garnix.io"
       ];
       trusted-public-keys = [
-        "asterismono.cachix.org-1:GgkakezDphTbi2w+ksIkuk+LfIbD32IbsxrpmnDpPvo="
-        "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       ];
     };
   };
