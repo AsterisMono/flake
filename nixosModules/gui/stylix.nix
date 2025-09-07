@@ -3,7 +3,7 @@
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
-    image = "${assetsPath}/wallpaper-nord.jpg";
+    image = "${assetsPath}/wallpapers/reisa.jpg";
     fonts = {
       serif = {
         package = pkgs.noto-fonts-cjk-serif;
