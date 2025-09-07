@@ -23,6 +23,7 @@
       settings = {
         hotkey-overlay.skip-at-startup = true;
         prefer-no-csd = true;
+        xwayland-satellite.path = "${lib.getExe pkgs.xwayland-satellite-stable}";
 
         outputs = {
           "${monitors.xiaomi}" = {
