@@ -156,6 +156,7 @@
             "Mod+0".action = focus-workspace "tray";
 
             "Mod+M".action = sh "makoctl dismiss --all";
+            "Mod+W".action = toggle-column-tabbed-display;
 
             "Alt+V".action =
               let
