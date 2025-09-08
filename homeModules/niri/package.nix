@@ -8,7 +8,6 @@
 # https://github.com/ryan4yin/nix-config/tree/main/home/linux/gui/niri
 # Thank you jinser & ryan4yin!
 {
-  imports = [ ./pawbar ];
 
   programs.niri =
     let
