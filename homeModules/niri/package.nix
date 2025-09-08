@@ -18,7 +18,8 @@
       };
     in
     {
-      package = pkgs.niri;
+      package = pkgs.niri-stable;
+
       settings = {
         hotkey-overlay.skip-at-startup = true;
         prefer-no-csd = true;
