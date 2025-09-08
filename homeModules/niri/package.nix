@@ -10,6 +10,7 @@
 {
   programs.niri =
     let
+      fuzzelScripts = ./fuzzelScripts;
       monitors = {
         sysmon = "Japan Display Inc. GPD1001H 0x00000001";
         superwide = "Beihai Century Joint Innovation Technology Co.,Ltd C34SKN Unknown";
@@ -150,8 +151,8 @@
             "Mod+Shift+Minus".action = set-window-height "-10%";
             "Mod+Shift+Equal".action = set-window-height "+10%";
 
-            "Mod+V".action = toggle-window-floating;
-            "Mod+Shift+V".action = switch-focus-between-floating-and-tiling;
+            "Mod+Shift+V".action = toggle-window-floating;
+            "Mod+Alt+Shift+V".action = switch-focus-between-floating-and-tiling;
 
             "Mod+Shift+S".action = screenshot;
             "Mod+Shift+P".action = screenshot-window;
@@ -164,10 +165,10 @@
             "Mod+M".action = sh "makoctl dismiss --all";
             "Mod+W".action = toggle-column-tabbed-display;
 
-            "Alt+V".action =
+            "Mod+V".action =
               let
-                cliphist-fuzzel = pkgs.writeShellApplication {
-                  name = "cliphist-fuzzel";
+                fuzzel-cliphist = pkgs.writeShellApplication {
+                  name = "fuzzel-cliphist";
                   runtimeInputs = with pkgs; [
                     cliphist
                     imagemagick
@@ -178,10 +179,27 @@
                     "nounset"
                     "pipefail"
                   ];
-                  text = builtins.readFile ./cliphist-fuzzel.sh;
+                  text = builtins.readFile "${fuzzelScripts}/cliphist.sh";
                 };
               in
-              sh (lib.getExe cliphist-fuzzel);
+              sh (lib.getExe fuzzel-cliphist);
+
+            "Mod+P".action =
+              let
+                fuzzel-projects = pkgs.writeShellApplication {
+                  name = "fuzzel-projects";
+                  runtimeInputs = with pkgs; [
+                    fuzzel
+                    libnotify
+                  ];
+                  bashOptions = [
+                    "nounset"
+                    "pipefail"
+                  ];
+                  text = builtins.readFile "${fuzzelScripts}/projects.sh";
+                };
+              in
+              sh (lib.getExe fuzzel-projects);
 
             "Mod+Shift+E".action = quit;
 
