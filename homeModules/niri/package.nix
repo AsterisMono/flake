@@ -8,7 +8,6 @@
 # https://github.com/ryan4yin/nix-config/tree/main/home/linux/gui/niri
 # Thank you jinser & ryan4yin!
 {
-
   programs.niri =
     let
       monitors = {
@@ -21,6 +20,13 @@
       package = pkgs.niri-stable;
 
       settings = {
+        spawn-at-startup = [
+          { command = lib.strings.splitString " " "kitty --class sysmon btop"; }
+          { command = [ "firefox" ]; }
+          { command = [ "Telegram" ]; }
+          { command = [ "bitwarden" ]; }
+        ];
+
         hotkey-overlay.skip-at-startup = true;
         prefer-no-csd = true;
         xwayland-satellite.path = "${lib.getExe pkgs.xwayland-satellite-stable}";
@@ -299,13 +305,6 @@
             open-on-output = monitors.sysmon;
           };
         };
-
-        spawn-at-startup = [
-          { command = lib.strings.splitString " " "kitty --class sysmon btop"; }
-          { command = [ "firefox" ]; }
-          { command = [ "Telegram" ]; }
-          { command = [ "bitwarden" ]; }
-        ];
       };
     };
 
