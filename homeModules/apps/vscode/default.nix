@@ -271,6 +271,7 @@
         styled-components.vscode-styled-components
         tamasfe.even-better-toml
         telesoho.vscode-markdown-paste-image
+        timonwong.shellcheck
         tombonnike.vscode-status-bar-format-toggle
         unifiedjs.vscode-mdx
         usernamehw.errorlens
