@@ -245,7 +245,6 @@
         mkhl.direnv
         ms-azuretools.vscode-containers
         ms-ceintl.vscode-language-pack-zh-hans
-        ms-kubernetes-tools.vscode-kubernetes-tools
         ms-vscode-remote.remote-containers
         ms-vscode-remote.remote-ssh
         ms-vscode-remote.remote-ssh-edit
