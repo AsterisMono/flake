@@ -74,6 +74,7 @@
           let
             sh = spawn "sh" "-c";
             wpctl = lib.getExe' pkgs.wireplumber "wpctl";
+
           in
           {
             "Mod+D".action = spawn "fuzzel";
@@ -155,8 +156,9 @@
             "Mod+Alt+Shift+V".action = switch-focus-between-floating-and-tiling;
 
             "Mod+Shift+S".action = screenshot;
-            "Mod+Shift+P".action = screenshot-window;
-            # "Mod+Shift+Ctrl+P".action = screenshot-screen;
+            "Mod+Shift+W".action = screenshot-window;
+            # https://github.com/sodiboo/niri-flake/issues/922
+            "Mod+Shift+P".action.screenshot-screen = [ ];
 
             "Mod+1".action = focus-workspace "browser";
             "Mod+2".action = focus-workspace "chat";
