@@ -57,6 +57,7 @@
     "format-muted": "",
     "scroll-step": 1,
     "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    "on-click-right": "pavucontrol",
     "format-icons": {
       "default": ""
     }
