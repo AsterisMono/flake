@@ -30,21 +30,11 @@ let
     pkgs.tailscale
     pkgs.flakePackages.orbstack
   ];
-  chromiumModule = _: {
-    programs.chromium = {
-      enable = !isDarwin;
-      commandLineArgs = [
-        "--enable-features=UseOzonePlatform"
-        "--ozone-platform=wayland"
-        "--enable-wayland-ime"
-      ];
-    };
-  };
   linuxOnlyModules = [
     ./fcitx5
     ./wemeet
-    chromiumModule
     ./kde-connect
+    ./chromium
   ];
 in
 {
