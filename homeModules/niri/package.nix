@@ -210,11 +210,11 @@
             "Mod+Shift+E".action = quit;
 
             "XF86AudioRaiseVolume" = {
-              action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%+";
+              action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%+";
               allow-when-locked = true;
             };
             "XF86AudioLowerVolume" = {
-              action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 10%-";
+              action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
               allow-when-locked = true;
             };
             "XF86AudioMute" = {
@@ -268,12 +268,24 @@
               }
               {
                 app-id = "^firefox$";
-                title = "^Picture-in-Picture$";
+                title = "^画中画$";
               }
             ];
             open-floating = true;
+            open-fullscreen = false;
             default-window-height.proportion = 0.65;
             default-column-width.proportion = 0.65;
+          }
+          {
+            matches = [
+              {
+                app-id = "^com\.network\.manager$";
+              }
+            ];
+            open-floating = true;
+            open-fullscreen = false;
+            default-window-height.proportion = 0.65;
+            default-column-width.proportion = 0.25;
           }
           {
             matches = [
