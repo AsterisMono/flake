@@ -10,7 +10,6 @@
     roles.desktop
     diskLayouts.btrfs
     gui.suites.niri
-    gui.suites.gnome
     gui.stylix
     hardware.bluetooth
     services.proxy
