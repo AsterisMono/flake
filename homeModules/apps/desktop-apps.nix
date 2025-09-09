@@ -44,6 +44,7 @@ let
     ./fcitx5
     ./wemeet
     chromiumModule
+    ./kde-connect
   ];
 in
 {
