@@ -1,0 +1,15 @@
+* {
+  font-family: "FiraCode Nerd Font Propo, Noto Sans Mono CJK SC";
+  font-size: 10pt;
+}
+
+window#waybar {
+  background: rgba(21, 18, 27, 0);
+  opacity: 0.9;
+}
+
+#custom-nixos {
+  margin-left: -10px;
+  padding-top: 2px;
+  font-size: 8pt;
+}
