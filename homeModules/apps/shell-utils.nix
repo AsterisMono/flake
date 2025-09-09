@@ -13,6 +13,7 @@ let
     duf
     cachix
     asciinema
+    bluetuith
   ];
 in
 {
