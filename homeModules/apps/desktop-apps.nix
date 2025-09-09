@@ -12,6 +12,8 @@ let
     telegram-desktop
     obsidian
     bitwarden-desktop
+    pavucontrol
+    nmgui
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar

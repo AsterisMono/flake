@@ -8,4 +8,7 @@ _: {
   xdg.configFile."waybar/config.jsonc".source = ./config.jsonc;
 
   stylix.targets.waybar.enable = false;
+
+  # MPRIS
+  services.playerctld.enable = true;
 }
