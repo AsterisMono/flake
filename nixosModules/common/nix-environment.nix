@@ -1,16 +1,17 @@
 {
   config,
   inputs,
-  pkgs,
   lib,
   overlays,
   ...
 }:
 
 {
+  # Use Determinate Nix
+  imports = [ inputs.determinate.nixosModules.default ];
+
   config = {
     nix = {
-      package = pkgs.nixVersions.latest;
       channel.enable = false;
       registry = {
         noa.flake = inputs.self;
@@ -34,6 +35,10 @@
           "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         ];
       };
+
+      extraOptions = ''
+        eval-cores = 0
+      '';
 
       # Suppress nix-shell channel errors on a flake system
       nixPath = [ "/etc/nix/path" ];
