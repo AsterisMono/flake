@@ -2,9 +2,13 @@
   description = "Noa's NixOS Flake";
 
   inputs = {
-    flake-utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+    determinate-nix = {
+      url = "github:DeterminateSystems/nix-src";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -181,6 +185,7 @@
         extended-lib = import ./overlays/extended-lib.nix self;
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
         inherit (inputs.niri.overlays) niri;
+        determinate-nix = inputs.determinate-nix.overlays.default;
       };
 
       lib = {
