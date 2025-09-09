@@ -347,7 +347,10 @@
   programs.fuzzel = {
     enable = true;
     settings = {
-      main.icon-theme = "Tela-light";
+      main = {
+        icon-theme = "Tela-light";
+        terminal = "${lib.getExe pkgs.kitty}";
+      };
     };
   };
 
