@@ -62,7 +62,9 @@
           # https://github.com/YaLTeR/niri/wiki/Overview#backdrop-customization
           background-color = "transparent";
           always-center-single-column = true;
+          center-focused-column = "on-overflow";
           border.width = 2;
+          struts.top = -16;
         };
 
         cursor.hide-when-typing = true;
