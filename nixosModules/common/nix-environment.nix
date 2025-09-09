@@ -1,8 +1,8 @@
 {
   config,
-  inputs,
   pkgs,
   lib,
+  inputs,
   overlays,
   ...
 }:
@@ -10,7 +10,7 @@
 {
   config = {
     nix = {
-      package = pkgs.nixVersions.latest;
+      package = pkgs.nix;
       channel.enable = false;
       registry = {
         noa.flake = inputs.self;
@@ -34,6 +34,11 @@
           "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
         ];
       };
+
+      extraOptions = ''
+        eval-cores = 0
+        lazy-trees = true
+      '';
 
       # Suppress nix-shell channel errors on a flake system
       nixPath = [ "/etc/nix/path" ];
