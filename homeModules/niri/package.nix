@@ -16,7 +16,6 @@
       monitors = {
         sysmon = "Japan Display Inc. GPD1001H 0x00000001";
         superwide = "Beihai Century Joint Innovation Technology Co.,Ltd C34SKN Unknown";
-        xiaomi = "Xiaomi Corporation Mi Monitor 5877500021251";
       };
     in
     {
@@ -35,10 +34,6 @@
         xwayland-satellite.path = "${lib.getExe pkgs.xwayland-satellite-stable}";
 
         outputs = {
-          "${monitors.xiaomi}" = {
-            scale = 1.5;
-            focus-at-startup = true;
-          };
           "${monitors.superwide}" = {
             scale = 1;
             mode = {
