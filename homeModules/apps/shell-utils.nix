@@ -28,6 +28,11 @@ in
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
+      commit.gpgsign = true;
+      gpg.format = "ssh";
+      user.signingKey = ''
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOz0CMmkGSXv4H77rmrmvadltAlwAZeVimxGoUAfArs Noa Virellia
+      '';
     };
   };
 
