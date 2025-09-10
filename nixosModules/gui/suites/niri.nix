@@ -1,6 +1,7 @@
 {
   inputs,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -13,5 +14,12 @@
     package = pkgs.niri;
   };
 
-  services.xserver.displayManager.gdm.enable = true;
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${lib.getExe pkgs.greetd.tuigreet} --cmd niri-session";
+      };
+    };
+  };
 }
