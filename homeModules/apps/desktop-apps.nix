@@ -35,6 +35,7 @@ let
     ./wemeet
     ./kde-connect
     ./chromium
+    ./obs-studio
   ];
 in
 {
