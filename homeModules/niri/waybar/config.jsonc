@@ -32,7 +32,7 @@
   "systemd-failed-units": {
     "hide-on-ok": true,
     "format": " {nr_failed}",
-    "format-ok": " 1",
+    "format-ok": "",
     "system": true,
     "user": true
   },
@@ -84,9 +84,9 @@
 
   "network": {
     "format-wifi": " {signalStrength}%",
-    "format-ethernet": "{ipaddr}/{cidr} 󰈀",
+    "format-ethernet": "󰈀 {ipaddr}/{cidr}",
     "tooltip-format": "{essid} - {ifname} via {gwaddr} ",
-    "format-linked": "{ifname} (No IP) 󰈀",
+    "format-linked": "󰈀 {ifname} (No IP)",
     "format-disconnected": "",
     "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}",
     "on-click-right": "nmgui"
