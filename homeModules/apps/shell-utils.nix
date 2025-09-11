@@ -83,6 +83,8 @@ in
       "gg" = "lazygit";
       "rec" = "asciinema rec";
       "code" = "codium .";
+      "icat" = "kitten icat";
+      "ssh" = "kitten ssh";
     };
     functions = {
       fish_title = {
