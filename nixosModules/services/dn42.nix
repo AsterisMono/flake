@@ -329,7 +329,7 @@ in
                     (lib.hasPrefix "fe80:" values.tunnelPeerAddr) && (lib.hasSuffix "/64" values.tunnelPeerAddr)
                   ) "%${mkDn42WgIfname asn}";
                 in
-                lib.traceVal ''
+                ''
                   protocol bgp dn42_${lib.toLower asn} from dnpeers {
                       neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)}${fe80Interface} as ${lib.removePrefix "AS" asn};
                   }
