@@ -57,8 +57,8 @@
       "AS4242422323" = {
         endpoint = "***REMOVED***";
         pubkey = "***REMOVED***";
-        tunnelLocalAddr = "ee80:759::0833/64";
-        tunnelPeerAddr = "ee80:759::2323/64";
+        tunnelLocalAddr = "fe80:759:0833::1/64";
+        tunnelPeerAddr = "fe80:759:2323::1/64";
       };
       "AS4242420994" = {
         endpoint = "***REMOVED***";
