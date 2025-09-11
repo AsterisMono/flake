@@ -46,7 +46,7 @@
             focus-at-startup = true;
           };
           "${monitors.sysmon}" = {
-            scale = 2;
+            scale = 1.5;
             position.x = 3440;
             position.y = 0;
           };
