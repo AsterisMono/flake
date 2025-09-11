@@ -14,6 +14,7 @@ let
     bitwarden-desktop
     pavucontrol
     nmgui
+    vlc
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
