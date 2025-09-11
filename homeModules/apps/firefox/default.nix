@@ -73,6 +73,7 @@
       // lib.optionalAttrs (system != "aarch64-darwin") {
         "media.ffmpeg.vaapi.enabled" = true;
         "gfx.webrender.all" = true;
+        "media.hardware-video-decoding.force-enabled" = true;
       };
       RequestedLocales = "zh-cn,zh,zh-tw,zh-hk,en-us,en";
     };
