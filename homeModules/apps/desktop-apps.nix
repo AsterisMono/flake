@@ -37,6 +37,7 @@ let
     ./kde-connect
     ./chromium
     ./obs-studio
+    ./reminder
   ];
 in
 {
