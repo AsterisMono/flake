@@ -12,7 +12,7 @@ let
         flatpak.appId = "com.tencent.wemeet";
         bubblewrap = {
           sockets = {
-            x11 = true;
+            x11 = false;
             wayland = true;
             pipewire = true;
           };
