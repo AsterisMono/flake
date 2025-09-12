@@ -155,6 +155,7 @@
         "remote.SSH.localServerDownload" = "always";
         "search.smartCase" = true;
         "security.workspace.trust.untrustedFiles" = "open";
+        "svelte.enable-ts-plugin" = true;
         "terminal.integrated.allowChords" = false;
         "terminal.integrated.cursorBlinking" = false;
         "terminal.integrated.cursorStyle" = "line";
@@ -269,6 +270,7 @@
         signageos.signageos-vscode-sops
         skellock.just
         styled-components.vscode-styled-components
+        svelte.svelte-vscode
         tamasfe.even-better-toml
         telesoho.vscode-markdown-paste-image
         timonwong.shellcheck
