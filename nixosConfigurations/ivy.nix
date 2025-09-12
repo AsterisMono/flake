@@ -57,8 +57,8 @@
       "AS4242422323" = {
         endpoint = "home.kagura.lolicon.cyou:20833";
         pubkey = "z3XndJnzBW9D+S6flQ+nlJH+WlrCcGtImdN4kUb/LGM=";
-        tunnelLocalAddr = "fe80:759:0833::1/64";
-        tunnelPeerAddr = "fe80:759:2323::1/64";
+        tunnelLocalAddr = "fdec:a476:db6e:ffff::2323:0/127";
+        tunnelPeerAddr = "fdec:a476:db6e:ffff::2323:1/127";
       };
       "AS4242420994" = {
         endpoint = "hgt0ae5n23e.sn.mynetname.net:20833";
