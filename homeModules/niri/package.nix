@@ -14,8 +14,9 @@
     let
       fuzzelScripts = ./fuzzelScripts;
       monitors = {
-        sysmon = "Japan Display Inc. GPD1001H 0x00000001";
+        gpd = "Japan Display Inc. GPD1001H 0x00000001";
         superwide = "Beihai Century Joint Innovation Technology Co.,Ltd C34SKN Unknown";
+        npc = "PNP(XYA) NPC Xianyou 0x00000003";
       };
     in
     {
@@ -45,10 +46,17 @@
             position.y = 0;
             focus-at-startup = true;
           };
-          "${monitors.sysmon}" = {
+          "${monitors.gpd}" = {
             scale = 1.5;
             position.x = 3440;
             position.y = 0;
+          };
+          "${monitors.npc}" = {
+            mode = {
+              width = 2560;
+              height = 1440;
+              refresh = 75.000;
+            };
           };
         };
 
@@ -333,7 +341,7 @@
           };
           "99-tray" = {
             name = "tray";
-            open-on-output = monitors.sysmon;
+            open-on-output = monitors.gpd;
           };
         };
       };
