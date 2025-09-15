@@ -26,6 +26,7 @@ in
     realize
 
     unstablePkgs.gemini-cli
+    unstablePkgs.codex
   ];
 
   # Neovim
