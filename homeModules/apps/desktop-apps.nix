@@ -38,6 +38,7 @@ let
     ./chromium
     ./obs-studio
     ./reminder
+    ./xpipe
   ];
 in
 {
