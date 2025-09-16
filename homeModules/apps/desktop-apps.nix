@@ -34,7 +34,6 @@ let
   linuxOnlyModules = [
     ./fcitx5
     ./wemeet
-    ./kde-connect
     ./chromium
     ./obs-studio
     ./reminder
