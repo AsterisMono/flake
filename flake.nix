@@ -244,7 +244,6 @@
             nixd
             just
             deploy-rs
-            nh
             nixfmt-rfc-style
             ssh-to-age
             sops
