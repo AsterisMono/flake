@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   unstablePkgs,
@@ -41,6 +42,8 @@ in
     enableFishIntegration = true;
     enableTransience = true;
   };
+
+  xdg.configFile."starship.toml".source = lib.mkForce ./starship.toml;
 
   programs.direnv = {
     enable = true;
