@@ -40,6 +40,7 @@ let
           The ip address on the peer side of the tunnel, provided by the peer.
         '';
       };
+      extendedNextHop = mkEnableOption "ipv4 extended next hop";
     };
   };
   ownAsOpts = _: {
@@ -331,7 +332,13 @@ in
                 in
                 ''
                   protocol bgp dn42_${lib.toLower asn} from dnpeers {
+                      ${lib.optionalString values.extendedNextHop "enable extended messages on;"}
                       neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)}${fe80Interface} as ${lib.removePrefix "AS" asn};
+                      ${lib.optionalString values.extendedNextHop ''
+                        ipv4 {
+                            extended next hop on;
+                        };
+                      ''}
                   }
                 ''
               ) cfg.peers
