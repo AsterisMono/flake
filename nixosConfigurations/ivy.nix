@@ -5,11 +5,15 @@
   secretsPath,
   ...
 }:
+let
+  thisTsAddress = "100.74.184.53";
+in
 {
   imports = with nixosModules; [
     roles.server
     services.tailscale
     services.dn42
+    (services.prometheus-blackbox thisTsAddress)
   ];
 
   noa.nix.enableMirrorSubstituter = true;
@@ -79,7 +83,7 @@
   services.prometheus.exporters =
     let
       networkSettings = {
-        listenAddress = "100.74.184.53"; # Tailscale
+        listenAddress = thisTsAddress; # Tailscale
         openFirewall = true;
       };
     in

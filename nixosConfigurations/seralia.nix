@@ -5,12 +5,14 @@
 }:
 let
   grafanaDomain = "observatory.requiem.garden";
+  thisTsAddress = "100.121.244.87";
 in
 {
   imports = with nixosModules; [
     diskLayouts.btrfs
     roles.server
     services.tailscale
+    (services.prometheus-blackbox thisTsAddress)
   ];
 
   disko.devices.disk.main.device = "/dev/vda";
@@ -28,41 +30,103 @@ in
         ];
         disabledCollectors = [ "textfile" ];
       };
-      # blackbox = {
-      #   enable = true;
-      #   port = 9115;
-      #   listenAddress = "127.0.0.1";
-      # };
     };
     scrapeConfigs = [
       {
-        job_name = "node";
+        # Do not **ever** change the job name.
+        # Been there, done that.
+        # https://stackoverflow.com/questions/54704117/how-can-i-delete-old-jobs-from-prometheus
+        job_name = "node_exporter";
         static_configs = [
           {
             targets = [
-              "localhost:${toString config.services.prometheus.exporters.node.port}"
+              "localhost:9100"
               "ivy:9100"
             ];
           }
         ];
       }
       {
-        job_name = "bird";
+        job_name = "bird_exporter";
+        static_configs = [
+          { targets = [ "ivy:9324" ]; }
+        ];
+      }
+      {
+        job_name = "wireguard_exporter";
+        static_configs = [
+          { targets = [ "ivy:9586" ]; }
+        ];
+      }
+      {
+        job_name = "blackbox_exporter";
         static_configs = [
           {
             targets = [
-              "ivy:9324"
+              "localhost:9115"
+              "ivy:9115"
             ];
           }
         ];
       }
       {
-        job_name = "wireguard";
+        job_name = "blackbox_tsnet_heartbeats";
+        metrics_path = "/probe";
+        params = {
+          module = [ "heartbeat_icmp" ];
+        };
         static_configs = [
           {
             targets = [
-              "ivy:9586"
+              "ivy"
+              "seralia"
+              "derper"
             ];
+          }
+        ];
+        relabel_configs = [
+          {
+            source_labels = [ "__address__" ];
+            target_label = "__param_target";
+          }
+          {
+            source_labels = [ "__param_target" ];
+            target_label = "instance";
+          }
+          {
+            target_label = "__address__";
+            replacement = "${thisTsAddress}:9115";
+          }
+        ];
+      }
+      {
+        job_name = "blackbox_dn42_peer_heartbeats";
+        metrics_path = "/probe";
+        params = {
+          module = [ "heartbeat_icmp" ];
+        };
+        static_configs = [
+          {
+            # TODO: integrate into dn42 config
+            targets = [
+              "fdec:a476:db6e:ffff::2323:1" # 2323
+              "fdd2:4372:796f:ffff::833:0" # 0994
+              "fe80::803%dn42wg0803" # 0803
+            ];
+          }
+        ];
+        relabel_configs = [
+          {
+            source_labels = [ "__address__" ];
+            target_label = "__param_target";
+          }
+          {
+            source_labels = [ "__param_target" ];
+            target_label = "instance";
+          }
+          {
+            target_label = "__address__";
+            replacement = "ivy:9115";
           }
         ];
       }
