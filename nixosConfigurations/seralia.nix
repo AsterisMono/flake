@@ -18,12 +18,21 @@ in
   services.prometheus = {
     enable = true;
     globalConfig.scrape_interval = "10s";
-    exporters.node = {
-      enable = true;
-      enabledCollectors = [
-        "systemd"
-      ];
-      disabledCollectors = [ "textfile" ];
+    exporters = {
+      node = {
+        enable = true;
+        port = 9100;
+        listenAddress = "127.0.0.1";
+        enabledCollectors = [
+          "systemd"
+        ];
+        disabledCollectors = [ "textfile" ];
+      };
+      # blackbox = {
+      #   enable = true;
+      #   port = 9115;
+      #   listenAddress = "127.0.0.1";
+      # };
     };
     scrapeConfigs = [
       {
@@ -32,6 +41,27 @@ in
           {
             targets = [
               "localhost:${toString config.services.prometheus.exporters.node.port}"
+              "ivy:9100"
+            ];
+          }
+        ];
+      }
+      {
+        job_name = "bird";
+        static_configs = [
+          {
+            targets = [
+              "ivy:9324"
+            ];
+          }
+        ];
+      }
+      {
+        job_name = "wireguard";
+        static_configs = [
+          {
+            targets = [
+              "ivy:9586"
             ];
           }
         ];
@@ -45,9 +75,8 @@ in
       server = {
         http_addr = "127.0.0.1";
         http_port = 3000;
-        enforce_domain = true;
         enable_gzip = true;
-        domain = grafanaDomain;
+        root_url = "https://${grafanaDomain}/";
       };
       analytics.reporting_enabled = false;
     };

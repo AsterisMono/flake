@@ -75,4 +75,35 @@
       };
     };
   };
+
+  services.prometheus.exporters =
+    let
+      networkSettings = {
+        listenAddress = "100.74.184.53"; # Tailscale
+        openFirewall = true;
+      };
+    in
+    {
+      node = {
+        enable = true;
+        port = 9100;
+        enabledCollectors = [
+          "systemd"
+          "netdev.address-info"
+        ];
+        disabledCollectors = [ "textfile" ];
+      }
+      // networkSettings;
+      bird = {
+        enable = true;
+        port = 9324;
+      }
+      // networkSettings;
+      wireguard = {
+        enable = true;
+        port = 9586;
+        latestHandshakeDelay = true;
+      }
+      // networkSettings;
+    };
 }
