@@ -60,3 +60,5 @@ rdeploy-host hostname:
 rdeploy-host-bare hostname target:
     nixos-rebuild --flake .#{{ hostname }} --target-host {{ target }} switch --use-remote-sudo -v -L
 
+generate-wg-keys:
+    wg genkey | tee privatekey | wg pubkey > publickey
