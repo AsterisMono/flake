@@ -1,11 +1,15 @@
 {
+  lib,
   config,
   nixosModules,
+  miscPath,
   ...
 }:
 let
   grafanaDomain = "observatory.requiem.garden";
   thisTsAddress = "100.121.244.87";
+  dn42Peers = import "${miscPath}/dn42Peers.nix";
+  mkEndpointHostname = value: lib.head (lib.splitString ":" value.endpoint);
 in
 {
   imports = with nixosModules; [
@@ -107,12 +111,7 @@ in
         };
         static_configs = [
           {
-            # TODO: integrate into dn42 config
-            targets = [
-              "fdec:a476:db6e:ffff::2323:1" # 2323
-              "fdd2:4372:796f:ffff::833:0" # 0994
-              "fe80::803%dn42wg0803" # 0803
-            ];
+            targets = lib.mapAttrsToList (asn: mkEndpointHostname) dn42Peers;
           }
         ];
         relabel_configs = [
@@ -128,7 +127,13 @@ in
             target_label = "__address__";
             replacement = "ivy:9115";
           }
-        ];
+        ]
+        ++ lib.mapAttrsToList (asn: value: {
+          source_labels = [ "__param_target" ];
+          regex = lib.escapeRegex (mkEndpointHostname value);
+          target_label = "asn";
+          replacement = asn;
+        }) dn42Peers;
       }
     ];
   };
