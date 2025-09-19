@@ -62,3 +62,6 @@ rdeploy-host-bare hostname target:
 
 generate-wg-keys:
     wg genkey | tee privatekey | wg pubkey > publickey
+
+activate-git-crypt:
+    git-agecrypt config add -i ~/.config/sops/age/keys.txt

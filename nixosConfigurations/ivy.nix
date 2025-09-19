@@ -3,7 +3,6 @@
   nixosModules,
   pkgs,
   secretsPath,
-  miscPath,
   ...
 }:
 let
@@ -58,7 +57,7 @@ in
       routerId = "224.6.107.225";
       subnet = "fdec:a476:db6e::/48";
     };
-    peers = import "${miscPath}/dn42Peers.nix";
+    peers = import "${secretsPath}/dn42Peers.nix";
   };
 
   services.prometheus.exporters =

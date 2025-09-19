@@ -74,7 +74,6 @@
       inherit (inputs.nixpkgs) lib;
       secretsPath = ./secrets;
       assetsPath = ./assets;
-      miscPath = ./misc;
       # This recursive attrset pattern is forbidden, but we use it here anyway.
       #
       # The following flake output attributes must be NixOS modules:
@@ -91,7 +90,6 @@
           inputs
           secretsPath
           assetsPath
-          miscPath
           ;
         inherit (self)
           nixosModules
@@ -252,6 +250,7 @@
             jq
             openssh
             wireguard-tools
+            git-agecrypt
           ];
           inherit (checks.pre-commit-check) shellHook;
           buildInputs = checks.pre-commit-check.enabledPackages;

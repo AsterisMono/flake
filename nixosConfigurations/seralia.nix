@@ -2,13 +2,13 @@
   lib,
   config,
   nixosModules,
-  miscPath,
+  secretsPath,
   ...
 }:
 let
   grafanaDomain = "observatory.requiem.garden";
   thisTsAddress = "100.121.244.87";
-  dn42Peers = import "${miscPath}/dn42Peers.nix";
+  dn42Peers = import "${secretsPath}/dn42Peers.nix";
   mkEndpointHostname = value: lib.head (lib.splitString ":" value.endpoint);
 in
 {
