@@ -15,6 +15,8 @@ let
     pavucontrol
     nmgui
     vlc
+    kdePackages.okular
+    netease-cloud-music-gtk
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
