@@ -64,7 +64,7 @@ generate-wg-keys:
     wg genkey | tee privatekey | wg pubkey > publickey
 
 git-agecrypt-activate:
-    git-agecrypt config add -i ~/.config/sops/age/keys.txt
+    git-agecrypt init && git-agecrypt config add -i ~/.config/sops/age/keys.txt && git checkout main && git restore .
 
 git-agecrypt-add file:
     git-agecrypt config add -r "age10rmq9vcjjpxpl7qx2qc9nh6xvr0ktdjphq7w6mz9zwlz6kxxfprqfrz7gk" -p {{ file }} && echo "{{ file }} filter=git-agecrypt diff=git-agecrypt" >> .gitattributes
