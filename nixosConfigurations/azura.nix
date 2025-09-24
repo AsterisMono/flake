@@ -15,6 +15,7 @@
     services.proxy
     services.tailscale
     services.docker
+    services.waydroid
     users.cmiki
   ];
 

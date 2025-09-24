@@ -62,6 +62,10 @@
       url = "github:nixpak/nixpak";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -194,6 +198,7 @@
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
         inherit (inputs.niri.overlays) niri;
         determinate-nix = inputs.determinate-nix.overlays.default;
+        inherit (inputs.nur.overlays) default;
       };
 
       lib = {
