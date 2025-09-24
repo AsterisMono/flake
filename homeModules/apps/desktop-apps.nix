@@ -17,6 +17,7 @@ let
     vlc
     kdePackages.okular
     netease-cloud-music-gtk
+    spotify
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
