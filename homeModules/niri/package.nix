@@ -273,6 +273,10 @@
                 app-id = "^firefox$";
                 title = "^画中画$";
               }
+              {
+                app-id = "^Bytedance-feishu$";
+                title = "图片";
+              }
             ];
             open-floating = true;
             open-fullscreen = false;
