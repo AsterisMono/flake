@@ -77,10 +77,6 @@
 
         cursor.hide-when-typing = true;
 
-        input = {
-          workspace-auto-back-and-forth = true;
-        };
-
         binds =
           with config.lib.niri.actions;
           let
