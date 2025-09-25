@@ -41,6 +41,7 @@ let
     ./obs-studio
     ./reminder
     ./xpipe
+    ./feishu
   ];
 in
 {
