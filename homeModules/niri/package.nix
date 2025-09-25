@@ -86,7 +86,7 @@
           let
             sh = spawn "sh" "-c";
             wpctl = lib.getExe' pkgs.wireplumber "wpctl";
-
+            playerctl = lib.getExe' pkgs.playerctl "playerctl";
           in
           {
             "Mod+D".action = spawn "fuzzel";
@@ -226,6 +226,18 @@
             };
             "XF86AudioLowerVolume" = {
               action = sh "${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+              allow-when-locked = true;
+            };
+            "Ctrl+Mod+Left" = {
+              action = sh "${playerctl} previous";
+              allow-when-locked = true;
+            };
+            "Ctrl+Mod+Right" = {
+              action = sh "${playerctl} next";
+              allow-when-locked = true;
+            };
+            "Ctrl+Mod+Space" = {
+              action = sh "${playerctl} play-pause";
               allow-when-locked = true;
             };
             "XF86AudioMute" = {
