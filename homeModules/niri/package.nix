@@ -174,8 +174,9 @@
             # https://github.com/sodiboo/niri-flake/issues/922
             "Mod+Shift+P".action.screenshot-screen = [ ];
 
-            "Mod+1".action = focus-workspace "browser";
-            "Mod+2".action = focus-workspace "chat";
+            "Mod+1".action = focus-workspace "workpad";
+            "Mod+2".action = focus-workspace "messengers";
+            "Mod+3".action = focus-workspace "spotify";
             "Mod+0".action = focus-workspace "tray";
 
             "Mod+M".action = sh "makoctl dismiss --all";
