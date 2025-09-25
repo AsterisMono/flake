@@ -91,6 +91,8 @@
           {
             "Mod+D".action = spawn "fuzzel";
             "Mod+Q".action = spawn "kitty";
+            "Mod+Shift+Q".action =
+              sh "kitty --detach && sleep 0.2 && niri msg action consume-or-expel-window-left";
             "Mod+C" = {
               action = close-window;
               repeat = false;
