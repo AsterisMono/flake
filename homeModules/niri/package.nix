@@ -1,5 +1,6 @@
 {
   config,
+  hostname,
   lib,
   pkgs,
   ...
@@ -24,10 +25,14 @@
 
       settings = {
         spawn-at-startup = [
-          { command = lib.strings.splitString " " "kitty --class sysmon btop"; }
           { command = [ "firefox" ]; }
           { command = [ "Telegram" ]; }
           { command = [ "bitwarden" ]; }
+          { command = [ "bytedance-feishu" ]; }
+          { command = [ "spotify" ]; }
+        ]
+        ++ lib.optionals (hostname == "aeris") [
+          { command = lib.strings.splitString " " "kitty --class sysmon btop"; }
         ];
 
         hotkey-overlay.skip-at-startup = true;
@@ -298,15 +303,16 @@
             matches = [
               { app-id = "^firefox$"; }
             ];
-            open-on-workspace = "browser";
+            open-on-workspace = "workpad";
             default-column-width.proportion = 0.5;
           }
           {
             matches = [
               { app-id = "^Slack$"; }
               { app-id = "^org\.telegram\.desktop$"; }
+              { app-id = "^Bytedance-feishu$"; }
             ];
-            open-on-workspace = "chat";
+            open-on-workspace = "messengers";
             default-column-width.proportion = 0.5;
           }
           {
@@ -324,9 +330,19 @@
             default-column-width.proportion = 1.0;
           }
           {
+            matches = [
+              { app-id = "^spotify$"; }
+              { app-id = "^com\.gitee\.gmg137\.NeteaseCloudMusicGtk4$"; }
+            ];
+            open-on-workspace = "spotify";
+            default-column-width.proportion = 0.66667;
+          }
+          {
             matches = builtins.map (l: l // { at-startup = true; }) [
               { app-id = "^firefox$"; }
               { app-id = "^org\.telegram\.desktop$"; }
+              { app-id = "^Bytedance-feishu$"; }
+              { app-id = "^spotify$"; }
               { app-id = "^sysmon$"; }
               { app-id = "^Bitwarden$"; }
             ];
@@ -335,12 +351,16 @@
         ];
 
         workspaces = {
-          "01-browser" = {
-            name = "browser";
+          "01-workpad" = {
+            name = "workpad";
             open-on-output = monitors.superwide;
           };
-          "02-chat" = {
-            name = "chat";
+          "02-messengers" = {
+            name = "messengers";
+            open-on-output = monitors.superwide;
+          };
+          "03-spotify" = {
+            name = "spotify";
             open-on-output = monitors.superwide;
           };
           "99-tray" = {
