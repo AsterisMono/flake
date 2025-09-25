@@ -3,63 +3,64 @@
   programs.firefox = {
     enable = true;
     policies = {
-      ExtensionSettings = {
-        "uBlock0@raymondhill.net" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "{3c078156-979c-498b-8990-85f7987dd929}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/sidebery/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "navbar";
-        };
-        "sponsorBlocker@ajay.app" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "jid1-MnnxcxisBPnSXQ@jetpack" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/privacy-badger17/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-ff/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "queryamoid@kaply.com" = {
-          install_url = "https://github.com/mkaply/queryamoid/releases/download/v0.1/query_amo_addon_id-0.1-fx.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/refined-github-/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "jid1-BoFifL9Vbdl2zQ@jetpack" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "{74145f27-f039-47ce-a470-a662b129930a}" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-        "chrome-mask@overengineer.dev" = {
-          install_url = "https://addons.mozilla.org/firefox/downloads/latest/chrome-mask/latest.xpi";
-          installation_mode = "force_installed";
-          default_area = "menupanel";
-        };
-      };
+      ExtensionSettings =
+        lib.mapAttrs
+          (
+            _: value:
+            {
+              installation_mode = "force_installed";
+              default_area = "menupanel";
+            }
+            // value
+          )
+          {
+            "uBlock0@raymondhill.net" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi";
+            };
+            "{3c078156-979c-498b-8990-85f7987dd929}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/sidebery/latest.xpi";
+              default_area = "navbar";
+            };
+            "sponsorBlocker@ajay.app" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/sponsorblock/latest.xpi";
+            };
+            "jid1-MnnxcxisBPnSXQ@jetpack" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/privacy-badger17/latest.xpi";
+            };
+            "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
+            };
+            "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-ff/latest.xpi";
+            };
+            "queryamoid@kaply.com" = {
+              install_url = "https://github.com/mkaply/queryamoid/releases/download/v0.1/query_amo_addon_id-0.1-fx.xpi";
+            };
+            "{a4c4eda4-fb84-4a84-b4a1-f7c1cbf2a1ad}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/refined-github-/latest.xpi";
+            };
+            "jid1-BoFifL9Vbdl2zQ@jetpack" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/decentraleyes/latest.xpi";
+            };
+            "{74145f27-f039-47ce-a470-a662b129930a}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/clearurls/latest.xpi";
+            };
+            "chrome-mask@overengineer.dev" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/chrome-mask/latest.xpi";
+            };
+            "redirect-nix-wiki@undesided.me" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/redirectnixwiki/latest.xpi";
+            };
+            "{eceab40b-230a-4560-98ed-185ad010633f}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/nixos-packages-search-engine/latest.xpi";
+            };
+            "{39ba6e88-6981-4e1f-9c68-591c9965633b}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/nixos-options-search-engine/latest.xpi";
+            };
+            "Tab-Session-Manager@sienori" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/tab-session-manager/latest.xpi";
+            };
+          };
       DisplayBookmarksToolbar = "never";
       DisablePocket = true;
       OfferToSaveLogins = false;
