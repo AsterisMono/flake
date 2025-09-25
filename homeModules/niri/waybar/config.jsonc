@@ -15,6 +15,7 @@
   "modules-center": ["mpris"],
   "modules-right": [
     "network",
+    "network#speed",
     "temperature",
     "cpu",
     "memory",
@@ -83,13 +84,19 @@
   },
 
   "network": {
-    "format-wifi": " {signalStrength}%",
+    "format-wifi": " {essid}@{signalStrength}%",
     "format-ethernet": "󰈀 {ipaddr}/{cidr}",
     "tooltip-format": "{essid} - {ifname} via {gwaddr} ",
     "format-linked": "󰈀 {ifname} (No IP)",
     "format-disconnected": "",
     "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}",
     "on-click-right": "nmgui"
+  },
+
+  "network#speed": {
+    "interval": 3,
+    "format-wifi": " {bandwidthUpBytes}  {bandwidthDownBytes}",
+    "format-ethernet": " {bandwidthUpBytes}  {bandwidthDownBytes}"
   },
 
   "bluetooth": {
@@ -103,6 +110,7 @@
 
   "mpris": {
     "format": "{status_icon} {dynamic}",
+    "dynamic-order": ["title", "artist", "album"],
     "status-icons": {
       "playing": "",
       "paused": "",
