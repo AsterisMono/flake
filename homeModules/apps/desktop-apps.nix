@@ -9,7 +9,6 @@ let
   isDarwin = system == "aarch64-darwin";
   homePackages = with unstablePkgs; [
     dbeaver-bin
-    telegram-desktop
     obsidian
     bitwarden-desktop
     pavucontrol
@@ -42,6 +41,8 @@ let
     ./reminder
     ./xpipe
     ./feishu
+    ./qq
+    ./telegram-desktop
   ];
 in
 {

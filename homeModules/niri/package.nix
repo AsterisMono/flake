@@ -270,37 +270,6 @@
           }
           {
             matches = [
-              { app-id = "^org\.telegram\.desktop$"; }
-              { app-id = "^QQ$"; }
-            ];
-            block-out-from = "screencast";
-          }
-          {
-            matches = [
-              {
-                app-id = "^QQ$";
-                title = "^(图片查看)|(视频播放)器$";
-              }
-              {
-                app-id = "^org\.telegram\.desktop$";
-                title = "^Media viewer$";
-              }
-              {
-                app-id = "^firefox$";
-                title = "^画中画$";
-              }
-              {
-                app-id = "^Bytedance-feishu$";
-                title = "图片";
-              }
-            ];
-            open-floating = true;
-            open-fullscreen = false;
-            default-window-height.proportion = 0.65;
-            default-column-width.proportion = 0.65;
-          }
-          {
-            matches = [
               {
                 app-id = "^com\.network\.manager$";
               }
@@ -309,22 +278,6 @@
             open-fullscreen = false;
             default-window-height.proportion = 0.65;
             default-column-width.proportion = 0.25;
-          }
-          {
-            matches = [
-              { app-id = "^firefox$"; }
-            ];
-            open-on-workspace = "workpad";
-            default-column-width.proportion = 0.5;
-          }
-          {
-            matches = [
-              { app-id = "^Slack$"; }
-              { app-id = "^org\.telegram\.desktop$"; }
-              { app-id = "^Bytedance-feishu$"; }
-            ];
-            open-on-workspace = "messengers";
-            default-column-width.proportion = 0.5;
           }
           {
             matches = [
@@ -356,6 +309,7 @@
               { app-id = "^spotify$"; }
               { app-id = "^sysmon$"; }
               { app-id = "^Bitwarden$"; }
+              { app-id = "^QQ$"; }
             ];
             open-focused = false;
           }

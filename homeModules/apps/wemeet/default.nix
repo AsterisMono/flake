@@ -1,14 +1,15 @@
-{ pkgs, ... }:
+{ pkgs, unstablePkgs, ... }:
 let
   wemeet-nixpak = pkgs.lib.mkNixPak {
     config =
       { sloth, ... }:
       {
         imports = [
+          ../_nixpakModules/common.nix
           ../_nixpakModules/gui-base.nix
           ../_nixpakModules/network.nix
         ];
-        app.package = pkgs.wemeet;
+        app.package = unstablePkgs.wemeet;
         flatpak.appId = "com.tencent.wemeet";
         bubblewrap = {
           sockets = {

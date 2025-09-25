@@ -1,27 +1,24 @@
-{ pkgs, ... }:
+{ unstablePkgs, ... }:
 {
-  home.packages = [ pkgs.feishu ];
+  home.packages = [ unstablePkgs.telegram-desktop ];
 
   programs.niri.settings.window-rules =
     let
-      app-id = "^Bytedance-feishu$";
+      app-id = "^org\.telegram\.desktop$";
     in
     [
       {
         matches = [
-          {
-            inherit app-id;
-            title = "飞书";
-          }
+          { inherit app-id; }
         ];
         open-on-workspace = "messengers";
-        default-window-height.proportion = 0.8; # Fcitx5 panel offset
+        block-out-from = "screencast";
       }
       {
         matches = [
           {
             inherit app-id;
-            title = "图片";
+            title = "^Media viewer$";
           }
         ];
         open-floating = true;
