@@ -275,9 +275,18 @@
               }
             ];
             open-floating = true;
-            open-fullscreen = false;
             default-window-height.proportion = 0.65;
             default-column-width.proportion = 0.25;
+          }
+          {
+            matches = [
+              {
+                app-id = "^org\.gnome\.Nautilus$";
+              }
+            ];
+            open-floating = true;
+            default-window-height.proportion = 0.65;
+            default-column-width.proportion = 0.4;
           }
           {
             matches = [
