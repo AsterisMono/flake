@@ -192,14 +192,29 @@
         directory = ./nixosConfigurations;
       };
 
-      overlays = {
-        flake-packages = import ./overlays/flake-packages.nix self;
-        extended-lib = import ./overlays/extended-lib.nix self;
-        nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
-        inherit (inputs.niri.overlays) niri;
-        determinate-nix = inputs.determinate-nix.overlays.default;
-        inherit (inputs.nur.overlays) default;
-      };
+      overlays =
+        let
+          python-pkgs-overlay = final: prev: {
+            pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
+              (
+                python-final: python-prev:
+                prev.lib.packagesFromDirectoryRecursive {
+                  inherit (python-final) callPackage;
+                  directory = ./pythonPackages;
+                }
+              )
+            ];
+          };
+        in
+        {
+          flake-packages = import ./overlays/flake-packages.nix self;
+          extended-lib = import ./overlays/extended-lib.nix self;
+          nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
+          inherit (inputs.niri.overlays) niri;
+          determinate-nix = inputs.determinate-nix.overlays.default;
+          inherit (inputs.nur.overlays) default;
+          inherit python-pkgs-overlay;
+        };
 
       lib = {
         withOfflineInstaller = import ./lib/withOfflineInstaller.nix;
@@ -221,7 +236,7 @@
       in
       rec {
         packages =
-          lib.filterAttrs
+          (lib.filterAttrs
             (
               pname: package:
               if builtins.hasAttr "meta" package then builtins.elem system package.meta.platforms else true
@@ -231,7 +246,14 @@
                 inherit (pkgs) callPackage;
                 directory = ./packages;
               }
-            );
+            )
+          )
+          // {
+            pythonPackages = lib.packagesFromDirectoryRecursive {
+              inherit (pkgs.python3Packages) callPackage;
+              directory = ./pythonPackages;
+            };
+          };
 
         checks = {
           pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {

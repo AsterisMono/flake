@@ -51,16 +51,46 @@ in
   };
 
   sops.secrets.gemini_api_key = { };
+  sops.secrets.github_fish_ai_pat = { };
+  sops.templates."fish-ai.ini" = {
+    content = ''
+      [fish-ai]
+      configuration = github
+      keymap_2 = ctrl-o
+      language = Chinese
+
+      [github]
+      provider = self-hosted
+      server = https://models.inference.ai.azure.com
+      api_key = ${config.sops.placeholder.github_fish_ai_pat}
+      model = gpt-4o-mini
+    '';
+    path = "${config.home.homeDirectory}/.config/fish-ai.ini";
+  };
+
+  # TODO: refactor me into a home-manager module
+  xdg.dataFile."fish-ai/bin".source = "${pkgs.python3Packages.fish-ai}/bin";
 
   programs.fish = {
     enable = true;
-    plugins =
-      with pkgs.fishPlugins;
-      map (x: { inherit (x) name src; }) [
+    plugins = map (x: { inherit (x) name src; }) (
+      [
+        {
+          name = "fish-ai";
+          src = pkgs.fetchFromGitHub {
+            owner = "Realiserad";
+            repo = "fish-ai";
+            rev = "v$2.3.0";
+            sha256 = "sha256-ydWM8LoM6TsWOmMXzfJ5bSrvqrk9EPGS1wkKowbA3DA=";
+          };
+        }
+      ]
+      ++ (with pkgs.fishPlugins; [
         plugin-git
         fzf-fish
         puffer
-      ];
+      ])
+    );
     shellInit = "set -g fish_greeting";
     interactiveShellInit = ''
       set EDITOR nvim
