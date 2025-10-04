@@ -28,11 +28,13 @@
           { command = [ "firefox" ]; }
           { command = [ "Telegram" ]; }
           { command = [ "bitwarden" ]; }
-          { command = [ "bytedance-feishu" ]; }
-          { command = [ "spotify" ]; }
         ]
         ++ lib.optionals (hostname == "aeris") [
           { command = lib.strings.splitString " " "kitty --class sysmon btop"; }
+        ]
+        ++ lib.optionals (hostname == "zephira") [
+          { command = [ "bytedance-feishu" ]; }
+          { command = [ "spotify" ]; }
         ];
 
         hotkey-overlay.skip-at-startup = true;
