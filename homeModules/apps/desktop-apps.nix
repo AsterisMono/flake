@@ -17,7 +17,6 @@ let
     kdePackages.okular
     netease-cloud-music-gtk
     spotify
-    moonlight-qt
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
@@ -44,6 +43,7 @@ let
     ./feishu
     ./qq
     ./telegram-desktop
+    ./moonlight-qt
   ];
 in
 {
