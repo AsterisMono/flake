@@ -17,6 +17,7 @@ let
     kdePackages.okular
     netease-cloud-music-gtk
     spotify
+    jetbrains.datagrip
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
