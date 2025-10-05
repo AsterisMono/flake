@@ -52,12 +52,8 @@
         ++ lib.optionals (config.noa.tailscale.advertiseRoutes != [ ]) [
           "--advertise-routes=${lib.strings.concatStringsSep "," config.noa.tailscale.advertiseRoutes}"
         ]
-        ++ [
-          "--advertise-tags=tag:nixos${
-            lib.optionalString (
-              config.noa.tailscale.advertiseTags != [ ]
-            ) ",${lib.strings.concatStringsSep "," config.noa.tailscale.advertiseTags}"
-          }"
+        ++ lib.optionals (config.noa.tailscale.advertiseTags != [ ]) [
+          "--advertise-tags=tag:${lib.strings.concatStringsSep "," config.noa.tailscale.advertiseTags}"
         ]
         ++ lib.optionals config.noa.tailscale.ssh.enable [
           "--ssh"
