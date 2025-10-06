@@ -75,7 +75,7 @@
         "editor.quickSuggestions" = {
           strings = "on";
         };
-        "editor.smoothScrolling" = true;
+        "editor.smoothScrolling" = false;
         "editor.stickyScroll.enabled" = true;
         "editor.suggest.snippetsPreventQuickSuggestions" = false;
         "editor.suggestSelection" = "first";
@@ -218,6 +218,7 @@
         aaron-bond.better-comments
         alefragnani.project-manager
         astro-build.astro-vscode
+        asvetliakov.vscode-neovim
         bierner.markdown-mermaid
         bradlc.vscode-tailwindcss
         chrisdias.vscode-opennewinstance
@@ -268,6 +269,7 @@
         ritwickdey.liveserver
         rust-lang.rust-analyzer
         signageos.signageos-vscode-sops
+        sumneko.lua
         skellock.just
         styled-components.vscode-styled-components
         svelte.svelte-vscode
