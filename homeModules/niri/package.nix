@@ -15,8 +15,8 @@
     let
       fuzzelScripts = ./fuzzelScripts;
       monitors = {
-        gpd = "Japan Display Inc. GPD1001H 0x00000001";
         superwide = "Beihai Century Joint Innovation Technology Co.,Ltd C34SKN Unknown";
+        superwide-xiaomi = "Xiaomi Corporation Mi Monitor 0000000000000";
         npc = "PNP(XYA) NPC Xianyou 0x00000003";
       };
     in
@@ -53,16 +53,19 @@
             position.y = 0;
             focus-at-startup = true;
           };
-          "${monitors.gpd}" = {
-            scale = 1.5;
-            position.x = 3440;
-            position.y = 0;
-          };
           "${monitors.npc}" = {
             mode = {
               width = 2560;
               height = 1440;
               refresh = 75.000;
+            };
+            transform.rotation = 90;
+          };
+          "${monitors.superwide-xiaomi}" = {
+            mode = {
+              width = 3440;
+              height = 1440;
+              refresh = 99.992;
             };
           };
         };
@@ -291,28 +294,6 @@
             default-column-width.proportion = 0.4;
           }
           {
-            matches = [
-              { app-id = "^Bitwarden$"; }
-            ];
-            open-on-workspace = "tray";
-            default-column-width.proportion = 0.5;
-          }
-          {
-            matches = [
-              { app-id = "^sysmon$"; }
-            ];
-            open-on-workspace = "tray";
-            default-column-width.proportion = 1.0;
-          }
-          {
-            matches = [
-              { app-id = "^spotify$"; }
-              { app-id = "^com\.gitee\.gmg137\.NeteaseCloudMusicGtk4$"; }
-            ];
-            open-on-workspace = "spotify";
-            default-column-width.proportion = 0.66667;
-          }
-          {
             matches = builtins.map (l: l // { at-startup = true; }) [
               { app-id = "^firefox$"; }
               { app-id = "^org\.telegram\.desktop$"; }
@@ -325,25 +306,6 @@
             open-focused = false;
           }
         ];
-
-        workspaces = {
-          "01-workpad" = {
-            name = "workpad";
-            open-on-output = monitors.superwide;
-          };
-          "02-messengers" = {
-            name = "messengers";
-            open-on-output = monitors.superwide;
-          };
-          "03-spotify" = {
-            name = "spotify";
-            open-on-output = monitors.superwide;
-          };
-          "99-tray" = {
-            name = "tray";
-            open-on-output = monitors.gpd;
-          };
-        };
       };
     };
 
