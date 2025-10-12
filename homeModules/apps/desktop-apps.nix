@@ -17,6 +17,7 @@ let
     kdePackages.okular
     netease-cloud-music-gtk
     spotify
+    prismlauncher
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
