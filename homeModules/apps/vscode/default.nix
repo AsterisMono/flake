@@ -218,7 +218,6 @@
         aaron-bond.better-comments
         alefragnani.project-manager
         astro-build.astro-vscode
-        asvetliakov.vscode-neovim
         bierner.markdown-mermaid
         bradlc.vscode-tailwindcss
         chrisdias.vscode-opennewinstance
