@@ -57,7 +57,9 @@ in
       routerId = "224.6.107.225";
       subnet = "fdec:a476:db6e::/48";
     };
-    peers = import "${secretsPath}/dn42Peers.nix";
+    peers = {
+      "AS4242420994".endpoint = "fdd2:4372:796f:ffff::833:0/127";
+    };
   };
 
   services.prometheus.exporters =

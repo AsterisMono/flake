@@ -1,4 +1,0 @@
-[config]
-"secrets/dn42Peers.nix" = [
-  "age10rmq9vcjjpxpl7qx2qc9nh6xvr0ktdjphq7w6mz9zwlz6kxxfprqfrz7gk",
-]

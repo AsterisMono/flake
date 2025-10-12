@@ -9,8 +9,9 @@
 let
   inherit (lib) mkOption mkEnableOption types;
   cfg = config.noa.dn42;
-  peerOpts = _: {
+  wireguardOpts = _: {
     options = {
+      enable = mkEnableOption "wireguard for this peer";
       endpoint = mkOption {
         example = "***REMOVED***";
         type = types.str;
@@ -33,11 +34,22 @@ let
           The ip address on the local side of the tunnel.
         '';
       };
-      tunnelPeerAddr = mkOption {
+    };
+  };
+  peerOpts = _: {
+    options = {
+      wireguard = mkOption {
+        type = types.submodule wireguardOpts;
+        default = {
+          enable = false;
+          tunnelLocalAddr = "";
+        };
+      };
+      endpoint = mkOption {
         example = "fe80::759:2323/64";
         type = types.str;
         description = ''
-          The ip address on the peer side of the tunnel, provided by the peer.
+          The ip address of your peer
         '';
       };
       extendedNextHop = mkEnableOption "ipv4 extended next hop";
@@ -91,13 +103,13 @@ let
       restartUnits = [ "systemd-networkd.service" ];
     };
   };
-  generateNetworkdConfig =
+  generateNetworkdWgConfig =
     asn: values:
     let
       networkdEntry = "peer-${asn}";
       ifname = mkDn42WgIfname asn;
     in
-    {
+    lib.optionalAttrs values.wireguard.enable {
       netdevs."${lib.toLower networkdEntry}" = {
         netdevConfig = {
           Name = ifname;
@@ -109,7 +121,7 @@ let
         };
         wireguardPeers = [
           {
-            PublicKey = values.pubkey;
+            PublicKey = values.wireguard.pubkey;
             Endpoint = values.endpoint;
             # TODO: is this too open?
             AllowedIPs = [
@@ -134,7 +146,7 @@ let
         linkConfig = {
           RequiredForOnline = "no";
         };
-        address = [ values.tunnelLocalAddr ];
+        address = [ values.wireguard.tunnelLocalAddr ];
       };
     };
 in
@@ -168,7 +180,6 @@ in
             endpoint = "***REMOVED***";
             pubkey = "***REMOVED***";
             tunnelLocalAddr = "fe80::fade:cafe/64";
-            tunnelPeerAddr = "fe80:759::2323/64";
           };
         };
       };
@@ -190,7 +201,7 @@ in
         merge = lib.foldl (a: b: lib.recursiveUpdate a b) { };
       in
       lib.recursiveUpdate
-        (lib.zipAttrsWith (_: merge) (lib.mapAttrsToList generateNetworkdConfig cfg.peers))
+        (lib.zipAttrsWith (_: merge) (lib.mapAttrsToList generateNetworkdWgConfig cfg.peers))
         {
           netdevs."${dummyIfname}" = {
             netdevConfig = {
@@ -327,13 +338,13 @@ in
                 asn: values:
                 let
                   fe80Interface = lib.optionalString (
-                    (lib.hasPrefix "fe80:" values.tunnelPeerAddr) && (lib.hasSuffix "/64" values.tunnelPeerAddr)
+                    (lib.hasPrefix "fe80:" values.endpoint) && (lib.hasSuffix "/64" values.endpoint)
                   ) "%${mkDn42WgIfname asn}";
                 in
                 ''
                   protocol bgp dn42_${lib.toLower asn} from dnpeers {
                       ${lib.optionalString values.extendedNextHop "enable extended messages on;"}
-                      neighbor ${lib.head (lib.splitString "/" values.tunnelPeerAddr)}${fe80Interface} as ${lib.removePrefix "AS" asn};
+                      neighbor ${lib.head (lib.splitString "/" values.endpoint)}${fe80Interface} as ${lib.removePrefix "AS" asn};
                       ${lib.optionalString values.extendedNextHop ''
                         ipv4 {
                             extended next hop on;

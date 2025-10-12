@@ -139,6 +139,7 @@
       networkConfig = {
         DHCP = "ipv4";
         IPv6AcceptRA = true;
+        Address = "fdd2:4372:796f:ffff::833:1/127";
       };
       linkConfig.RequiredForOnline = "routable";
     };

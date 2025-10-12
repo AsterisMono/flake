@@ -4,5 +4,4 @@ builds:
         - "*.x86_64-linux.*"
         - defaultPackage.x86_64-linux
         - nixosConfigurations.*
-        - checks.*
     branch: main

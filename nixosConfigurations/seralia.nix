@@ -1,15 +1,11 @@
 {
-  lib,
   config,
   nixosModules,
-  secretsPath,
   ...
 }:
 let
   grafanaDomain = "observatory.requiem.garden";
   thisTsAddress = "100.121.244.87";
-  dn42Peers = import "${secretsPath}/dn42Peers.nix";
-  mkEndpointHostname = value: lib.head (lib.splitString ":" value.endpoint);
 in
 {
   imports = with nixosModules; [
@@ -57,12 +53,6 @@ in
         ];
       }
       {
-        job_name = "wireguard_exporter";
-        static_configs = [
-          { targets = [ "ivy:9586" ]; }
-        ];
-      }
-      {
         job_name = "blackbox_exporter";
         static_configs = [
           {
@@ -102,38 +92,6 @@ in
             replacement = "${thisTsAddress}:9115";
           }
         ];
-      }
-      {
-        job_name = "blackbox_dn42_peer_heartbeats";
-        metrics_path = "/probe";
-        params = {
-          module = [ "heartbeat_icmp" ];
-        };
-        static_configs = [
-          {
-            targets = lib.mapAttrsToList (asn: mkEndpointHostname) dn42Peers;
-          }
-        ];
-        relabel_configs = [
-          {
-            source_labels = [ "__address__" ];
-            target_label = "__param_target";
-          }
-          {
-            source_labels = [ "__param_target" ];
-            target_label = "instance";
-          }
-          {
-            target_label = "__address__";
-            replacement = "ivy:9115";
-          }
-        ]
-        ++ lib.mapAttrsToList (asn: value: {
-          source_labels = [ "__param_target" ];
-          regex = lib.escapeRegex (mkEndpointHostname value);
-          target_label = "asn";
-          replacement = asn;
-        }) dn42Peers;
       }
     ];
   };
