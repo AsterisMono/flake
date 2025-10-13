@@ -3,8 +3,13 @@
   font-size: 10pt;
 }
 
-window#waybar {
-  background: rgba(21, 18, 27, 0);
+window.topbar#waybar {
+  background: rgba(46, 52, 64, 0);
+  opacity: 0.9;
+}
+
+window.taskbar#waybar {
+  background: rgba(46, 52, 64, 0.9);
   opacity: 0.9;
 }
 
