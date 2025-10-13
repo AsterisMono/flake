@@ -68,7 +68,6 @@ in
           }
         ];
         open-floating = false;
-        open-on-workspace = "messengers";
         default-window-height.proportion = 0.8;
       }
       {

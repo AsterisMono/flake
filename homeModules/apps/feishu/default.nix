@@ -14,7 +14,6 @@
             title = "飞书";
           }
         ];
-        open-on-workspace = "messengers";
         default-window-height.proportion = 0.8; # Fcitx5 panel offset
       }
       {

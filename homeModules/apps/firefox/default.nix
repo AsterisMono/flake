@@ -101,7 +101,6 @@
         matches = [
           { inherit app-id; }
         ];
-        open-on-workspace = "workpad";
       }
       {
         matches = [

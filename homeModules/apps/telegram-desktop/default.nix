@@ -11,7 +11,6 @@
         matches = [
           { inherit app-id; }
         ];
-        open-on-workspace = "messengers";
         block-out-from = "screencast";
       }
       {
