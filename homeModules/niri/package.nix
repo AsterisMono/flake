@@ -3,6 +3,7 @@
   hostname,
   lib,
   pkgs,
+  unstablePkgs,
   ...
 }:
 # https://github.com/jetjinser/flake/blob/master/hosts/dorothy/desktop/niri.nix
@@ -174,6 +175,7 @@
             "Mod+Shift+W".action = screenshot-window;
             # https://github.com/sodiboo/niri-flake/issues/922
             "Mod+Shift+P".action.screenshot-screen = [ ];
+            "Mod+Shift+A".action = sh "wl-paste | ${lib.getExe unstablePkgs.satty} -f -";
 
             "Mod+M".action = sh "makoctl dismiss --all";
             "Mod+W".action = toggle-column-tabbed-display;
@@ -313,6 +315,8 @@
       };
     };
   };
+
+  xdg.configFile."satty/config.toml".source = ./satty.toml;
 
   programs.kitty = {
     enable = true;
