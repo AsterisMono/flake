@@ -457,5 +457,6 @@
     wl-clip-persist
     nautilus
     nautilus-open-any-terminal
+    viewnior
   ];
 }
