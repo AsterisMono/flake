@@ -236,7 +236,7 @@
       in
       rec {
         packages =
-          (lib.filterAttrs
+          lib.filterAttrs
             (
               pname: package:
               if builtins.hasAttr "meta" package then builtins.elem system package.meta.platforms else true
@@ -246,14 +246,7 @@
                 inherit (pkgs) callPackage;
                 directory = ./packages;
               }
-            )
-          )
-          // {
-            pythonPackages = lib.packagesFromDirectoryRecursive {
-              inherit (pkgs.python3Packages) callPackage;
-              directory = ./pythonPackages;
-            };
-          };
+            );
 
         checks = {
           pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
