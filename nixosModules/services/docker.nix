@@ -10,13 +10,12 @@
   };
 
   config = {
-    virtualisation.docker = {
+    virtualisation.podman = {
       enable = true;
-      daemon.settings = lib.mkIf config.noa.docker.useRegistryMirror {
-        registry-mirrors = [ "https://docker.1ms.run" ];
-      };
+      dockerSocket.enable = true;
+      dockerCompat = true;
     };
-    virtualisation.oci-containers.backend = "docker";
+    virtualisation.oci-containers.backend = "podman";
     virtualisation.oci-containers.containers.watch-tower = lib.mkIf config.noa.docker.enableWatchTower {
       image = "containrrr/watchtower";
       volumes = [
