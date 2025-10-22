@@ -9,8 +9,7 @@
   imports = with nixosModules; [
     roles.desktop
     diskLayouts.btrfs
-    gui.suites.niri
-    gui.stylix
+    gui.suites.plasma
     hardware.bluetooth
     services.proxy
     services.tailscale
@@ -29,7 +28,6 @@
         apps.desktop-apps
         apps.development
         roles.desktop
-        niri
       ];
     };
     docker.useRegistryMirror = true;
