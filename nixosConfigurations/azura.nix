@@ -10,6 +10,7 @@
     roles.desktop
     diskLayouts.btrfs
     gui.suites.plasma
+    gui.stylix
     hardware.bluetooth
     services.proxy
     services.tailscale
