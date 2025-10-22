@@ -1,12 +1,9 @@
 {
-  inputs,
   pkgs,
   lib,
   ...
 }:
 {
-  imports = [ inputs.niri.nixosModules.niri ];
-
   niri-flake.cache.enable = false;
 
   programs.niri = {
