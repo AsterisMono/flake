@@ -9,7 +9,7 @@
   imports = with nixosModules; [
     roles.desktop
     diskLayouts.btrfs
-    gui.suites.plasma
+    gui.suites.gnome
     gui.stylix
     hardware.bluetooth
     services.proxy
