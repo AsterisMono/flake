@@ -40,6 +40,7 @@
     ++ (with pkgs; [
       gnome-tweaks
       gnome-browser-connector
+      gdm-settings
     ]);
 
   # Override pulseaudio
