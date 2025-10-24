@@ -30,6 +30,7 @@
   environment.systemPackages =
     (with pkgs.gnomeExtensions; [
       appindicator
+      clipboard-indicator
       dash-to-dock
       system-monitor
       xremap
