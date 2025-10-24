@@ -1,6 +1,7 @@
 {
   pkgs,
   lib,
+  assetsPath,
   ...
 }:
 {
@@ -46,4 +47,21 @@
   # Override pulseaudio
   # I have no idea who enabled this
   services.pulseaudio.enable = lib.mkForce false;
+
+  # Profile icon
+  system.activationScripts.script.text =
+    let
+      username = "cmiki";
+    in
+    ''
+      mkdir -p /var/lib/AccountsService/{icons,users}
+      cp ${assetsPath}/noa.png /var/lib/AccountsService/icons/${username}
+      echo -e "[User]\nIcon=/var/lib/AccountsService/icons/${username}\n" > /var/lib/AccountsService/users/${username}
+
+      chown root:root /var/lib/AccountsService/users/${username}
+      chmod 0600 /var/lib/AccountsService/users/${username}
+
+      chown root:root /var/lib/AccountsService/icons/${username}
+      chmod 0444 /var/lib/AccountsService/icons/${username}
+    '';
 }
