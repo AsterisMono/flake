@@ -12,6 +12,7 @@
     ./xpipe
     ./telegram-desktop
     ./moonlight-qt
+    ./flatpaks
   ];
 
   home.packages = with unstablePkgs; [

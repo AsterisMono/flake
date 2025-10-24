@@ -11,6 +11,7 @@
     diskLayouts.btrfs
     gui.suites.gnome
     gui.stylix
+    gui.flatpak
     hardware.bluetooth
     services.proxy
     services.tailscale
