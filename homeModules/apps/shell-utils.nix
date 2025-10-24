@@ -198,15 +198,4 @@ in
   };
 
   xdg.configFile."zellij/config.kdl".source = ./externalConfigs/zellij-config.kdl;
-
-  programs.yazi = {
-    enable = true;
-    enableFishIntegration = true;
-  };
-
-  programs.pay-respects = {
-    enable = true;
-    enableFishIntegration = true;
-    package = unstablePkgs.pay-respects;
-  };
 }
