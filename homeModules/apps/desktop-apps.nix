@@ -7,13 +7,9 @@
     ./vscode
     ./firefox
     ./fcitx5
-    ./wemeet
     ./chromium
     ./obs-studio
-    ./reminder
     ./xpipe
-    ./feishu
-    ./qq
     ./telegram-desktop
     ./moonlight-qt
   ];
