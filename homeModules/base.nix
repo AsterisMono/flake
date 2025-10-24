@@ -1,8 +1,6 @@
 {
-  system,
   username,
   secretsPath,
-  lib,
   osConfig,
   ...
 }:
