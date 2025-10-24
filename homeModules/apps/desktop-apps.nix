@@ -11,14 +11,9 @@ let
     dbeaver-bin
     obsidian
     bitwarden-desktop
-    pavucontrol
-    nmgui
     vlc
-    kdePackages.okular
-    netease-cloud-music-gtk
     spotify
     prismlauncher
-    kdePackages.kate
   ];
   darwinOnlyPackages = with unstablePkgs; [
     ice-bar
