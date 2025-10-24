@@ -151,29 +151,14 @@
         directory = ./nixosConfigurations;
       };
 
-      overlays =
-        let
-          python-pkgs-overlay = final: prev: {
-            pythonPackagesExtensions = prev.pythonPackagesExtensions ++ [
-              (
-                python-final: python-prev:
-                prev.lib.packagesFromDirectoryRecursive {
-                  inherit (python-final) callPackage;
-                  directory = ./pythonPackages;
-                }
-              )
-            ];
-          };
-        in
-        {
-          flake-packages = import ./overlays/flake-packages.nix self;
-          extended-lib = import ./overlays/extended-lib.nix self;
-          nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
-          inherit (inputs.niri.overlays) niri;
-          determinate-nix = inputs.determinate-nix.overlays.default;
-          inherit (inputs.nur.overlays) default;
-          inherit python-pkgs-overlay;
-        };
+      overlays = {
+        flake-packages = import ./overlays/flake-packages.nix self;
+        extended-lib = import ./overlays/extended-lib.nix self;
+        nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
+        inherit (inputs.niri.overlays) niri;
+        determinate-nix = inputs.determinate-nix.overlays.default;
+        inherit (inputs.nur.overlays) default;
+      };
 
       lib = {
         withOfflineInstaller = import ./lib/withOfflineInstaller.nix;
