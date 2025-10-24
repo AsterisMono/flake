@@ -2,8 +2,8 @@
 {
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
-    image = "${assetsPath}/wallpapers/reisa.jpg";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest.yaml";
+    image = "${assetsPath}/wallpapers/everforest.jpg";
     fonts = {
       serif = {
         package = pkgs.noto-fonts-cjk-serif;
