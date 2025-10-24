@@ -43,7 +43,7 @@ in
     enableTransience = true;
   };
 
-  xdg.configFile."starship.toml".source = lib.mkForce ./starship.toml;
+  xdg.configFile."starship.toml".source = lib.mkForce ./externalConfigs/starship.toml;
 
   programs.direnv = {
     enable = true;
@@ -197,7 +197,7 @@ in
     enable = true;
   };
 
-  xdg.configFile."zellij/config.kdl".source = ./zellij-config.kdl;
+  xdg.configFile."zellij/config.kdl".source = ./externalConfigs/zellij-config.kdl;
 
   programs.yazi = {
     enable = true;
