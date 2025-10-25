@@ -23,5 +23,6 @@
     vlc
     spotify
     prismlauncher
+    helvum
   ];
 }
