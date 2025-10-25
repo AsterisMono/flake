@@ -1,5 +1,7 @@
 {
   unstablePkgs,
+  lib,
+  osConfig,
   ...
 }:
 {
@@ -25,4 +27,10 @@
     prismlauncher
     helvum
   ];
+
+  dconf.settings = lib.mkIf osConfig.services.xserver.desktopManager.gnome.enable {
+    "org/gnome/shell/keybindings" = {
+      show-screenshot-ui = [ "<Shift><Super>s" ];
+    };
+  };
 }
