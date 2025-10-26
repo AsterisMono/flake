@@ -5,6 +5,9 @@
   osConfig,
   ...
 }:
+let
+  useGnome = osConfig.services.xserver.desktopManager.gnome.enable;
+in
 {
   imports = [
     ./vscode
@@ -20,15 +23,29 @@
     ./flatpaks
   ];
 
-  home.packages = with unstablePkgs; [
-    dbeaver-bin
-    obsidian
-    bitwarden-desktop
-    vlc
-    spotify
-    prismlauncher
-    helvum
-  ];
+  home.packages =
+    with unstablePkgs;
+    [
+      dbeaver-bin
+      obsidian
+      bitwarden-desktop
+      vlc
+      spotify
+      prismlauncher
+      helvum
+    ]
+    ++ lib.optionals useGnome (
+      with pkgs.gnomeExtensions;
+      [
+        appindicator
+        clipboard-indicator
+        dash-to-dock
+        system-monitor
+        xremap
+        blur-my-shell
+        kimpanel
+      ]
+    );
 
   home.sessionVariables = {
     "NIXOS_OZONE_WL" = "1"; # for any ozone-based browser & electron apps to run on wayland
@@ -63,20 +80,10 @@
     targets.neovim.enable = false;
   };
 }
-// lib.optionalAttrs osConfig.services.xserver.desktopManager.gnome.enable {
+// lib.optionalAttrs useGnome {
   dconf.settings = {
     "org/gnome/shell/keybindings" = {
       show-screenshot-ui = [ "<Shift><Super>s" ];
     };
   };
-
-  home.packages = with pkgs.gnomeExtensions; [
-    appindicator
-    clipboard-indicator
-    dash-to-dock
-    system-monitor
-    xremap
-    blur-my-shell
-    kimpanel
-  ];
 }
