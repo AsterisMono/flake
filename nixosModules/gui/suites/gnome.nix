@@ -28,21 +28,11 @@
 
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
 
-  environment.systemPackages =
-    (with pkgs.gnomeExtensions; [
-      appindicator
-      clipboard-indicator
-      dash-to-dock
-      system-monitor
-      xremap
-      blur-my-shell
-      kimpanel
-    ])
-    ++ (with pkgs; [
-      gnome-tweaks
-      gnome-browser-connector
-      gdm-settings
-    ]);
+  environment.systemPackages = with pkgs; [
+    gnome-tweaks
+    gnome-browser-connector
+    gdm-settings
+  ];
 
   # Override pulseaudio
   # I have no idea who enabled this
