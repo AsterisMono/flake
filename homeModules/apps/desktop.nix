@@ -35,16 +35,15 @@ in
       helvum
     ]
     ++ lib.optionals useGnome (
-      with pkgs.gnomeExtensions;
-      [
+      [ pkgs.flakePackages.vicinae-gnome-extension ]
+      ++ (with pkgs.gnomeExtensions; [
         appindicator
-        clipboard-indicator
         dash-to-dock
         system-monitor
         xremap
         blur-my-shell
         kimpanel
-      ]
+      ])
     );
 
   home.sessionVariables = {
