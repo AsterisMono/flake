@@ -25,6 +25,12 @@ in
     "org/gnome/shell/keybindings" = {
       toggle-message-tray = [ "@as []" ];
     };
+    "org/gnome/settings-daemon/plugins/media-keys" = {
+      custom-keybindings = [
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
+        "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
+      ];
+    };
     "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
       binding = "<Super>space";
       command = "${vicinae} toggle";
