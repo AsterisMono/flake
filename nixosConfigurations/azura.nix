@@ -26,10 +26,9 @@
     homeManager = {
       enable = true;
       modules = with homeModules; [
+        apps.desktop
         apps.shell-utils
-        apps.desktop-apps
         apps.development
-        roles.desktop
       ];
     };
     docker.useRegistryMirror = true;

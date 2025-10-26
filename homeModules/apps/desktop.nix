@@ -1,9 +1,35 @@
 {
+  unstablePkgs,
   pkgs,
+  lib,
   osConfig,
   ...
 }:
 {
+  imports = [
+    ./vscode
+    ./firefox
+    ./fcitx5
+    ./chromium
+    ./obs-studio
+    ./xpipe
+    ./telegram-desktop
+    ./moonlight-qt
+    ./kitty
+    ./vicinae
+    ./flatpaks
+  ];
+
+  home.packages = with unstablePkgs; [
+    dbeaver-bin
+    obsidian
+    bitwarden-desktop
+    vlc
+    spotify
+    prismlauncher
+    helvum
+  ];
+
   home.sessionVariables = {
     "NIXOS_OZONE_WL" = "1"; # for any ozone-based browser & electron apps to run on wayland
     "MOZ_ENABLE_WAYLAND" = "1"; # for firefox to run on wayland
@@ -36,4 +62,21 @@
     targets.firefox.profileNames = [ "default" ];
     targets.neovim.enable = false;
   };
+}
+// lib.optionalAttrs osConfig.services.xserver.desktopManager.gnome.enable {
+  dconf.settings = {
+    "org/gnome/shell/keybindings" = {
+      show-screenshot-ui = [ "<Shift><Super>s" ];
+    };
+  };
+
+  home.packages = with pkgs.gnomeExtensions; [
+    appindicator
+    clipboard-indicator
+    dash-to-dock
+    system-monitor
+    xremap
+    blur-my-shell
+    kimpanel
+  ];
 }
