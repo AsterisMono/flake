@@ -15,6 +15,7 @@
     ./telegram-desktop
     ./moonlight-qt
     ./kitty
+    ./vicinae
     ./flatpaks
   ];
 

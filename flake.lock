@@ -726,6 +726,7 @@
         "pre-commit-hooks": "pre-commit-hooks",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
+        "vicinae": "vicinae",
         "wrapper-manager": "wrapper-manager"
       }
     },
@@ -947,6 +948,29 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "vicinae": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1761406186,
+        "narHash": "sha256-u2SG4wt7bE6f2p2hNHwiW1eESRHfSYRfH26XVPdq92o=",
+        "owner": "vicinaehq",
+        "repo": "vicinae",
+        "rev": "ff82e6648b17d4066d08f15addf993e6046a91f2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "vicinaehq",
+        "repo": "vicinae",
         "type": "github"
       }
     },
