@@ -12,7 +12,7 @@ bootstrap hostname disk:
     nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{ hostname }} --disk main {{ disk }}
 
 generate-hardware-config hostname target:
-    ssh {{ target }} "nixos-generate-config --show-hardware-config --no-filesystems" > ./hardwares/{{ hostname }}.nix
+    ssh {{ target }} "nix --extra-experimental-features nix-command --extra-experimental-features flakes shell nixpkgs#nixos-install-tools -c nixos-generate-config --show-hardware-config --no-filesystems" > ./hardwares/{{ hostname }}.nix
 
 build:
     nixos-rebuild build --flake . --use-remote-sudo -v -L
