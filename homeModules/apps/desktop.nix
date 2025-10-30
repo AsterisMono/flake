@@ -33,6 +33,7 @@ in
       spotify
       prismlauncher
       helvum
+      figma-linux
     ]
     ++ lib.optionals useGnome (
       [ pkgs.flakePackages.vicinae-gnome-extension ]
