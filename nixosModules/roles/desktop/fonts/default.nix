@@ -8,6 +8,9 @@
       noto-fonts-emoji
       noto-fonts-cjk-serif
       noto-fonts-extra
+      source-han-sans
+      source-han-serif
+      wqy_microhei
 
       inter
 
