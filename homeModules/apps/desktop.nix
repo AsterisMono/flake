@@ -46,6 +46,7 @@ in
         blur-my-shell
         kimpanel
         gsconnect
+        mpris-label
       ])
     );
 
@@ -86,6 +87,19 @@ in
   dconf.settings = {
     "org/gnome/shell/keybindings" = {
       show-screenshot-ui = [ "<Shift><Super>s" ];
+    };
+    "org/gnome/shell/extensions/mpris-label" = {
+      divider-string = " - ";
+      extension-index = 3;
+      extension-place = "left";
+      left-click-action = "activate-player";
+      right-click-action = "open-menu";
+      left-padding = 0;
+      right-padding = 0;
+      second-field = "";
+      show-icon = "left";
+      symbolic-source-icon = true;
+      use-album = true;
     };
   };
 }
