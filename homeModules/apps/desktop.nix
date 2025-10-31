@@ -34,6 +34,7 @@ in
       prismlauncher
       helvum
       figma-linux
+      splayer
     ]
     ++ lib.optionals useGnome (
       [ pkgs.flakePackages.vicinae-gnome-extension ]
