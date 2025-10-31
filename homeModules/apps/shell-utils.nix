@@ -24,7 +24,7 @@ in
   programs.git = {
     enable = true;
     userName = "Noa Virellia";
-    userEmail = "cmiki@amono.me";
+    userEmail = "noa@requiem.garden";
     extraConfig = {
       init.defaultBranch = "main";
       pull.rebase = true;
