@@ -44,6 +44,7 @@ in
         xremap
         blur-my-shell
         kimpanel
+        gsconnect
       ])
     );
 
