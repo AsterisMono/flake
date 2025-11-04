@@ -229,6 +229,7 @@
         dbaeumer.vscode-eslint
         docker.docker
         donjayamanne.python-environment-manager
+        denoland.vscode-deno
         editorconfig.editorconfig
         esbenp.prettier-vscode
         file-icons.file-icons
