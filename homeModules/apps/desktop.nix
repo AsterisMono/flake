@@ -47,6 +47,7 @@ in
         kimpanel
         gsconnect
         mpris-label
+        caffeine
       ])
     );
 
