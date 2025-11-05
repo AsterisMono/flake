@@ -8,6 +8,7 @@
       cursor_blink_interval = 0;
       cursor_beam_thickness = 1.2;
       shell_integration = "enabled";
+      allow_remote_control = "socket-only";
     };
   };
 }
