@@ -9,9 +9,11 @@ let
 in
 {
   home.packages = with pkgs; [
+    # Runtime / Compilers
     nodejs_22
     corepack_22
     devenv
+    go
 
     # Language servers
     nixd
@@ -20,6 +22,7 @@ in
     vscode-langservers-extracted
     yaml-language-server
     yamlfmt
+    gopls
 
     # Scripts
     ccnupr
