@@ -8,7 +8,7 @@
 let
   httpProxy = "http://127.0.0.1:7890";
   socksProxy = "socks5://127.0.0.1:7890";
-  username = config.users.users.cmiki.name;
+  username = config.users.users.nvirellia.name;
 in
 {
   networking.proxy = {

@@ -77,10 +77,6 @@
 
   environment.variables.SOPS_AGE_KEY_FILE = "$HOME/.config/sops/age/keys.txt";
 
-  fonts.packages = with pkgs; [
-    nerd-fonts.fira-code
-  ];
-
   services.tailscale.enable = true;
 
   system.stateVersion = 5;

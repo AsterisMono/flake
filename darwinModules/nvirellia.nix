@@ -5,7 +5,7 @@
   ...
 }@osSpecialArgs:
 let
-  username = "cmiki";
+  username = "nvirellia";
 in
 {
   options = {
@@ -19,7 +19,7 @@ in
     # "Yes, I think the status quo is that you shouldn’t use the users.users.* arguments on your main user, but frankly I forget why."
     # https://github.com/LnL7/nix-darwin/issues/811
     users.users."${username}" = {
-      home = "/Users/cmiki";
+      home = "/Users/${username}";
       description = "Noa Virellia";
     };
 
@@ -54,7 +54,7 @@ in
     noa.homeManager.modules = with homeModules.apps; [
       shell-utils
       development
-      desktop-apps
+      darwin-apps
     ];
   };
 }

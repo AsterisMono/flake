@@ -286,7 +286,6 @@
         xabikos.javascriptsnippets
         xlthu.pangu-markdown
         yzhang.markdown-all-in-one
-        zamerick.vscode-caddyfile-syntax
         zignd.html-css-class-completion
       ];
     };

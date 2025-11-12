@@ -14,7 +14,6 @@ let
     duf
     cachix
     asciinema
-    bluetuith
   ];
 in
 {
@@ -50,9 +49,6 @@ in
     nix-direnv.enable = true;
   };
 
-  sops.secrets.gemini_api_key = { };
-  sops.secrets.github_fish_ai_pat = { };
-
   programs.fish = {
     enable = true;
     plugins = map (x: { inherit (x) name src; }) (
@@ -75,7 +71,6 @@ in
         end
       end
 
-      export GEMINI_API_KEY=$(cat ${config.sops.secrets.gemini_api_key.path})
       export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
     '';
     shellAliases = {

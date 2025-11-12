@@ -91,28 +91,4 @@
       '';
     };
   };
-
-  programs.niri.settings.window-rules =
-    let
-      app-id = "^firefox$";
-    in
-    [
-      {
-        matches = [
-          { inherit app-id; }
-        ];
-      }
-      {
-        matches = [
-          {
-            inherit app-id;
-            title = "^画中画$";
-          }
-        ];
-        open-floating = true;
-        open-fullscreen = false;
-        default-window-height.proportion = 0.65;
-        default-column-width.proportion = 0.65;
-      }
-    ];
 }

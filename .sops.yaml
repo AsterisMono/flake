@@ -3,6 +3,7 @@ keys:
     - &host_seralia age1vfnd3vq40q5kvh68ftwyh6wxfkf5906xejt4689nvrq99vrslprqtpumg7
     - &host_ivy age13wmpnkt79dzzg9t74w9xmvzwsnyx7mfkakzkz9n4dya469wvqshq5rpevv
     - &host_anemone age15z20fn7qdzxzq36r4dw54908rl8y3extszu0v8xjs03ekrza9fusprc6mf
+    - &host_fervorine age1tn7meh0p3y2s0nqx98mwx6reqf4ksq0w8kjvlapn3zjs0yew799qphl7qc
 creation_rules:
     - path_regex: secrets/home.yaml$
       key_groups:
@@ -15,3 +16,4 @@ creation_rules:
                 - *host_seralia
                 - *host_ivy
                 - *host_anemone
+                - *host_fervorine

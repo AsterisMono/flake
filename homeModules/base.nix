@@ -1,7 +1,9 @@
 {
+  lib,
   username,
   secretsPath,
   osConfig,
+  system,
   ...
 }:
 let

@@ -104,7 +104,6 @@
         overlays = lib.attrValues self.overlays;
       };
       darwinMachines = [
-        "Oryx"
         "Fervorine"
       ];
     in
@@ -156,10 +155,11 @@
           hostname:
           let
             system = "aarch64-darwin";
+            darwinOverlays = lib.attrValues (lib.removeAttrs self.overlays [ "determinate-nix" ]);
             unstablePkgs = import inputs.nixpkgs-unstable {
               inherit system;
               config.allowUnfree = true;
-              overlays = lib.attrValues self.overlays;
+              overlays = darwinOverlays;
             };
           in
           {
@@ -168,6 +168,7 @@
               inherit system;
               specialArgs = globalSpecialArgs // {
                 inherit hostname system unstablePkgs;
+                overlays = darwinOverlays;
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
                 inputs.home-manager-darwin.darwinModules.home-manager
@@ -259,6 +260,7 @@
             openssh
             wireguard-tools
             git-agecrypt
+            nh
           ];
           inherit (checks.pre-commit-check) shellHook;
           buildInputs = checks.pre-commit-check.enabledPackages;
