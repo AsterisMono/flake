@@ -43,7 +43,7 @@ gc:
     sudo nix store gc --debug
 
 update-iterm2:
-    cp ~/.config/iterm2/com.googlecode.iterm2.plist ./homeModules/iterm2/com.googlecode.iterm2.plist
+    cp ~/.config/iterm2/com.googlecode.iterm2.plist ./homeModules/apps/iterm2/com.googlecode.iterm2.plist
 
 scan-age-key target:
     ssh {{ target }} cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age
