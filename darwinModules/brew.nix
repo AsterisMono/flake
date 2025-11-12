@@ -42,6 +42,7 @@ _: {
       "slack"
       "neteasemusic"
       "feishu"
+      "figma"
     ];
   };
 }
