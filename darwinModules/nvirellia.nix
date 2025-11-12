@@ -27,6 +27,7 @@ in
       sharedModules = [
         inputs.nix-index-database.homeModules.nix-index
         inputs.sops-nix.homeManagerModules.sops
+        inputs.stylix.homeModules.stylix
       ];
       users."${username}".imports = [
         homeModules.base
@@ -51,10 +52,11 @@ in
 
     system.primaryUser = username;
 
-    noa.homeManager.modules = with homeModules.apps; [
-      shell-utils
-      development
-      darwin-apps
+    noa.homeManager.modules = with homeModules; [
+      apps.shell-utils
+      apps.development
+      apps.darwin-apps
+      stylix.darwin
     ];
   };
 }
