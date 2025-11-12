@@ -30,6 +30,15 @@
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";
+    darwin = {
+      url = "github:lnl7/nix-darwin/nix-darwin-25.05";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
+    home-manager-darwin = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs-darwin";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -94,9 +103,15 @@
           ;
         overlays = lib.attrValues self.overlays;
       };
+      darwinMachines = [
+        "Oryx"
+        "Fervorine"
+      ];
     in
     {
       nixosModules = modulesFromDirectoryRecursive ./nixosModules;
+
+      darwinModules = modulesFromDirectoryRecursive ./darwinModules;
 
       homeModules = modulesFromDirectoryRecursive ./homeModules;
 
@@ -135,6 +150,33 @@
 
         directory = ./nixosConfigurations;
       };
+
+      darwinConfigurations = builtins.listToAttrs (
+        builtins.map (
+          hostname:
+          let
+            system = "aarch64-darwin";
+            unstablePkgs = import inputs.nixpkgs-unstable {
+              inherit system;
+              config.allowUnfree = true;
+              overlays = lib.attrValues self.overlays;
+            };
+          in
+          {
+            name = hostname;
+            value = inputs.darwin.lib.darwinSystem {
+              inherit system;
+              specialArgs = globalSpecialArgs // {
+                inherit hostname system unstablePkgs;
+              };
+              modules = (builtins.attrValues self.darwinModules) ++ [
+                inputs.home-manager-darwin.darwinModules.home-manager
+                inputs.sops-nix.darwinModules.sops
+              ];
+            };
+          }
+        ) darwinMachines
+      );
 
       deploy.nodes = lib.packagesFromDirectoryRecursive {
         callPackage =

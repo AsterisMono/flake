@@ -2,7 +2,7 @@
 
 [![built with garnix](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2FAsterisMono%2Fflake%3Fbranch%3Dmain)](https://garnix.io/repo/AsterisMono/flake) `<- If this says "all builds failed" then I'm out of garnix CI time`
 
-A modular and reproducible personal setup for NixOS systems.
+A modular and reproducible personal setup for both NixOS and Darwin systems.
 
 ## Current state
 

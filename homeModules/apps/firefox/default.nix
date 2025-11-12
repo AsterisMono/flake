@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, system, ... }:
 {
   programs.firefox = {
     enable = true;
@@ -70,6 +70,8 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "browser.newtabpage.activity-stream.feeds.topsites" = false;
         "browser.ctrlTab.sortByRecentlyUsed" = true;
+      }
+      // lib.optionalAttrs (system != "aarch64-darwin") {
         "media.ffmpeg.vaapi.enabled" = true;
         "gfx.webrender.all" = true;
         "media.hardware-video-decoding.force-enabled" = true;

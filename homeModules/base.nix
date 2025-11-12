@@ -5,7 +5,7 @@
   ...
 }:
 let
-  homeDirectory = "/home/${username}";
+  homeDirectory = if system == "aarch64-darwin" then "/Users/${username}" else "/home/${username}";
 in
 {
   imports = osConfig.noa.homeManager.modules;
@@ -26,7 +26,7 @@ in
     defaultSopsFile = "${secretsPath}/home.yaml";
   };
 
-  xdg.userDirs = {
+  xdg.userDirs = lib.mkIf (system != "aarch64-darwin") {
     enable = true;
     createDirectories = true;
   };
