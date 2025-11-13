@@ -3780,7 +3780,7 @@ The script should do this: \(ai.prompt)</string>
 			<key>Normal Font</key>
 			<string>FiraCodeNF-Ret 13</string>
 			<key>Only The Default BG Color Uses Transparency</key>
-			<false/>
+			<true/>
 			<key>Option Key Sends</key>
 			<integer>2</integer>
 			<key>Prompt Before Closing 2</key>
@@ -3900,8 +3900,10 @@ The script should do this: \(ai.prompt)</string>
 			<string>xterm-256color</string>
 			<key>Thin Strokes</key>
 			<integer>4</integer>
+			<key>Title Components</key>
+			<integer>3</integer>
 			<key>Transparency</key>
-			<real>0.0</real>
+			<real>0.14508928571428567</real>
 			<key>Unlimited Scrollback</key>
 			<false/>
 			<key>Use Bold Font</key>
