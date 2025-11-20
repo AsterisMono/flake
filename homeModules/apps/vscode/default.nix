@@ -146,8 +146,8 @@
         "notebook.markup.fontSize" = 16;
         "prettier.tabWidth" = 2;
         "projectManager.git.baseFolders" = [
-          "/Users/cmiki/Projects"
-          "/Users/cmiki/SideProjects"
+          "/Users/nvirellia/Projects"
+          "/Users/nvirellia/SideProjects"
           "/home/cmiki/repos"
           "/home/cmiki/Projects"
         ];
