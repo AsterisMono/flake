@@ -9,11 +9,19 @@ _: {
       upgrade = true;
     };
 
+    masApps = {
+      TencentMeeting = 1484048379;
+      Wechat = 836500024;
+      NeteaseCloudMusic = 944848654;
+      QQ = 451108668;
+      Lark = 1551632588;
+      "WPS Office" = 1443749478;
+    };
+
     taps = [ "xpipe-io/tap" ];
 
     brews = [ ];
 
-    # `brew install --cask`
     casks = [
       "visual-studio-code"
       "google-chrome"
@@ -40,8 +48,6 @@ _: {
       "bitwarden"
       "xpipe"
       "slack"
-      "neteasemusic"
-      "feishu"
       "figma"
     ];
   };
