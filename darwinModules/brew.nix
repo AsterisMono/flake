@@ -3,7 +3,7 @@ _: {
     enable = true;
 
     onActivation = {
-      autoUpdate = false;
+      autoUpdate = true;
       # 'zap': uninstalls all formulae(and related files) not listed here.
       cleanup = "zap";
       upgrade = true;
@@ -49,6 +49,7 @@ _: {
       "xpipe"
       "slack"
       "figma"
+      "codex"
     ];
   };
 }

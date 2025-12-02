@@ -14,6 +14,7 @@ in
     corepack_22
     devenv
     go
+    uv
 
     # Language servers
     nixd
@@ -27,9 +28,6 @@ in
     # Scripts
     ccnupr
     realize
-
-    unstablePkgs.gemini-cli
-    unstablePkgs.codex
   ];
 
   # Neovim

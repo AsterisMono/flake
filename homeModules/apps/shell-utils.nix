@@ -71,6 +71,10 @@ in
         end
       end
 
+      if test -x /opt/homebrew/bin/brew
+        /opt/homebrew/bin/brew shellenv | source
+      end
+
       export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
     '';
     shellAliases = {
@@ -84,7 +88,7 @@ in
       "rec" = "asciinema rec";
       "code" = "codium .";
       "icat" = "kitten icat";
-      "ssh" = "kitten ssh";
+      "issh" = "kitten ssh";
     };
     functions = {
       fish_title = {
