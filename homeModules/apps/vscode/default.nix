@@ -172,6 +172,7 @@
         "terminal.integrated.fontSize" = lib.mkForce 13;
         "terminal.integrated.fontWeight" = "normal";
         "terminal.integrated.gpuAcceleration" = "off";
+        "terminal.integrated.stickyScroll.enabled" = false;
         "typescript.locale" = "en";
         "typescript.preferences.importModuleSpecifier" = "non-relative";
         "typescript.suggest.autoImports" = true;
