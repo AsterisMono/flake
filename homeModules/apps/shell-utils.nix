@@ -22,17 +22,19 @@ in
   # Command-line Apps
   programs.git = {
     enable = true;
-    userName = "Noa Virellia";
-    userEmail = "noa@requiem.garden";
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Noa Virellia";
+        email = "noa@requiem.garden";
+        signingKey = ''
+          ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOz0CMmkGSXv4H77rmrmvadltAlwAZeVimxGoUAfArs Noa Virellia
+        '';
+      };
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
       commit.gpgsign = true;
       gpg.format = "ssh";
-      user.signingKey = ''
-        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOOz0CMmkGSXv4H77rmrmvadltAlwAZeVimxGoUAfArs Noa Virellia
-      '';
     };
   };
 
@@ -42,7 +44,8 @@ in
     enableTransience = true;
   };
 
-  xdg.configFile."starship.toml".source = lib.mkForce ./externalConfigs/starship.toml;
+  home.file."${config.xdg.configHome}/starship.toml".source =
+    lib.mkForce ./externalConfigs/starship.toml;
 
   programs.direnv = {
     enable = true;

@@ -4,6 +4,7 @@
   lib,
   inputs,
   overlays,
+  system,
   ...
 }:
 
@@ -54,6 +55,7 @@
     environment.etc."nix/path/nixpkgs".source = inputs.nixpkgs;
 
     nixpkgs = {
+      hostPlatform = { inherit system; };
       config.allowUnfree = true;
       inherit overlays;
     };

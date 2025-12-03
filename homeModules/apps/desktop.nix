@@ -6,7 +6,7 @@
   ...
 }:
 let
-  useGnome = osConfig.services.xserver.desktopManager.gnome.enable;
+  useGnome = osConfig.services.desktopManager.gnome.enable;
 in
 {
   imports = [

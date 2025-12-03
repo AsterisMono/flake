@@ -1,3 +1,3 @@
 flake: final: prev: {
-  flakePackages = flake.packages.${prev.system};
+  flakePackages = flake.packages.${prev.stdenv.hostPlatform.system};
 }

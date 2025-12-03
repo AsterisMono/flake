@@ -17,7 +17,7 @@ in
     package = inputs.vicinae.packages.${system}.default;
   };
 
-  dconf.settings = lib.mkIf osConfig.services.xserver.desktopManager.gnome.enable {
+  dconf.settings = lib.mkIf osConfig.services.desktopManager.gnome.enable {
     "org/gnome/desktop/wm/keybindings" = {
       switch-input-source = [ "@as []" ];
       switch-input-source-backward = [ "@as []" ];

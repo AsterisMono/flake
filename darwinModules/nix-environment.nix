@@ -1,8 +1,8 @@
 {
   inputs,
-  lib,
   pkgs,
   overlays,
+  system,
   ...
 }:
 {
@@ -33,6 +33,7 @@
   };
 
   nixpkgs = {
+    hostPlatform = { inherit system; };
     config.allowUnfree = true;
     inherit overlays;
   };

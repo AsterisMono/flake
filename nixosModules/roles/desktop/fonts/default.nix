@@ -5,9 +5,8 @@
     packages = with pkgs; [
       noto-fonts
       noto-fonts-cjk-sans
-      noto-fonts-emoji
+      noto-fonts-color-emoji
       noto-fonts-cjk-serif
-      noto-fonts-extra
       source-han-sans
       source-han-serif
       wqy_microhei
