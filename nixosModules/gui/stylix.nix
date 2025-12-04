@@ -2,7 +2,7 @@
 {
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/everforest.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-dawn.yaml";
     image = "${assetsPath}/wallpapers/everforest.jpg";
     fonts = {
       serif = {
