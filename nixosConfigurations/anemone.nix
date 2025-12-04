@@ -40,6 +40,7 @@ in
   sops.secrets.headplane_cookie_secret = {
     format = "yaml";
     sopsFile = "${secretsPath}/headscale.yaml";
+    owner = config.services.headscale.user;
   };
 
   services.headplane =
