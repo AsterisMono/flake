@@ -79,7 +79,7 @@ in
       dark = "Tela-dark";
       light = "Tela-light";
     };
-    opacity.terminal = 0.9;
+    opacity.terminal = 0.95;
     targets.firefox.profileNames = [ "default" ];
     targets.neovim.enable = false;
   };
