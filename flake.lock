@@ -137,6 +137,27 @@
         "type": "github"
       }
     },
+    "devshell": {
+      "inputs": {
+        "nixpkgs": [
+          "headplane",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1762521437,
+        "narHash": "sha256-RXN+lcx4DEn3ZS+LqEJSUu/HH+dwGvy0syN7hTo/Chg=",
+        "owner": "numtide",
+        "repo": "devshell",
+        "rev": "07bacc9531f5f4df6657c0a02a806443685f384a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "devshell",
+        "type": "github"
+      }
+    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -394,6 +415,30 @@
         "ref": "gnome-49",
         "repo": "gnome-shell",
         "type": "gitlab"
+      }
+    },
+    "headplane": {
+      "inputs": {
+        "devshell": "devshell",
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764827389,
+        "narHash": "sha256-0QZDUwi2gNN35cs0nGD6rIZoPyhccaMSC5CJunE4fUo=",
+        "owner": "tale",
+        "repo": "headplane",
+        "rev": "bf3fdd47cd98ad4edb9a5960346b28de063039b3",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tale",
+        "repo": "headplane",
+        "type": "github"
       }
     },
     "home-manager-darwin": {
@@ -775,6 +820,7 @@
         "flake-parts": "flake-parts",
         "flake-utils": "flake-utils",
         "git-hooks": "git-hooks",
+        "headplane": "headplane",
         "home-manager-darwin": "home-manager-darwin",
         "home-manager-nixos": "home-manager-nixos",
         "niri": "niri",
