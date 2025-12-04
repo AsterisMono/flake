@@ -52,6 +52,8 @@ in
         tls_cert_path = "/dev/null";
         tls_key_path = "/dev/null";
         policy.path = "/dev/null";
+        # FIXME: upstream
+        oidc.client_secret_path = "/dev/null";
       };
 
       headscaleConfig = format.generate "headscale.yml" settings;
@@ -65,13 +67,14 @@ in
           cookie_secret_path = config.sops.secrets.headplane_cookie_secret.path;
         };
         headscale = {
-          url = "https://${headscale_url}";
+          public_url = "https://${headscale_url}";
+          url = "https://127.0.0.1:40180";
           config_path = "${headscaleConfig}";
         };
         integration = {
           agent = {
             # FIXME: upstream module
-            pre_authkey_path = "";
+            pre_authkey_path = "/dev/null";
           };
         };
       };
@@ -81,8 +84,28 @@ in
     enable = true;
     extraConfig = ''
       ${headscale_url} {
-        reverse_proxy /admin* localhost:3000
-        reverse_proxy * localhost:40180
+        header {
+          Strict-Transport-Security "max-age=15552000; includeSubDomains"
+        }
+
+        @admin path /admin/*
+        handle @admin {
+          reverse_proxy localhost:3000 {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up Host {host}
+          }
+        }
+
+        handle {
+          reverse_proxy localhost:40180 {
+            header_up X-Real-IP {remote_host}
+            header_up X-Forwarded-For {remote_host}
+            header_up X-Forwarded-Proto {scheme}
+            header_up Host {host}
+          }
+        }
       }
     '';
   };
