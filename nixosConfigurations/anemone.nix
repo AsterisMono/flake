@@ -68,7 +68,7 @@ in
         };
         headscale = {
           public_url = "https://${headscale_url}";
-          url = "https://127.0.0.1:40180";
+          url = "http://127.0.0.1:40180";
           config_path = "${headscaleConfig}";
         };
         integration = {
@@ -88,7 +88,6 @@ in
         handle @admin {
           reverse_proxy localhost:3000
         }
-
         handle {
           reverse_proxy localhost:40180
         }
