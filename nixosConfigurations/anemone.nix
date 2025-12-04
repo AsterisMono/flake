@@ -32,6 +32,7 @@ in
         base_domain = "paths.requiem.garden";
         override_local_dns = false;
       };
+      prefixes.allocation = "random";
     };
     address = "0.0.0.0";
     port = 40180;
