@@ -8,7 +8,7 @@
   ...
 }:
 let
-  headscale_url = "tether.requiem.garden";
+  domain = "tether.requiem.garden";
 in
 {
   # Anemone (JP.TKY.TRI.Core)
@@ -26,7 +26,7 @@ in
   services.headscale = {
     enable = true;
     settings = {
-      server_url = "https://${headscale_url}";
+      server_url = "https://${domain}";
       dns = {
         magic_dns = true;
         base_domain = "paths.requiem.garden";
@@ -67,7 +67,7 @@ in
           cookie_secret_path = config.sops.secrets.headplane_cookie_secret.path;
         };
         headscale = {
-          public_url = "https://${headscale_url}";
+          public_url = "https://${domain}";
           url = "http://127.0.0.1:40180";
           config_path = "${headscaleConfig}";
         };
@@ -83,11 +83,11 @@ in
   services.caddy = {
     enable = true;
     extraConfig = ''
-      ${headscale_url} {
-        @admin path /admin/*
-        handle @admin {
+      ${domain} {
+        handle /admin/* {
           reverse_proxy localhost:3000
         }
+
         handle {
           reverse_proxy localhost:40180
         }
