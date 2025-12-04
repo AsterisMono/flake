@@ -145,11 +145,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1762521437,
-        "narHash": "sha256-RXN+lcx4DEn3ZS+LqEJSUu/HH+dwGvy0syN7hTo/Chg=",
+        "lastModified": 1741473158,
+        "narHash": "sha256-kWNaq6wQUbUMlPgw8Y+9/9wP0F8SHkjy24/mN3UAppg=",
         "owner": "numtide",
         "repo": "devshell",
-        "rev": "07bacc9531f5f4df6657c0a02a806443685f384a",
+        "rev": "7c9e793ebe66bcba8292989a68c0419b737a22a0",
         "type": "github"
       },
       "original": {
@@ -428,15 +428,16 @@
         ]
       },
       "locked": {
-        "lastModified": 1764827389,
-        "narHash": "sha256-0QZDUwi2gNN35cs0nGD6rIZoPyhccaMSC5CJunE4fUo=",
+        "lastModified": 1760294873,
+        "narHash": "sha256-hsrnmEwKXJlPjV4aIfmS6GAE414ArVRGoPPpZGmV0x4=",
         "owner": "tale",
         "repo": "headplane",
-        "rev": "bf3fdd47cd98ad4edb9a5960346b28de063039b3",
+        "rev": "7a222c47ee4a593acd1f0f4093b99a825111e463",
         "type": "github"
       },
       "original": {
         "owner": "tale",
+        "ref": "v0.6.1",
         "repo": "headplane",
         "type": "github"
       }

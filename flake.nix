@@ -69,7 +69,7 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     headplane = {
-      url = "github:tale/headplane";
+      url = "github:tale/headplane?ref=v0.6.1";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
