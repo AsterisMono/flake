@@ -15,16 +15,16 @@ generate-hardware-config hostname target:
     ssh {{ target }} "nix --extra-experimental-features nix-command --extra-experimental-features flakes shell nixpkgs#nixos-install-tools -c nixos-generate-config --show-hardware-config --no-filesystems" > ./hardwares/{{ hostname }}.nix
 
 build:
-    nixos-rebuild build --flake . --use-remote-sudo -v -L
+    nixos-rebuild build --flake . --sudo -v -L
 
 deploy:
-    nixos-rebuild switch --flake . --use-remote-sudo -v -L
+    nixos-rebuild switch --flake . --sudo -v -L
 
 boot:
-    nixos-rebuild boot --flake . --use-remote-sudo -v -L
+    nixos-rebuild boot --flake . --sudo -v -L
 
 dryrun:
-    nixos-rebuild dry-run --flake . --use-remote-sudo -v -L
+    nixos-rebuild dry-run --flake . --sudo -v -L
 
 history:
     nix profile history --profile /nix/var/nix/profiles/system
@@ -58,7 +58,7 @@ rdeploy-host hostname:
     deploy .#{{ hostname }}
 
 rdeploy-host-bare hostname target:
-    nixos-rebuild --flake .#{{ hostname }} --target-host {{ target }} switch --use-remote-sudo -v -L
+    nixos-rebuild --flake .#{{ hostname }} --target-host {{ target }} switch -v -L
 
 generate-wg-keys:
     wg genkey | tee privatekey | wg pubkey > publickey
