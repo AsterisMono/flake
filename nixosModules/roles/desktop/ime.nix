@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   i18n.inputMethod = {
@@ -10,7 +10,7 @@
         qt6Packages.fcitx5-chinese-addons
         qt6Packages.fcitx5-configtool
         fcitx5-pinyin-zhwiki
-        fcitx5-nord
+        flakePackages.fcitx5-rose-pine
       ];
     };
   };
