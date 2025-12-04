@@ -17,6 +17,8 @@ in
     package = inputs.vicinae.packages.${system}.default;
   };
 
+  xdg.configFile."vicinae/vicinae.json".force = true;
+
   dconf.settings = lib.mkIf osConfig.services.desktopManager.gnome.enable {
     "org/gnome/desktop/wm/keybindings" = {
       switch-input-source = [ "@as []" ];
