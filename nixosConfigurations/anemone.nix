@@ -68,6 +68,12 @@ in
           url = "https://${headscale_url}";
           config_path = "${headscaleConfig}";
         };
+        integration = {
+          agent = {
+            # FIXME: upstream module
+            pre_authkey_path = "";
+          };
+        };
       };
     };
 
