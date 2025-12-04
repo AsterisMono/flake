@@ -84,27 +84,13 @@ in
     enable = true;
     extraConfig = ''
       ${headscale_url} {
-        header {
-          Strict-Transport-Security "max-age=15552000; includeSubDomains"
-        }
-
         @admin path /admin/*
         handle @admin {
-          reverse_proxy localhost:3000 {
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-            header_up Host {host}
-          }
+          reverse_proxy localhost:3000
         }
 
         handle {
-          reverse_proxy localhost:40180 {
-            header_up X-Real-IP {remote_host}
-            header_up X-Forwarded-For {remote_host}
-            header_up X-Forwarded-Proto {scheme}
-            header_up Host {host}
-          }
+          reverse_proxy localhost:40180
         }
       }
     '';
