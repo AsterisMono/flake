@@ -28,7 +28,8 @@ in
     settings = {
       server_url = "https://${headscale_url}";
       dns = {
-        magic_dns = false;
+        magic_dns = true;
+        base_domain = "paths.requiem.garden";
         override_local_dns = false;
       };
     };
@@ -77,6 +78,16 @@ in
         reverse_proxy * localhost:40180
       }
     '';
+  };
+
+  networking.firewall = {
+    allowedTCPPorts = [
+      80
+      443
+    ];
+    allowedUDPPorts = [
+      3478
+    ];
   };
 
   disko.devices.disk.main.device = "/dev/vda";
