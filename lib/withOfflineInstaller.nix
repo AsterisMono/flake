@@ -18,6 +18,12 @@ let
           inherit (value.locked) owner repo rev;
           hash = value.locked.narHash;
         }
+      else if value.locked.type == "gitlab" then
+        pkgs.fetchFromGitLab {
+          inherit (value.locked) owner repo rev;
+          domain = value.locked.host;
+          hash = value.locked.narHash;
+        }
       else
         pkgs.fetchgit {
           inherit (value.locked) url rev;
@@ -30,12 +36,13 @@ nixosConfig
 // {
   offlineInstaller =
     (lib.nixosSystem {
-      inherit (nixosConfig.config.nixpkgs) system;
       modules = [
         (
           { modulesPath, pkgs, ... }:
           {
             imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
+
+            nixpkgs.hostPlatform.system = "x86_64-linux";
 
             nix.settings = {
               experimental-features = [
