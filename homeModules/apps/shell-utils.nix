@@ -110,7 +110,12 @@ in
     };
   };
 
-  programs.lazygit.enable = true;
+  programs.lazygit = {
+    enable = true;
+    settings = {
+      git.commit.signOff = true;
+    };
+  };
 
   programs.gh = {
     enable = true;
