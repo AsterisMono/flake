@@ -75,6 +75,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    tangled-core = {
+      url = "git+https://tangled.org/@tangled.org/core";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
