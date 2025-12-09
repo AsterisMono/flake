@@ -37,7 +37,6 @@ _: {
       "rectangle"
       "jordanbaird-ice"
       "onedrive"
-      "insomnia"
       "stats"
       "typora"
       "tailscale-app"
@@ -50,6 +49,7 @@ _: {
       "slack"
       "figma"
       "codex"
+      "bruno"
     ];
   };
 }
