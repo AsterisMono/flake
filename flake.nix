@@ -10,12 +10,6 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    determinate-nix = {
-      url = "github:DeterminateSystems/nix-src";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-parts.follows = "flake-parts";
-      inputs.git-hooks-nix.follows = "git-hooks";
-    };
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -76,7 +70,7 @@
       inputs.flake-utils.follows = "flake-utils";
     };
     tangled-core = {
-      url = "git+https://tangled.org/@tangled.org/core";
+      url = "git+https://tangled.org/@tangled.org/core?ref=refs/tags/v1.11.0-alpha";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -102,17 +96,18 @@
           callPackage = path: _: import path;
           directory = _dirPath;
         };
+      overlays = lib.attrValues self.overlays;
       globalSpecialArgs = {
         inherit
           inputs
           secretsPath
           assetsPath
+          overlays
           ;
         inherit (self)
           nixosModules
           homeModules
           ;
-        overlays = lib.attrValues self.overlays;
       };
       darwinMachines = [
         "Fervorine"
@@ -165,19 +160,21 @@
           hostname:
           let
             system = "aarch64-darwin";
-            darwinOverlays = lib.attrValues (lib.removeAttrs self.overlays [ "determinate-nix" ]);
             unstablePkgs = import inputs.nixpkgs-unstable {
-              inherit system;
+              inherit system overlays;
               config.allowUnfree = true;
-              overlays = darwinOverlays;
             };
           in
           {
             name = hostname;
             value = inputs.darwin.lib.darwinSystem {
               specialArgs = globalSpecialArgs // {
-                inherit hostname system unstablePkgs;
-                overlays = darwinOverlays;
+                inherit
+                  hostname
+                  system
+                  unstablePkgs
+                  overlays
+                  ;
               };
               modules = (builtins.attrValues self.darwinModules) ++ [
                 inputs.home-manager-darwin.darwinModules.home-manager
@@ -210,7 +207,6 @@
         extended-lib = import ./overlays/extended-lib.nix self;
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
         inherit (inputs.niri.overlays) niri;
-        determinate-nix = inputs.determinate-nix.overlays.default;
         inherit (inputs.nur.overlays) default;
       };
 
