@@ -3,7 +3,7 @@ _: {
     enable = true;
 
     onActivation = {
-      autoUpdate = true;
+      autoUpdate = false;
       # 'zap': uninstalls all formulae(and related files) not listed here.
       cleanup = "zap";
       upgrade = true;
@@ -44,12 +44,13 @@ _: {
       "obsidian"
       "telegram-desktop"
       "chatgpt"
-      "bitwarden"
       "xpipe"
       "slack"
       "figma"
       "codex"
       "bruno"
+      "1password"
+      "1password-cli"
     ];
   };
 }

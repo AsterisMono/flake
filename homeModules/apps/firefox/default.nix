@@ -27,9 +27,6 @@
             "jid1-MnnxcxisBPnSXQ@jetpack" = {
               install_url = "https://addons.mozilla.org/firefox/downloads/latest/privacy-badger17/latest.xpi";
             };
-            "{446900e4-71c2-419f-a6a7-df9c091e268b}" = {
-              install_url = "https://addons.mozilla.org/firefox/downloads/latest/bitwarden-password-manager/latest.xpi";
-            };
             "{d7742d87-e61d-4b78-b8a1-b469842139fa}" = {
               install_url = "https://addons.mozilla.org/firefox/downloads/latest/vimium-ff/latest.xpi";
             };
@@ -59,6 +56,9 @@
             };
             "Tab-Session-Manager@sienori" = {
               install_url = "https://addons.mozilla.org/firefox/downloads/latest/tab-session-manager/latest.xpi";
+            };
+            "{d634138d-c276-4fc8-924b-40a0ea21d284}" = {
+              install_url = "https://addons.mozilla.org/firefox/downloads/latest/1password-x-password-manager/latest.xpi";
             };
           };
       DisplayBookmarksToolbar = "never";

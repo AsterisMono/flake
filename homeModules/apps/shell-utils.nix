@@ -78,7 +78,7 @@ in
         /opt/homebrew/bin/brew shellenv | source
       end
 
-      export SSH_AUTH_SOCK=${config.home.homeDirectory}/.bitwarden-ssh-agent.sock
+      export SSH_AUTH_SOCK="${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
     '';
     shellAliases = {
       ".." = "cd ../";
