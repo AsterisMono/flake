@@ -26,4 +26,11 @@
       };
     };
   };
+
+  # Use GRUB2 as the boot loader.
+  boot.loader.systemd-boot.enable = lib.mkForce false;
+  boot.loader.grub = {
+    enable = true;
+    efiSupport = false;
+  };
 }
