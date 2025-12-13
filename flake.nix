@@ -201,8 +201,8 @@
         flake-packages = import ./overlays/flake-packages.nix self;
         extended-lib = import ./overlays/extended-lib.nix self;
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
+        nur = inputs.nur.overlays.default;
         inherit (inputs.niri.overlays) niri;
-        inherit (inputs.nur.overlays) default;
       };
 
       lib = {
