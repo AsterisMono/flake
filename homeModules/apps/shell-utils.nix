@@ -89,7 +89,8 @@ in
       "tree" = "eza --tree";
       "gg" = "lazygit";
       "rec" = "asciinema rec";
-      "code" = "codium .";
+      "co" = "codium .";
+      "ze" = "zed .";
       "icat" = "kitten icat";
       "issh" = "kitten ssh";
     };

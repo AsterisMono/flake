@@ -1,0 +1,109 @@
+{
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "on_yank"
+  },
+  "title_bar": {
+    "show_sign_in": false,
+    "show_user_picture": false
+  },
+  "tab_bar": {
+    "show_nav_history_buttons": false,
+    "show_tab_bar_buttons": false
+  },
+  "tabs": {
+    "git_status": true,
+    "show_diagnostics": "errors"
+  },
+  "toolbar": {
+    "quick_actions": false
+  },
+  "status_bar": {
+    "active_language_button": false,
+    "cursor_position_button": false
+  },
+  "features": {
+    "edit_prediction_provider": "none"
+  },
+  "diagnostics": {
+    "inline": {
+      "enabled": true
+    }
+  },
+  "git": {
+    "inline_blame": {
+      "enabled": false
+    }
+  },
+  "inlay_hints": {
+    "toggle_on_modifiers_press": {
+      "alt": true
+    },
+    "show_background": true
+  },
+  "collaboration_panel": {
+    "button": false
+  },
+  "colorize_brackets": true,
+  "rounded_selection": false,
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "ui_font_family": "FiraCode Nerd Font Mono",
+  "ui_font_size": 14,
+  "buffer_font_size": 14,
+  "theme": {
+    "mode": "system",
+    "light": "Rosé Pine Dawn",
+    "dark": "Rosé Pine Moon"
+  },
+  "proxy": "http://127.0.0.1:7890",
+  "cursor_blink": false,
+  "load_direnv": "shell_hook",
+  "languages": {
+    "Nix": {
+      "language_servers": [
+        "nixd",
+        "!nil"
+      ],
+      "formatter": {
+        "external": {
+          "command": "nixfmt"
+        }
+      }
+    }
+  },
+  "formatter": [
+    "language_server"
+  ],
+  "code_actions_on_format": {
+    "source.addMissingImports": true,
+    "source.removeUnusedImports": true,
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+  "terminal": {
+    "shell": {
+      "program": "fish"
+    },
+    "cursor_shape": "bar"
+  },
+  "lsp": {
+    "json-language-server": {
+      "settings": {
+        "json": {
+          "schemas": [
+            {
+              "fileMatch": [
+                "package.json"
+              ],
+              "url": "https://www.schemastore.org/package"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

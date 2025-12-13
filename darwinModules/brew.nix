@@ -51,6 +51,8 @@ _: {
       "bruno"
       "1password"
       "1password-cli"
+      "zed"
+      "karabiner-elements"
     ];
   };
 }

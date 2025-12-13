@@ -1,0 +1,44 @@
+[
+  {
+    "context": "Workspace && !Dock",
+    "bindings": {
+      "ctrl-h": "pane::ActivatePreviousItem",
+      "ctrl-l": "pane::ActivateNextItem",
+      "ctrl-x": "pane::CloseActiveItem",
+      "ctrl-p": "file_finder::Toggle",
+      "ctrl-shift-t": "pane::ReopenClosedItem"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == insert",
+    "bindings": {
+      // "j k": "vim::NormalBefore"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "ctrl-s": "workspace::Save",
+      "ctrl-p": "file_finder::Toggle",
+      "ctrl-h": "pane::ActivatePreviousItem",
+      "ctrl-l": "pane::ActivateNextItem",
+      "ctrl-x": "pane::CloseActiveItem"
+    }
+  },
+  {
+    "context": "Dock",
+    "bindings": {
+      "ctrl-w h": "workspace::ActivatePaneLeft",
+      "ctrl-w l": "workspace::ActivatePaneRight",
+      "ctrl-w k": "workspace::ActivatePaneUp",
+      "ctrl-w j": "workspace::ActivatePaneDown"
+    }
+  },
+  {
+    "context": "vim_mode == normal || vim_mode == visual",
+    "bindings": {
+      "s": "vim::PushSneak",
+      "shift-s": "vim::PushSneakBackward"
+    }
+  }
+]
