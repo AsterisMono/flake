@@ -36,11 +36,6 @@
         ];
       };
 
-      extraOptions = ''
-        eval-cores = 0
-        lazy-trees = true
-      '';
-
       # Suppress nix-shell channel errors on a flake system
       nixPath = [ "/etc/nix/path" ];
 
