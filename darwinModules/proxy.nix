@@ -18,6 +18,7 @@
     serviceConfig = {
       Label = "mihomo";
       RunAtLoad = true;
+      KeepAlive = true;
       LimitLoadToSessionType = "System";
       ProgramArguments = [
         (lib.getExe pkgs.mihomo)
