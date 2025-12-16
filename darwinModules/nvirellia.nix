@@ -56,7 +56,7 @@ in
       apps.shell-utils
       apps.development
       apps.darwin-apps
-      stylix.darwin
+      stylix
     ];
   };
 }

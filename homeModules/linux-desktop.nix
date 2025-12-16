@@ -10,18 +10,20 @@ let
 in
 {
   imports = [
-    ./vscode
-    ./zed
-    ./firefox
-    ./fcitx5
-    ./chromium
-    ./obs-studio
-    ./xpipe
-    ./telegram-desktop
-    ./moonlight-qt
-    ./kitty
-    ./vicinae
-    ./flatpaks
+    ./stylix
+
+    ./apps/vscode
+    ./apps/zed
+    ./apps/firefox
+    ./apps/fcitx5
+    ./apps/chromium
+    ./apps/obs-studio
+    ./apps/xpipe
+    ./apps/telegram-desktop
+    ./apps/moonlight-qt
+    ./apps/kitty
+    ./apps/vicinae
+    ./apps/flatpaks
   ];
 
   home.packages =
@@ -65,24 +67,6 @@ in
     "SDL_VIDEODRIVER" = "wayland";
     "GDK_BACKEND" = "wayland";
     "XDG_SESSION_TYPE" = "wayland";
-  };
-
-  stylix = {
-    inherit (osConfig.stylix) image base16Scheme;
-    cursor = {
-      package = pkgs.capitaine-cursors;
-      name = "capitaine-cursors";
-      size = 32;
-    };
-    icons = {
-      enable = true;
-      package = pkgs.tela-icon-theme;
-      dark = "Tela-dark";
-      light = "Tela-light";
-    };
-    opacity.terminal = 0.95;
-    targets.firefox.profileNames = [ "default" ];
-    targets.neovim.enable = false;
   };
 }
 // lib.optionalAttrs useGnome {
