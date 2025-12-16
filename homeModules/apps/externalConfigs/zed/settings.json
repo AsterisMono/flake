@@ -1,4 +1,7 @@
 {
+  "features": {
+    "edit_prediction_provider": "zed"
+  },
   "telemetry": {
     "diagnostics": false,
     "metrics": false
@@ -8,7 +11,6 @@
     "use_system_clipboard": "on_yank"
   },
   "title_bar": {
-    "show_sign_in": false,
     "show_user_picture": false
   },
   "tab_bar": {
@@ -29,9 +31,6 @@
   "project_panel": {
     "hide_gitignore": true
   },
-  "features": {
-    "edit_prediction_provider": "none"
-  },
   "diagnostics": {
     "inline": {
       "enabled": true
@@ -41,12 +40,6 @@
     "inline_blame": {
       "enabled": false
     }
-  },
-  "inlay_hints": {
-    "toggle_on_modifiers_press": {
-      "alt": true
-    },
-    "show_background": true
   },
   "collaboration_panel": {
     "button": false
@@ -62,7 +55,6 @@
     "light": "Rosé Pine Dawn",
     "dark": "Rosé Pine Moon"
   },
-  "proxy": "http://127.0.0.1:7890",
   "cursor_blink": false,
   "load_direnv": "shell_hook",
   "terminal": {

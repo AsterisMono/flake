@@ -79,6 +79,7 @@ in
       end
 
       export SSH_AUTH_SOCK="${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+      export ZED_PREDICT_EDITS_URL=http://172.0.161.24:9000/predict_edits
     '';
     shellAliases = {
       ".." = "cd ../";
