@@ -64,8 +64,6 @@ in
     );
     shellInit = "set -g fish_greeting";
     interactiveShellInit = ''
-      set EDITOR nvim
-
       any-nix-shell fish --info-right | source
 
       if set -q FISH_FORK_PWD_HINT

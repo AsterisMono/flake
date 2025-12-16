@@ -23,5 +23,6 @@ in
 
   home.sessionVariables = {
     ZED_PREDICT_EDITS_URL = "http://172.0.161.24:9000/predict_edits";
+    EDITOR = "zed --wait -n";
   };
 }
