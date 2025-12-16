@@ -55,8 +55,7 @@ in
     noa.homeManager.modules = with homeModules; [
       apps.shell-utils
       apps.development
-      apps.darwin-apps
-      stylix
+      darwin-desktop
     ];
   };
 }
