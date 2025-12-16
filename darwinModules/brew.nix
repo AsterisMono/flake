@@ -23,7 +23,6 @@ _: {
     brews = [ ];
 
     casks = [
-      "visual-studio-code"
       "google-chrome"
       "iterm2"
       "orbstack"
@@ -51,7 +50,6 @@ _: {
       "bruno"
       "1password"
       "1password-cli"
-      "zed"
       "karabiner-elements"
     ];
   };

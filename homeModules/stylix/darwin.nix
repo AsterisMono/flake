@@ -6,6 +6,7 @@
     opacity.terminal = 0.9;
     targets.firefox.profileNames = [ "default" ];
     targets.neovim.enable = false;
+    targets.zed.enable = false;
     overlays.enable = false;
   };
 }

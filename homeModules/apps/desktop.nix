@@ -11,6 +11,7 @@ in
 {
   imports = [
     ./vscode
+    ./zed
     ./firefox
     ./fcitx5
     ./chromium

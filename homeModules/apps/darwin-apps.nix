@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./vscode
+    ./zed
     ./firefox
 
     ./iterm2

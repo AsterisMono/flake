@@ -10,12 +10,6 @@
     }
   },
   {
-    "context": "Editor && vim_mode == insert",
-    "bindings": {
-      // "j k": "vim::NormalBefore"
-    }
-  },
-  {
     "context": "VimControl && !menu",
     "bindings": {
       "ctrl-s": "workspace::Save",

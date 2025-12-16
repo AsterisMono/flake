@@ -37,8 +37,4 @@ in
     vimAlias = true;
     package = unstablePkgs.neovim-unwrapped;
   };
-
-  # Zed
-  xdg.configFile."zed/settings.json".source = ./externalConfigs/zed/settings.json;
-  xdg.configFile."zed/keymap.json".source = ./externalConfigs/zed/keymap.json;
 }
