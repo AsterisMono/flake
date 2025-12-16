@@ -53,6 +53,7 @@ _: {
       "1password-cli"
       "karabiner-elements"
       "zed"
+      "launchcontrol"
     ];
   };
 }

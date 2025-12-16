@@ -19,13 +19,10 @@
       Label = "mihomo";
       RunAtLoad = true;
       KeepAlive = true;
-      LimitLoadToSessionType = "System";
       ProgramArguments = [
-        (lib.getExe pkgs.mihomo)
-        "-d"
-        "/Library/Application Support/mihomo"
-        "-f"
-        "${config.sops.secrets.mihomoConfig.path}"
+        "/bin/sh"
+        "-c"
+        "/bin/wait4path /nix/store && exec ${lib.getExe pkgs.mihomo} -d \"/Library/Application Support/mihomo\" -f ${config.sops.secrets.mihomoConfig.path}"
       ];
       WorkingDirectory = "/Library/Application Support/mihomo/";
       StandardOutPath = "/Library/Application Support/mihomo/log.out";
