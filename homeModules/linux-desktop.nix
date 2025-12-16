@@ -10,7 +10,7 @@ let
 in
 {
   imports = [
-    ./stylix
+    ./stylix.nix
 
     ./apps/vscode
     ./apps/zed

@@ -1,7 +1,14 @@
-{ lib, system, ... }:
+{
+  lib,
+  system,
+  unstablePkgs,
+  ...
+}:
 {
   programs.firefox = {
     enable = true;
+    # Use homebrew to install Firefox on macOS for proper code signing
+    package = if system == "aarch64-darwin" then null else unstablePkgs.firefox;
     policies = {
       ExtensionSettings =
         lib.mapAttrs

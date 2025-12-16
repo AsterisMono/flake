@@ -23,6 +23,7 @@ _: {
     brews = [ ];
 
     casks = [
+      "firefox"
       "google-chrome"
       "iterm2"
       "orbstack"
