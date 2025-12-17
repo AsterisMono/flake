@@ -12,7 +12,6 @@ in
   imports = [
     ./stylix.nix
 
-    ./apps/vscode
     ./apps/zed
     ./apps/firefox
     ./apps/fcitx5
