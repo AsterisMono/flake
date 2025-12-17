@@ -70,6 +70,20 @@ in
     "GDK_BACKEND" = "wayland";
     "XDG_SESSION_TYPE" = "wayland";
   };
+
+  i18n.inputMethod = {
+    enable = true;
+    type = "fcitx5";
+    fcitx5 = {
+      waylandFrontend = true;
+      addons = with pkgs; [
+        qt6Packages.fcitx5-chinese-addons
+        qt6Packages.fcitx5-configtool
+        fcitx5-pinyin-zhwiki
+        flakePackages.fcitx5-rose-pine
+      ];
+    };
+  };
 }
 // lib.optionalAttrs useGnome {
   dconf.settings = {
