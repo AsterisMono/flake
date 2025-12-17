@@ -1,9 +1,0 @@
-[general]
-early-exit = true
-corner-roundness = 0
-initial-tool = "blur"
-disable-notifications = true
-
-[font]
-family = "Noto Sans CJK SC"
-style = "Regular"

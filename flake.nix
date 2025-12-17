@@ -41,11 +41,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     wrapper-manager.url = "github:viperML/wrapper-manager";
-    niri = {
-      url = "github:sodiboo/niri-flake";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     stylix = {
       url = "github:nix-community/stylix/release-25.11";
@@ -142,7 +137,6 @@
                 inputs.home-manager-nixos.nixosModules.home-manager
                 inputs.sops-nix.nixosModules.sops
                 inputs.stylix.nixosModules.stylix
-                inputs.niri.nixosModules.niri
               ];
             };
           };
@@ -202,7 +196,6 @@
         extended-lib = import ./overlays/extended-lib.nix self;
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
         nur = inputs.nur.overlays.default;
-        inherit (inputs.niri.overlays) niri;
       };
 
       lib = {

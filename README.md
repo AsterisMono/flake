@@ -10,7 +10,7 @@
 
 - **多主机管理**：`nixosConfigurations/`（每台 NixOS 主机一个文件），`darwinConfigurations`（flake 内列表管理）。
 - **可复用模块**：
-  - `nixosModules/`：角色（desktop/server）、硬件、磁盘布局（disko）、GUI 套件（GNOME/Plasma/Niri）、服务（Tailscale、DN42、Proxy、Docker 等）。
+  - `nixosModules/`：角色（desktop/server）、硬件、磁盘布局（disko）、GUI 套件（GNOME/Plasma）、服务（Tailscale、DN42、Proxy、Docker 等）。
   - `darwinModules/`：nix-darwin 系统设置、Homebrew、代理（mihomo）等。
   - `homeModules/`：home-manager 基础层 + Linux 桌面应用组合（含 Stylix、VSCode、Firefox、fcitx5 等）。
 - **Secrets 管理**：`secrets/` 使用 `sops` + `age` 加密；模块通过 `sops-nix` 引用。
