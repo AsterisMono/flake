@@ -6,5 +6,6 @@
     ./apps/zed
     ./apps/firefox
     ./apps/iterm2
+    ./apps/ghostty
   ];
 }

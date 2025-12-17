@@ -22,6 +22,7 @@ in
     ./apps/telegram-desktop
     ./apps/moonlight-qt
     ./apps/kitty
+    ./apps/ghostty
     ./apps/vicinae
     ./apps/flatpaks
   ];
