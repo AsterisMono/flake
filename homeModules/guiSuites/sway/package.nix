@@ -50,13 +50,14 @@ in
     swayidle
     swaylock
     wl-clipboard
-    mako
     waybar
     slurp
     grim
   ];
 
   services.gnome-keyring.enable = true;
+  services.mako.enable = true;
+  services.wl-clip-persist.enable = true;
 
   xdg.portal.config.common.default = "*";
 }
