@@ -15,6 +15,14 @@ in
     config = {
       modifier = "Mod4";
       bars = [ ];
+      fonts = lib.mkForce {
+        names = [
+          "FiraCode Nerd Font Mono"
+          "Noto Sans CJK SC"
+        ];
+        style = "Retina";
+        size = 10.0;
+      };
       output.HDMI-A-1 = {
         mode = "2560x1440@75hz";
         scale = "1.25";
