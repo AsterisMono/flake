@@ -1,11 +1,17 @@
 {
   lib,
+  system,
   config,
   pkgs,
   unstablePkgs,
   ...
 }:
 let
+  sshAuthSock =
+    if (system == "aarch64-darwin") then
+      "${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    else
+      "${config.home.homeDirectory}/.1password/agent.sock";
   extraPackages = with unstablePkgs; [
     any-nix-shell
     fastfetch
@@ -76,8 +82,7 @@ in
         /opt/homebrew/bin/brew shellenv | source
       end
 
-      export SSH_AUTH_SOCK="${config.home.homeDirectory}/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
-      export ZED_PREDICT_EDITS_URL=http://172.0.161.24:9000/predict_edits
+      export SSH_AUTH_SOCK="${sshAuthSock}"
     '';
     shellAliases = {
       ".." = "cd ../";

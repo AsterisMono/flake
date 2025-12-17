@@ -38,6 +38,8 @@ in
       helvum
       figma-linux
       splayer
+      _1password-gui
+      _1password-cli
     ]
     ++ lib.optionals useGnome (
       [ pkgs.flakePackages.vicinae-gnome-extension ]
