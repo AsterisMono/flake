@@ -9,6 +9,7 @@
 let
   commonStylixPrefs = {
     enable = true;
+    polarity = "dark";
     opacity.terminal = 0.95;
     fonts = {
       serif = {
