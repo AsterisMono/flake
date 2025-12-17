@@ -22,9 +22,8 @@
           "flakes"
         ];
         substituters = lib.mkIf config.noa.nix.enableMirrorSubstituter [
-          "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
-          "https://mirror.sjtu.edu.cn/nix-channels/store"
-          "https://mirrors.ustc.edu.cn/nix-channels/store"
+          "https://mirrors4.tuna.tsinghua.edu.cn/nix-channels/store"
+          "https://ipv4.mirrors.ustc.edu.cn/nix-channels/store"
         ];
         extra-substituters = [
           "https://nix-community.cachix.org"
