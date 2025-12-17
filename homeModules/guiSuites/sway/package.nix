@@ -23,7 +23,6 @@ in
       menu = "vicinae toggle";
       gaps.smartBorders = "on";
       workspaceAutoBackAndForth = true;
-      focus.followMouse = false;
       window.titlebar = false;
       floating.titlebar = false;
       keybindings =
