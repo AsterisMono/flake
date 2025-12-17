@@ -1,21 +1,45 @@
 {
+  lib,
   system,
   osConfig ? { },
   pkgs,
+  assetsPath,
   ...
 }:
 let
-  darwinStylix = {
+  commonStylixPrefs = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
-    opacity.terminal = 0.9;
-    targets.firefox.profileNames = [ "default" ];
-    targets.neovim.enable = false;
-    targets.zed.enable = false;
-    overlays.enable = false;
+    opacity.terminal = 0.95;
+    fonts = {
+      serif = {
+        package = pkgs.noto-fonts-cjk-serif;
+        name = "Noto Serif CJK SC";
+      };
+      sansSerif = {
+        package = pkgs.noto-fonts-cjk-sans;
+        name = "Noto Sans CJK SC";
+      };
+      monospace = {
+        package = pkgs.nerd-fonts.fira-code;
+        name = "FiraCode Nerd Font Mono";
+      };
+      emoji = {
+        package = pkgs.noto-fonts-color-emoji;
+        name = "Noto Color Emoji";
+      };
+    };
   };
-  linuxStylix = {
-    inherit (osConfig.stylix) image base16Scheme;
+  darwinStylix = lib.recursiveUpdate commonStylixPrefs {
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
+    overlays.enable = false;
+    fonts.sizes = {
+      terminal = 9;
+      applications = 9;
+    };
+  };
+  linuxStylix = lib.recursiveUpdate commonStylixPrefs {
+    inherit (osConfig.stylix) base16Scheme;
+    image = "${assetsPath}/wallpapers/rp-debian.jpg";
     cursor = {
       package = pkgs.capitaine-cursors;
       name = "capitaine-cursors";
@@ -27,10 +51,6 @@ let
       dark = "Tela-dark";
       light = "Tela-light";
     };
-    opacity.terminal = 0.95;
-    targets.firefox.profileNames = [ "default" ];
-    targets.neovim.enable = false;
-    targets.zed.enable = false;
   };
 in
 {

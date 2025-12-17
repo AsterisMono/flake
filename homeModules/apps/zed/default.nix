@@ -1,4 +1,5 @@
 {
+  pkgs,
   system,
   unstablePkgs,
   lib,
@@ -48,4 +49,19 @@ in
   #
   # This hints we must manage zsh with home-manager if we're on aarch64-darwin.
   programs.zsh.enable = lib.mkDefault (system == "aarch64-darwin");
+
+  # Stylix
+  stylix.targets.zed = {
+    colors.enable = false;
+    fonts.override = {
+      sansSerif = {
+        package = pkgs.nerd-fonts.fira-code;
+        name = "FiraCode Nerd Font Mono";
+      };
+      monospace = {
+        package = pkgs.nerd-fonts.fira-code;
+        name = "FiraCode Nerd Font Mono";
+      };
+    };
+  };
 }

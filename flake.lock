@@ -21,17 +21,17 @@
     "base16-fish": {
       "flake": false,
       "locked": {
-        "lastModified": 1754405784,
-        "narHash": "sha256-l9xHIy+85FN+bEo6yquq2IjD1rSg9fjfjpyGP1W8YXo=",
+        "lastModified": 1765809053,
+        "narHash": "sha256-XCUQLoLfBJ8saWms2HCIj4NEN+xNsWBlU1NrEPcQG4s=",
         "owner": "tomyun",
         "repo": "base16-fish",
-        "rev": "23ae20a0093dca0d7b39d76ba2401af0ccf9c561",
+        "rev": "86cbea4dca62e08fb7fd83a70e96472f92574782",
         "type": "github"
       },
       "original": {
         "owner": "tomyun",
         "repo": "base16-fish",
-        "rev": "23ae20a0093dca0d7b39d76ba2401af0ccf9c561",
+        "rev": "86cbea4dca62e08fb7fd83a70e96472f92574782",
         "type": "github"
       }
     },
@@ -423,11 +423,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1764776959,
-        "narHash": "sha256-d+5CGloq7Lo1u2SkzhF8oiOdUc6Z5emh22nTXUB9CFA=",
+        "lastModified": 1765859973,
+        "narHash": "sha256-LN5O0h9GSgcDE/sz4+sLS3CbQALru1x4lh9hrxpeHwI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "e1680d594a9281651cbf7d126941a8c8e2396183",
+        "rev": "7df150f0d3857cf68dae443813b27acfb201b2d8",
         "type": "github"
       },
       "original": {
@@ -444,11 +444,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1764776959,
-        "narHash": "sha256-d+5CGloq7Lo1u2SkzhF8oiOdUc6Z5emh22nTXUB9CFA=",
+        "lastModified": 1765859973,
+        "narHash": "sha256-LN5O0h9GSgcDE/sz4+sLS3CbQALru1x4lh9hrxpeHwI=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "e1680d594a9281651cbf7d126941a8c8e2396183",
+        "rev": "7df150f0d3857cf68dae443813b27acfb201b2d8",
         "type": "github"
       },
       "original": {
@@ -805,11 +805,11 @@
         "tinted-zed": "tinted-zed"
       },
       "locked": {
-        "lastModified": 1764836393,
-        "narHash": "sha256-J2jgYyXiXctr91MSuBQ6dwB1YaC7DpzKp+Rkj6pqS8o=",
+        "lastModified": 1765900102,
+        "narHash": "sha256-Ea1R+dGLu/psLNMgYKoDpVLg9psGq9drKUOOcety1fo=",
         "owner": "nix-community",
         "repo": "stylix",
-        "rev": "6f3b50c8fa9c468fc787e211b700e46592bf9d56",
+        "rev": "259af48fe5dc004c11aa2b1339814138517616bf",
         "type": "github"
       },
       "original": {
