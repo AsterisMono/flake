@@ -9,7 +9,7 @@
   imports = with nixosModules; [
     roles.desktop
     diskLayouts.btrfs
-    gui.suites.plasma
+    gui.greetd
     gui.stylix
     gui.flatpak
     hardware.bluetooth
@@ -27,6 +27,7 @@
       enable = true;
       modules = with homeModules; [
         linux-desktop
+        guiSuites.sway
         apps.shell-utils
         apps.development
       ];
