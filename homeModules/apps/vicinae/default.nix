@@ -17,6 +17,10 @@ in
     package = inputs.vicinae.packages.${system}.default;
   };
 
+  systemd.user.services.vicinae.Service.Environment = [
+    "PATH=/etc/profiles/per-user/cmiki/bin"
+  ];
+
   xdg.configFile."vicinae/vicinae.json".force = true;
 
   dconf.settings = lib.mkIf osConfig.services.desktopManager.gnome.enable {
