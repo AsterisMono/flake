@@ -118,6 +118,19 @@
         }
       }
     },
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "schemaStore": {
+            "enable": true
+          },
+          "completion": true,
+          "schemas": {
+            "kubernetes": "**/mimosa/**/*.yaml"
+          }
+        }
+      }
+    },
     "biome": {
       "settings": {
         "require_config_file": true
