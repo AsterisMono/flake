@@ -37,7 +37,7 @@ in
   #
   # That means all Zed windows and projects will inherit that home directory environment.
   home.sessionVariables = {
-    ZED_PREDICT_EDITS_URL = "http://172.0.161.24:9000/predict_edits";
+    ZED_PREDICT_EDITS_URL = "http://gpu-worker-1.tail7fad75.ts.net:9000/predict_edits";
     EDITOR = "zed --wait -n";
   };
 
