@@ -57,7 +57,10 @@
     "shell": {
       "program": "fish"
     },
-    "cursor_shape": "bar"
+    "cursor_shape": "bar",
+    "scrollbar": {
+      "show": "never"
+    }
   },
   "languages": {
     "Nix": {
