@@ -1,38 +1,53 @@
 [
   {
-    "context": "Workspace && !Dock",
-    "bindings": {
-      "ctrl-h": "pane::ActivatePreviousItem",
-      "ctrl-l": "pane::ActivateNextItem",
-      "ctrl-x": "pane::CloseActiveItem",
-      "ctrl-p": "file_finder::Toggle",
-      "ctrl-shift-t": "pane::ReopenClosedItem"
-    }
-  },
-  {
-    "context": "VimControl && !menu",
-    "bindings": {
-      "ctrl-s": "workspace::Save",
-      "ctrl-p": "file_finder::Toggle",
-      "ctrl-h": "pane::ActivatePreviousItem",
-      "ctrl-l": "pane::ActivateNextItem",
-      "ctrl-x": "pane::CloseActiveItem"
-    }
-  },
-  {
-    "context": "Dock",
     "bindings": {
       "ctrl-w h": "workspace::ActivatePaneLeft",
-      "ctrl-w l": "workspace::ActivatePaneRight",
+      "ctrl-w j": "workspace::ActivatePaneDown",
       "ctrl-w k": "workspace::ActivatePaneUp",
-      "ctrl-w j": "workspace::ActivatePaneDown"
-    }
+      "ctrl-w l": "workspace::ActivatePaneRight",
+      "ctrl-w ctrl-h": "pane::ActivatePreviousItem",
+      "ctrl-w ctrl-l": "pane::ActivateNextItem",
+      "ctrl-t": "workspace::NewTerminal",
+    },
+    "context": "Dock",
   },
   {
-    "context": "vim_mode == normal || vim_mode == visual",
+    "bindings": {
+      "ctrl-h": "pane::ActivatePreviousItem",
+      "ctrl-l": "pane::ActivateNextItem",
+      "ctrl-p": "file_finder::Toggle",
+      "ctrl-s": "workspace::Save",
+      "ctrl-x": "pane::CloseActiveItem",
+    },
+    "context": "VimControl && !menu",
+  },
+  {
+    "bindings": {
+      "ctrl-h": "pane::ActivatePreviousItem",
+      "ctrl-l": "pane::ActivateNextItem",
+      "ctrl-p": "file_finder::Toggle",
+      "ctrl-shift-t": "pane::ReopenClosedItem",
+      "ctrl-x": "pane::CloseActiveItem",
+    },
+    "context": "Workspace && !Dock",
+  },
+  {
     "bindings": {
       "s": "vim::PushSneak",
-      "shift-s": "vim::PushSneakBackward"
-    }
-  }
+      "shift-s": "vim::PushSneakBackward",
+    },
+    "context": "VimControl && (vim_mode == normal || vim_mode == visual)",
+  },
+  {
+    "bindings": {
+      "space b l": "pane::CloseItemsToTheLeft",
+      "space b r": "pane::CloseItemsToTheRight",
+      "space b o": "pane::CloseOtherItems",
+      "space f f": "pane::RevealInProjectPanel",
+      "space r n": "editor::Rename",
+      "] d": "editor::GoToDiagnostic",
+      "[ d": "editor::GoToPreviousDiagnostic",
+    },
+    "context": "VimControl && vim_mode == normal",
+  },
 ]

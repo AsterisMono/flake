@@ -1,159 +1,212 @@
 {
-  "features": {
-    "edit_prediction_provider": "zed"
+  "auto_install_extensions": {
+    "astro": true,
+    "biome": true,
+    "html": true,
+    "just": true,
+    "nix": true,
+    "svelte": true,
+    "rose-pine-theme": true,
   },
-  "telemetry": {
-    "diagnostics": false,
-    "metrics": false
+  "buffer_font_family": "FiraCode Nerd Font Mono",
+  "buffer_font_size": 13.0,
+  "collaboration_panel": {
+    "button": false,
   },
-  "vim_mode": true,
-  "vim": {
-    "use_system_clipboard": "on_yank"
-  },
-  "title_bar": {
-    "show_user_picture": false
-  },
-  "tab_bar": {
-    "show_nav_history_buttons": false,
-    "show_tab_bar_buttons": false
-  },
-  "tabs": {
-    "git_status": true,
-    "show_diagnostics": "errors"
-  },
-  "toolbar": {
-    "quick_actions": false
-  },
-  "status_bar": {
-    "active_language_button": false,
-    "cursor_position_button": false
-  },
-  "project_panel": {
-    "hide_gitignore": true
-  },
+  "colorize_brackets": true,
+  "cursor_blink": false,
   "diagnostics": {
     "inline": {
-      "enabled": true
-    }
+      "enabled": true,
+    },
+  },
+  "features": {
+    "edit_prediction_provider": "zed",
   },
   "git": {
     "inline_blame": {
-      "enabled": false
-    }
-  },
-  "collaboration_panel": {
-    "button": false
-  },
-  "colorize_brackets": true,
-  "rounded_selection": false,
-  "theme": {
-    "mode": "system",
-    "light": "Rosé Pine Dawn",
-    "dark": "Rosé Pine Moon"
-  },
-  "cursor_blink": false,
-  "load_direnv": "shell_hook",
-  "terminal": {
-    "shell": {
-      "program": "fish"
+      "enabled": false,
     },
-    "cursor_shape": "bar",
-    "scrollbar": {
-      "show": "never"
-    }
   },
   "languages": {
+    "JavaScript": {
+      "code_actions_on_format": {
+        "source.addMissingImports.ts": true,
+        "source.fixAll.eslint": true,
+        "source.fixAll.ts": true,
+        "source.removeUnusedImports.ts": true,
+      },
+      "language_servers": ["typescript-language-server", "!vtsls", "..."],
+      "prettier": {
+        "allowed": false,
+      },
+    },
     "Nix": {
-      "language_servers": ["nixd", "!nil", "..."],
       "formatter": {
         "external": {
-          "command": "nixfmt"
-        }
-      }
-    },
-    "TypeScript": {
-      "language_servers": ["typescript-language-server", "!vtsls", "..."],
-      "prettier": {
-        "allowed": false
+          "command": "nixfmt",
+        },
       },
-      "code_actions_on_format": {
-        "source.fixAll.ts": true,
-        "source.addMissingImports.ts": true,
-        "source.removeUnusedImports.ts": true,
-        "source.fixAll.eslint": true
-      }
+      "language_servers": ["nixd", "!nil", "..."],
     },
     "TSX": {
+      "code_actions_on_format": {
+        "source.addMissingImports.ts": true,
+        "source.fixAll.eslint": true,
+        "source.fixAll.ts": true,
+        "source.removeUnusedImports.ts": true,
+      },
       "language_servers": ["typescript-language-server", "!vtsls", "..."],
       "prettier": {
-        "allowed": false
+        "allowed": false,
       },
-      "code_actions_on_format": {
-        "source.fixAll.ts": true,
-        "source.addMissingImports.ts": true,
-        "source.removeUnusedImports.ts": true,
-        "source.fixAll.eslint": true
-      }
     },
-    "JavaScript": {
+    "TypeScript": {
+      "code_actions_on_format": {
+        "source.addMissingImports.ts": true,
+        "source.fixAll.eslint": true,
+        "source.fixAll.ts": true,
+        "source.removeUnusedImports.ts": true,
+      },
       "language_servers": ["typescript-language-server", "!vtsls", "..."],
       "prettier": {
-        "allowed": false
+        "allowed": false,
       },
-      "code_actions_on_format": {
-        "source.fixAll.ts": true,
-        "source.addMissingImports.ts": true,
-        "source.removeUnusedImports.ts": true,
-        "source.fixAll.eslint": true
-      }
-    }
+    },
   },
+  "load_direnv": "shell_hook",
   "lsp": {
+    "biome": {
+      "settings": {
+        "require_config_file": true,
+      },
+    },
+    "eslint": {
+      "settings": {
+        "rulesCustomizations": [
+          {
+            "fixable": true,
+            "rule": "style/*",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "format/*",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*-indent",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*-spacing",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*-spaces",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*-order",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*-dangle",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*-newline",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*quotes",
+            "severity": "off",
+          },
+          {
+            "fixable": true,
+            "rule": "*semi",
+            "severity": "off",
+          },
+        ],
+      },
+    },
     "json-language-server": {
       "settings": {
         "json": {
           "schemas": [
             {
               "fileMatch": ["package.json"],
-              "url": "https://www.schemastore.org/package"
-            }
-          ]
-        }
-      }
+              "url": "https://www.schemastore.org/package",
+            },
+          ],
+        },
+      },
     },
     "yaml-language-server": {
       "settings": {
         "yaml": {
           "schemaStore": {
-            "enable": true
+            "enable": true,
           },
           "completion": true,
           "schemas": {
-            "kubernetes": "**/mimosa/**/*.yaml"
-          }
-        }
-      }
+            "kubernetes": "**/mimosa/**/*.yaml",
+          },
+        },
+      },
     },
-    "biome": {
-      "settings": {
-        "require_config_file": true
-      }
+  },
+  "project_panel": {
+    "hide_gitignore": true,
+  },
+  "rounded_selection": false,
+  "status_bar": {
+    "active_language_button": false,
+    "cursor_position_button": false,
+  },
+  "tab_bar": {
+    "show_nav_history_buttons": false,
+    "show_tab_bar_buttons": false,
+  },
+  "tabs": {
+    "git_status": true,
+    "show_diagnostics": "errors",
+  },
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false,
+  },
+  "terminal": {
+    "cursor_shape": "bar",
+    "shell": {
+      "program": "fish",
     },
-    "eslint": {
-      "settings": {
-        "rulesCustomizations": [
-          { "rule": "style/*", "severity": "off", "fixable": true },
-          { "rule": "format/*", "severity": "off", "fixable": true },
-          { "rule": "*-indent", "severity": "off", "fixable": true },
-          { "rule": "*-spacing", "severity": "off", "fixable": true },
-          { "rule": "*-spaces", "severity": "off", "fixable": true },
-          { "rule": "*-order", "severity": "off", "fixable": true },
-          { "rule": "*-dangle", "severity": "off", "fixable": true },
-          { "rule": "*-newline", "severity": "off", "fixable": true },
-          { "rule": "*quotes", "severity": "off", "fixable": true },
-          { "rule": "*semi", "severity": "off", "fixable": true }
-        ]
-      }
-    }
-  }
+    "scrollbar": {
+      "show": "never",
+    },
+  },
+  "theme": {
+    "dark": "Rosé Pine Moon",
+    "light": "Rosé Pine Dawn",
+    "mode": "system",
+  },
+  "title_bar": {
+    "show_user_picture": false,
+  },
+  "toolbar": {
+    "quick_actions": false,
+  },
+  "ui_font_family": "FiraCode Nerd Font Mono",
+  "ui_font_size": 13.0,
+  "vim": {
+    "use_system_clipboard": "on_yank",
+  },
+  "vim_mode": true,
 }
