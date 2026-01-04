@@ -55,6 +55,7 @@ _: {
       "zed"
       "launchcontrol"
       "ghostty"
+      "neovide-app"
     ];
   };
 }

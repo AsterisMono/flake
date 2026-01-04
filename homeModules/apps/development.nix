@@ -15,6 +15,7 @@ in
     devenv
     go
     uv
+    bun
 
     # Language servers
     nixd
@@ -36,4 +37,5 @@ in
     vimAlias = true;
     package = unstablePkgs.neovim-unwrapped;
   };
+  stylix.targets.neovim.enable = false;
 }

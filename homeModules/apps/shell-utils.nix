@@ -87,6 +87,7 @@ in
     shellAliases = {
       ".." = "cd ../";
       "n" = "nvim";
+      "ne" = "neovide --fork";
       "ls" = "eza -l";
       "l" = "eza -l";
       "ll" = "eza -al";
