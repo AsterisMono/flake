@@ -10,10 +10,6 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     deploy-rs.url = "github:serokell/deploy-rs";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -230,7 +226,7 @@
             );
 
         checks = {
-          pre-commit-check = inputs.pre-commit-hooks.lib.${system}.run {
+          pre-commit-check = inputs.git-hooks.lib.${system}.run {
             src = ./.;
             hooks = {
               nixfmt-rfc-style.enable = true;
