@@ -7,9 +7,9 @@
       "ctrl-w l": "workspace::ActivatePaneRight",
       "ctrl-w ctrl-h": "pane::ActivatePreviousItem",
       "ctrl-w ctrl-l": "pane::ActivateNextItem",
-      "ctrl-t": "workspace::NewTerminal",
+      "ctrl-t": "workspace::NewTerminal"
     },
-    "context": "Dock",
+    "context": "Dock"
   },
   {
     "bindings": {
@@ -17,9 +17,9 @@
       "ctrl-l": "pane::ActivateNextItem",
       "ctrl-p": "file_finder::Toggle",
       "ctrl-s": "workspace::Save",
-      "ctrl-x": "pane::CloseActiveItem",
+      "ctrl-x": "pane::CloseActiveItem"
     },
-    "context": "VimControl && !menu",
+    "context": "VimControl && !menu"
   },
   {
     "bindings": {
@@ -27,16 +27,16 @@
       "ctrl-l": "pane::ActivateNextItem",
       "ctrl-p": "file_finder::Toggle",
       "ctrl-shift-t": "pane::ReopenClosedItem",
-      "ctrl-x": "pane::CloseActiveItem",
+      "ctrl-x": "pane::CloseActiveItem"
     },
-    "context": "Workspace && !Dock",
+    "context": "Workspace && !Dock"
   },
   {
     "bindings": {
       "s": "vim::PushSneak",
-      "shift-s": "vim::PushSneakBackward",
+      "shift-s": "vim::PushSneakBackward"
     },
-    "context": "VimControl && (vim_mode == normal || vim_mode == visual)",
+    "context": "VimControl && (vim_mode == normal || vim_mode == visual)"
   },
   {
     "bindings": {
@@ -46,8 +46,8 @@
       "space f f": "pane::RevealInProjectPanel",
       "space r n": "editor::Rename",
       "] d": "editor::GoToDiagnostic",
-      "[ d": "editor::GoToPreviousDiagnostic",
+      "[ d": "editor::GoToPreviousDiagnostic"
     },
-    "context": "VimControl && vim_mode == normal",
-  },
+    "context": "VimControl && vim_mode == normal"
+  }
 ]

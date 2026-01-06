@@ -21,7 +21,7 @@ in
       "rose-pine-theme"
       "just"
     ];
-    userSettings = readJson ./settings.json;
+    userSettings = lib.mapAttrsRecursive (path: value: lib.mkForce value) (readJson ./settings.json);
     userKeymaps = readJson ./keymap.json;
     mutableUserSettings = true;
     mutableUserKeymaps = true;
