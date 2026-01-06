@@ -6,27 +6,27 @@
     "just": true,
     "nix": true,
     "svelte": true,
-    "rose-pine-theme": true,
+    "rose-pine-theme": true
   },
   "buffer_font_family": "FiraCode Nerd Font Mono",
   "buffer_font_size": 13.0,
   "collaboration_panel": {
-    "button": false,
+    "button": false
   },
   "colorize_brackets": true,
   "cursor_blink": false,
   "diagnostics": {
     "inline": {
-      "enabled": true,
-    },
+      "enabled": true
+    }
   },
   "features": {
-    "edit_prediction_provider": "zed",
+    "edit_prediction_provider": "zed"
   },
   "git": {
     "inline_blame": {
-      "enabled": false,
-    },
+      "enabled": false
+    }
   },
   "languages": {
     "JavaScript": {
@@ -34,52 +34,52 @@
         "source.addMissingImports.ts": true,
         "source.fixAll.eslint": true,
         "source.fixAll.ts": true,
-        "source.removeUnusedImports.ts": true,
+        "source.removeUnusedImports.ts": true
       },
       "language_servers": ["typescript-language-server", "!vtsls", "..."],
       "prettier": {
-        "allowed": false,
-      },
+        "allowed": false
+      }
     },
     "Nix": {
       "formatter": {
         "external": {
-          "command": "nixfmt",
-        },
+          "command": "nixfmt"
+        }
       },
-      "language_servers": ["nixd", "!nil", "..."],
+      "language_servers": ["nixd", "!nil", "..."]
     },
     "TSX": {
       "code_actions_on_format": {
         "source.addMissingImports.ts": true,
         "source.fixAll.eslint": true,
         "source.fixAll.ts": true,
-        "source.removeUnusedImports.ts": true,
+        "source.removeUnusedImports.ts": true
       },
       "language_servers": ["typescript-language-server", "!vtsls", "..."],
       "prettier": {
-        "allowed": false,
-      },
+        "allowed": false
+      }
     },
     "TypeScript": {
       "code_actions_on_format": {
         "source.addMissingImports.ts": true,
         "source.fixAll.eslint": true,
         "source.fixAll.ts": true,
-        "source.removeUnusedImports.ts": true,
+        "source.removeUnusedImports.ts": true
       },
       "language_servers": ["typescript-language-server", "!vtsls", "..."],
       "prettier": {
-        "allowed": false,
-      },
-    },
+        "allowed": false
+      }
+    }
   },
   "load_direnv": "shell_hook",
   "lsp": {
     "biome": {
       "settings": {
-        "require_config_file": true,
-      },
+        "require_config_file": true
+      }
     },
     "eslint": {
       "settings": {
@@ -87,55 +87,55 @@
           {
             "fixable": true,
             "rule": "style/*",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "format/*",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*-indent",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*-spacing",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*-spaces",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*-order",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*-dangle",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*-newline",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*quotes",
-            "severity": "off",
+            "severity": "off"
           },
           {
             "fixable": true,
             "rule": "*semi",
-            "severity": "off",
-          },
-        ],
-      },
+            "severity": "off"
+          }
+        ]
+      }
     },
     "json-language-server": {
       "settings": {
@@ -143,70 +143,70 @@
           "schemas": [
             {
               "fileMatch": ["package.json"],
-              "url": "https://www.schemastore.org/package",
-            },
-          ],
-        },
-      },
+              "url": "https://www.schemastore.org/package"
+            }
+          ]
+        }
+      }
     },
     "yaml-language-server": {
       "settings": {
         "yaml": {
           "schemaStore": {
-            "enable": true,
+            "enable": true
           },
           "completion": true,
           "schemas": {
-            "kubernetes": "**/mimosa/**/*.yaml",
-          },
-        },
-      },
-    },
+            "kubernetes": "**/mimosa/**/*.yaml"
+          }
+        }
+      }
+    }
   },
   "project_panel": {
-    "hide_gitignore": true,
+    "hide_gitignore": true
   },
   "rounded_selection": false,
   "status_bar": {
     "active_language_button": false,
-    "cursor_position_button": false,
+    "cursor_position_button": false
   },
   "tab_bar": {
     "show_nav_history_buttons": false,
-    "show_tab_bar_buttons": false,
+    "show_tab_bar_buttons": false
   },
   "tabs": {
     "git_status": true,
-    "show_diagnostics": "errors",
+    "show_diagnostics": "errors"
   },
   "telemetry": {
     "diagnostics": false,
-    "metrics": false,
+    "metrics": false
   },
   "terminal": {
     "cursor_shape": "bar",
     "shell": {
-      "program": "fish",
+      "program": "fish"
     },
     "scrollbar": {
-      "show": "never",
-    },
+      "show": "never"
+    }
   },
   "theme": {
     "dark": "Rosé Pine Moon",
     "light": "Rosé Pine Dawn",
-    "mode": "system",
+    "mode": "system"
   },
   "title_bar": {
-    "show_user_picture": false,
+    "show_user_picture": false
   },
   "toolbar": {
-    "quick_actions": false,
+    "quick_actions": false
   },
   "ui_font_family": "FiraCode Nerd Font Mono",
   "ui_font_size": 13.0,
   "vim": {
-    "use_system_clipboard": "on_yank",
+    "use_system_clipboard": "on_yank"
   },
-  "vim_mode": true,
+  "vim_mode": true
 }
