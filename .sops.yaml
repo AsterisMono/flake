@@ -3,7 +3,8 @@ keys:
   - &host_ivy age13wmpnkt79dzzg9t74w9xmvzwsnyx7mfkakzkz9n4dya469wvqshq5rpevv
   - &host_anemone age15z20fn7qdzxzq36r4dw54908rl8y3extszu0v8xjs03ekrza9fusprc6mf
   - &host_fervorine age12n3aw4lenwr0cqqmqf4hqhp2637eswpq4nv8ts33f2yxdqn5xckqxllndk
-  - &host_mercury age1w2zxrwad0c4k36eavyrp9dllks65jshm5xr4tk6l7cajcn8vdcnqwvrukm
+  - &host_mimosa age1w2zxrwad0c4k36eavyrp9dllks65jshm5xr4tk6l7cajcn8vdcnqwvrukm
+  - &host_mimosa_nursery age1q3v8uh7aq35nqdrs3ecuaw9xqczawru8ju73hc7ewfyyz4sv2e6qesdg8u
 creation_rules:
   - path_regex: secrets/home.yaml$
     key_groups:
@@ -16,4 +17,5 @@ creation_rules:
           - *host_ivy
           - *host_anemone
           - *host_fervorine
-          - *host_mercury
+          - *host_mimosa
+          - *host_mimosa_nursery
