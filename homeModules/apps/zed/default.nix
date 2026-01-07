@@ -1,5 +1,4 @@
 {
-  pkgs,
   system,
   unstablePkgs,
   lib,
@@ -21,7 +20,7 @@ in
       "rose-pine-theme"
       "just"
     ];
-    userSettings = lib.mapAttrsRecursive (path: value: lib.mkForce value) (readJson ./settings.json);
+    userSettings = readJson ./settings.json;
     userKeymaps = readJson ./keymap.json;
     mutableUserSettings = true;
     mutableUserKeymaps = true;
@@ -51,17 +50,5 @@ in
   programs.zsh.enable = lib.mkDefault (system == "aarch64-darwin");
 
   # Stylix
-  stylix.targets.zed = {
-    colors.enable = false;
-    fonts.override = {
-      sansSerif = {
-        package = pkgs.nerd-fonts.fira-code;
-        name = "FiraCode Nerd Font Mono";
-      };
-      monospace = {
-        package = pkgs.nerd-fonts.fira-code;
-        name = "FiraCode Nerd Font Mono";
-      };
-    };
-  };
+  stylix.targets.zed.enable = false;
 }
