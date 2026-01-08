@@ -30,3 +30,7 @@ utc_time_offset = '+8'
 [env_var.ASCIINEMA_REC]
 format = '[⬤ REC]($style) '
 style = 'bold yellow'
+
+[kubernetes]
+disabled = false
+detect_folders = [ 'infra' ]
