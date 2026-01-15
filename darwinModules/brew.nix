@@ -56,6 +56,7 @@ _: {
       "launchcontrol"
       "ghostty"
       "neovide-app"
+      "jetbrains-toolbox"
     ];
   };
 }
