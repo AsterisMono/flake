@@ -57,6 +57,7 @@ _: {
       "ghostty"
       "neovide-app"
       "jetbrains-toolbox"
+      "latest"
     ];
   };
 }
