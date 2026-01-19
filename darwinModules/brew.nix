@@ -20,7 +20,9 @@ _: {
 
     taps = [ "xpipe-io/tap" ];
 
-    brews = [ ];
+    brews = [
+      "gemini-cli"
+    ];
 
     casks = [
       "firefox"
