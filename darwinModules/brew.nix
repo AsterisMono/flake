@@ -22,6 +22,7 @@ _: {
 
     brews = [
       "gemini-cli"
+      "opencode"
     ];
 
     casks = [
