@@ -23,6 +23,7 @@ _: {
     brews = [
       "gemini-cli"
       "opencode"
+      "tailspin"
     ];
 
     casks = [
