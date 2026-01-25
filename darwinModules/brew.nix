@@ -18,7 +18,10 @@ _: {
       "WPS Office" = 1443749478;
     };
 
-    taps = [ "xpipe-io/tap" ];
+    taps = [
+      "xpipe-io/tap"
+      "mfkrause/tap"
+    ];
 
     brews = [
       "gemini-cli"
@@ -62,6 +65,7 @@ _: {
       "neovide-app"
       "jetbrains-toolbox"
       "latest"
+      "consul" # https://getconsul.app/
     ];
   };
 }
