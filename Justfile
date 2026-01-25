@@ -1,3 +1,5 @@
+default: darwin-deploy
+
 inspect:
     nix run github:bluskript/nix-inspect -- -p .
 
