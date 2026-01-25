@@ -27,6 +27,7 @@ _: {
       "gemini-cli"
       "opencode"
       "tailspin"
+      "jnsahaj/lumen/lumen"
     ];
 
     casks = [
