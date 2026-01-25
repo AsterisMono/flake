@@ -1,18 +1,24 @@
 {
+  "context_servers": {
+    "mcp-server-context7": {
+      "enabled": true,
+      "settings": {
+        "context7_api_key": "YOUR_API_KEY_HERE"
+      }
+    }
+  },
   "auto_install_extensions": {
     "astro": true,
-    "biome": true,
     "html": true,
     "just": true,
     "nix": true,
     "svelte": true,
-    "rose-pine-theme": true
+    "rose-pine-theme": true,
+    "biome": true,
+    "tsgo": true
   },
   "buffer_font_family": "FiraCode Nerd Font Mono",
   "buffer_font_size": 13.0,
-  "collaboration_panel": {
-    "button": false
-  },
   "colorize_brackets": true,
   "cursor_blink": false,
   "diagnostics": {
@@ -36,7 +42,7 @@
         "source.fixAll.ts": true,
         "source.removeUnusedImports.ts": true
       },
-      "language_servers": ["typescript-language-server", "!vtsls", "..."],
+      "language_servers": ["tsgo", "vtsls"],
       "prettier": {
         "allowed": false
       }
@@ -56,7 +62,7 @@
         "source.fixAll.ts": true,
         "source.removeUnusedImports.ts": true
       },
-      "language_servers": ["typescript-language-server", "!vtsls", "..."],
+      "language_servers": ["tsgo", "vtsls"],
       "prettier": {
         "allowed": false
       }
@@ -68,7 +74,7 @@
         "source.fixAll.ts": true,
         "source.removeUnusedImports.ts": true
       },
-      "language_servers": ["typescript-language-server", "!vtsls", "..."],
+      "language_servers": ["tsgo", "vtsls"],
       "prettier": {
         "allowed": false
       }
@@ -76,11 +82,6 @@
   },
   "load_direnv": "shell_hook",
   "lsp": {
-    "biome": {
-      "settings": {
-        "require_config_file": true
-      }
-    },
     "eslint": {
       "settings": {
         "rulesCustomizations": [
@@ -161,10 +162,15 @@
           }
         }
       }
+    },
+    "biome": {
+      "settings": {
+        "require_config_file": true
+      }
     }
   },
   "project_panel": {
-    "hide_gitignore": true
+    "dock": "left"
   },
   "rounded_selection": false,
   "status_bar": {
@@ -208,5 +214,8 @@
   "vim": {
     "use_system_clipboard": "on_yank"
   },
-  "vim_mode": true
+  "vim_mode": true,
+  "which_key": {
+    "enabled": true
+  }
 }

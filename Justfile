@@ -45,6 +45,16 @@ gc:
 update-iterm2:
     cp ~/.config/iterm2/com.googlecode.iterm2.plist ./homeModules/apps/iterm2/com.googlecode.iterm2.plist
 
+zed_config_dir := "./homeModules/apps/zed"
+
+update-zed:
+    cat ~/.config/zed/settings.json | \
+        npx strip-json-comments-cli | \
+        jq '(.. | objects | select(has("context7_api_key"))) .context7_api_key = "YOUR_API_KEY_HERE"' \
+        > {{ zed_config_dir }}/settings.json
+    cat ~/.config/zed/keymap.json | npx strip-json-comments-cli > {{ zed_config_dir }}/keymap.json
+    npx prettier --parser json --trailing-comma none --write {{ zed_config_dir }}/*.json
+
 scan-age-key target:
     ssh {{ target }} cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age
 

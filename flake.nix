@@ -249,6 +249,7 @@
             wireguard-tools
             git-agecrypt
             nh
+            json-repair
           ];
           inherit (checks.pre-commit-check) shellHook;
           buildInputs = checks.pre-commit-check.enabledPackages;
