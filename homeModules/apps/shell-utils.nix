@@ -20,6 +20,7 @@ let
     duf
     cachix
     asciinema
+    tailspin
   ];
 in
 {

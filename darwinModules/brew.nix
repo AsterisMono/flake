@@ -26,7 +26,6 @@ _: {
     brews = [
       "gemini-cli"
       "opencode"
-      "tailspin"
       "jnsahaj/lumen/lumen"
     ];
 
