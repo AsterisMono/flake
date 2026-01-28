@@ -4,6 +4,7 @@
   config,
   pkgs,
   unstablePkgs,
+  secretsPath,
   ...
 }:
 let
@@ -212,4 +213,17 @@ in
   };
 
   xdg.configFile."zellij/config.kdl".source = ./externalConfigs/zellij-config.kdl;
+
+  # Lumen
+  sops.secrets.lumen_openrouter_api_key = { };
+  sops.templates."lumen.config.json" = {
+    content = ''
+      {
+        "api_key": "${config.sops.placeholder.lumen_openrouter_api_key}",
+        "model": "openai/gpt-5.1-codex-mini",
+        "provider": "openrouter"
+      }
+    '';
+    path = "${config.home.homeDirectory}/.config/lumen/lumen.config.json";
+  };
 }
