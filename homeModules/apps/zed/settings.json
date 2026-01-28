@@ -15,7 +15,10 @@
     "svelte": true,
     "rose-pine-theme": true,
     "biome": true,
-    "tsgo": true
+    "tsgo": true,
+    "mcp-server-context7": true,
+    "terraform": true,
+    "emmet": true
   },
   "buffer_font_family": "FiraCode Nerd Font Mono",
   "buffer_font_size": 13.0,
