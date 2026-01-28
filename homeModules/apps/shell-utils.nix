@@ -226,4 +226,27 @@ in
     '';
     path = "${config.home.homeDirectory}/.config/lumen/lumen.config.json";
   };
+
+  # OpenCode
+  sops.secrets.context7_api_key = { };
+  sops.templates."opencode.json" = {
+    content = ''
+      {
+        "$schema": "https://opencode.ai/config.json",
+        "mcp": {
+          "context7": {
+            "type": "remote",
+            "url": "https://mcp.context7.com/mcp",
+            "headers": {
+              "CONTEXT7_API_KEY": "${config.sops.placeholder.context7_api_key}"
+            }
+          }
+        },
+        "plugin": [
+          "opencode-gemini-auth@latest",
+          "oh-my-opencode@latest"
+        ]
+      }
+    '';
+  };
 }
