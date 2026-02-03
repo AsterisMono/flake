@@ -66,6 +66,7 @@ _: {
       "jetbrains-toolbox"
       "latest"
       "consul" # https://getconsul.app/
+      "kitty"
     ];
   };
 }
