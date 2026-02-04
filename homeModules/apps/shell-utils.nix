@@ -4,7 +4,6 @@
   config,
   pkgs,
   unstablePkgs,
-  secretsPath,
   ...
 }:
 let
@@ -43,6 +42,20 @@ in
       push.autoSetupRemote = true;
       commit.gpgsign = true;
       gpg.format = "ssh";
+    };
+  };
+
+  programs.ssh = {
+    enable = true;
+    enableDefaultConfig = false;
+    includes = lib.optionals (system == "aarch64-darwin") [ "~/.orbstack/ssh/config" ];
+    matchBlocks = {
+      knot = {
+        host = "knot-rgarden";
+        hostname = "knot.requiem.garden";
+        user = "git";
+        port = 2222;
+      };
     };
   };
 
