@@ -1,0 +1,79 @@
+{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "lsp": {
+    "typescript-language-server": {
+      "command": ["typescript-language-server", "--stdio"],
+      "extensions": [".ts", ".tsx"],
+      "priority": 10
+    }
+  },
+  "tmux": {
+    "enabled": true,
+    "layout": "main-vertical",
+    "main_pane_size": 60,
+    "main_pane_min_width": 120,
+    "agent_pane_min_width": 40
+  },
+  "git_master": {
+    "include_co_authored_by": true
+  },
+  "agents": {
+    "sisyphus": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "oracle": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "librarian": {
+      "model": "opencode/big-pickle"
+    },
+    "explore": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "multimodal-looker": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "prometheus": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "metis": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "momus": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "atlas": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "hephaestus": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "sisyphus-junior": {
+      "model": "google/gemini-3-flash-preview",
+      "temperature": 0.2
+    }
+  },
+  "categories": {
+    "visual-engineering": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "ultrabrain": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "artistry": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "quick": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "unspecified-low": {
+      "model": "google/gemini-3-flash-preview"
+    },
+    "unspecified-high": {
+      "model": "google/gemini-3-pro-preview"
+    },
+    "writing": {
+      "model": "google/gemini-3-flash-preview"
+    }
+  }
+}

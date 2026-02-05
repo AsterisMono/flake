@@ -1,4 +1,10 @@
 {
+  "edit_predictions": {
+    "ollama": {
+      "model": "nishtahir/zeta:latest"
+    },
+    "provider": "ollama"
+  },
   "auto_install_extensions": {
     "astro": true,
     "html": true,
@@ -20,9 +26,6 @@
     "inline": {
       "enabled": true
     }
-  },
-  "features": {
-    "edit_prediction_provider": "zed"
   },
   "git": {
     "inline_blame": {

@@ -27,6 +27,8 @@ _: {
       "gemini-cli"
       "opencode"
       "jnsahaj/lumen/lumen"
+      "ollama"
+      "tmux"
     ];
 
     casks = [
@@ -67,6 +69,7 @@ _: {
       "latest"
       "consul" # https://getconsul.app/
       "kitty"
+      "ollama-app"
     ];
   };
 }

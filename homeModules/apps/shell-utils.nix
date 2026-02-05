@@ -128,6 +128,45 @@ in
           curl -F "file=@$file" https://0x0.st
         '';
       };
+      oc = {
+        body = ''
+          set base_name (basename (pwd))
+              set path_hash (echo (pwd) | md5 | cut -c1-4)
+              set session_name "$base_name-$path_hash"
+
+              # Find available port starting from 4096
+              function __oc_find_port
+                  set port 4096
+                  while test $port -lt 5096
+                      if not lsof -i :$port >/dev/null 2>&1
+                          echo $port
+                          return 0
+                      end
+                      set port (math $port + 1)
+                  end
+                  echo 4096
+              end
+
+              set oc_port (__oc_find_port)
+              set -x OPENCODE_PORT $oc_port
+
+              if set -q TMUX
+                  # Already inside tmux - just run with port
+                  opencode --port $oc_port $argv
+              else
+                  # Create tmux session and run opencode
+                  set oc_cmd "OPENCODE_PORT=$oc_port opencode --port $oc_port $argv; exec fish"
+                  if tmux has-session -t "$session_name" 2>/dev/null
+                      tmux new-window -t "$session_name" -c (pwd) "$oc_cmd"
+                      tmux attach-session -t "$session_name"
+                  else
+                      tmux new-session -s "$session_name" -c (pwd) "$oc_cmd"
+                  end
+              end
+
+              functions -e __oc_find_port
+        '';
+      };
     };
   };
 
@@ -233,7 +272,7 @@ in
     content = ''
       {
         "api_key": "${config.sops.placeholder.lumen_openrouter_api_key}",
-        "model": "openai/gpt-5.1-codex-mini",
+        "model": "x-ai/grok-code-fast-1",
         "provider": "openrouter"
       }
     '';

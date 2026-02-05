@@ -21,6 +21,7 @@ in
     nixd
     nixfmt-rfc-style
     typescript # tsserver
+    typescript-language-server
     vscode-langservers-extracted
     yaml-language-server
     yamlfmt
@@ -38,4 +39,6 @@ in
     package = unstablePkgs.neovim-unwrapped;
   };
   stylix.targets.neovim.enable = false;
+
+  xdg.configFile."opencode/oh-my-opencode.json".source = ./externalConfigs/oh-my-opencode.json;
 }
