@@ -7,7 +7,7 @@
 {
   programs.kitty = {
     enable = true;
-    package = if system == "aarch64-darwin" then null else unstablePkgs.firefox;
+    package = if system == "aarch64-darwin" then null else unstablePkgs.kitty;
     settings = {
       font_size = lib.mkForce 11.0;
       cursor_shape = "beam";
