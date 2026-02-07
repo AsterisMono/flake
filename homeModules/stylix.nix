@@ -31,7 +31,7 @@ let
     };
   };
   darwinStylix = lib.recursiveUpdate commonStylixPrefs {
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark.yaml";
     overlays.enable = false;
     fonts.sizes = {
       terminal = 9;
