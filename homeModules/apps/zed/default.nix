@@ -11,15 +11,6 @@ in
   programs.zed-editor = {
     enable = true;
     package = if system == "aarch64-darwin" then null else unstablePkgs.zed-editor;
-    extensions = [
-      "html"
-      "svelte"
-      "astro"
-      "biome"
-      "nix"
-      "rose-pine-theme"
-      "just"
-    ];
     userSettings = readJson ./settings.json;
     userKeymaps = readJson ./keymap.json;
     mutableUserSettings = true;
