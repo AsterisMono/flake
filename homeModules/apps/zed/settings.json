@@ -13,7 +13,6 @@
     "svelte": true,
     "rose-pine-theme": true,
     "biome": true,
-    "tsgo": true,
     "mcp-server-context7": true,
     "terraform": true,
     "emmet": true
@@ -195,8 +194,8 @@
     }
   },
   "theme": {
-    "dark": "Gruvbox Dark",
-    "light": "Gruvbox Light Hard",
+    "dark": "Rosé Pine Moon",
+    "light": "Rosé Pine Dawn",
     "mode": "dark"
   },
   "title_bar": {
