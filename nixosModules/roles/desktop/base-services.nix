@@ -1,7 +1,14 @@
 { pkgs, lib, ... }:
 
 {
+  environment.pathsToLink = [
+    "/share/applications"
+    "/share/xdg-desktop-portal"
+  ];
+
   networking.networkmanager.enable = true;
+  services.power-profiles-daemon.enable = true;
+  services.upower.enable = true;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

@@ -11,7 +11,6 @@
     diskLayouts.btrfs
     gui.greetd
     gui.stylix
-    gui.flatpak
     hardware.bluetooth
     hardware.nvidia
     services.proxy

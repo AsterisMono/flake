@@ -295,8 +295,7 @@ in
           }
         },
         "plugin": [
-          "opencode-gemini-auth@latest",
-          "oh-my-opencode@latest"
+          "opencode-gemini-auth@latest"
         ]
       }
     '';

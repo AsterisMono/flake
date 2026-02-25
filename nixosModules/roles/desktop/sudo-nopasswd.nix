@@ -12,6 +12,8 @@ _: {
     }
   ];
 
+  security.polkit.enable = true;
+
   security.polkit.extraConfig = ''
     /* Allow members of the wheel group to execute any actions
     * without password authentication, similar to "sudo NOPASSWD:"

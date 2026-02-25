@@ -8,17 +8,8 @@
     remotes = [
       {
         name = "flathub";
-        location = "https://mirror.sjtu.edu.cn/flathub";
+        location = "https://flathub.org/repo/flathub.flatpakrepo";
       }
-    ];
-
-    packages = [
-      "com.github.tchx84.Flatseal"
-      "cn.feishu.Feishu"
-      "com.qq.QQ"
-      "com.tencent.WeChat"
-      "com.tencent.wemeet"
-      "io.github.qier222.YesPlayMusic"
     ];
 
     update.auto = {

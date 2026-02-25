@@ -15,13 +15,9 @@ in
     ./apps/zed
     ./apps/firefox
     ./apps/fcitx5
-    ./apps/chromium
-    ./apps/obs-studio
     ./apps/xpipe
     ./apps/telegram-desktop
-    ./apps/moonlight-qt
     ./apps/kitty
-    ./apps/ghostty
     ./apps/vicinae
     ./apps/flatpaks
   ];
@@ -31,12 +27,8 @@ in
     [
       dbeaver-bin
       obsidian
-      bitwarden-desktop
       vlc
-      spotify
-      prismlauncher
       helvum
-      figma-linux
       splayer
       _1password-gui
       _1password-cli
@@ -82,6 +74,23 @@ in
         fcitx5-pinyin-zhwiki
         flakePackages.fcitx5-rose-pine
       ];
+    };
+  };
+
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+    config = {
+      common = {
+        default = [
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Secret" = [
+          "gnome-keyring"
+        ];
+      };
     };
   };
 }

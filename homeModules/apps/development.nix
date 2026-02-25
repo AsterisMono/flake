@@ -13,9 +13,6 @@ in
     nodejs_22
     corepack_22
     devenv
-    go
-    uv
-    bun
 
     # Language servers
     nixd
@@ -25,7 +22,6 @@ in
     vscode-langservers-extracted
     yaml-language-server
     yamlfmt
-    gopls
 
     # Scripts
     ccnupr
@@ -39,6 +35,4 @@ in
     package = unstablePkgs.neovim-unwrapped;
   };
   stylix.targets.neovim.enable = false;
-
-  xdg.configFile."opencode/oh-my-opencode.json".source = ./externalConfigs/oh-my-opencode.json;
 }
