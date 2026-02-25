@@ -13,6 +13,7 @@
     gui.stylix
     gui.flatpak
     hardware.bluetooth
+    hardware.nvidia
     services.proxy
     services.tailscale
     services.docker
