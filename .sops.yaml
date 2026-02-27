@@ -2,6 +2,7 @@ keys:
   - &noa age10rmq9vcjjpxpl7qx2qc9nh6xvr0ktdjphq7w6mz9zwlz6kxxfprqfrz7gk
   - &host_fervorine age12n3aw4lenwr0cqqmqf4hqhp2637eswpq4nv8ts33f2yxdqn5xckqxllndk
   - &host_azura age1y662pmf7vefagee6dukswsr2qtxp3nvamc2d027ccmsvegsnv35qdvmnmc
+  - &host_lavander age1vvq4rzuqk8j3eggp2ft558qw7xv2u0zwm0fyej72pcfmat2d9c2qgc73ww
 creation_rules:
   - path_regex: secrets/home.yaml$
     key_groups:
@@ -13,3 +14,4 @@ creation_rules:
           - *noa
           - *host_fervorine
           - *host_azura
+          - *host_lavander
