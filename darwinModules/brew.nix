@@ -34,7 +34,6 @@ _: {
     casks = [
       "firefox"
       "google-chrome"
-      "iterm2"
       "orbstack"
       "font-fira-code-nerd-font"
       "font-maple-mono-nf-cn"
@@ -44,7 +43,6 @@ _: {
       "raycast"
       "dbeaver-community"
       "rectangle"
-      "jordanbaird-ice"
       "onedrive"
       "stats"
       "typora"
@@ -52,7 +50,6 @@ _: {
       "warp"
       "obsidian"
       "telegram-desktop"
-      "chatgpt"
       "xpipe"
       "slack"
       "figma"
@@ -64,12 +61,10 @@ _: {
       "zed"
       "launchcontrol"
       "ghostty"
-      "neovide-app"
-      "jetbrains-toolbox"
       "latest"
       "consul" # https://getconsul.app/
       "kitty"
-      "ollama-app"
+      "thaw"
     ];
   };
 }
