@@ -15,7 +15,7 @@
       mouse-hide-while-typing = true;
       cursor-style = "bar";
       cursor-style-blink = false;
-      shell-integration-features = "no-cursor";
+      shell-integration-features = "no-cursor,ssh-terminfo,ssh-env";
       adjust-cursor-thickness = 2;
       adjust-cell-height = 1;
       command = lib.getExe pkgs.fish;
