@@ -318,7 +318,7 @@ in
                   export none;
                 };
 
-                ipv6 {   
+                ipv6 {
                     import filter {
                       if is_valid_network() && !is_self_net() then {
                         if (roa_check(dn42_roa, net, bgp_path.last) != ROA_VALID) then {
@@ -329,7 +329,7 @@ in
                       } else reject;
                     };
                     export filter { if is_valid_network() && source ~ [RTS_STATIC, RTS_BGP] then accept; else reject; };
-                    import limit 9000 action block; 
+                    import limit 9000 action block;
                 };
             }
 
@@ -367,11 +367,6 @@ in
           };
         };
       };
-    };
-
-    noa.tailscale = {
-      advertiseTags = [ "dn42" ];
-      advertiseRoutes = [ "fd00::/8" ];
     };
   };
 

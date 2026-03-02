@@ -36,7 +36,6 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    wrapper-manager.url = "github:viperML/wrapper-manager";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     stylix = {
       url = "github:nix-community/stylix/release-25.11";
@@ -46,19 +45,9 @@
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nur = {
-      url = "github:nix-community/NUR";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     vicinae = {
       url = "github:vicinaehq/vicinae";
       inputs.nixpkgs.follows = "nixpkgs";
-    };
-    headplane = {
-      url = "github:tale/headplane?ref=v0.6.1";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia-shell";
@@ -193,9 +182,7 @@
 
       overlays = {
         flake-packages = import ./overlays/flake-packages.nix self;
-        extended-lib = import ./overlays/extended-lib.nix self;
         nix-vscode-extensions = inputs.nix-vscode-extensions.overlays.default;
-        nur = inputs.nur.overlays.default;
       };
 
       lib = {

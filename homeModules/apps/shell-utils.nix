@@ -21,6 +21,7 @@ let
     cachix
     asciinema
     tailspin
+    isd
   ];
 in
 {

@@ -19,7 +19,6 @@ in
     ./apps/telegram-desktop
     ./apps/kitty
     ./apps/vicinae
-    ./apps/flatpaks
   ];
 
   home.packages =

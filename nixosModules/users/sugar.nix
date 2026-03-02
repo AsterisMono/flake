@@ -11,7 +11,6 @@ in
     description = "Asai Neko";
     extraGroups = [
       "wheel"
-      "docker"
     ];
     shell = pkgs.bashInteractive;
     initialHashedPassword = "$y$j9T$Z4t5zBrAt0cjjcxka6DWc.$EP6Qq51XqWMtxaEvLgBPGU73UTqR1UVHoyCnbGBDXx0";

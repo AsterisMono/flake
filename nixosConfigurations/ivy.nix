@@ -5,15 +5,10 @@
   secretsPath,
   ...
 }:
-let
-  thisTsAddress = "100.74.184.53";
-in
 {
   imports = with nixosModules; [
     roles.server
-    services.tailscale
     services.dn42
-    (services.prometheus-blackbox thisTsAddress)
   ];
 
   noa.nix.enableMirrorSubstituter = true;
@@ -61,36 +56,4 @@ in
       "AS4242420994".endpoint = "fdd2:4372:796f:ffff::833:0/127";
     };
   };
-
-  services.prometheus.exporters =
-    let
-      networkSettings = {
-        listenAddress = thisTsAddress; # Tailscale
-        openFirewall = true;
-      };
-    in
-    {
-      node = {
-        enable = true;
-        port = 9100;
-        enabledCollectors = [
-          "systemd"
-          "netdev.address-info"
-        ];
-        disabledCollectors = [ "textfile" ];
-      }
-      // networkSettings;
-      bird = {
-        enable = true;
-        port = 9324;
-      }
-      // networkSettings;
-      wireguard = {
-        enable = true;
-        port = 9586;
-        latestHandshakeDelay = true;
-        withRemoteIp = true;
-      }
-      // networkSettings;
-    };
 }

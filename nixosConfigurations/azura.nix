@@ -31,7 +31,6 @@
         apps.development
       ];
     };
-    docker.useRegistryMirror = true;
   };
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
