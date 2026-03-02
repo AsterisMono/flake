@@ -54,7 +54,7 @@ in
             "${modifier}+c" = "kill";
             "${modifier}+space" = "exec ${cfg.config.menu}";
             "${modifier}+Alt+Space" = "focus mode_toggle";
-            "${modifier}+Shift+s" = ''exec sh -c "slurp | grim -g - - | wl-copy"'';
+            "${modifier}+Shift+s" = "exec grimshot copy anything";
           })
           [
             "${modifier}+Return"
@@ -66,12 +66,8 @@ in
 
   home.packages = with pkgs; [
     brightnessctl
-    swayidle
-    swaylock
     wl-clipboard
-    waybar
-    slurp
-    grim
+    sway-contrib.grimshot
     xfce.thunar
   ];
 
