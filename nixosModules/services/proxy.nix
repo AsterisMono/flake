@@ -4,20 +4,7 @@
   secretsPath,
   ...
 }:
-let
-  cfg = config.noa.proxy;
-  proxy = "127.0.0.1:${toString cfg.port}";
-  httpProxy = "http://${proxy}";
-  socksProxy = "socks5://${proxy}";
-in
 {
-  options.noa.proxy = {
-    tunMode = lib.mkEnableOption "Enable TUN Mode for mihomo proxy";
-    port = lib.mkOption {
-      default = 7890;
-    };
-  };
-
   config = {
     sops.secrets.mihomoConfig = {
       format = "yaml";
@@ -28,15 +15,8 @@ in
 
     services.mihomo = {
       enable = true;
-      inherit (cfg) tunMode;
+      tunMode = true;
       configFile = config.sops.secrets.mihomoConfig.path;
-    };
-
-    networking.proxy = lib.mkIf (!cfg.tunMode) {
-      inherit httpProxy;
-      httpsProxy = httpProxy;
-      allProxy = socksProxy;
-      noProxy = "localhost,127.0.0.1,10.96.0.0/12,192.168.59.0/24,192.168.49.0/24,192.168.39.0/24"; # minikube
     };
 
     # iptables based firewall needs to be disabled
@@ -45,6 +25,6 @@ in
     # Effectively breaking tun mode
     # However NixOS config networking.firewall doesn't support declarative ip-range rules, only ports
     # sus
-    networking.firewall.enable = lib.mkForce (!cfg.tunMode);
+    networking.firewall.enable = lib.mkForce false;
   };
 }
