@@ -13,6 +13,7 @@
     gui.stylix
     hardware.bluetooth
     hardware.nvidia
+    services.flatpak
     services.proxy
     services.podman
     users.cmiki
