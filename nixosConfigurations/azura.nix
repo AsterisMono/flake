@@ -14,8 +14,7 @@
     hardware.bluetooth
     hardware.nvidia
     services.proxy
-    services.tailscale
-    services.docker
+    services.podman
     users.cmiki
   ];
 

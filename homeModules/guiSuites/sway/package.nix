@@ -21,6 +21,7 @@ in
     config = {
       startup = [
         { command = "noctalia-shell"; }
+        { command = "1password --silent"; }
       ];
       modifier = "Mod4";
       bars = [ ];
@@ -109,15 +110,6 @@ in
         widgets = {
           left = [
             {
-              colorizeSystemIcon = "none";
-              customIconPath = "";
-              enableColorization = false;
-              icon = "rocket";
-              iconColor = "none";
-              id = "Launcher";
-              useDistroLogo = false;
-            }
-            {
               characterCount = 2;
               colorizeIcons = false;
               emptyColor = "secondary";
@@ -131,7 +123,7 @@ in
               labelMode = "index";
               occupiedColor = "secondary";
               pillSize = 0.6;
-              showApplications = false;
+              showApplications = true;
               showBadge = true;
               showLabelsOnlyWhenOccupied = true;
               unfocusedIconsOpacity = 1;
@@ -232,21 +224,12 @@ in
             }
             {
               clockColor = "none";
-              customFont = "";
-              formatHorizontal = "HH:mm ddd, MMM dd";
+              customFont = "FiraCode Nerd Font Mono";
+              formatHorizontal = "HH:mm";
               formatVertical = "HH mm - dd MM";
               id = "Clock";
               tooltipFormat = "HH:mm ddd, MMM dd";
-              useCustomFont = false;
-            }
-            {
-              colorizeDistroLogo = false;
-              colorizeSystemIcon = "none";
-              customIconPath = "";
-              enableColorization = false;
-              icon = "noctalia";
-              id = "ControlCenter";
-              useDistroLogo = false;
+              useCustomFont = true;
             }
           ];
         };
@@ -275,7 +258,7 @@ in
         shadowDirection = "center";
         shadowOffsetX = 0;
         shadowOffsetY = 0;
-        language = "";
+        language = "zh-CN";
         allowPanelsOnScreenWithoutBar = true;
         showChangelogOnStartup = false;
         telemetryEnabled = false;
@@ -509,7 +492,7 @@ in
         externalMonitor = "resources || missioncenter || jdsystemmonitor || corestats || system-monitoring-center || gnome-system-monitor || plasma-systemmonitor || mate-system-monitor || ukui-system-monitor || deepin-system-monitor || pantheon-system-monitor";
       };
       dock = {
-        enabled = true;
+        enabled = false;
         position = "bottom";
         displayMode = "auto_hide";
         dockType = "floating";

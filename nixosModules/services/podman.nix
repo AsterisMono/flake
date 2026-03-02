@@ -1,13 +1,4 @@
-{
-  pkgs,
-  ...
-}:
-{
-  environment.systemPackages = with pkgs; [
-    arion
-    docker-client
-  ];
-
+_: {
   virtualisation = {
     docker.enable = false;
     podman = {
