@@ -13,5 +13,4 @@
       libvdpau-va-gl
     ];
   };
-
 }

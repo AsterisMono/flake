@@ -16,7 +16,6 @@ in
 
   wayland.windowManager.sway = {
     enable = true;
-    systemd.enable = true;
     wrapperFeatures.gtk = true;
     config = {
       startup = [
@@ -33,7 +32,7 @@ in
         style = "Retina";
         size = 10.0;
       };
-      output.DP-1 = {
+      output.DP-3 = {
         mode = "2560x1440@75hz";
         scale = "1.25";
       };

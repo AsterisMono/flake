@@ -9,10 +9,10 @@
   imports = with nixosModules; [
     roles.desktop
     diskLayouts.btrfs
-    gui.greetd
+    gui.suites.sway
     gui.stylix
     hardware.bluetooth
-    hardware.nvidia
+    hardware.intel-graphics
     services.flatpak
     services.proxy
     services.podman
