@@ -1,5 +1,10 @@
 { inputs, ... }: {
-  systems = [ "x86_64-linux" ];
+  flake-file.inputs = {
+    git-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
 
   perSystem =
     {
