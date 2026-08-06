@@ -1,0 +1,9 @@
+keys:
+  - &noa age155rf8ggpnmdmcpwkd4gj3qy8j05wdtz7cwf96k50um6xly40h3wqc8pthy
+  - &mimosa age1fca2dlmqukt48zg89lrd0k2s5q8w52f9z3tyrfzcr2r2sj8gegxssldpzp
+creation_rules:
+  - path_regex: modules/secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+      - age:
+          - *noa
+          - *mimosa

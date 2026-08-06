@@ -3,7 +3,6 @@
     disko.devices = {
       disk = {
         main = {
-          device = "/dev/disk/by-id/some-disk-id";
           type = "disk";
           content = {
             type = "gpt";

@@ -11,11 +11,14 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     git-hooks.url = "github:cachix/git-hooks.nix";
+    home-manager.url = "github:nix-community/home-manager/release-26.05";
     import-tree.url = "github:vic/import-tree";
     nix-auto-follow = {
       url = "github:fzakaria/nix-auto-follow";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-index-database.url = "github:nix-community/nix-index-database";
     nixpkgs.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.xz";
+    sops-nix.url = "github:Mic92/sops-nix";
   };
 }
