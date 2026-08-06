@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+{ inputs, lib, ... }: {
   flake-file.inputs.git-hooks.url = "github:cachix/git-hooks.nix";
 
   perSystem =
@@ -14,7 +14,10 @@
           src = ./.;
           hooks = {
             nixfmt.enable = true;
-            statix.enable = true;
+            statix = {
+              enable = true;
+              settings.config = lib.toString ../statix.toml;
+            };
             convco.enable = true;
           };
         };
@@ -25,8 +28,11 @@
           nixd
           nixfmt
           just
-          sops
           nh
+          sops
+          age
+          ssh-to-age
+          nixos-rebuild-ng
         ];
         inherit (config.checks.pre-commit-check) shellHook;
         buildInputs = config.checks.pre-commit-check.enabledPackages;
