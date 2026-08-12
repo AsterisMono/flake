@@ -4,7 +4,6 @@
     # Default modules
     imports = [
       inputs.self.modules.generic.constants
-      inputs.self.modules.generic.secrets
       inputs.self.modules.nixos.nix
       inputs.self.modules.nixos.secrets
       inputs.sops-nix.nixosModules.sops

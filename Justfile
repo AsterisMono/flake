@@ -24,7 +24,7 @@ bootstrap hostname disk:
     nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{ hostname }} --disk main {{ disk }}
 
 rdeploy hostname target:
-    nixos-rebuild --flake .#{{ hostname }} --target-host {{ target }} switch -v -L
+    nixos-rebuild --flake .#{{ hostname }} --target-host {{ target }} switch -L
 
 generate-hardware-config target:
     ssh {{ target }} "nix --extra-experimental-features nix-command --extra-experimental-features flakes shell nixpkgs#nixos-install-tools -c nixos-generate-config --show-hardware-config --no-filesystems"

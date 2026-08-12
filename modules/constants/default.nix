@@ -10,6 +10,7 @@
 
     imports = with inputs.self.modules.generic; [
       constants-nvirellia
+      constants-resources
     ];
   };
 }

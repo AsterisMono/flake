@@ -8,6 +8,7 @@
       nix-substituter-cn
       services-podman
       services-sing-box
+      services-netbird
       (
         {
           modulesPath,
@@ -20,6 +21,10 @@
             (modulesPath + "/installer/scan/not-detected.nix")
           ];
 
+          networking = {
+            hostName = "mimosa";
+            domain = "lotus.local";
+          };
           boot.initrd.availableKernelModules = [ "nvme" ];
           boot.initrd.kernelModules = [ "dm-snapshot" ];
           boot.kernelModules = [ "kvm-amd" ];
