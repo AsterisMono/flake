@@ -2,7 +2,7 @@
   flake.nixosConfigurations.mimosa = inputs.nixpkgs.lib.nixosSystem {
     system = "x86_64-linux";
     modules = with inputs.self.modules.nixos; [
-      system-server
+      role-server
       boot-efi
       inputs.self.diskoConfigurations.xfs-with-quota
       nix-substituter-cn
