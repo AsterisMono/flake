@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  flake.modules.nixos.system-default = {
+  flake.modules.nixos.role-default = {
     # Default modules
     imports = [
       inputs.self.modules.generic.constants

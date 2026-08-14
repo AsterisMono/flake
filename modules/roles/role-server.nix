@@ -1,8 +1,8 @@
 { inputs, ... }:
 {
-  flake.modules.nixos.system-server = { config, ... }: {
+  flake.modules.nixos.role-server = { config, ... }: {
     imports = with inputs.self.modules.nixos; [
-      system-default
+      role-default
       services-ssh
     ];
 
