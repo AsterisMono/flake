@@ -5,10 +5,12 @@
 This repository is personal NixOS infrastructure. Optimize changes for safe operation of the managed machines, not for turning the repository into a reusable framework.
 
 - A **host** is an actual physical or virtual machine.
-- A **NixOS configuration** is the declarative desired state assigned to a host and exported through `flake.nixosConfigurations`.
-- A **role** is reusable policy for a machine purpose. Every NixOS configuration must import the `base` role; layer more specific roles on top.
+- A **machine** is the repository composition assigned to a host and materialized as a NixOS configuration.
+- A **NixOS configuration** is the operational output for a machine, exported through `flake.nixosConfigurations`.
+- An **aspect** is reusable policy with an optional NixOS contribution, optional Home Manager contribution, or both.
+- A **role** is an aspect that composes policy for a machine purpose. Every machine must import the `base` role; layer more specific roles on top.
 
-Keep host configuration files focused on identity, hardware facts, disk selection, and composition of roles and features. Do not put host-specific details in reusable roles.
+Keep machine definition files focused on identity, hardware facts, disk selection, and composition of roles and aspects. Do not put host-specific details in reusable aspects.
 
 ## Dendritic architecture
 
@@ -16,7 +18,9 @@ This flake follows the [dendritic pattern](https://raw.githubusercontent.com/mig
 
 The summary here is sufficient for routine changes. Read the upstream dendritic documentation before changing the repository architecture, introducing a module pattern, changing how values cross module boundaries, or adding module-level `enable` options. Do not fetch it for ordinary value edits inside an established module.
 
-- Export reusable lower-level modules through `flake.modules.nixos.<feature>`, `flake.modules.home.<feature>`, or `flake.modules.generic.<feature>`.
+- Export reusable lower-level modules through `flake.modules.nixos.<feature>`, `flake.modules.homeManager.<feature>`, or `flake.modules.generic.<feature>`.
+- Compose native modules through `flake.modules.aspects.<feature>`. Native NixOS and Home Manager modules with the same name are included automatically; declare an aspect directly to add dependencies or other contributions.
+- Define machines through `machines.<name>` as `aspects`-class submodules. Import aspects there, assign disk layouts through `diskoConfig`, and keep detected hardware facts in `hardware`; reserve `nixosModule` and `homeModule` for manual interventions. `flake.nixosConfigurations.<name>` is generated from the machine definition.
 - Keep definitions for multiple configuration classes together when they implement the same feature. Do not split a feature solely because it affects both NixOS and Home Manager.
 - Importing a project module should normally enable its feature. Do not add a project-level `enable` option unless the module genuinely must be imported while inactive.
 - Let `import-tree` discover top-level modules. Do not introduce manual top-level import lists for files it already discovers.
@@ -26,8 +30,8 @@ The summary here is sufficient for routine changes. Read the upstream dendritic 
 
 ## Repository map
 
-- `modules/configurations/`: NixOS configurations for hosts; hardware facts and module composition belong here.
-- `modules/roles/`: reusable policy bundles for machine purposes. `base` is mandatory for every NixOS configuration.
+- `modules/machines/`: machine definitions; hardware facts, disk selection, and aspect composition belong here.
+- `modules/roles/`: reusable aspect bundles for machine purposes. `base` is mandatory for every machine.
 - `modules/services/`: reusable service integrations and the secrets consumed by those services.
 - `modules/system/`: operating-system policy such as boot, storage, locale, and Nix behavior.
 - `modules/users/`: user accounts and their corresponding Home Manager entry points.
@@ -68,9 +72,15 @@ Follow these patterns:
 - Keep the NixOS and Home Manager release lines aligned. Do not move one independently to unstable or another release unless the task explicitly includes that migration.
 - Keep dependency updates targeted. Do not run a blanket `nix flake update` unless explicitly requested. When an input changes, regenerate `flake.nix`, update only the relevant lock node where practical, and include the resulting `flake.lock` change.
 
+## NixOS reference
+
+Use the `nixos` MCP as the primary reference for NixOS and Home Manager options, packages, and related documentation. Consult upstream documentation when the MCP does not cover the required capability or when repository guidance explicitly requires it.
+
 ## Validation
 
 Use the development shell (`nix develop`) for the repository's versions of `nixfmt`, `statix`, and related tools. Normally the shell should already be activated; if not (missing tools), ask the user to acticvate the nix shell first.
+
+Whenever adding a new file, stage it with `git add` so Nix can see it in the flake source. If Nix reports that it cannot find a module or file and you have confirmed that the path exists, run `git add` for that module or file before retrying.
 
 Before completing a change:
 

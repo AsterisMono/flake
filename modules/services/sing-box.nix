@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.services-sing-box = { config, ... }: {
+  flake.modules.nixos.sing-box = { config, ... }: {
     sops.secrets.sing_box_config = {
       format = "json";
       sopsFile = config.constants.resources.getSecretPath "sing-box.json";

@@ -1,4 +1,5 @@
-default: deploy
+default:
+    @just --list
 
 build:
     nh os build

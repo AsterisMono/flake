@@ -1,11 +1,8 @@
 { inputs, ... }:
 {
-  flake.modules.nixos.role-server = { config, ... }: {
-    imports = with inputs.self.modules.nixos; [
-      role-default
-      services-ssh
-    ];
+  flake.modules.aspects.server.imports = [ inputs.self.modules.aspects.ssh ];
 
+  flake.modules.nixos.server = { config, ... }: {
     # Boot
     boot.loader = {
       systemd-boot.configurationLimit = 5;

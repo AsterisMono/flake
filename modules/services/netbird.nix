@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.services-netbird = { config, ... }: {
+  flake.modules.nixos.netbird = { config, ... }: {
     sops.secrets.netbird_setup_key = {
       format = "yaml";
       sopsFile = config.constants.resources.getSecretPath "netbird.yaml";
