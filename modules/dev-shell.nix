@@ -33,9 +33,11 @@
           age
           ssh-to-age
           nixos-rebuild-ng
+          uv
         ];
         inherit (config.checks.pre-commit-check) shellHook;
         buildInputs = config.checks.pre-commit-check.enabledPackages;
+        EDITOR = "zed";
       };
     };
 }

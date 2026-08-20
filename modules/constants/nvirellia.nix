@@ -1,5 +1,5 @@
 {
-  flake.modules.generic.constants-nvirellia = { lib, ... }: {
+  flake.modules.generic.nvirellia = { lib, ... }: {
     options.constants.nvirellia = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       default = { };

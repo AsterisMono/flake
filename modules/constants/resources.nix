@@ -1,5 +1,5 @@
 { inputs, ... }: {
-  flake.modules.generic.constants-resources = { lib, ... }: {
+  flake.modules.generic.resources = { lib, ... }: {
     options.constants.resources = lib.mkOption {
       type = with lib.types; attrsOf unspecified;
       default = { };

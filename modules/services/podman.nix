@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.services-podman = {
+  flake.modules.nixos.podman = {
     virtualisation = {
       docker.enable = false;
       podman = {
