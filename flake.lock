@@ -601,11 +601,11 @@
         "nixpkgs": "nixpkgs_7"
       },
       "locked": {
-        "lastModified": 1787326696,
-        "narHash": "sha256-0vaPpVeRvo0zh/yzn3H/i5g/L+hJlvdHX+dVNEQ09tU=",
+        "lastModified": 1787582378,
+        "narHash": "sha256-J/eJNprZV4kiJ7djJdoW+fyH2X5zbaiiPEj6Q2A3I0k=",
         "ref": "refs/heads/main",
-        "rev": "6750b6be6630fbe16d8bb934e4169c50c9a01e4a",
-        "revCount": 3,
+        "rev": "adab2b09ff22d2b1e8ec79effe92e54551e84faa",
+        "revCount": 8,
         "type": "git",
         "url": "https://forge.asnk.io/sugar/sfd-nix"
       },
