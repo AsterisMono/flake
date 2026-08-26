@@ -18,7 +18,6 @@
               enable = true;
               settings.config = lib.toString ../statix.toml;
             };
-            convco.enable = true;
           };
         };
       };
@@ -37,7 +36,7 @@
         ];
         inherit (config.checks.pre-commit-check) shellHook;
         buildInputs = config.checks.pre-commit-check.enabledPackages;
-        EDITOR = "zeditor";
+        EDITOR = "zeditor --wait";
       };
     };
 }
