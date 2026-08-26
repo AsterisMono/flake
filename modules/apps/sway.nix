@@ -144,6 +144,11 @@ _: {
         wdisplays
       ];
 
+      home.sessionVariables = {
+        "NIXOS_OZONE_WL" = "1";
+        "ELECTRON_OZONE_PLATFORM_HINT" = "auto";
+      };
+
       services.gnome-keyring.enable = true;
       services.lxqt-policykit-agent.enable = true;
       systemd.user.services.lxqt-policykit-agent.Unit.After = [ "graphical-session.target" ];
