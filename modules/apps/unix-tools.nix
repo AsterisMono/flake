@@ -19,6 +19,8 @@
       isd
     ];
 
+    programs.ripgrep.enable = true;
+
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
