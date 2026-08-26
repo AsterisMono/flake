@@ -24,9 +24,9 @@
         };
         icons = {
           enable = true;
-          package = pkgs.la-capitaine-icon-theme;
-          dark = "la-capitaine-icon-theme";
-          light = "la-capitaine-icon-theme";
+          package = pkgs.tela-icon-theme;
+          dark = "Tela-dark";
+          light = "Tela-dark";
         };
         /*
           Stylix uses these as the primary fonts for application targets and

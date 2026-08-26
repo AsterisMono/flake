@@ -22,7 +22,6 @@ _: {
           ];
           modules-center = [ "mpris" ];
           modules-right = [
-            "network"
             "network#speed"
             "temperature"
             "cpu"
@@ -104,16 +103,6 @@ _: {
             on-click = "kitty --start-as=fullscreen --title btop sh -c 'btop'";
           };
 
-          network = {
-            format-wifi = " {essid}@{signalStrength}%";
-            format-ethernet = "󰈀 {ipaddr}/{cidr}";
-            tooltip-format = "{essid} - {ifname} via {gwaddr} ";
-            format-linked = "󰈀 {ifname} (No IP)";
-            format-disconnected = "";
-            format-alt = "{ifname}:{essid} {ipaddr}/{cidr}";
-            on-click-right = "nmgui";
-          };
-
           "network#speed" = {
             interval = 3;
             format-wifi = " {bandwidthUpBytes}  {bandwidthDownBytes}";
@@ -166,10 +155,22 @@ _: {
             "sway/workspaces"
             "wlr/taskbar"
           ];
+          modules-right = [ "sway/scratchpad" ];
           "sway/workspaces" = {
             all-outputs = true;
             disable-scroll-wraparound = true;
             format = "{name}";
+          };
+          "sway/scratchpad" = {
+            format = "{icon} {count}";
+            format-icons = [
+              ""
+              ""
+            ];
+            show-empty = false;
+            tooltip = true;
+            tooltip-format = "{app}: {title}";
+            on-click = "swaymsg scratchpad show";
           };
           "wlr/taskbar" = {
             all-outputs = true;
@@ -177,6 +178,7 @@ _: {
             icon-size = 16;
             icon-theme = "Tela-dark";
             tooltip = false;
+            expand = true;
             homogeneous = true;
             truncate = true;
             justify = "left";
@@ -199,6 +201,10 @@ _: {
         window#waybar.taskbar {
           background: alpha(@base00, 0.92);
           border-top: 1px solid alpha(@base04, 0.35);
+        }
+
+        window#waybar.taskbar > box {
+          padding-right: 8px;
         }
 
         #workspaces {
