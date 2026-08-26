@@ -17,6 +17,7 @@
           hash = "sha256-1n30bVynUkK650sGyfmD9GoElzqxSUmSpfP7Tb9q2G4=";
         };
         base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
+        polarity = "dark";
         cursor = {
           name = "macOS";
           package = pkgs.apple-cursor;
