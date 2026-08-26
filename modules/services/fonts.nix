@@ -13,17 +13,17 @@ let
     serif = lib.mkAfter [
       "Noto Serif CJK SC"
       "Symbols Nerd Font"
-      "Noto Color Emoji"
+      "Twitter Color Emoji"
     ];
     sansSerif = lib.mkAfter [
       "Noto Sans CJK SC"
       "Symbols Nerd Font"
-      "Noto Color Emoji"
+      "Twitter Color Emoji"
     ];
     monospace = lib.mkAfter [
       "Noto Sans Mono CJK SC"
       "Symbols Nerd Font Mono"
-      "Noto Color Emoji"
+      "Twitter Color Emoji"
     ];
   };
 in
@@ -35,7 +35,7 @@ in
         noto-fonts
         noto-fonts-cjk-sans
         noto-fonts-cjk-serif
-        noto-fonts-color-emoji
+        twitter-color-emoji
         source-han-sans
         source-han-serif
         wqy_microhei
