@@ -82,18 +82,14 @@ Use the development shell (`nix develop`) for the repository's versions of `nixf
 
 Whenever adding a new file, stage it with `git add` so Nix can see it in the flake source. If Nix reports that it cannot find a module or file and you have confirmed that the path exists, run `git add` for that module or file before retrying.
 
-Before completing a change:
+Before completing a change, format changed Nix files with `nixfmt`.
 
-1. Format changed Nix files with `nixfmt`.
-2. Run `nix flake check`.
-3. If a NixOS configuration was added or changed, build only that configuration with `nix build .#nixosConfigurations.<name>.config.system.build.toplevel`.
-
-Do not build every NixOS configuration locally for a shared-module change; exhaustive configuration builds belong to CI. Preserve the `nixos-configurations-import-base` check. Encode new objective repository-wide invariants as flake checks when practical, but leave subjective formatting and lint rules to `nixfmt` and `statix`.
+Preserve the `nixos-configurations-import-base` check. Encode new objective repository-wide invariants as flake checks when practical, but leave subjective formatting and lint rules to `nixfmt` and `statix`.
 
 ## Operational safety
 
 Bare `just` is informational and lists recipes. Even so, inspect a recipe before invoking it.
 
-Do not run remote, privileged, machine-mutating, disk, deployment, garbage-collection, or key-rewrite recipes without explicit authorization. This includes `deploy`, `boot`, `dryrun`, `install`, `bootstrap`, `rdeploy`, `generate-hardware-config`, `gc`, `scan-age-key`, and `updatekeys`. Prefer the non-switching Nix build command in the validation section when only verification is required.
+Do not run remote, privileged, machine-mutating, disk, deployment, garbage-collection, or key-rewrite recipes without explicit authorization. This includes `deploy`, `boot`, `dryrun`, `install`, `bootstrap`, `rdeploy`, `generate-hardware-config`, `gc`, `scan-age-key`, and `updatekeys`.
 
 Preserve unrelated work in a dirty worktree. Do not create commits unless requested. When a commit is requested, use a Conventional Commit message such as `type(scope): description`.
