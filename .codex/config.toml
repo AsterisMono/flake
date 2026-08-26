@@ -1,3 +1,6 @@
 [mcp_servers.nixos]
 command = "uvx"
 args = ["mcp-nixos"]
+
+[mcp_servers.nixos.tools.nix]
+approval_mode = "approve"
