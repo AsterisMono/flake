@@ -18,7 +18,7 @@
     kitty
     ly
     neovim
-    singbox-gui
+    sing-box
     starship
     sway
     unix-tools
