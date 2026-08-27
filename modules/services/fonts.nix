@@ -23,6 +23,8 @@ let
     monospace = lib.mkAfter [
       "Noto Sans Mono CJK SC"
       "Symbols Nerd Font Mono"
+      "Noto Sans Symbols"
+      "Noto Sans Symbols 2"
       "Twitter Color Emoji"
     ];
   };
