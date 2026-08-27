@@ -14,6 +14,10 @@
   flake.modules.homeManager.agents =
     { pkgs, ... }:
     {
-      home.packages = [ pkgs.llm-agents.codex ];
+      home.packages = with pkgs.llm-agents; [
+        codex
+        pi
+        herdr
+      ];
     };
 }

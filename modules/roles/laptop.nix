@@ -10,6 +10,7 @@
     stylix
 
     _1password
+    agents
     fcitx5
     firefox
     fish
