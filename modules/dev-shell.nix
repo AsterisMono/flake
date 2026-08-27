@@ -1,5 +1,8 @@
 { inputs, lib, ... }: {
-  flake-file.inputs.git-hooks.url = "github:cachix/git-hooks.nix";
+  flake-file.inputs.git-hooks = {
+    url = "github:cachix/git-hooks.nix";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   perSystem =
     {

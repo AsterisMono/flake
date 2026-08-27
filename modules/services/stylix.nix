@@ -2,7 +2,9 @@
 {
   flake-file.inputs.stylix = {
     url = "github:nix-community/stylix/release-26.05";
+    inputs.flake-parts.follows = "flake-parts";
     inputs.nixpkgs.follows = "nixpkgs";
+    inputs.systems.follows = "systems";
   };
 
   flake.modules.nixos.stylix =

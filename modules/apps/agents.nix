@@ -2,7 +2,9 @@
 {
   flake-file.inputs.llm-agents = {
     url = "github:numtide/llm-agents.nix";
+    inputs.flake-parts.follows = "flake-parts";
     inputs.nixpkgs.follows = "nixpkgs-unstable";
+    inputs.systems.follows = "systems";
   };
 
   flake.modules.nixos.agents = {

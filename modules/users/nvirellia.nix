@@ -1,7 +1,13 @@
 _: {
   flake-file.inputs = {
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    home-manager.url = "github:nix-community/home-manager/release-26.05";
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   flake.modules.nixos.nvirellia =

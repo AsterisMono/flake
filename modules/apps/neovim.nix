@@ -1,6 +1,11 @@
 { inputs, ... }:
 {
-  flake-file.inputs.nixvim.url = "github:nix-community/nixvim/nixos-26.05";
+  flake-file.inputs.nixvim = {
+    url = "github:nix-community/nixvim/nixos-26.05";
+    inputs.flake-parts.follows = "flake-parts";
+    inputs.nixpkgs.follows = "nixpkgs";
+    inputs.systems.follows = "systems";
+  };
 
   flake.modules.homeManager.neovim = {
     imports = [ inputs.nixvim.homeModules.nixvim ];
