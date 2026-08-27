@@ -11,7 +11,120 @@ _: {
       jsonFormat = pkgs.formats.json { };
       contentType = lib.types.either lib.types.lines lib.types.path;
       resourceType = lib.types.either (lib.types.attrsOf contentType) lib.types.path;
+      piPackageType = lib.types.submodule {
+        options = {
+          hash = lib.mkOption {
+            type = lib.types.str;
+            example = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            description = "Hash of the fetched npm dependency cache for this Pi package.";
+          };
+
+          npmFlags = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ "--legacy-peer-deps" ];
+            description = "Additional flags passed to npm install.";
+          };
+        };
+      };
       isPathLike = lib.hm.strings.isPathLike;
+      parseNpmSpec =
+        npmSpec:
+        let
+          unversioned = {
+            name = npmSpec;
+            version = "latest";
+          };
+        in
+        if lib.hasPrefix "@" npmSpec then
+          let
+            slashParts = lib.splitString "/" npmSpec;
+            scope = builtins.elemAt slashParts 0;
+            rest = builtins.concatStringsSep "/" (builtins.tail slashParts);
+            versionParts = lib.splitString "@" rest;
+            package = builtins.elemAt versionParts 0;
+          in
+          if builtins.length slashParts < 2 || package == "" then
+            unversioned
+          else
+            {
+              name = "${scope}/${package}";
+              version = if builtins.length versionParts > 1 then builtins.elemAt versionParts 1 else "latest";
+            }
+        else
+          let
+            versionParts = lib.splitString "@" npmSpec;
+            package = builtins.elemAt versionParts 0;
+          in
+          if package == "" then
+            unversioned
+          else
+            {
+              name = package;
+              version = if builtins.length versionParts > 1 then builtins.elemAt versionParts 1 else "latest";
+            };
+      mkNpmPackage =
+        source: packageCfg:
+        let
+          npmSpec = lib.removePrefix "npm:" source;
+          package = parseNpmSpec npmSpec;
+          pname = "pi-npm-package-${lib.strings.sanitizeDerivationName package.name}";
+          packageJson = builtins.toJSON {
+            name = pname;
+            version = "0.0.0";
+            private = true;
+            dependencies.${package.name} = package.version;
+          };
+          packageSrc = pkgs.runCommand "${pname}-src" { } ''
+            mkdir -p $out
+            printf %s ${lib.escapeShellArg packageJson} > $out/package.json
+          '';
+          nodeModulesLinkTarget = if lib.hasPrefix "@" package.name then "../.." else "..";
+          generateLock = ''
+            export HOME=$TMPDIR/home
+            export npm_config_cache=$TMPDIR/npm-cache
+            mkdir -p "$HOME"
+            npm install --package-lock-only --ignore-scripts ${lib.escapeShellArgs packageCfg.npmFlags}
+          '';
+        in
+        pkgs.buildNpmPackage {
+          inherit pname;
+          inherit (package) version;
+          src = packageSrc;
+
+          npmDeps = pkgs.fetchNpmDeps {
+            name = "${pname}-${package.version}-npm-deps";
+            src = packageSrc;
+            nativeBuildInputs = [ pkgs.nodejs ];
+            NODE_EXTRA_CA_CERTS = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+            postPatch = generateLock;
+            inherit (packageCfg) hash;
+          };
+          inherit (packageCfg) npmFlags;
+          dontNpmBuild = true;
+          postPatch = ''
+            cp "$npmDeps/package-lock.json" package-lock.json
+          '';
+          installPhase = ''
+            runHook preInstall
+            test -d ${lib.escapeShellArg "node_modules/${package.name}"}
+            mkdir -p "$out"
+            cp -R node_modules "$out/node_modules"
+            if [ ! -e "$out/node_modules/${package.name}/node_modules" ]; then
+              ln -s ${lib.escapeShellArg nodeModulesLinkTarget} "$out/node_modules/${package.name}/node_modules"
+            fi
+            ln -s ${lib.escapeShellArg "node_modules/${package.name}"} "$out/package"
+            runHook postInstall
+          '';
+        };
+      vendoredNpmPackagePaths = lib.mapAttrsToList (
+        source: packageCfg: "${mkNpmPackage source packageCfg}/package"
+      ) cfg.vendoredNpmPackages;
+      existingPackages = cfg.settings.packages or [ ];
+      effectiveSettings =
+        cfg.settings
+        // lib.optionalAttrs (vendoredNpmPackagePaths != [ ]) {
+          packages = vendoredNpmPackagePaths ++ existingPackages;
+        };
 
       addSuffix =
         suffix: name:
@@ -81,6 +194,20 @@ _: {
           description = ''
             Directory containing Pi's global configuration. When changed from
             the upstream default, PI_CODING_AGENT_DIR is set accordingly.
+          '';
+        };
+
+        vendoredNpmPackages = lib.mkOption {
+          type = lib.types.attrsOf piPackageType;
+          default = { };
+          example = {
+            "npm:pi-mcp-adapter@2.29.0".hash = "";
+          };
+          description = ''
+            Pi npm packages to fetch into the Nix store with buildNpmPackage
+            and add to settings.json. Attribute names use Pi's npm package
+            source syntax: npm:<name> or npm:<name>@<version>. Set hash to an
+            empty string to get the expected hash from the build failure.
           '';
         };
 
@@ -196,7 +323,20 @@ _: {
       };
 
       config = lib.mkIf cfg.enable {
+        programs.pi-agent.settings.packages = lib.mkIf (cfg.vendoredNpmPackages != { }) (lib.mkDefault [ ]);
+
         assertions = [
+          {
+            assertion = lib.all (lib.hasPrefix "npm:") (lib.attrNames cfg.vendoredNpmPackages);
+            message = "`programs.pi-agent.vendoredNpmPackages` supports only npm: package sources";
+          }
+          {
+            assertion =
+              vendoredNpmPackagePaths == [ ]
+              || !(cfg.settings ? packages)
+              || builtins.isList cfg.settings.packages;
+            message = "`programs.pi-agent.settings.packages` must be a list when `programs.pi-agent.vendoredNpmPackages` is set";
+          }
           {
             assertion = !isPathLike cfg.extensions || lib.pathIsDirectory cfg.extensions;
             message = "`programs.pi-agent.extensions` must be a directory when set to a path";
@@ -239,8 +379,8 @@ _: {
           };
 
           file = lib.mkMerge [
-            (lib.mkIf (cfg.settings != { }) {
-              "${cfg.configDir}/settings.json".source = jsonFormat.generate "pi-settings.json" cfg.settings;
+            (lib.mkIf (effectiveSettings != { }) {
+              "${cfg.configDir}/settings.json".source = jsonFormat.generate "pi-settings.json" effectiveSettings;
             })
             (lib.mkIf (cfg.keybindings != { }) {
               "${cfg.configDir}/keybindings.json".source =
