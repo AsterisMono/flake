@@ -4,6 +4,9 @@ default:
 build:
     nh os build
 
+build-installer-iso:
+    nix build .#nixosConfigurations.installer.config.system.build.isoImage -L
+
 deploy:
     nh os switch
 
@@ -25,7 +28,7 @@ bootstrap hostname disk:
     nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{ hostname }} --disk main {{ disk }}
 
 [positional-arguments]
-generate-luks-password machine vault="Private":
+generate-luks-password machine vault="NixOS":
     #!/usr/bin/env bash
     set -euo pipefail
 
