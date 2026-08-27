@@ -31,8 +31,12 @@
           labels = [
             "node-22:docker://node:22-bookworm"
             "nixos-latest:docker://nixos/nix"
+            "docker:docker://data.forgejo.org/oci/alpine:3.20"
           ];
-          settings = { };
+          settings.container = {
+            network = "host";
+            docker_host = "automount";
+          };
         };
       };
 

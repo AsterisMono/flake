@@ -32,6 +32,7 @@
         networking = {
           hostName = "mimosa";
           domain = "lotus.local";
+          firewall.enable = lib.mkForce false;
         };
         boot.initrd.availableKernelModules = [ "nvme" ];
         boot.initrd.kernelModules = [ "dm-snapshot" ];
