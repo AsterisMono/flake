@@ -24,6 +24,24 @@ install hostname target:
 bootstrap hostname disk:
     nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{ hostname }} --disk main {{ disk }}
 
+[positional-arguments]
+generate-luks-password machine vault="Private":
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    item_title="NixOS $1 LUKS root"
+
+    op item create \
+      --category Password \
+      --title "$item_title" \
+      --vault "$2" \
+      --generate-password='letters,digits,symbols,64' \
+      --format json \
+      | op item get - --fields label=password --reveal \
+      | sudo install -m 0600 /dev/stdin /run/luks-password
+
+    echo "Saved a new LUKS password as '$item_title' in the '$2' vault and wrote /run/luks-password."
+
 rdeploy hostname target:
     nixos-rebuild --flake .#{{ hostname }} --target-host {{ target }} switch -L
 
