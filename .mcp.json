@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "nixos": {
+      "command": "uvx",
+      "args": [
+        "mcp-nixos"
+      ],
+      "lifecycle": "lazy"
+    }
+  }
+}
