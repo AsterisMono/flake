@@ -26,6 +26,13 @@
           settings = {
             onboarding = false;
             session.resume_agents_on_restore = true;
+            keys.command = [
+              {
+                key = "alt+r";
+                type = "plugin_action";
+                command = "persiyanov.reviewr.toggle";
+              }
+            ];
             theme.name = "gruvbox";
             ui.toast.delivery = "system";
           };
