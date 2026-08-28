@@ -1,4 +1,8 @@
-_: {
+{ lib, config, ... }:
+let
+  inherit (config.npmHelpers) defaultNpmFlags mkVendoredSettings;
+in
+{
   flake.modules.homeManager.pi-agent =
     {
       config,
@@ -21,111 +25,16 @@ _: {
 
           npmFlags = lib.mkOption {
             type = lib.types.listOf lib.types.str;
-            default = [ "--legacy-peer-deps" ];
+            default = defaultNpmFlags;
             description = "Additional flags passed to npm install.";
           };
         };
       };
       isPathLike = lib.hm.strings.isPathLike;
-      parseNpmSpec =
-        npmSpec:
-        let
-          unversioned = {
-            name = npmSpec;
-            version = "latest";
-          };
-        in
-        if lib.hasPrefix "@" npmSpec then
-          let
-            slashParts = lib.splitString "/" npmSpec;
-            scope = builtins.elemAt slashParts 0;
-            rest = builtins.concatStringsSep "/" (builtins.tail slashParts);
-            versionParts = lib.splitString "@" rest;
-            package = builtins.elemAt versionParts 0;
-          in
-          if builtins.length slashParts < 2 || package == "" then
-            unversioned
-          else
-            {
-              name = "${scope}/${package}";
-              version = if builtins.length versionParts > 1 then builtins.elemAt versionParts 1 else "latest";
-            }
-        else
-          let
-            versionParts = lib.splitString "@" npmSpec;
-            package = builtins.elemAt versionParts 0;
-          in
-          if package == "" then
-            unversioned
-          else
-            {
-              name = package;
-              version = if builtins.length versionParts > 1 then builtins.elemAt versionParts 1 else "latest";
-            };
-      mkNpmPackage =
-        source: packageCfg:
-        let
-          npmSpec = lib.removePrefix "npm:" source;
-          package = parseNpmSpec npmSpec;
-          pname = "pi-npm-package-${lib.strings.sanitizeDerivationName package.name}";
-          packageJson = builtins.toJSON {
-            name = pname;
-            version = "0.0.0";
-            private = true;
-            dependencies.${package.name} = package.version;
-          };
-          packageSrc = pkgs.runCommand "${pname}-src" { } ''
-            mkdir -p $out
-            printf %s ${lib.escapeShellArg packageJson} > $out/package.json
-          '';
-          nodeModulesLinkTarget = if lib.hasPrefix "@" package.name then "../.." else "..";
-          generateLock = ''
-            export HOME=$TMPDIR/home
-            export npm_config_cache=$TMPDIR/npm-cache
-            mkdir -p "$HOME"
-            npm install --package-lock-only --ignore-scripts ${lib.escapeShellArgs packageCfg.npmFlags}
-          '';
-        in
-        pkgs.buildNpmPackage {
-          inherit pname;
-          inherit (package) version;
-          src = packageSrc;
-
-          npmDeps = pkgs.fetchNpmDeps {
-            name = "${pname}-${package.version}-npm-deps";
-            src = packageSrc;
-            nativeBuildInputs = [ pkgs.nodejs ];
-            NODE_EXTRA_CA_CERTS = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-            postPatch = generateLock;
-            inherit (packageCfg) hash;
-          };
-          inherit (packageCfg) npmFlags;
-          dontNpmBuild = true;
-          postPatch = ''
-            cp "$npmDeps/package-lock.json" package-lock.json
-          '';
-          installPhase = ''
-            runHook preInstall
-            test -d ${lib.escapeShellArg "node_modules/${package.name}"}
-            mkdir -p "$out"
-            cp -R node_modules "$out/node_modules"
-            if [ ! -e "$out/node_modules/${package.name}/node_modules" ]; then
-              ln -s ${lib.escapeShellArg nodeModulesLinkTarget} "$out/node_modules/${package.name}/node_modules"
-            fi
-            ln -s ${lib.escapeShellArg "node_modules/${package.name}"} "$out/package"
-            runHook postInstall
-          '';
-        };
-      vendoredNpmPackagePaths = lib.mapAttrsToList (
-        source: packageCfg: "${mkNpmPackage source packageCfg}/package"
-      ) cfg.vendoredNpmPackages;
-      existingPackages = cfg.settings.packages or [ ];
-      effectiveSettings =
-        cfg.settings
-        // lib.optionalAttrs (vendoredNpmPackagePaths != [ ]) {
-          packages = vendoredNpmPackagePaths ++ existingPackages;
-        };
-
+      inherit (mkVendoredSettings pkgs cfg.settings cfg.vendoredNpmPackages)
+        vendoredNpmPackagePaths
+        effectiveSettings
+        ;
       addSuffix =
         suffix: name:
         if lib.hasSuffix suffix name || (suffix == ".ts" && lib.hasSuffix ".js" name) then
