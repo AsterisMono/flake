@@ -1,6 +1,6 @@
 { inputs, ... }:
 {
-  flake.modules.aspects.laptop.imports = with inputs.self.modules.aspects; [
+  flake.modules.aspects.workstation.imports = with inputs.self.modules.aspects; [
     audio
     bluetooth
     fonts

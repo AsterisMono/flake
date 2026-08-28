@@ -4,7 +4,7 @@
     system = "x86_64-linux";
     imports = with inputs.self.modules.aspects; [
       base
-      laptop
+      workstation
       efi
       i18n
       substituter-cn
