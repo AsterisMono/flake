@@ -135,7 +135,7 @@ _: {
             };
 
             "custom/waycat" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycat} --format-enabled --format '<span font_family=\"polycat\" size=\"200%\">$frame</span>'";
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycat} --format-enabled --format '<span font_family=\"polycat\" size=\"160%\">$frame</span>'";
               format = "{}";
             };
 
