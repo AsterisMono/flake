@@ -205,7 +205,7 @@ _: {
               "sway/scratchpad"
             ];
             "custom/waycodex" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycodex} --offline '' --format '5h {5h_used}% • 1w {1w_used}% • reset {next_reset}'";
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycodex} --offline '' --format '5h {5h_left}% • 1w {1w_left}% • reset {next_reset}'";
               interval = 60;
               format = "{}";
             };
