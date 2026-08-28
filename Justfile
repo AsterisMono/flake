@@ -2,16 +2,16 @@ default:
     @just --list
 
 build:
-    nh os build
+    nixos-rebuild build --flake . --sudo
 
 build-installer-iso:
     nix build .#nixosConfigurations.installer.config.system.build.isoImage -L
 
 deploy:
-    nh os switch
+    nixos-rebuild switch --flake . --sudo
 
 boot:
-    nh os boot
+    nixos-rebuild boot --flake . --sudo
 
 dryrun:
     nixos-rebuild dry-run --flake . --sudo -v -L
