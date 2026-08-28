@@ -139,6 +139,12 @@ _: {
               format = "{}";
             };
 
+            "custom/wayherdr" = {
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '󰄛{working} 󱜺<span foreground=\"#ea6962\">{blocked}</span> 󰅿<span foreground=\"#a9b665\">{done}</span>'";
+              interval = 3;
+              format = "{}";
+            };
+
             memory = {
               interval = 3;
               format = " {}%";
@@ -199,7 +205,10 @@ _: {
               "sway/workspaces"
               "wlr/taskbar"
             ];
-            modules-right = [ "sway/scratchpad" ];
+            modules-right = [
+              "custom/wayherdr"
+              "sway/scratchpad"
+            ];
             "sway/workspaces" = {
               all-outputs = true;
               disable-scroll-wraparound = true;
