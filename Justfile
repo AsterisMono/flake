@@ -2,16 +2,22 @@ default:
     @just --list
 
 build:
-    nixos-rebuild build --flake . --sudo
+    nixos-rebuild build --flake .
 
 build-installer-iso:
     nix build .#nixosConfigurations.installer.config.system.build.isoImage -L
 
-deploy:
-    nixos-rebuild switch --flake . --sudo
+elevate command:
+    pkexec /run/current-system/sw/bin/bash -c {{ quote(command) }}
 
-boot:
-    nixos-rebuild boot --flake . --sudo
+_activate action:
+    @nixos-rebuild build --flake .
+    @system="$(readlink -f result)"; \
+      just elevate "nix-env -p /nix/var/nix/profiles/system --set '$system' && '$system/bin/switch-to-configuration' {{ action }}"
+
+deploy: (_activate "switch")
+
+boot: (_activate "boot")
 
 dryrun:
     nixos-rebuild dry-run --flake . --sudo -v -L
