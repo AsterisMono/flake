@@ -139,12 +139,6 @@ _: {
               format = "{}";
             };
 
-            "custom/wayherdr" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '<span foreground=\"#7daea3\">󰄛</span> {working} <span foreground=\"#ea6962\">󱜺</span> {blocked} <span foreground=\"#a9b665\">󰅿</span> {done}'";
-              interval = 3;
-              format = "{}";
-            };
-
             memory = {
               interval = 3;
               format = " {}%";
@@ -209,6 +203,11 @@ _: {
               "custom/wayherdr"
               "sway/scratchpad"
             ];
+            "custom/wayherdr" = {
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '<span foreground=\"#7daea3\">󰄛</span> {working} <span foreground=\"#ea6962\">󱜺</span> {blocked} <span foreground=\"#a9b665\">󰅿</span> {done}'";
+              interval = 3;
+              format = "{}";
+            };
             "sway/workspaces" = {
               all-outputs = true;
               disable-scroll-wraparound = true;
