@@ -200,9 +200,15 @@ _: {
               "wlr/taskbar"
             ];
             modules-right = [
+              "custom/waycodex"
               "custom/wayherdr"
               "sway/scratchpad"
             ];
+            "custom/waycodex" = {
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycodex} --offline '' --format '5h {5h_used}% • 1w {1w_used}% • reset {next_reset}'";
+              interval = 60;
+              format = "{}";
+            };
             "custom/wayherdr" = {
               exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '󰄛 {working}{{#blocked}} <span foreground=\"#d8a657\">󱜺</span> {blocked}{{/blocked}}{{#done}} <span foreground=\"#a9b665\">󰅿</span> {done}{{/done}}'";
               interval = 3;
