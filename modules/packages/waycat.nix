@@ -12,20 +12,21 @@
 
         src = pkgs.fetchFromGitHub {
           owner = "AsterisMono";
-          repo = "waycat";
-          rev = "b3ad19138cd36e01b3f631b420260a7634ce33a2";
-          hash = "sha256-THQh5jSDYwLPjKs4j4SYLanDWhAApWtLEaPXcOOVfxk=";
+          repo = "waybar-toys";
+          rev = "b6fb26af921082a53072bbbccc8757b3ae49d76c";
+          hash = "sha256-A+0dKXlfj6CVW7OkfOQAh3IqN9bTp+lQKCKwwYxnB0Y=";
         };
 
-        cargoHash = "sha256-OYvNgmfNfjeMTGzADWTj4EXIWOj5snbnHrmHwkBL7vQ=";
+        cargoHash = "sha256-SPgq2kWY7K+knQRID3wZOzffZU0VonY1ApBPga5Gd9E=";
+        buildAndTestSubdir = "waycat";
 
         postInstall = ''
-          install -Dm644 res/waycat.ttf $out/share/fonts/TTF/waycat.ttf
+          install -Dm644 waycat/res/waycat.ttf $out/share/fonts/TTF/waycat.ttf
         '';
 
         meta = {
           description = "Lightweight animated CPU-load cat for Waybar and Polybar";
-          homepage = "https://github.com/AsterisMono/waycat";
+          homepage = "https://github.com/AsterisMono/waybar-toys/tree/main/waycat";
           license = pkgs.lib.licenses.mit;
           mainProgram = "waycat";
           platforms = pkgs.lib.platforms.linux;

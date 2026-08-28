@@ -12,16 +12,17 @@
 
         src = pkgs.fetchFromGitHub {
           owner = "AsterisMono";
-          repo = "wayherdr";
-          rev = "5c6f81e7c0f8b7693582d15a910161dac54881ab";
-          hash = "sha256-C/e+V1zr3KuCQjvysqwgz7YHUgFiQryAn8GAfSSXcFw=";
+          repo = "waybar-toys";
+          rev = "b6fb26af921082a53072bbbccc8757b3ae49d76c";
+          hash = "sha256-A+0dKXlfj6CVW7OkfOQAh3IqN9bTp+lQKCKwwYxnB0Y=";
         };
 
-        cargoHash = "sha256-DwQsX1mas0/b0vf3C//CR866BX/PMSkSg8Vui9c0VBk=";
+        cargoHash = "sha256-SPgq2kWY7K+knQRID3wZOzffZU0VonY1ApBPga5Gd9E=";
+        buildAndTestSubdir = "wayherdr";
 
         meta = {
           description = "Waybar plugin that shows the statuses of agents in a running herdr server";
-          homepage = "https://github.com/AsterisMono/wayherdr";
+          homepage = "https://github.com/AsterisMono/waybar-toys/tree/main/wayherdr";
           license = pkgs.lib.licenses.mit;
           mainProgram = "wayherdr";
           platforms = pkgs.lib.platforms.linux;
