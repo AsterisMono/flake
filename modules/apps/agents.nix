@@ -41,7 +41,10 @@
         pi-agent = {
           enable = true;
           package = pkgs.llm-agents.pi;
-          settings.defaultModel = "gpt-5.6-sol";
+          settings = {
+            defaultProvider = "openai-codex";
+            defaultModel = "gpt-5.6-sol";
+          };
           vendoredNpmPackages = {
             "npm:@ff-labs/pi-fff@0.10.5".hash = "sha256-KfilZVZohnisnbQ8XO7+50TQzSaIrw6DpLxA5XRIi+w=";
             "npm:@narumitw/pi-goal@0.54.3".hash = "sha256-1P7I+bvcWgynbZ+kkam9sIRgWMGTdFO4K/o/hqbzWaM=";
