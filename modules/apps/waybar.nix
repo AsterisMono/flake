@@ -26,12 +26,11 @@ _: {
             ];
             modules-center = [ "mpris" ];
             modules-right = [
+              "custom/waycat"
               "network#speed"
               "temperature"
-              "custom/waycat"
               "memory"
               "battery"
-              "backlight"
               "wireplumber"
               "tray"
             ];
@@ -94,9 +93,13 @@ _: {
               format = " {temperatureC}°C";
             };
 
+            cpu = {
+              interval = 1;
+              format = "{usage}%";
+            };
+
             "custom/waycat" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycat} --format-enabled --format '$rcpu $frame'";
-              interval = 0;
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycat} --format-enabled --format '<span font_family=\"polycat\" size=\"200%\">$frame</span>'";
               format = "{}";
             };
 
@@ -256,10 +259,6 @@ _: {
             margin-left: -10px;
             padding-top: 2px;
             font-size: 8pt;
-          }
-
-          #custom-waycat {
-            font-family: polycat;
           }
         '';
       };
