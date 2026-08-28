@@ -210,7 +210,7 @@ _: {
               format = "{}";
             };
             "custom/wayherdr" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '󰄛 {working}{{#blocked}} <span foreground=\"#d8a657\">󱜺</span> {blocked}{{/blocked}}{{#done}} <span foreground=\"#a9b665\">󰅿</span> {done}{{/done}}'";
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format ' <span foreground=\"#5a524c\">|</span> 󰄛 {working}{{#blocked}} <span foreground=\"#d8a657\">󱜺</span> {blocked}{{/blocked}}{{#done}} <span foreground=\"#a9b665\">󰅿</span> {done}{{/done}}'";
               interval = 3;
               format = "{}";
             };
