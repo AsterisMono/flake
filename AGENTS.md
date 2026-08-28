@@ -36,6 +36,7 @@ The summary here is sufficient for routine changes. Read the upstream dendritic 
 - `modules/system/`: operating-system policy such as boot, storage, locale, and Nix behavior.
 - `modules/users/`: user accounts and their corresponding Home Manager entry points.
 - `modules/apps/`: user-facing application configuration, generally exposed as Home Manager modules.
+- `modules/packages/`: package definitions exported through the flake's package set and self-package overlay.
 - `modules/constants/`: typed shared identity, resource, and other cross-feature values.
 - `modules/secrets/`: shared sops-nix integration plus encrypted secret documents.
 
@@ -65,6 +66,12 @@ Follow these patterns:
 - Set `owner`, `group`, and `mode` no more permissively than the consumer requires.
 - For a password supplied through `hashedPasswordFile`, declare its secret with `neededForUsers = true` so it is available before user creation.
 - When recipients change, update the affected encrypted documents with `sops updatekeys`; `just updatekeys` is the repository-wide convenience recipe. This rewrite requires explicit authorization.
+
+## Packaging software
+
+- Put package definitions in `modules/packages/` and follow the [nixpkgs packaging guidelines](https://github.com/NixOS/nixpkgs/blob/master/pkgs/README.md).
+- Use [nix-init](https://github.com/nix-community/nix-init) to generate an initial package expression when applicable, then adapt it to this repository's dendritic flake structure and local conventions.
+- When consuming a package exported by this flake in NixOS or Home Manager configuration, use `pkgs.selfPackages.<package>` through the self-package overlay rather than reaching into `inputs.self.packages` directly.
 
 ## Compatibility and dependencies
 
