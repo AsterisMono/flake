@@ -32,6 +32,7 @@
     programs.direnv = {
       enable = true;
       nix-direnv.enable = true;
+      config.whitelist.prefix = [ "${config.home.homeDirectory}/.herdr/worktrees/" ];
     };
 
     programs.zoxide = {
