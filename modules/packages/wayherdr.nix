@@ -13,8 +13,8 @@
         src = pkgs.fetchFromGitHub {
           owner = "AsterisMono";
           repo = "wayherdr";
-          rev = "b8a1df82d0514031bd78ab8852746ab67d599a10";
-          hash = "sha256-pID/mqpgmdsaD32RnuSHgnYM47zt7/+3c9Tl7pQiw58=";
+          rev = "5c6f81e7c0f8b7693582d15a910161dac54881ab";
+          hash = "sha256-C/e+V1zr3KuCQjvysqwgz7YHUgFiQryAn8GAfSSXcFw=";
         };
 
         cargoHash = "sha256-DwQsX1mas0/b0vf3C//CR866BX/PMSkSg8Vui9c0VBk=";

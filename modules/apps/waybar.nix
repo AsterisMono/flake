@@ -204,7 +204,7 @@ _: {
               "sway/scratchpad"
             ];
             "custom/wayherdr" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '<span foreground=\"#7daea3\">󰄛</span> {working} <span foreground=\"#ea6962\">󱜺</span> {blocked} <span foreground=\"#a9b665\">󰅿</span> {done}'";
+              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format '󰄛 {working}{{#blocked}} <span foreground=\"#d8a657\">󱜺</span> {blocked}{{/blocked}}{{#done}} <span foreground=\"#a9b665\">󰅿</span> {done}{{/done}}'";
               interval = 3;
               format = "{}";
             };
