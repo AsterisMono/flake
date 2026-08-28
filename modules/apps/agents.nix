@@ -33,7 +33,10 @@
         pi-agent = {
           enable = true;
           package = pkgs.llm-agents.pi;
+          settings.defaultModel = "gpt-5.6-sol";
           vendoredNpmPackages = {
+            "npm:@ff-labs/pi-fff@0.10.5".hash = "sha256-KfilZVZohnisnbQ8XO7+50TQzSaIrw6DpLxA5XRIi+w=";
+            "npm:@narumitw/pi-goal@0.54.3".hash = "sha256-1P7I+bvcWgynbZ+kkam9sIRgWMGTdFO4K/o/hqbzWaM=";
             "npm:pi-mcp-adapter@2.29.0".hash = "sha256-OrdOu1g0OeyrcdjOSNTcj1Alv2xNTOAECZPwQBZOgL8=";
             "npm:pi-web-access@0.25.0".hash = "sha256-nvaGGOUKKKVyX2aSXqSI4CJOCCa8EKXHUkwo9PGSKEw=";
             "npm:pi-subagents@0.58.0".hash = "sha256-RWSRVZ8piZhwBJFstt2d7CLCdMBvMrY8d7a/UhcJLyw=";
