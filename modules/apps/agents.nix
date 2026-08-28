@@ -28,7 +28,7 @@ let
     "npm:@ff-labs/pi-fff@0.10.5".hash = "sha256-KfilZVZohnisnbQ8XO7+50TQzSaIrw6DpLxA5XRIi+w=";
     "npm:@narumitw/pi-goal@0.54.3".hash = "sha256-1P7I+bvcWgynbZ+kkam9sIRgWMGTdFO4K/o/hqbzWaM=";
     "npm:pi-mcp-adapter@2.29.0".hash = "sha256-OrdOu1g0OeyrcdjOSNTcj1Alv2xNTOAECZPwQBZOgL8=";
-    "npm:pi-web-access@0.25.0".hash = "sha256-nvaGGOUKKKVyX2aSXqSI4CJOCCa8EKXHUkwo9PGSKEw=";
+    "npm:pi-web-access@0.25.0".hash = "sha256-2bLEFPgtf7Z2zwB0FM8QnajtclT7MLh/EUXT6YKpqWM=";
     "npm:pi-subagents@0.58.0".hash = "sha256-RWSRVZ8piZhwBJFstt2d7CLCdMBvMrY8d7a/UhcJLyw=";
     "npm:@narumitw/pi-usage@0.54.0".hash = "sha256-7wFMNCnVi6ynJyjcNxoqfTAK+j5xD/PPhSdCD5Fns8Q=";
   };
