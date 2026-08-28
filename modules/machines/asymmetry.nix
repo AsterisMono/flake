@@ -6,6 +6,7 @@
       base
       workstation
       efi
+      secure-boot
       i18n
       substituter-cn
     ];
