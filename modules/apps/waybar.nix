@@ -230,13 +230,12 @@ _: {
               icon-size = 16;
               icon-theme = "Tela-dark";
               tooltip = false;
-              expand = true;
-              homogeneous = true;
-              truncate = true;
-              justify = "left";
               on-click = "activate";
               on-click-middle = "close";
-              rewrite."Firefox Web Browser" = "Firefox";
+              rewrite = {
+                "(.{24}).+" = "$1…";
+                "Firefox Web Browser" = "Firefox";
+              };
             };
           }
         ];
@@ -273,6 +272,10 @@ _: {
             border-radius: 0;
             box-shadow: inset 0 -2px transparent;
             text-shadow: none;
+          }
+
+          #taskbar button {
+            min-width: 240px;
           }
 
           #workspaces button:hover,
