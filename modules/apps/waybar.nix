@@ -1,6 +1,39 @@
 _: {
+  flake.modules.nixos.waybar =
+    { lib, ... }:
+    {
+      options.hardware.sensors.cpuTemperature = lib.mkOption {
+        type = lib.types.nullOr (
+          lib.types.submodule {
+            options = {
+              hwmonPathAbs = lib.mkOption {
+                type = lib.types.str;
+                description = "Runtime hwmon directory containing the CPU temperature sensor.";
+              };
+
+              inputFilename = lib.mkOption {
+                type = lib.types.str;
+                default = "temp1_input";
+                description = "CPU temperature input file within the hwmon directory.";
+              };
+            };
+          }
+        );
+        default = null;
+        description = "The machine's CPU temperature sensor.";
+      };
+    };
+
   flake.modules.homeManager.waybar =
-    { pkgs, ... }:
+    {
+      lib,
+      osConfig,
+      pkgs,
+      ...
+    }:
+    let
+      cpuTemperatureSensor = osConfig.hardware.sensors.cpuTemperature;
+    in
     {
       home.packages = [ pkgs.selfPackages.waycat ];
 
@@ -28,7 +61,9 @@ _: {
             modules-right = [
               "custom/waycat"
               "network#speed"
-              "temperature"
+            ]
+            ++ lib.optional (cpuTemperatureSensor != null) "temperature"
+            ++ [
               "memory"
               "battery"
               "wireplumber"
@@ -88,8 +123,9 @@ _: {
               format-icons.default = "";
             };
 
-            temperature = {
-              thermal-zone = 0;
+            temperature = lib.optionalAttrs (cpuTemperatureSensor != null) {
+              hwmon-path-abs = cpuTemperatureSensor.hwmonPathAbs;
+              input-filename = cpuTemperatureSensor.inputFilename;
               format = " {temperatureC}°C";
             };
 
