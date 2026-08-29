@@ -1,23 +1,31 @@
 _: {
-  flake.modules.nixos.sway = { pkgs, ... }: {
-    programs.sway = {
-      enable = true;
-      package = pkgs.unstable.swayfx;
-    };
+  flake.modules.nixos.sway =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      programs.sway = {
+        enable = true;
+        package = pkgs.unstable.swayfx;
+      };
 
-    programs.uwsm = {
-      enable = true;
-      waylandCompositors = {
-        sway = {
-          prettyName = "Sway";
-          comment = "Sway compositor managed by UWSM";
-          binPath = "/run/current-system/sw/bin/sway";
+      programs.uwsm = {
+        enable = true;
+        waylandCompositors = {
+          sway = {
+            prettyName = "Sway";
+            comment = "Sway compositor managed by UWSM";
+            binPath = "/run/current-system/sw/bin/sway";
+            extraArgs = lib.optional (builtins.elem "nvidia" config.services.xserver.videoDrivers) "--unsupported-gpu";
+          };
         };
       };
-    };
 
-    systemd.user.targets."nixos-fake-graphical-session".enable = false;
-  };
+      systemd.user.targets."nixos-fake-graphical-session".enable = false;
+    };
 
   flake.modules.homeManager.sway =
     {
