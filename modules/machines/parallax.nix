@@ -60,9 +60,14 @@
           "Samsung Electric Company Odyssey G70D H1AK500000" = {
             mode = "3840x2160@143.988Hz";
             position = "1440 416";
-            scale = "1.25";
+            scale = "1.333333";
           };
         };
+        startup = [
+          {
+            command = ''swaymsg focus output "Samsung Electric Company Odyssey G70D H1AK500000"'';
+          }
+        ];
         workspaceOutputAssign = [
           {
             workspace = "1";

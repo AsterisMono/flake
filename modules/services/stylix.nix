@@ -18,7 +18,7 @@
           url = "https://r2.requiem.garden/kataomoi.jpg";
           hash = "sha256-1n30bVynUkK650sGyfmD9GoElzqxSUmSpfP7Tb9q2G4=";
         };
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
         polarity = "dark";
         cursor = {
           name = "macOS";

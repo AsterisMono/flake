@@ -296,7 +296,7 @@ _: {
 
           #workspaces button.focused,
           #taskbar button.active {
-            color: @base07;
+            color: @base05;
             background: @base02;
             box-shadow: inset 0 -2px @base0D;
           }

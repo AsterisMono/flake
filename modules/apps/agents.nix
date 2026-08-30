@@ -15,7 +15,7 @@ let
         command = "persiyanov.reviewr.toggle";
       }
     ];
-    theme.name = "gruvbox";
+    theme.name = "catppuccin";
     ui.toast.delivery = "system";
   };
 

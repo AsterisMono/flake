@@ -97,7 +97,7 @@ _: {
           workspaceAutoBackAndForth = true;
           window = {
             titlebar = false;
-            border = 2;
+            border = 1;
           };
           floating = {
             titlebar = false;
@@ -132,7 +132,7 @@ _: {
           bindgesture swipe:3:left workspace next
           seat * hide_cursor when-typing enable
           blur enable
-          default_dim_inactive 0.2
+          default_dim_inactive 0.1
           exec uwsm finalize
         '';
       };
