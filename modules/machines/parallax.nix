@@ -7,10 +7,11 @@
       workstation
       efi
       nvidia
+      zram
       i18n
       substituter-cn
     ];
-    diskoConfig = inputs.self.diskoConfigurations.xfs-with-quota;
+    diskoConfig = inputs.self.diskoConfigurations.xfs-swap;
     hardware =
       {
         config,
