@@ -27,7 +27,6 @@ install hostname target:
       --flake .#{{ hostname }} \
       --target-host {{ target }} \
       --copy-host-keys \
-      --no-substitute-on-destination \
       --disko-mode disko \
 
 bootstrap hostname disk:
