@@ -94,10 +94,6 @@ _: {
             };
           };
           output."*".bg = "${wallpaper} fill";
-          output."China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4 Unknown" = {
-            mode = "2880x1800@120Hz";
-            scale = "1.75";
-          };
           workspaceAutoBackAndForth = true;
           window = {
             titlebar = false;
