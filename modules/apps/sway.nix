@@ -158,7 +158,7 @@ _: {
           Description = "KDE PolicyKit Authentication Agent for Sway";
           PartOf = [ "graphical-session.target" ];
           After = [ "graphical-session.target" ];
-          ConditionEnvironment = "XDG_CURRENT_DESKTOP=sway";
+          ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         };
         Service = {
           ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
@@ -170,10 +170,10 @@ _: {
       services.mako.enable = true;
 
       systemd.user.services = {
-        mako.Unit.ConditionEnvironment = "XDG_CURRENT_DESKTOP=sway";
+        mako.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         waybar.Unit.ConditionEnvironment = lib.mkForce [
           "WAYLAND_DISPLAY"
-          "XDG_CURRENT_DESKTOP=sway"
+          "XDG_SESSION_DESKTOP=sway"
         ];
       };
     };
