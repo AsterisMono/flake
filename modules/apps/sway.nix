@@ -153,9 +153,28 @@ _: {
         "ELECTRON_OZONE_PLATFORM_HINT" = "auto";
       };
 
-      services.gnome-keyring.enable = true;
-      services.lxqt-policykit-agent.enable = true;
-      systemd.user.services.lxqt-policykit-agent.Unit.After = [ "graphical-session.target" ];
+      systemd.user.services.sway-polkit-agent = {
+        Unit = {
+          Description = "KDE PolicyKit Authentication Agent for Sway";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+          ConditionEnvironment = "XDG_CURRENT_DESKTOP=sway";
+        };
+        Service = {
+          ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
+          Restart = "on-failure";
+        };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
+
       services.mako.enable = true;
+
+      systemd.user.services = {
+        mako.Unit.ConditionEnvironment = "XDG_CURRENT_DESKTOP=sway";
+        waybar.Unit.ConditionEnvironment = lib.mkForce [
+          "WAYLAND_DISPLAY"
+          "XDG_CURRENT_DESKTOP=sway"
+        ];
+      };
     };
 }

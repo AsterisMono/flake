@@ -17,8 +17,8 @@
     flatpak
     git
     kitty
-    ly
     neovim
+    plasma
     sing-box
     starship
     sway
