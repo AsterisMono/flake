@@ -10,7 +10,10 @@ _: {
           puffer
         ]
       );
-      shellInit = "set -g fish_greeting";
+      shellInit = ''
+        set --global --export BASE16_SHELL_SET_BACKGROUND false
+        set --global fish_greeting
+      '';
       interactiveShellInit = ''
         any-nix-shell fish --info-right | source
       '';
