@@ -18,7 +18,7 @@
     git
     kitty
     neovim
-    netbird-ui
+    netbird-desktop
     plasma
     sing-box
     starship
