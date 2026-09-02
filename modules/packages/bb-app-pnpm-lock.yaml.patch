@@ -1,0 +1,83 @@
+--- a/pnpm-lock.yaml
++++ b/pnpm-lock.yaml
+@@ -9,15 +9,9 @@
+   '@expo/metro-config>lightningcss': 1.30.1
+
+ patchedDependencies:
+-  '@pierre/diffs@1.2.9':
+-    hash: wdjikkl65wfpocm6wrflymrtdq
+-    path: patches/@pierre__diffs@1.2.9.patch
+-  expo-modules-jsi@57.0.4:
+-    hash: raucdrgf3mznkb7qkl7fkzjw5u
+-    path: patches/expo-modules-jsi@57.0.4.patch
+-  oniguruma-to-es@4.3.4:
+-    hash: f5db5z5xon23qqwgpdyyzpga5u
+-    path: patches/oniguruma-to-es@4.3.4.patch
++  '@pierre/diffs@1.2.9': 2390b5c3dc0ef03b121cfbd5fd3623542c1a30de03ace4905d6a96f30842d522
++  expo-modules-jsi@57.0.4: cc7d4d3b1674c31f8f874ccb19a44b4cb7bb02ac696e152a55227f4d49a165c1
++  oniguruma-to-es@4.3.4: c894e70dbf504d1ae06fcd4e714310092460e78f6804ab489ed066c151ee2817
+
+ importers:
+
+@@ -127,7 +121,7 @@
+         version: 1.1.6(react@19.2.4)
+       '@pierre/diffs':
+         specifier: ^1.2.9
+-        version: 1.2.9(patch_hash=wdjikkl65wfpocm6wrflymrtdq)(@shikijs/themes@3.23.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
++        version: 1.2.9(patch_hash=2390b5c3dc0ef03b121cfbd5fd3623542c1a30de03ace4905d6a96f30842d522)(@shikijs/themes@3.23.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+       '@pierre/trees':
+         specifier: ^1.0.0-beta.3
+         version: 1.0.0-beta.3(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+@@ -410,7 +404,7 @@
+         version: 13.2.1
+       oniguruma-to-es:
+         specifier: ^4.3.4
+-        version: 4.3.4(patch_hash=f5db5z5xon23qqwgpdyyzpga5u)
++        version: 4.3.4(patch_hash=c894e70dbf504d1ae06fcd4e714310092460e78f6804ab489ed066c151ee2817)
+       sharp:
+         specifier: ^0.34.5
+         version: 0.34.5
+@@ -18593,7 +18587,7 @@
+
+   '@petamoriken/float16@3.9.3': {}
+
+-  '@pierre/diffs@1.2.9(patch_hash=wdjikkl65wfpocm6wrflymrtdq)(@shikijs/themes@3.23.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
++  '@pierre/diffs@1.2.9(patch_hash=2390b5c3dc0ef03b121cfbd5fd3623542c1a30de03ace4905d6a96f30842d522)(@shikijs/themes@3.23.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
+     dependencies:
+       '@pierre/theme': 1.0.3
+       '@pierre/theming': 0.0.1(@pierre/theme@1.0.3)(@shikijs/themes@3.23.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(shiki@3.23.0)
+@@ -19653,7 +19647,7 @@
+     dependencies:
+       '@shikijs/types': 3.23.0
+       '@shikijs/vscode-textmate': 10.0.2
+-      oniguruma-to-es: 4.3.4(patch_hash=f5db5z5xon23qqwgpdyyzpga5u)
++      oniguruma-to-es: 4.3.4(patch_hash=c894e70dbf504d1ae06fcd4e714310092460e78f6804ab489ed066c151ee2817)
+
+   '@shikijs/engine-oniguruma@3.23.0':
+     dependencies:
+@@ -23400,14 +23394,14 @@
+   expo-modules-core@57.0.11(react-native-worklets@0.10.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4))(react@19.2.4))(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4))(react@19.2.4):
+     dependencies:
+       '@expo/expo-modules-macros-plugin': 0.6.1
+-      expo-modules-jsi: 57.0.4(patch_hash=raucdrgf3mznkb7qkl7fkzjw5u)(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4))
++      expo-modules-jsi: 57.0.4(patch_hash=cc7d4d3b1674c31f8f874ccb19a44b4cb7bb02ac696e152a55227f4d49a165c1)(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4))
+       invariant: 2.2.4
+       react: 19.2.4
+       react-native: 0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4)
+     optionalDependencies:
+       react-native-worklets: 0.10.1(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4))(react@19.2.4)
+
+-  expo-modules-jsi@57.0.4(patch_hash=raucdrgf3mznkb7qkl7fkzjw5u)(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4)):
++  expo-modules-jsi@57.0.4(patch_hash=cc7d4d3b1674c31f8f874ccb19a44b4cb7bb02ac696e152a55227f4d49a165c1)(react-native@0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4)):
+     dependencies:
+       react-native: 0.86.2(@babel/core@7.29.0)(@react-native/metro-config@0.86.2(@babel/core@7.29.0))(@types/react@19.2.13)(react@19.2.4)
+
+@@ -26200,7 +26194,7 @@
+
+   oniguruma-parser@0.12.1: {}
+
+-  oniguruma-to-es@4.3.4(patch_hash=f5db5z5xon23qqwgpdyyzpga5u):
++  oniguruma-to-es@4.3.4(patch_hash=c894e70dbf504d1ae06fcd4e714310092460e78f6804ab489ed066c151ee2817):
+     dependencies:
+       oniguruma-parser: 0.12.1
+       regex: 6.1.0
