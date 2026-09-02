@@ -27,10 +27,12 @@ let
   piVendoredNpmPackages = {
     "npm:@ff-labs/pi-fff@0.10.5".hash = "sha256-KfilZVZohnisnbQ8XO7+50TQzSaIrw6DpLxA5XRIi+w=";
     "npm:@narumitw/pi-goal@0.54.3".hash = "sha256-1P7I+bvcWgynbZ+kkam9sIRgWMGTdFO4K/o/hqbzWaM=";
+    "npm:@narumitw/pi-usage@0.60.1".hash = "sha256-XzxPioMLX1pkTwYVjIIIfllKHVb0Ri+J/y3j+TCnKCU=";
+    "npm:pi-ask-user@0.14.0".hash = "sha256-HpdEKc6OjyteonKQ2XF1GwP3WPIUySZjaDzZ3UIYcdg=";
+    "npm:pi-better-harness@0.1.27".hash = "sha256-55kKA3AzAmlElIgOjvA/P0bkwgJxoYxXnpDZ5YI51xc=";
     "npm:pi-mcp-adapter@2.29.0".hash = "sha256-OrdOu1g0OeyrcdjOSNTcj1Alv2xNTOAECZPwQBZOgL8=";
     "npm:pi-web-access@0.25.0".hash = "sha256-2bLEFPgtf7Z2zwB0FM8QnajtclT7MLh/EUXT6YKpqWM=";
     "npm:pi-subagents@0.58.0".hash = "sha256-RWSRVZ8piZhwBJFstt2d7CLCdMBvMrY8d7a/UhcJLyw=";
-    "npm:@narumitw/pi-usage@0.54.0".hash = "sha256-7wFMNCnVi6ynJyjcNxoqfTAK+j5xD/PPhSdCD5Fns8Q=";
   };
 
   inherit (config.npmHelpers) mkVendoredSettings;
