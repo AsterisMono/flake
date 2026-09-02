@@ -60,10 +60,6 @@ _: {
       menu = "vicinae toggle";
       modifier = "Mod4";
       terminal = "${lib.getExe pkgs.uwsm} app -- ${lib.getExe pkgs.kitty}";
-      wallpaper = pkgs.fetchurl {
-        url = "https://r2.requiem.garden/kataomoi.jpg";
-        hash = "sha256-1n30bVynUkK650sGyfmD9GoElzqxSUmSpfP7Tb9q2G4=";
-      };
     in
     {
       wayland.windowManager.sway = {
@@ -93,7 +89,6 @@ _: {
               tap = "enabled";
             };
           };
-          output."*".bg = "${wallpaper} fill";
           workspaceAutoBackAndForth = true;
           window = {
             titlebar = false;

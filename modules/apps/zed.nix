@@ -27,7 +27,7 @@ _: {
           "just"
           "nix"
           "svelte"
-          "rose-pine-theme"
+          "nvim-nightfox"
           "biome"
           "terraform"
         ];
@@ -124,8 +124,8 @@ _: {
             scrollbar.show = "never";
           };
           theme = {
-            dark = "Gruvbox Dark Hard";
-            light = "Rosé Pine Dawn";
+            dark = "Nordfox - blurred";
+            light = "Dawnfox - blurred";
             mode = "dark";
           };
           title_bar.show_user_picture = false;
