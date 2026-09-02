@@ -2,6 +2,7 @@
   flake.modules.homeManager.git = { config, ... }: {
     programs.git = {
       enable = true;
+      lfs.enable = true;
       settings = {
         user = with config.constants.nvirellia; {
           name = preferredName;
