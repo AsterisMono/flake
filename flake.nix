@@ -49,6 +49,10 @@
         systems.follows = "systems";
       };
     };
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     preservation.url = "github:nix-community/preservation";
     sfd-nix.url = "git+https://forge.asnk.io/sugar/sfd-nix";
     sops-nix = {

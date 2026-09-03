@@ -19,7 +19,7 @@
     kitty
     neovim
     netbird-desktop
-    plasma
+    noctalia-greeter
     sing-box
     starship
     sway
