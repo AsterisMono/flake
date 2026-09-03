@@ -31,4 +31,6 @@
 
     nvirellia
   ];
+
+  flake.modules.nixos.workstation.boot.loader.systemd-boot.configurationLimit = 5;
 }
