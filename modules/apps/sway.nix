@@ -24,6 +24,11 @@ _: {
         };
       };
 
+      services = {
+        dbus.packages = [ pkgs.tumbler ];
+        udisks2.enable = true;
+      };
+
       systemd.user.targets."nixos-fake-graphical-session".enable = false;
     };
 
@@ -134,11 +139,24 @@ _: {
 
       programs.swaylock.enable = true;
 
+      programs.gpg.enable = true;
+
+      services.gpg-agent = {
+        enable = true;
+        pinentry.package = pkgs.pinentry-gnome3;
+      };
+
       home.packages = with pkgs; [
         brightnessctl
         wl-clipboard
         sway-contrib.grimshot
-        kdePackages.dolphin
+        atril
+        ristretto
+        seahorse
+        thunar
+        tumbler
+        xarchiver
+        xfce4-screenshooter
         autotiling
         wdisplays
       ];
@@ -150,22 +168,26 @@ _: {
 
       systemd.user.services.sway-polkit-agent = {
         Unit = {
-          Description = "KDE PolicyKit Authentication Agent for Sway";
+          Description = "LXQt PolicyKit Authentication Agent for Sway";
           PartOf = [ "graphical-session.target" ];
           After = [ "graphical-session.target" ];
           ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         };
         Service = {
-          ExecStart = "${pkgs.kdePackages.polkit-kde-agent-1}/libexec/polkit-kde-authentication-agent-1";
+          ExecStart = "${lib.getExe pkgs.lxqt.lxqt-policykit}";
           Restart = "on-failure";
         };
         Install.WantedBy = [ "graphical-session.target" ];
       };
 
-      services.mako.enable = true;
+      services = {
+        mako.enable = true;
+        udiskie.enable = true;
+      };
 
       systemd.user.services = {
         mako.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
+        udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         waybar.Unit.ConditionEnvironment = lib.mkForce [
           "WAYLAND_DISPLAY"
           "XDG_SESSION_DESKTOP=sway"
