@@ -5,9 +5,22 @@
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  flake.modules.nixos.noctalia-greeter = {
-    imports = [ inputs.noctalia-greeter.nixosModules.default ];
+  flake.modules.nixos.noctalia-greeter =
+    { config, ... }:
+    {
+      imports = [ inputs.noctalia-greeter.nixosModules.default ];
 
-    programs.noctalia-greeter.enable = true;
-  };
+      programs.noctalia-greeter = {
+        enable = true;
+        settings = {
+          session.default = "Sway (UWSM)";
+          user.default = config.constants.nvirellia.username;
+          idle.timeout = 300;
+          keyboard = {
+            layout = "us";
+            options = "ctrl:nocaps";
+          };
+        };
+      };
+    };
 }

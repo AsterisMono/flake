@@ -47,6 +47,14 @@
         nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
         hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
       };
+    nixosModule = {
+      programs.noctalia-greeter.settings.output = {
+        name = "HDMI-A-2";
+        width = 3840;
+        height = 2160;
+        scale = 1.333333;
+      };
+    };
     homeModule = {
       wayland.windowManager.sway.config = {
         output = {
