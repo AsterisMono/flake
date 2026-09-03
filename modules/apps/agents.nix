@@ -81,15 +81,22 @@ in
         };
       };
 
-      home.packages = with pkgs.llm-agents; [
-        codex
-      ];
+      home.packages =
+        with pkgs.llm-agents;
+        [
+          codex
+          cursor-agent
+        ]
+        ++ (with pkgs; [
+          bubblewrap
+          jq
+          python3
+        ]);
     };
 
   perSystem =
     {
       inputs',
-      system,
       config,
       ...
     }:
