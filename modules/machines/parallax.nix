@@ -7,6 +7,7 @@
       workstation
       efi
       nvidia
+      steam
       zram
       i18n
       substituter-cn
