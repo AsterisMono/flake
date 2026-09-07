@@ -7,6 +7,7 @@
       workstation
       efi
       nvidia
+      hmcl
       steam
       zram
       i18n
