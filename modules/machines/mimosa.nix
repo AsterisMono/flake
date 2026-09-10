@@ -4,6 +4,7 @@
     imports = with inputs.self.modules.aspects; [
       base
       server
+      hydra
       efi
       substituter-cn
       podman
