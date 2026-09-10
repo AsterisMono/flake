@@ -146,6 +146,9 @@ in
           Group = "agent";
           StateDirectory = "flint-workshop";
           WorkingDirectory = stateDir;
+          # A `herdr --remote` attach can start its own server; stop any
+          # existing server so systemd consistently owns the socket.
+          ExecStartPre = "-${lib.getExe llmAgents.herdr} server stop";
           ExecStart = "${lib.getExe llmAgents.herdr} server";
           Restart = "always";
           RestartSec = 5;
