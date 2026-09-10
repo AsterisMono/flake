@@ -26,7 +26,26 @@ in
           qmd
           terminal-use
         ]
-        ++ [ pkgs._1password-cli ];
+        ++ (with pkgs; [
+          _1password-cli
+          bat
+          dnsutils
+          fd
+          file
+          gh
+          git-lfs
+          jq
+          just
+          lsof
+          python3
+          ripgrep
+          sqlite
+          tree
+          unzip
+          wget
+          yq-go
+          zip
+        ]);
 
       sops.secrets.mira_agent_op_token = {
         format = "yaml";
@@ -49,9 +68,12 @@ in
         isSystemUser = true;
         group = "agent";
         home = stateDir;
+        shell = pkgs.bashInteractive;
         description = "Mira agentic service";
+        openssh.authorizedKeys.keys = [ config.constants.nvirellia.sshPubKey ];
       };
       users.groups.agent = { };
+      environment.shells = [ pkgs.bashInteractive ];
 
       systemd.services.mira-agent = {
         description = "Mira agentic service (Hermes messaging gateway)";
@@ -59,13 +81,17 @@ in
         after = [
           "network-online.target"
           "sops-install-secrets.service"
+          "herdr.service"
         ];
-        wants = [ "network-online.target" ];
+        wants = [
+          "network-online.target"
+          "herdr.service"
+        ];
         requires = [ "sops-install-secrets.service" ];
 
         environment = {
           HOME = stateDir;
-          HERMES_HOME = stateDir;
+          HERMES_HOME = "${stateDir}/.hermes";
           HERMES_SUPERVISED_CHILD = "1";
         };
 
@@ -95,6 +121,36 @@ in
           ProtectSystem = "strict";
           ProtectHome = true;
           ReadWritePaths = [ stateDir ];
+        };
+      };
+
+      systemd.services.herdr = {
+        description = "Herdr terminal workspace server";
+        wantedBy = [ "multi-user.target" ];
+        after = [ "network-online.target" ];
+        wants = [ "network-online.target" ];
+
+        environment = {
+          HOME = stateDir;
+          SHELL = "${pkgs.bashInteractive}/bin/bash";
+        };
+
+        path = [ config.system.path ];
+
+        serviceConfig = {
+          Type = "simple";
+          User = "mira";
+          Group = "agent";
+          StateDirectory = "flint-workshop";
+          WorkingDirectory = stateDir;
+          ExecStart = "${lib.getExe llmAgents.herdr} server";
+          Restart = "always";
+          RestartSec = 5;
+          StandardOutput = "journal";
+          StandardError = "journal";
+
+          NoNewPrivileges = true;
+          PrivateTmp = true;
         };
       };
     };
