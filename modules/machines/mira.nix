@@ -1,5 +1,5 @@
 { inputs, ... }: {
-  machines.mimosa = {
+  machines.mira = {
     system = "x86_64-linux";
     imports = with inputs.self.modules.aspects; [
       base
@@ -10,6 +10,7 @@
       podman
       sing-box
       netbird
+      mira-agent
       nvirellia
       neovim
       unix-tools
@@ -30,7 +31,7 @@
         ];
 
         networking = {
-          hostName = "mimosa";
+          hostName = "mira";
           domain = "lotus.local";
           firewall.enable = lib.mkForce false;
         };
