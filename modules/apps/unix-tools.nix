@@ -27,6 +27,10 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
+      matchBlocks."mira" = {
+        hostname = "10.0.0.21";
+        user = "mira";
+      };
     };
 
     programs.direnv = {
