@@ -30,6 +30,8 @@ _: {
           "nvim-nightfox"
           "biome"
           "terraform"
+          "nordic-theme"
+          "nord"
         ];
 
         userSettings = {
@@ -124,7 +126,7 @@ _: {
             scrollbar.show = "never";
           };
           theme = {
-            dark = "Nordfox - blurred";
+            dark = "Nord Dark";
             light = "Dawnfox - blurred";
             mode = "dark";
           };
