@@ -8,7 +8,6 @@
       efi
       substituter-cn
       podman
-      forgejo-runner
       sing-box
       netbird
       nvirellia
