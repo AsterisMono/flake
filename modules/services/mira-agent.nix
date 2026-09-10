@@ -16,38 +16,38 @@ in
       });
     in
     {
-      environment.systemPackages =
-        with llmAgents;
-        [
-          agent-browser
-          ai-memory
-          herdr
-          hermes-agent
-          memvid-cli
-          opencode
-          qmd
-          terminal-use
-        ]
-        ++ (with pkgs; [
-          _1password-cli
-          bat
-          dnsutils
-          fd
-          file
-          gh
-          git-lfs
-          jq
-          just
-          lsof
-          python3
-          ripgrep
-          sqlite
-          tree
-          unzip
-          wget
-          yq-go
-          zip
-        ]);
+      environment.systemPackages = [
+        hermes
+      ]
+      ++ (with llmAgents; [
+        agent-browser
+        ai-memory
+        herdr
+        memvid-cli
+        opencode
+        qmd
+        terminal-use
+      ])
+      ++ (with pkgs; [
+        _1password-cli
+        bat
+        dnsutils
+        fd
+        file
+        gh
+        git-lfs
+        jq
+        just
+        lsof
+        python3
+        ripgrep
+        sqlite
+        tree
+        unzip
+        wget
+        yq-go
+        zip
+      ]);
 
       sops.secrets.mira_agent_op_token = {
         format = "yaml";
