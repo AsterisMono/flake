@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  inputs,
+  lib,
+  config,
+  ...
+}:
 let
   inherit (config.npmHelpers) defaultNpmFlags mkVendoredSettings;
 in
@@ -12,6 +17,7 @@ in
     }:
     let
       cfg = config.programs.pi-agent;
+      defaultPackage = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.pi;
       jsonFormat = pkgs.formats.json { };
       contentType = lib.types.either lib.types.lines lib.types.path;
       resourceType = lib.types.either (lib.types.attrsOf contentType) lib.types.path;
@@ -91,8 +97,8 @@ in
 
         package = lib.mkOption {
           type = lib.types.nullOr lib.types.package;
-          default = pkgs.llm-agents.pi;
-          defaultText = lib.literalExpression "pkgs.llm-agents.pi";
+          default = defaultPackage;
+          defaultText = lib.literalExpression "inputs.llm-agents.packages.\${pkgs.stdenv.hostPlatform.system}.pi";
           description = "The Pi package to install. Set to null to manage configuration only.";
         };
 

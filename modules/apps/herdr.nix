@@ -1,4 +1,8 @@
-_: {
+{
+  inputs,
+  ...
+}:
+{
   flake.modules.homeManager.herdr =
     {
       config,
@@ -8,6 +12,7 @@ _: {
     }:
     let
       cfg = config.programs.herdr;
+      defaultPackage = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr;
       tomlFormat = pkgs.formats.toml { };
       pluginType = lib.types.path;
       pluginEntries = lib.mapAttrs' (name: source: {
@@ -28,8 +33,8 @@ _: {
 
         package = lib.mkOption {
           type = lib.types.nullOr lib.types.package;
-          default = pkgs.llm-agents.herdr;
-          defaultText = lib.literalExpression "pkgs.llm-agents.herdr";
+          default = defaultPackage;
+          defaultText = lib.literalExpression "inputs.llm-agents.packages.\${pkgs.stdenv.hostPlatform.system}.herdr";
           description = "The Herdr package to install. Set to null to manage configuration only.";
         };
 

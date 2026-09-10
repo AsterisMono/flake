@@ -4,14 +4,7 @@
 }:
 {
   flake-file.inputs = {
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-      inputs = {
-        flake-parts.follows = "flake-parts";
-        nixpkgs.follows = "nixpkgs-unstable";
-        systems.follows = "systems";
-      };
-    };
+    llm-agents.url = "github:numtide/llm-agents.nix";
     wrapper-manager.url = "github:viperML/wrapper-manager";
   };
 
@@ -19,12 +12,11 @@
     herdr
   ];
 
-  flake.modules.nixos.agents = {
-    nixpkgs.overlays = [ inputs.llm-agents.overlays.shared-nixpkgs ];
-  };
-
   flake.modules.homeManager.agents =
     { pkgs, ... }:
+    let
+      llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+    in
     {
       programs = {
         herdr = {
@@ -47,7 +39,7 @@
       };
 
       home.packages =
-        with pkgs.llm-agents;
+        with llmAgents;
         [
           codex
           cursor-agent
