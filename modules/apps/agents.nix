@@ -4,7 +4,14 @@
 }:
 {
   flake-file.inputs = {
-    llm-agents.url = "github:numtide/llm-agents.nix";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs = {
+        flake-parts.follows = "flake-parts";
+        nixpkgs.follows = "nixpkgs-unstable";
+        systems.follows = "systems";
+      };
+    };
     wrapper-manager.url = "github:viperML/wrapper-manager";
   };
 
@@ -33,7 +40,7 @@
                 command = "persiyanov.reviewr.toggle";
               }
             ];
-            theme.name = "catppuccin";
+            theme.name = "terminal";
             ui.toast.delivery = "system";
           };
         };

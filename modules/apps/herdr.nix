@@ -28,8 +28,8 @@ _: {
 
         package = lib.mkOption {
           type = lib.types.nullOr lib.types.package;
-          default = pkgs.unstable.herdr;
-          defaultText = lib.literalExpression "pkgs.unstable.herdr";
+          default = pkgs.llm-agents.herdr;
+          defaultText = lib.literalExpression "pkgs.llm-agents.herdr";
           description = "The Herdr package to install. Set to null to manage configuration only.";
         };
 
