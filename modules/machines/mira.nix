@@ -10,6 +10,7 @@
       sing-box
       netbird
       mira-agent
+      honcho
     ];
     diskoConfig = inputs.self.diskoConfigurations.xfs-with-quota;
     hardware =

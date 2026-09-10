@@ -11,7 +11,9 @@ in
     { config, pkgs, ... }:
     let
       llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
-      hermes = llmAgents.hermes-agent;
+      hermes = llmAgents.hermes-agent.overridePythonAttrs (old: {
+        dependencies = old.dependencies ++ [ pkgs.selfPackages.honcho-ai ];
+      });
     in
     {
       environment.systemPackages =
@@ -93,6 +95,7 @@ in
           HOME = stateDir;
           HERMES_HOME = "${stateDir}/.hermes";
           HERMES_SUPERVISED_CHILD = "1";
+          HONCHO_BASE_URL = "http://127.0.0.1:8000";
         };
 
         path = [ config.system.path ];
