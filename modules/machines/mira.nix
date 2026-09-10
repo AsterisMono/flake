@@ -4,18 +4,12 @@
     imports = with inputs.self.modules.aspects; [
       base
       server
-      hydra
       efi
       substituter-cn
       podman
       sing-box
       netbird
       mira-agent
-      nvirellia
-      neovim
-      unix-tools
-      starship
-      fish
     ];
     diskoConfig = inputs.self.diskoConfigurations.xfs-with-quota;
     hardware =
