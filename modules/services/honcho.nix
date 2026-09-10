@@ -8,16 +8,50 @@
     }:
     let
       image = "ghcr.io/plastic-labs/honcho:latest";
+      openRouterBaseUrl = "https://openrouter.ai/api/v1";
+      chatFeatures = [
+        "DERIVER_MODEL_CONFIG"
+        "SUMMARY_MODEL_CONFIG"
+        "DREAM_DEDUCTION_MODEL_CONFIG"
+        "DREAM_INDUCTION_MODEL_CONFIG"
+        "DIALECTIC_LEVELS__minimal__MODEL_CONFIG"
+        "DIALECTIC_LEVELS__low__MODEL_CONFIG"
+        "DIALECTIC_LEVELS__medium__MODEL_CONFIG"
+        "DIALECTIC_LEVELS__high__MODEL_CONFIG"
+        "DIALECTIC_LEVELS__max__MODEL_CONFIG"
+      ];
+      chatEnvironment = lib.listToAttrs (
+        lib.concatMap (feature: [
+          {
+            name = "${feature}__TRANSPORT";
+            value = "openai";
+          }
+          {
+            name = "${feature}__MODEL";
+            value = "google/gemini-2.5-flash-lite";
+          }
+          {
+            name = "${feature}__OVERRIDES__BASE_URL";
+            value = openRouterBaseUrl;
+          }
+        ]) chatFeatures
+      );
       # Host networking: podman's internal DNS is unreliable here (sing-box
       # intercepts UDP/53), so every service binds 127.0.0.1 on the host and
       # they talk to each other over loopback.
-      connectionEnvironment = {
+      honchoEnvironment = {
         DB_CONNECTION_URI = "postgresql+psycopg://postgres:postgres@127.0.0.1:5432/postgres";
         CACHE_URL = "redis://127.0.0.1:6379/0?suppress=true";
         CACHE_ENABLED = "true";
         AUTH_USE_AUTH = "false";
         VECTOR_STORE_TYPE = "pgvector";
-      };
+        # Gemini Embedding 2 via OpenRouter, truncated to the 1536-dim schema.
+        EMBEDDING_MODEL_CONFIG__TRANSPORT = "openai";
+        EMBEDDING_MODEL_CONFIG__MODEL = "google/gemini-embedding-2";
+        EMBEDDING_MODEL_CONFIG__OVERRIDES__BASE_URL = openRouterBaseUrl;
+        EMBEDDING_VECTOR_DIMENSIONS = "1536";
+      }
+      // chatEnvironment;
     in
     {
       sops.secrets.honcho_env = {
@@ -79,7 +113,7 @@
               "honcho-db"
               "honcho-redis"
             ];
-            environment = connectionEnvironment;
+            environment = honchoEnvironment;
             environmentFiles = [ config.sops.secrets.honcho_env.path ];
           };
 
@@ -96,7 +130,7 @@
               "honcho-redis"
               "honcho-api"
             ];
-            environment = connectionEnvironment;
+            environment = honchoEnvironment;
             environmentFiles = [ config.sops.secrets.honcho_env.path ];
           };
         };
