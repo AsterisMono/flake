@@ -31,6 +31,7 @@ in
       ++ (with pkgs; [
         _1password-cli
         bat
+        chromium
         dnsutils
         fd
         file
