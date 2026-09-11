@@ -5,6 +5,7 @@
       base
       server
       efi
+      i18n
       substituter-cn
       podman
       sing-box
