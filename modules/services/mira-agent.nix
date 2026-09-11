@@ -22,6 +22,7 @@ in
       ++ (with llmAgents; [
         agent-browser
         ai-memory
+        codex
         herdr
         memvid-cli
         opencode
@@ -32,6 +33,7 @@ in
         _1password-cli
         bat
         chromium
+        devenv
         dnsutils
         fd
         file
