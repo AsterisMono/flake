@@ -25,6 +25,8 @@
     nixosModule =
       { pkgs, ... }:
       {
+        nix.settings.trusted-users = [ "mira" ];
+
         fonts = {
           fontconfig.enable = lib.mkForce true;
           packages = with pkgs; [
