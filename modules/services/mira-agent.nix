@@ -39,8 +39,10 @@ in
         jq
         just
         lsof
+        openssl
         python3
         ripgrep
+        selfPackages.github-app-token
         sqlite
         tree
         unzip
