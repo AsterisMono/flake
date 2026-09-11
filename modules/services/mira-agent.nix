@@ -34,6 +34,7 @@ in
         bat
         chromium
         devenv
+        direnv
         dnsutils
         fd
         file
