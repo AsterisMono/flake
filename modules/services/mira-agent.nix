@@ -43,9 +43,11 @@ in
         python3
         ripgrep
         selfPackages.github-app-token
+        selfPackages.tirith
         sqlite
         tree
         unzip
+        uv
         wget
         yq-go
         zip
@@ -101,6 +103,22 @@ in
         };
 
         path = [ config.system.path ];
+
+        # Hermes resolves uv/uvx and tirith from its own $HERMES_HOME/bin before
+        # PATH, and its installer drops generic glibc builds there — which NixOS
+        # cannot exec ("Could not start dynamically linked executable"). That
+        # silently killed the browser toolset (uvx) and the pre-exec security
+        # scanner (tirith, whose circuit breaker opens after 3 failures and
+        # disables scanning for the rest of the process). Point those names at
+        # the Nix-built equivalents. Re-run on every start so a re-download by
+        # the agent's own installer self-heals.
+        preStart = ''
+          bin="${stateDir}/.hermes/bin"
+          mkdir -p "$bin"
+          ln -sfn ${pkgs.uv}/bin/uv "$bin/uv"
+          ln -sfn ${pkgs.uv}/bin/uvx "$bin/uvx"
+          ln -sfn ${pkgs.selfPackages.tirith}/bin/tirith "$bin/tirith"
+        '';
 
         serviceConfig = {
           Type = "simple";
