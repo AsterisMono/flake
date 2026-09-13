@@ -44,6 +44,7 @@
           codex
           cursor-agent
           opencode
+          dsh
         ]
         ++ (with pkgs; [
           bubblewrap
