@@ -13,10 +13,8 @@ let
     "npm:@juicesharp/rpiv-todo@2.10.1".hash = "sha256-HJkGPtV9l2tcyFC3ypOpsg+zK30xORBwK/ZAwyQEiXU=";
     "npm:@narumitw/pi-goal@0.54.4".hash = "sha256-u2OIvisWyr70CIDh7Be51eg5PdFN99Pb8vbbDGcAwqQ=";
     "npm:pi-ask-user@0.15.0".hash = "sha256-/U+aH1DCYQAccUUgm24B5vPpxDNQu62zOFPG8av7ykc=";
-    "npm:pi-lens@4.1.6".hash = "sha256-z3w7xb8kcKZ8dXrFYHwwguJq8ACG7/kAhczc7X2HyM8=";
     "npm:pi-mcp-adapter@2.32.1".hash = "sha256-0TOiEcPV6Ytvhairm8XEB3QvVRuT0Xo/2/dtOeDSHGQ=";
     "npm:pi-web-access@0.29.0".hash = "sha256-0+1o91vuRym/g8jXPfLELWvmsEQE/rbrCV4dxlZ8LAg=";
-    "npm:pi-subagents@0.67.0".hash = "sha256-bI+rSrFyfJj90uCFEwTK1gEPONfcB/YK4e5+Tjk+pPU=";
   };
 
   herdrSkill = builtins.fetchurl {
