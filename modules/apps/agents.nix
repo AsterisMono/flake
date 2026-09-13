@@ -2,14 +2,37 @@
   inputs,
   ...
 }:
+let
+  piSettings = {
+    defaultProvider = "deepseek";
+    defaultModel = "deepseek-v4-flash";
+  };
+
+  piVendoredNpmPackages = {
+    "npm:@ff-labs/pi-fff@0.10.6".hash = "sha256-tuXOO4CbFMXF5ww/NNXvesjPWc6geXJJegQ0YRKlGIU=";
+    "npm:@juicesharp/rpiv-todo@2.10.1".hash = "sha256-HJkGPtV9l2tcyFC3ypOpsg+zK30xORBwK/ZAwyQEiXU=";
+    "npm:@narumitw/pi-goal@0.54.4".hash = "sha256-u2OIvisWyr70CIDh7Be51eg5PdFN99Pb8vbbDGcAwqQ=";
+    "npm:pi-ask-user@0.15.0".hash = "sha256-/U+aH1DCYQAccUUgm24B5vPpxDNQu62zOFPG8av7ykc=";
+    "npm:pi-lens@4.1.6".hash = "sha256-z3w7xb8kcKZ8dXrFYHwwguJq8ACG7/kAhczc7X2HyM8=";
+    "npm:pi-mcp-adapter@2.32.1".hash = "sha256-0TOiEcPV6Ytvhairm8XEB3QvVRuT0Xo/2/dtOeDSHGQ=";
+    "npm:pi-pear@0.2.0".hash = "sha256-jTK8FrugDV2FIyxJfD95yRSfVp8XIqZbiBd8GUb2PYQ=";
+    "npm:pi-web-access@0.29.0".hash = "sha256-0+1o91vuRym/g8jXPfLELWvmsEQE/rbrCV4dxlZ8LAg=";
+    "npm:pi-subagents@0.67.0".hash = "sha256-bI+rSrFyfJj90uCFEwTK1gEPONfcB/YK4e5+Tjk+pPU=";
+  };
+
+  herdrSkill = builtins.fetchurl {
+    url = "https://raw.githubusercontent.com/herdrdev/herdr/7b675f42af35508eab66ac42fe1598628597a893/skills/herdr/SKILL.md";
+    sha256 = "sha256-I3rSqy2BI+K7N5VtOkHu0UHy0ip8NuQVt4dsA5dnkJk=";
+  };
+in
 {
   flake-file.inputs = {
     llm-agents.url = "github:numtide/llm-agents.nix";
-    wrapper-manager.url = "github:viperML/wrapper-manager";
   };
 
   flake.modules.aspects.agents.imports = with inputs.self.modules.aspects; [
     herdr
+    pi-agent
   ];
 
   flake.modules.homeManager.agents =
@@ -35,6 +58,14 @@
             theme.name = "terminal";
             ui.toast.delivery = "system";
           };
+        };
+
+        pi-agent = {
+          enable = true;
+          package = llmAgents.pi;
+          settings = piSettings;
+          skills.herdr = herdrSkill;
+          vendoredNpmPackages = piVendoredNpmPackages;
         };
       };
 

@@ -623,8 +623,7 @@
         "sfd-nix": "sfd-nix",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
-        "systems": "systems_2",
-        "wrapper-manager": "wrapper-manager"
+        "systems": "systems_2"
       }
     },
     "rust-overlay": {
@@ -836,21 +835,6 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "wrapper-manager": {
-      "locked": {
-        "lastModified": 1788338967,
-        "narHash": "sha256-ERCTzitF650HHNvTOPMAB3rTi6ptcwatmrx9QFkreKs=",
-        "owner": "viperML",
-        "repo": "wrapper-manager",
-        "rev": "05d5c2a8f0a6091cc17573d9a0c0de59269b8534",
-        "type": "github"
-      },
-      "original": {
-        "owner": "viperML",
-        "repo": "wrapper-manager",
         "type": "github"
       }
     }

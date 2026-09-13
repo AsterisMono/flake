@@ -66,6 +66,5 @@
       };
     };
     systems.url = "github:nix-systems/default";
-    wrapper-manager.url = "github:viperML/wrapper-manager";
   };
 }
