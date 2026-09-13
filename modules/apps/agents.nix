@@ -6,6 +6,9 @@ let
   piSettings = {
     defaultProvider = "deepseek";
     defaultModel = "deepseek-v4-flash";
+    hideThinkingBlock = true;
+    showCacheMissNotices = true;
+    quietStartup = true;
   };
 
   piVendoredNpmPackages = {
