@@ -25,6 +25,7 @@ _: {
         "ll" = "eza -al";
         "tree" = "eza --tree";
         "gg" = "lazygit";
+        "zed" = "zeditor";
         "ze" = "zed .";
       };
     };
