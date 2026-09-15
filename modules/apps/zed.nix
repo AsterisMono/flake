@@ -121,6 +121,7 @@ _: {
             metrics = false;
           };
           terminal = {
+            blinking = "off";
             cursor_shape = "bar";
             shell.program = lib.getExe pkgs.fish;
             scrollbar.show = "never";
