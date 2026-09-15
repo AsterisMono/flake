@@ -64,8 +64,14 @@ _: {
           };
           cli_default_open_behavior = "new_window";
           buffer_font_family = "FiraCode Nerd Font";
+          # Use static CJK fonts; non-400 weights can break Linux fallbacks.
+          # https://github.com/zed-industries/zed/issues/60155
+          buffer_font_fallbacks = [ "Source Han Sans SC" ];
           buffer_font_size = 15.0;
+          buffer_font_weight = 400;
           ui_font_size = 16.0;
+          ui_font_fallbacks = [ "Source Han Sans SC" ];
+          ui_font_weight = 400;
           colorize_brackets = true;
           cursor_blink = false;
           diagnostics.inline.enabled = true;
