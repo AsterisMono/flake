@@ -84,8 +84,8 @@ in
       stylix = {
         enable = true;
         image = pkgs.fetchurl {
-          url = "https://raw.githubusercontent.com/linuxdotexe/nordic-wallpapers/refs/heads/master/wallpapers/ign_unsplash3.png";
-          hash = "sha256-mEjpLq0pE+3UNdg2S1Yjrgx24WoqqMUXW40GL/m9Ltk=";
+          url = "https://r2.requiem.garden/41.jpg";
+          hash = "sha256-Wgt0tcAAkxQg2u160iIOVQPiOOXCVLCkRNgNtI7zwfE=";
         };
         base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
         polarity = "dark";
