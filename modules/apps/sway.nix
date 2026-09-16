@@ -62,6 +62,29 @@ _: {
           fi
         '';
       };
+      launchChatApps = pkgs.writeShellApplication {
+        name = "launch-chat-apps";
+        runtimeInputs = [
+          pkgs.coreutils
+          pkgs.flatpak
+          pkgs.gnugrep
+          pkgs.unstable.swayfx
+        ];
+        text = ''
+          flatpak run org.telegram.desktop &
+
+          # Sway inserts a window below the telegram one only once it exists,
+          # so slack has to wait for its window before it may start.
+          for _ in {1..60}; do
+            if swaymsg -t get_tree | grep -q org.telegram.desktop; then
+              break
+            fi
+            sleep 1
+          done
+
+          exec flatpak run com.slack.Slack
+        '';
+      };
       menu = "vicinae toggle";
       modifier = "Mod4";
       terminal = "${lib.getExe pkgs.uwsm} app -- ${lib.getExe pkgs.kitty}";
@@ -76,12 +99,19 @@ _: {
         wrapperFeatures.gtk = true;
         config = {
           defaultWorkspace = "workspace number 1";
+          assigns = {
+            "10" = [
+              { app_id = "^org\\.telegram\\.desktop$"; }
+              { app_id = "^com\\.slack\\.Slack$"; }
+            ];
+          };
           startup = [
             { command = "1password --silent"; }
             {
               command = "autotiling";
               always = true;
             }
+            { command = "${lib.getExe launchChatApps}"; }
           ];
           inherit menu modifier terminal;
           bars = [ ];
@@ -98,6 +128,14 @@ _: {
           window = {
             titlebar = false;
             border = 1;
+            commands = [
+              {
+                criteria = {
+                  app_id = "^org\\.telegram\\.desktop$";
+                };
+                command = "layout splitv";
+              }
+            ];
           };
           floating = {
             titlebar = false;
