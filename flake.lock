@@ -623,7 +623,8 @@
         "sfd-nix": "sfd-nix",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
-        "systems": "systems_2"
+        "systems": "systems_2",
+        "zed-glassy-nord": "zed-glassy-nord"
       }
     },
     "rust-overlay": {
@@ -835,6 +836,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "zed-glassy-nord": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1749327740,
+        "narHash": "sha256-r5JeK82KIrWOfPDchLhYcPUECJyOkFg+kxTjRpI6T54=",
+        "owner": "matt-gilb",
+        "repo": "zed_glassy-nord",
+        "rev": "85a30524c022eb7a84852089a1b2c276c901234b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "matt-gilb",
+        "repo": "zed_glassy-nord",
         "type": "github"
       }
     }

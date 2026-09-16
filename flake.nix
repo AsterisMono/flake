@@ -66,5 +66,9 @@
       };
     };
     systems.url = "github:nix-systems/default";
+    zed-glassy-nord = {
+      url = "github:matt-gilb/zed_glassy-nord";
+      flake = false;
+    };
   };
 }

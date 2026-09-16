@@ -1,4 +1,9 @@
-_: {
+{ inputs, ... }: {
+  flake-file.inputs.zed-glassy-nord = {
+    url = "github:matt-gilb/zed_glassy-nord";
+    flake = false;
+  };
+
   flake.modules.homeManager.zed =
     { pkgs, lib, ... }:
     let
@@ -33,6 +38,8 @@ _: {
           "nordic-theme"
           "nord"
         ];
+
+        themes.glassy_nord = builtins.readFile (inputs.zed-glassy-nord + "/themes/glassy_nord.json");
 
         userSettings = {
           agent_servers = {
@@ -133,8 +140,8 @@ _: {
             scrollbar.show = "never";
           };
           theme = {
-            dark = "Nord Dark";
-            light = "Dawnfox - blurred";
+            dark = "Glassy Nord Dark";
+            light = "Glassy Nord Light";
             mode = "dark";
           };
           title_bar.show_user_picture = false;
