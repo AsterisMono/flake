@@ -16,6 +16,7 @@
     fish
     flatpak
     git
+    keyring
     kitty
     neovim
     netbird-desktop
