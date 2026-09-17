@@ -65,6 +65,7 @@ _: {
       menu = "vicinae toggle";
       modifier = "Mod4";
       terminal = "${lib.getExe pkgs.uwsm} app -- ${lib.getExe pkgs.kitty}";
+      wpctl = lib.getExe' pkgs.wireplumber "wpctl";
     in
     {
       wayland.windowManager.sway = {
@@ -114,10 +115,10 @@ _: {
                 "${modifier}+Escape" = "exec swaylock";
                 "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
                 "${modifier}+Shift+s" = "exec grimshot copy anything";
-                "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-                "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-                "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-                "XF86AudioRaiseVolume" = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
+                "XF86AudioLowerVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+                "XF86AudioMicMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+                "XF86AudioMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
+                "XF86AudioRaiseVolume" = "exec ${wpctl} set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
                 "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
                 "XF86MonBrightnessUp" = "exec brightnessctl set 5%+";
               })
