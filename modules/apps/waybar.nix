@@ -33,6 +33,31 @@ _: {
     }:
     let
       cpuTemperatureSensor = osConfig.hardware.sensors.cpuTemperature;
+
+      memoryPressure = pkgs.writeShellScript "waybar-memory-pressure" ''
+        ${lib.getExe pkgs.gawk} '
+          function v(x) { sub(/^[^=]*=/, "", x); return x }
+          FILENAME ~ /pressure/ {
+            if ($1 == "some") { s10 = v($2); s60 = v($3); s300 = v($4) }
+            else if ($1 == "full") { f10 = v($2); f60 = v($3); f300 = v($4) }
+          }
+          FILENAME ~ /meminfo/ {
+            if ($1 == "SwapTotal:") st = $2
+            else if ($1 == "SwapFree:") sf = $2
+            else if ($1 == "Zswap:") zp = $2
+            else if ($1 == "Zswapped:") zw = $2
+          }
+          END {
+            if (s60 + 0 <= 0) exit
+            printf "%s\n", s60
+            printf "some %s/%s/%s%% · full %s/%s/%s%% · swap %.2f/%.2f GiB · zswap %.2f GiB (swapped %.2f GiB)", s10, s60, s300, f10, f60, f300, (st - sf) / 1048576, st / 1048576, zp / 1048576, zw / 1048576
+            if (s60 + 0 >= 20) print "critical"
+            else if (s60 + 0 >= 5) print "warning"
+          }
+        ' /proc/pressure/memory /proc/meminfo
+      '';
+
+      wpctl = lib.getExe' pkgs.wireplumber "wpctl";
     in
     {
       home.packages = [ pkgs.selfPackages.waycat ];
@@ -59,14 +84,17 @@ _: {
             ];
             modules-center = [ "mpris" ];
             modules-right = [
+              "idle_inhibitor"
+              "power-profiles-daemon"
               "custom/waycat"
               "network#speed"
             ]
             ++ lib.optional (cpuTemperatureSensor != null) "temperature"
             ++ [
               "memory"
+              "custom/pressure"
               "battery"
-              "wireplumber"
+              "pulseaudio"
               "tray"
             ];
 
@@ -114,13 +142,37 @@ _: {
               ];
             };
 
-            wireplumber = {
+            "power-profiles-daemon" = {
+              format = "{icon}";
+              tooltip = true;
+              format-icons = {
+                default = "󰓅";
+                performance = "󰓅";
+                balanced = "";
+                power-saver = "";
+              };
+            };
+
+            idle_inhibitor = {
+              format = "{icon}";
+              format-icons = {
+                activated = "󰈈";
+                deactivated = "󰈉";
+              };
+            };
+
+            pulseaudio = {
               format = "{icon} {volume}%";
-              format-muted = "";
+              format-muted = "{icon} {volume}%";
+              format-icons = {
+                hdmi = "󰽟";
+                hdmi-muted = "󰽠";
+                default = "󰋋";
+                default-muted = "󰟎";
+              };
               scroll-step = 1;
-              on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-              on-click-right = "pavucontrol";
-              format-icons.default = "";
+              on-click = "${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
+              on-click-right = "${lib.getExe pkgs.pavucontrol}";
             };
 
             temperature = lib.optionalAttrs (cpuTemperatureSensor != null) {
@@ -143,8 +195,16 @@ _: {
               interval = 3;
               format = " {}%";
               tooltip = true;
-              tooltip-format = "Memory - {used:0.1f}GB used";
-              on-click = "kitty --start-as=fullscreen --title btop sh -c 'btop'";
+              tooltip-format = "RAM {used:0.1f}/{total:0.1f} GiB · swap {swapUsed:0.1f}/{swapTotal:0.1f} GiB";
+              on-click = "kitty --start-as=fullscreen --title btop sh -c '${lib.getExe pkgs.btop}'";
+            };
+
+            "custom/pressure" = {
+              exec = "${memoryPressure}";
+              interval = 3;
+              "hide-empty-text" = true;
+              format = "󰊚 {text}%";
+              on-click = "kitty --start-as=fullscreen --title btop sh -c '${lib.getExe pkgs.btop}'";
             };
 
             "network#speed" = {
@@ -199,36 +259,10 @@ _: {
               "sway/workspaces"
               "wlr/taskbar"
             ];
-            modules-right = [
-              "custom/waycodex"
-              "custom/wayherdr"
-              "sway/scratchpad"
-            ];
-            "custom/waycodex" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.waycodex} --offline '' --format '5h {5h_left}% • 1w {1w_left}% • reset {next_reset}'";
-              interval = 60;
-              format = "{}";
-            };
-            "custom/wayherdr" = {
-              exec = "${pkgs.lib.getExe pkgs.selfPackages.wayherdr} --offline '' --format ' <span foreground=\"#5a524c\">|</span> 󰄛 {working}{{#blocked}} <span foreground=\"#d8a657\">󱜺</span> {blocked}{{/blocked}}{{#done}} <span foreground=\"#a9b665\">󰅿</span> {done}{{/done}}'";
-              interval = 3;
-              format = "{}";
-            };
             "sway/workspaces" = {
               all-outputs = true;
               disable-scroll-wraparound = true;
               format = "{name}";
-            };
-            "sway/scratchpad" = {
-              format = "{icon} {count}";
-              format-icons = [
-                ""
-                ""
-              ];
-              show-empty = false;
-              tooltip = true;
-              tooltip-format = "{app}: {title}";
-              on-click = "swaymsg scratchpad show";
             };
             "wlr/taskbar" = {
               all-outputs = true;
@@ -239,7 +273,7 @@ _: {
               on-click = "activate";
               on-click-middle = "close";
               rewrite = {
-                "(.{24}).+" = "$1…";
+                "(.{20}).+" = "$1…";
                 "Firefox Web Browser" = "Firefox";
               };
             };
@@ -282,6 +316,8 @@ _: {
 
           #taskbar button {
             min-width: 240px;
+            padding: 0 6px;
+
           }
 
           #workspaces button:hover,
@@ -312,6 +348,14 @@ _: {
             margin-left: -10px;
             padding-top: 2px;
             font-size: 8pt;
+          }
+
+          #custom-pressure.warning {
+            color: @base0A;
+          }
+
+          #custom-pressure.critical {
+            color: @base08;
           }
         '';
       };
