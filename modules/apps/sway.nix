@@ -170,8 +170,8 @@ _: {
                 "${modifier}+Escape" = "exec swaylock";
                 "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
                 "${modifier}+Shift+s" = "exec grimshot copy anything";
-                "${modifier}+Shift+a" = "exec ${annotateScreenshot}";
-                "${modifier}+grave" = "exec ${dropdownTerm}";
+                "${modifier}+Shift+a" = "exec ${lib.getExe annotateScreenshot}";
+                "${modifier}+grave" = "exec ${lib.getExe dropdownTerm}";
                 "${modifier}+v" = "exec ${vicinae} deeplink 'vicinae://launch/clipboard/history'";
                 "XF86AudioLowerVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
                 "XF86AudioMicMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
