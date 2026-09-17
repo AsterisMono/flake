@@ -48,6 +48,11 @@
 
         nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
         hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+
+        hardware.sensors.cpuTemperature = {
+          hwmonPathAbs = "/sys/devices/pci0000:00/0000:00:18.3/hwmon";
+          inputFilename = "temp1_input";
+        };
       };
     nixosModule = {
       swapDevices = [
