@@ -34,7 +34,6 @@ _: {
 
   flake.modules.homeManager.sway =
     {
-      config,
       lib,
       pkgs,
       ...
@@ -72,12 +71,6 @@ _: {
           pkgs.unstable.swayfx
         ];
         text = ''
-          ${lib.optionalString (config.wayland.windowManager.sway.chatAppsOutput != null) ''
-            if ! swaymsg -t get_outputs \
-              | grep -qF ${lib.escapeShellArg config.wayland.windowManager.sway.chatAppsOutput}; then
-              exit 0
-            fi
-          ''}
           flatpak run org.telegram.desktop &
 
           # Sway inserts a window below the telegram one only once it exists,
@@ -97,157 +90,146 @@ _: {
       terminal = "${lib.getExe pkgs.uwsm} app -- ${lib.getExe pkgs.kitty}";
     in
     {
-      options.wayland.windowManager.sway.chatAppsOutput = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        description = ''
-          Output that must be connected for the chat apps to launch at startup.
-          When null, they launch regardless of connected outputs.
+      wayland.windowManager.sway = {
+        enable = true;
+        systemd.enable = false; # UWSM managed
+        package = pkgs.unstable.swayfx;
+        # SwayFX requires a DRM renderer even for its config check, which is unavailable in the build sandbox.
+        checkConfig = false;
+        wrapperFeatures.gtk = true;
+        config = {
+          defaultWorkspace = "workspace number 1";
+          assigns = {
+            "10" = [
+              { app_id = "^org\\.telegram\\.desktop$"; }
+              { app_id = "^com\\.slack\\.Slack$"; }
+            ];
+          };
+          startup = [
+            { command = "1password --silent"; }
+            {
+              command = "autotiling";
+              always = true;
+            }
+            { command = "${lib.getExe launchChatApps}"; }
+          ];
+          inherit menu modifier terminal;
+          bars = [ ];
+          gaps.smartBorders = "on";
+          input = {
+            "*".xkb_options = "ctrl:nocaps";
+            "type:touchpad" = {
+              dwt = "enabled";
+              natural_scroll = "enabled";
+              tap = "enabled";
+            };
+          };
+          workspaceAutoBackAndForth = true;
+          window = {
+            titlebar = false;
+            border = 1;
+            commands = [
+              {
+                criteria = {
+                  app_id = "^org\\.telegram\\.desktop$";
+                };
+                command = "layout splitv";
+              }
+            ];
+          };
+          floating = {
+            titlebar = false;
+            criteria = [ { title = "^Authentication Required$"; } ];
+          };
+          focus.followMouse = false;
+          keybindings =
+            removeAttrs
+              (lib.mkOptionDefault {
+                "${modifier}+q" = "exec ${terminal}";
+                "${modifier}+c" = "kill";
+                "${modifier}+space" = "exec ${menu}";
+                "${modifier}+Alt+Space" = "focus mode_toggle";
+                "${modifier}+Escape" = "exec swaylock";
+                "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
+                "${modifier}+Shift+s" = "exec grimshot copy anything";
+                "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
+                "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+                "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+                "XF86AudioRaiseVolume" = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
+                "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
+                "XF86MonBrightnessUp" = "exec brightnessctl set 5%+";
+              })
+              [
+                "${modifier}+Return"
+                "${modifier}+Shift+q"
+                "${modifier}+d"
+              ];
+        };
+        extraConfig = ''
+          bindgesture swipe:3:right workspace prev
+          bindgesture swipe:3:left workspace next
+          seat * hide_cursor when-typing enable
+          blur enable
+          default_dim_inactive 0.1
+          exec uwsm finalize
         '';
       };
 
-      config = {
-        wayland.windowManager.sway = {
-          enable = true;
-          systemd.enable = false; # UWSM managed
-          package = pkgs.unstable.swayfx;
-          # SwayFX requires a DRM renderer even for its config check, which is unavailable in the build sandbox.
-          checkConfig = false;
-          wrapperFeatures.gtk = true;
-          config = {
-            defaultWorkspace = "workspace number 1";
-            assigns = {
-              "10" = [
-                { app_id = "^org\\.telegram\\.desktop$"; }
-                { app_id = "^com\\.slack\\.Slack$"; }
-              ];
-            };
-            startup = [
-              { command = "1password --silent"; }
-              {
-                command = "autotiling";
-                always = true;
-              }
-              { command = "${lib.getExe launchChatApps}"; }
-            ];
-            inherit menu modifier terminal;
-            bars = [ ];
-            gaps.smartBorders = "on";
-            input = {
-              "*".xkb_options = "ctrl:nocaps";
-              "type:touchpad" = {
-                dwt = "enabled";
-                natural_scroll = "enabled";
-                tap = "enabled";
-              };
-            };
-            workspaceAutoBackAndForth = true;
-            window = {
-              titlebar = false;
-              border = 1;
-              commands = [
-                {
-                  criteria = {
-                    app_id = "^org\\.telegram\\.desktop$";
-                  };
-                  command = "layout splitv";
-                }
-              ];
-            };
-            floating = {
-              titlebar = false;
-              criteria = [ { title = "^Authentication Required$"; } ];
-            };
-            focus.followMouse = false;
-            keybindings =
-              removeAttrs
-                (lib.mkOptionDefault {
-                  "${modifier}+q" = "exec ${terminal}";
-                  "${modifier}+c" = "kill";
-                  "${modifier}+space" = "exec ${menu}";
-                  "${modifier}+Alt+Space" = "focus mode_toggle";
-                  "${modifier}+Escape" = "exec swaylock";
-                  "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
-                  "${modifier}+Shift+s" = "exec grimshot copy anything";
-                  "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
-                  "XF86AudioMicMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
-                  "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-                  "XF86AudioRaiseVolume" = "exec wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+";
-                  "XF86MonBrightnessDown" = "exec brightnessctl set 5%-";
-                  "XF86MonBrightnessUp" = "exec brightnessctl set 5%+";
-                })
-                [
-                  "${modifier}+Return"
-                  "${modifier}+Shift+q"
-                  "${modifier}+d"
-                ];
-          };
-          extraConfig = ''
-            bindgesture swipe:3:right workspace prev
-            bindgesture swipe:3:left workspace next
-            seat * hide_cursor when-typing enable
-            blur enable
-            default_dim_inactive 0.1
-            exec uwsm finalize
-          '';
+      programs.swaylock.enable = true;
+
+      programs.gpg.enable = true;
+
+      services.gpg-agent = {
+        enable = true;
+        pinentry.package = pkgs.pinentry-gnome3;
+      };
+
+      home.packages = with pkgs; [
+        brightnessctl
+        wl-clipboard
+        sway-contrib.grimshot
+        atril
+        ristretto
+        seahorse
+        thunar
+        tumbler
+        xarchiver
+        xfce4-screenshooter
+        autotiling
+        wdisplays
+      ];
+
+      home.sessionVariables = {
+        "NIXOS_OZONE_WL" = "1";
+        "ELECTRON_OZONE_PLATFORM_HINT" = "auto";
+      };
+
+      systemd.user.services.sway-polkit-agent = {
+        Unit = {
+          Description = "LXQt PolicyKit Authentication Agent for Sway";
+          PartOf = [ "graphical-session.target" ];
+          After = [ "graphical-session.target" ];
+          ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         };
-
-        programs.swaylock.enable = true;
-
-        programs.gpg.enable = true;
-
-        services.gpg-agent = {
-          enable = true;
-          pinentry.package = pkgs.pinentry-gnome3;
+        Service = {
+          ExecStart = "${lib.getExe pkgs.lxqt.lxqt-policykit}";
+          Restart = "on-failure";
         };
+        Install.WantedBy = [ "graphical-session.target" ];
+      };
 
-        home.packages = with pkgs; [
-          brightnessctl
-          wl-clipboard
-          sway-contrib.grimshot
-          atril
-          ristretto
-          seahorse
-          thunar
-          tumbler
-          xarchiver
-          xfce4-screenshooter
-          autotiling
-          wdisplays
+      services = {
+        mako.enable = true;
+        udiskie.enable = true;
+      };
+
+      systemd.user.services = {
+        mako.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
+        udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
+        waybar.Unit.ConditionEnvironment = lib.mkForce [
+          "WAYLAND_DISPLAY"
+          "XDG_SESSION_DESKTOP=sway"
         ];
-
-        home.sessionVariables = {
-          "NIXOS_OZONE_WL" = "1";
-          "ELECTRON_OZONE_PLATFORM_HINT" = "auto";
-        };
-
-        systemd.user.services.sway-polkit-agent = {
-          Unit = {
-            Description = "LXQt PolicyKit Authentication Agent for Sway";
-            PartOf = [ "graphical-session.target" ];
-            After = [ "graphical-session.target" ];
-            ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
-          };
-          Service = {
-            ExecStart = "${lib.getExe pkgs.lxqt.lxqt-policykit}";
-            Restart = "on-failure";
-          };
-          Install.WantedBy = [ "graphical-session.target" ];
-        };
-
-        services = {
-          mako.enable = true;
-          udiskie.enable = true;
-        };
-
-        systemd.user.services = {
-          mako.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
-          udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
-          waybar.Unit.ConditionEnvironment = lib.mkForce [
-            "WAYLAND_DISPLAY"
-            "XDG_SESSION_DESKTOP=sway"
-          ];
-        };
       };
     };
 }

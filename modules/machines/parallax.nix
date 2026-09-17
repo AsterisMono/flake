@@ -58,35 +58,32 @@
       };
     };
     homeModule = {
-      wayland.windowManager.sway = {
-        chatAppsOutput = "MKG MK-165Q32s 24G97P73LKZ4";
-        config = {
-          output = {
-            "Invalid Vendor Codename - RTK HDMI 0x01010101".disable = "";
-            "MKG MK-165Q32s 24G97P73LKZ4" = {
-              mode = "2560x1440@165.003Hz";
-              position = "0 0";
-              scale = "1";
-              transform = "90";
-            };
-            "Samsung Electric Company Odyssey G70D H1AK500000" = {
-              mode = "3840x2160@143.988Hz";
-              position = "1440 416";
-              scale = "1.333333";
-            };
+      wayland.windowManager.sway.config = {
+        output = {
+          "Invalid Vendor Codename - RTK HDMI 0x01010101".disable = "";
+          "MKG MK-165Q32s 24G97P73LKZ4" = {
+            mode = "2560x1440@165.003Hz";
+            position = "0 0";
+            scale = "1";
+            transform = "90";
           };
-          startup = [
-            {
-              command = ''swaymsg focus output "Samsung Electric Company Odyssey G70D H1AK500000"'';
-            }
-          ];
-          workspaceOutputAssign = [
-            {
-              workspace = "1";
-              output = "Samsung Electric Company Odyssey G70D H1AK500000";
-            }
-          ];
+          "Samsung Electric Company Odyssey G70D H1AK500000" = {
+            mode = "3840x2160@143.988Hz";
+            position = "1440 416";
+            scale = "1.333333";
+          };
         };
+        startup = [
+          {
+            command = ''swaymsg focus output "Samsung Electric Company Odyssey G70D H1AK500000"'';
+          }
+        ];
+        workspaceOutputAssign = [
+          {
+            workspace = "1";
+            output = "Samsung Electric Company Odyssey G70D H1AK500000";
+          }
+        ];
       };
     };
   };
