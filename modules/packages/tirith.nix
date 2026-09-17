@@ -1,7 +1,4 @@
-{
-  inputs,
-  ...
-}:
+_:
 let
   # Upstream publishes per Rust target triple. There is no x86_64 musl build,
   # so the glibc archive is the only option and autoPatchelfHook is required.
@@ -15,9 +12,9 @@ let
 in
 {
   perSystem =
-    { system, ... }:
+    { system, pkgsUnstable, ... }:
     let
-      pkgs = inputs.nixpkgs-unstable.legacyPackages.${system};
+      pkgs = pkgsUnstable;
       target = targetFor system;
     in
     {

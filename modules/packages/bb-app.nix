@@ -1,9 +1,8 @@
-{ inputs, ... }:
-{
+_: {
   perSystem =
-    { system, ... }:
+    { pkgsUnstable, ... }:
     let
-      pkgs = inputs.nixpkgs-unstable.legacyPackages.${system};
+      pkgs = pkgsUnstable;
       electron = pkgs.electron_41;
       nodejs = pkgs.nodejs_24;
       pnpm = pkgs.pnpm_11.override { nodejs-slim = nodejs; };

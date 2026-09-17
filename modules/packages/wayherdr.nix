@@ -1,9 +1,8 @@
-{ inputs, ... }:
-{
+_: {
   perSystem =
-    { system, ... }:
+    { pkgsUnstable, ... }:
     let
-      pkgs = inputs.nixpkgs-unstable.legacyPackages.${system};
+      pkgs = pkgsUnstable;
     in
     {
       packages.wayherdr = pkgs.rustPlatform.buildRustPackage (finalAttrs: {

@@ -1,12 +1,8 @@
-{
-  inputs,
-  ...
-}:
-{
+_: {
   perSystem =
-    { system, ... }:
+    { pkgsUnstable, ... }:
     let
-      pkgs = inputs.nixpkgs-unstable.legacyPackages.${system};
+      pkgs = pkgsUnstable;
       # RS256 signing goes through `cryptography`; `openssl` is the documented
       # fallback backend and is generally useful on the agent host.
       python = pkgs.python3.withPackages (ps: [ ps.cryptography ]);

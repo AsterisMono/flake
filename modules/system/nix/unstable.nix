@@ -12,4 +12,15 @@
       })
     ];
   };
+
+  # Single unfree-enabled unstable package set for every perSystem package
+  # definition, so packages do not each import their own instance.
+  perSystem =
+    { system, ... }:
+    {
+      _module.args.pkgsUnstable = import inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    };
 }
