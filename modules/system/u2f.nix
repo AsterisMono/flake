@@ -6,6 +6,7 @@
         authfile = "/etc/u2f-mappings";
         origin = "pam://nvirellia";
         cue = true;
+        userpresence = 0;
       };
     };
 
@@ -17,6 +18,6 @@
     };
 
     environment.etc."u2f-mappings".text =
-      "nvirellia:cxMAOv20SDEK3+/85zFWEN1Bn+ch3DTjPafLHTkX1PrdCZmpkBL126BQ5FcuQUNSMxKEPNfREKv9L7kOIrtzc1aUJfTLu/JRk0jINfYPQ0AxB7iwjFEp61KZilT2g4dD,0QCaAy3o37rB9Pc6b5+oZj3YKAuf3hOqxkFq0WsUGheWYNKH4Ki49eoa/6cTby+jP3TOsc63uCHJ46ZZj7kl6A==,es256,+presence\n";
+      "nvirellia:YrvbuSziBDgXkUw4+uonGHaC0lhdAXKNJRkiwfgx7P/GXQrF4pexZ6V4RtiD2o5Sqei0E1MPB09a45XFvg3NNBHhCoG2/ybU+Y6Ax6BQ7nb28yvrjeXyhtuTX+eETe58,luPqci9Gcyfo1cJgA1TPzjK37t+8m8UzBQSwC/M0sBsbTrynuKPFVyOy4B+D49IfwhzIfKDiuO40L5aOD+fIXQ==,es256,\n";
   };
 }
