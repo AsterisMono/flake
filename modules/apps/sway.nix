@@ -72,33 +72,6 @@ _: {
       vicinae = lib.getExe config.programs.vicinae.package;
       systemctl = lib.getExe' pkgs.systemd "systemctl";
 
-      dropdownTerm = pkgs.writeShellApplication {
-        name = "dropdown-term";
-        runtimeInputs = [
-          pkgs.coreutils
-          pkgs.gnugrep
-          pkgs.kitty
-          pkgs.unstable.swayfx
-        ];
-        text = ''
-          app="dropdown-term"
-          if swaymsg -q -t get_tree | grep -q "\"app_id\": \"$app\""; then
-            swaymsg "[app_id=\"$app\"] scratchpad show"
-          else
-            kitty --class "$app" >/dev/null 2>&1 &
-            i=0
-            while [ "$i" -lt 50 ]; do
-              if swaymsg -q -t get_tree | grep -q "\"app_id\": \"$app\""; then
-                break
-              fi
-              sleep 0.1
-              i=$((i + 1))
-            done
-            swaymsg "[app_id=\"$app\"] scratchpad show"
-          fi
-        '';
-      };
-
       annotateScreenshot = pkgs.writeShellApplication {
         name = "screenshot-annotate";
         runtimeInputs = [
@@ -171,7 +144,6 @@ _: {
                 "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
                 "${modifier}+Shift+s" = "exec grimshot copy anything";
                 "${modifier}+Shift+a" = "exec ${lib.getExe annotateScreenshot}";
-                "${modifier}+grave" = "exec ${lib.getExe dropdownTerm}";
                 "${modifier}+v" = "exec ${vicinae} deeplink 'vicinae://launch/clipboard/history'";
                 "XF86AudioLowerVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
                 "XF86AudioMicMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
@@ -192,7 +164,6 @@ _: {
           seat * hide_cursor when-typing enable
           blur enable
           default_dim_inactive 0.1
-          for_window [app_id="dropdown-term"] floating enable, resize set 60 ppt 50 ppt, move position center, move scratchpad
           for_window [app_id="com.gabm.satty"] floating enable
           exec uwsm finalize
         '';
