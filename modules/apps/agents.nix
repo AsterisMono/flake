@@ -94,6 +94,7 @@ in
           bubblewrap
           jq
           python3
+          selfPackages.zed-delta
         ]);
     };
 }
