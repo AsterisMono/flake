@@ -322,12 +322,19 @@ _: {
           #taskbar button {
             min-width: 240px;
             padding: 0 6px;
-
           }
 
-          #workspaces button:hover,
-          #taskbar button:hover {
+          #workspaces button:hover {
             padding: 0 10px;
+            color: @base04;
+            background: transparent;
+            border: 0;
+            box-shadow: inset 0 -2px transparent;
+            text-shadow: none;
+          }
+
+          #taskbar button:hover {
+            padding: 0 6px;
             color: @base04;
             background: transparent;
             border: 0;
