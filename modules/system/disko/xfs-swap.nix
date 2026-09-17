@@ -18,8 +18,11 @@
                 };
               };
               swap = {
-                size = "16G";
-                content.type = "swap";
+                size = "32G";
+                content = {
+                  type = "swap";
+                  resumeDevice = true;
+                };
               };
               root = {
                 size = "100%";

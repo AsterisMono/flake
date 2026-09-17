@@ -9,7 +9,7 @@
       nvidia
       hmcl
       steam
-      zram
+      zswap
       i18n
       substituter-cn
     ];
@@ -50,12 +50,20 @@
         hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
       };
     nixosModule = {
+      swapDevices = [
+        {
+          device = "/swapfile";
+          size = 32 * 1024;
+          priority = 10;
+        }
+      ];
       programs.noctalia-greeter.settings.output = {
         name = "HDMI-A-2";
         width = 3840;
         height = 2160;
         scale = 1.333333;
       };
+      services.logind.settings.Login.HandlePowerKey = "hibernate";
     };
     homeModule = {
       wayland.windowManager.sway.config = {
