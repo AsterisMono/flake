@@ -281,6 +281,11 @@ _: {
         ];
 
         style = ''
+          window#waybar,
+          window#waybar * {
+            font-family: "FiraCode Nerd Font Propo";
+          }
+
           window#waybar.topbar {
             background: alpha(@base00, 0.92);
           }
