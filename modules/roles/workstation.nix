@@ -8,6 +8,7 @@
     podman
     power
     stylix
+    u2f
 
     _1password
     agents
