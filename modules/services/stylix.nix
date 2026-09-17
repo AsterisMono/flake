@@ -121,7 +121,7 @@ in
             package = pkgs.noto-fonts;
           };
           monospace = {
-            name = "FiraCode Nerd Font";
+            name = "FiraCode Nerd Font Mono";
             package = pkgs.nerd-fonts.fira-code;
           };
           emoji = {

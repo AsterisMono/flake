@@ -70,7 +70,7 @@
             coloring = "indent_aware";
           };
           cli_default_open_behavior = "new_window";
-          buffer_font_family = "FiraCode Nerd Font";
+          buffer_font_family = "FiraCode Nerd Font Mono";
           # Use static CJK fonts; non-400 weights can break Linux fallbacks.
           # https://github.com/zed-industries/zed/issues/60155
           buffer_font_fallbacks = [ "Source Han Sans SC" ];
@@ -146,7 +146,7 @@
           };
           title_bar.show_user_picture = false;
           toolbar.quick_actions = false;
-          ui_font_family = "FiraCode Nerd Font";
+          ui_font_family = "FiraCode Nerd Font Mono";
           vim.use_system_clipboard = "on_yank";
           vim_mode = true;
           which_key.enabled = true;
