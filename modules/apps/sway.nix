@@ -216,22 +216,6 @@ _: {
           wdisplays
         ];
 
-        # Thunar uses a lowercase application style class. Keep its widgets
-        # translucent so the compositor can blur the background behind them.
-        stylix.targets.gtk.extraCss = ''
-          window.thunar,
-          window.thunar .view,
-          window.thunar .sidebar,
-          window.thunar headerbar,
-          window.thunar .titlebar,
-          window.thunar .toolbar,
-          window.thunar notebook,
-          window.thunar stack {
-            background-color: alpha(@window_bg_color, 0.8);
-            background-image: none;
-          }
-        '';
-
         home.sessionVariables = {
           "NIXOS_OZONE_WL" = "1";
           "ELECTRON_OZONE_PLATFORM_HINT" = "auto";
