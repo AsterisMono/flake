@@ -34,6 +34,7 @@ _: {
 
   flake.modules.homeManager.sway =
     {
+      config,
       lib,
       pkgs,
       ...
@@ -66,6 +67,60 @@ _: {
       modifier = "Mod4";
       terminal = "${lib.getExe pkgs.uwsm} app -- ${lib.getExe pkgs.kitty}";
       wpctl = lib.getExe' pkgs.wireplumber "wpctl";
+      swaymsg = lib.getExe' pkgs.unstable.swayfx "swaymsg";
+      swaylock = lib.getExe config.programs.swaylock.package;
+      vicinae = lib.getExe config.programs.vicinae.package;
+      systemctl = lib.getExe' pkgs.systemd "systemctl";
+
+      dropdownTerm = pkgs.writeShellApplication {
+        name = "dropdown-term";
+        runtimeInputs = [
+          pkgs.coreutils
+          pkgs.gnugrep
+          pkgs.kitty
+          pkgs.unstable.swayfx
+        ];
+        text = ''
+          app="dropdown-term"
+          if swaymsg -q -t get_tree | grep -q "\"app_id\": \"$app\""; then
+            swaymsg "[app_id=\"$app\"] scratchpad show"
+          else
+            kitty --class "$app" >/dev/null 2>&1 &
+            i=0
+            while [ "$i" -lt 50 ]; do
+              if swaymsg -q -t get_tree | grep -q "\"app_id\": \"$app\""; then
+                break
+              fi
+              sleep 0.1
+              i=$((i + 1))
+            done
+            swaymsg "[app_id=\"$app\"] scratchpad show"
+          fi
+        '';
+      };
+
+      annotateScreenshot = pkgs.writeShellApplication {
+        name = "screenshot-annotate";
+        runtimeInputs = [
+          pkgs.coreutils
+          pkgs.grim
+          pkgs.satty
+          pkgs.slurp
+          pkgs.wl-clipboard
+        ];
+        text = ''
+          geometry="$(slurp)" || exit 0
+          dir="$HOME/Pictures/Screenshots"
+          mkdir -p "$dir"
+          grim -g "$geometry" - | satty \
+            --filename - \
+            --copy-command wl-copy \
+            --actions-on-enter save-to-clipboard \
+            --actions-on-escape exit \
+            --output-filename "$dir/%Y%m%d_%H%M%S.png" \
+            --early-exit
+        '';
+      };
     in
     {
       wayland.windowManager.sway = {
@@ -115,6 +170,9 @@ _: {
                 "${modifier}+Escape" = "exec swaylock";
                 "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
                 "${modifier}+Shift+s" = "exec grimshot copy anything";
+                "${modifier}+Shift+a" = "exec ${annotateScreenshot}";
+                "${modifier}+grave" = "exec ${dropdownTerm}";
+                "${modifier}+v" = "exec ${vicinae} deeplink 'vicinae://launch/clipboard/history'";
                 "XF86AudioLowerVolume" = "exec ${wpctl} set-volume @DEFAULT_AUDIO_SINK@ 5%-";
                 "XF86AudioMicMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
                 "XF86AudioMute" = "exec ${wpctl} set-mute @DEFAULT_AUDIO_SINK@ toggle";
@@ -134,11 +192,36 @@ _: {
           seat * hide_cursor when-typing enable
           blur enable
           default_dim_inactive 0.1
+          for_window [app_id="dropdown-term"] floating enable, resize set 60 ppt 50 ppt, move position center, move scratchpad
+          for_window [app_id="com.gabm.satty"] floating enable
           exec uwsm finalize
         '';
       };
 
       programs.swaylock.enable = true;
+
+      services.swayidle = {
+        enable = true;
+        events = {
+          before-sleep = "${swaylock} -f";
+          after-resume = "${swaymsg} 'output * dpms on'";
+        };
+        timeouts = [
+          {
+            timeout = 300;
+            command = "${swaylock} -f";
+          }
+          {
+            timeout = 600;
+            command = "${swaymsg} 'output * dpms off'";
+            resumeCommand = "${swaymsg} 'output * dpms on'";
+          }
+          {
+            timeout = 1800;
+            command = "${systemctl} suspend-then-hibernate";
+          }
+        ];
+      };
 
       programs.gpg.enable = true;
 
@@ -151,6 +234,9 @@ _: {
         brightnessctl
         wl-clipboard
         sway-contrib.grimshot
+        grim
+        slurp
+        satty
         atril
         ristretto
         seahorse
@@ -189,6 +275,10 @@ _: {
       systemd.user.services = {
         mako.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
+        swayidle.Unit.ConditionEnvironment = lib.mkForce [
+          "WAYLAND_DISPLAY"
+          "XDG_SESSION_DESKTOP=sway"
+        ];
         waybar.Unit.ConditionEnvironment = lib.mkForce [
           "WAYLAND_DISPLAY"
           "XDG_SESSION_DESKTOP=sway"
