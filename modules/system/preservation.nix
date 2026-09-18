@@ -120,6 +120,10 @@
                   directory = ".codex";
                   mode = "0700";
                 }
+                {
+                  directory = ".local/share/csh";
+                  mode = "0700";
+                }
                 ".local/share/atuin"
                 ".local/share/containers"
                 ".local/share/direnv"
