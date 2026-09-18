@@ -139,10 +139,6 @@ in
   flake.modules.homeManager.stylix = {
     stylix.targets = {
       firefox.enable = false;
-      waybar = {
-        addCss = false;
-        opacity.enable = false;
-      };
       zed.enable = false;
     };
   };

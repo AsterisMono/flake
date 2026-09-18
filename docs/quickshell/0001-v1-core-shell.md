@@ -155,12 +155,12 @@ The HTML contains a viewport-aligned blurred wallpaper fallback because the head
 
 ## Migration from the current configuration
 
-The baseline is [waybar.nix](../../modules/apps/waybar.nix), with session and notification ownership in [sway.nix](../../modules/apps/sway.nix).
+The baseline was the Waybar feature, with session and notification ownership in [sway.nix](../../modules/apps/sway.nix).
 
 | Touchpoint | Planned change / invariant |
 | --- | --- |
 | `modules/apps/quickshell.nix` | Export the native NixOS/Home Manager feature modules; use packaged Quickshell and generated configuration. Home Manager exposes `programs.quickshell` configuration and systemd integration; verify the pinned version's exact options before implementation. |
-| `modules/apps/waybar.nix` | Retire after cutover validation, retaining an explicit rollback path meanwhile. Move the `hardware.sensors.cpuTemperature` declaration to the replacement feature without changing its path or duplicating declarations. Keep machine sensor values where they are. |
+| `modules/apps/waybar.nix` | Retired after cutover, together with the two Waybar-oriented packages that only served it; the `hardware.sensors.cpuTemperature` declaration moved to the replacement feature without changing its path. Rollback is the commit that drops them. |
 | `modules/apps/sway.nix` | Add layer effects; transfer service conditions to Quickshell; remove Mako ownership only at notification-server cutover. Keep SwayFX, UWSM, `bars = []`, lock/idle policy, launcher, and unrelated utilities. |
 | `modules/roles/workstation.nix` | Replace the Waybar aspect with Quickshell. Do not change unrelated roles or the base-role invariant. |
 | `modules/machines/stylix-test.nix` | Replace its direct Waybar import too. This is an important V1-without-herdr test machine. |

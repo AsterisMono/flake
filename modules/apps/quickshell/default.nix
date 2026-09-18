@@ -264,8 +264,7 @@ _: {
 
       # waycat supplies both the health-bar animation process and the
       # "polycat" font its frames are drawn with. The shell consumes it, so it
-      # has to install it here: the Waybar feature that used to own this
-      # package is no longer composed once Quickshell replaces it.
+      # installs the package itself.
       home.packages = [ pkgs.selfPackages.waycat ];
 
       systemd.user.services.quickshell = {

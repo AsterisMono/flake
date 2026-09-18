@@ -77,7 +77,7 @@ Repository and local inspection on 2026-09-18 found:
 
 - [herdr.nix](../../modules/apps/herdr.nix) already manages the package, TOML configuration, and declared plugin links.
 - [agents.nix](../../modules/apps/agents.nix) composes herdr, enables the existing reviewr integration, and selects system toast delivery. Keep that workflow intact.
-- [wayherdr.nix](../../modules/packages/wayherdr.nix) packages a Waybar-oriented summary tool, but the current Waybar module does not mount it. Its existence does not require using formatted Waybar output as the new data model.
+- A Waybar-oriented summary tool, `wayherdr`, packaged the same data for the old bar. The Waybar module never mounted it, and it was dropped with the rest of the Waybar feature; formatted Waybar output is not the basis for the new data model.
 - The installed CLI reported **herdr 0.9.1**. Its bundled `herdr api schema --json` reported **protocol 22**, schema version 1. These are observed compatibility facts, not permission to pin or update dependencies in this change.
 
 The bundled schema was inspected without reading live agent contents or contacting an active session. Recheck the package selected by the repository at implementation time; an installed binary and the evaluated flake package may differ.
