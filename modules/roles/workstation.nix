@@ -3,6 +3,7 @@
   flake.modules.aspects.workstation.imports = with inputs.self.modules.aspects; [
     audio
     bluetooth
+    console
     fonts
     networkmanager
     podman

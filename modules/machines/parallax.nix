@@ -55,6 +55,10 @@
         };
       };
     nixosModule = {
+      boot.kernelParams = [
+        "video=HDMI-A-1:3840x2160@60"
+        "video=DP-3:2560x1440@60,rotate=90"
+      ];
       swapDevices = [
         {
           device = "/swapfile";
