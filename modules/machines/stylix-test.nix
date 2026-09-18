@@ -14,7 +14,7 @@
       ly
       neovim
       sway
-      waybar
+      quickshell
 
       nvirellia
     ];

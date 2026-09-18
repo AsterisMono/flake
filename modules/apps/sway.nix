@@ -164,6 +164,32 @@ _: {
           bindgesture swipe:3:left workspace next
           seat * hide_cursor when-typing enable
           blur enable
+          # Bars never have a window behind them: tiled windows stop at the
+          # exclusive zone. Blurring the wallpaper is what gives them the same
+          # frosted material as the popups, which blur whatever is behind them.
+          layer_effects "quickshell-bar-top" {
+            blur enable
+            blur_xray enable
+            # Without this the blur is also painted over the surface's
+            # transparent pixels, which at fractional scale adds one device
+            # pixel of blurred wallpaper below the bar and over the window
+            # under it.
+            blur_ignore_transparent enable
+          }
+          layer_effects "quickshell-bar-bottom" {
+            blur enable
+            blur_xray enable
+            blur_ignore_transparent enable
+          }
+          layer_effects "quickshell-popup" {
+            blur enable
+            shadows enable
+          }
+          # Banners are their own small overlay surface, so they get the same
+          # frosted treatment as the popups.
+          layer_effects "quickshell-banner" {
+            blur enable
+          }
           default_dim_inactive 0.1
           for_window [app_id="com.gabm.satty"] floating enable
           exec uwsm finalize
@@ -240,18 +266,12 @@ _: {
       };
 
       services = {
-        mako.enable = true;
         udiskie.enable = true;
       };
 
       systemd.user.services = {
-        mako.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         swayidle.Unit.ConditionEnvironment = lib.mkForce [
-          "WAYLAND_DISPLAY"
-          "XDG_SESSION_DESKTOP=sway"
-        ];
-        waybar.Unit.ConditionEnvironment = lib.mkForce [
           "WAYLAND_DISPLAY"
           "XDG_SESSION_DESKTOP=sway"
         ];

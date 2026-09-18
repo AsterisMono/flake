@@ -1,29 +1,4 @@
 _: {
-  flake.modules.nixos.waybar =
-    { lib, ... }:
-    {
-      options.hardware.sensors.cpuTemperature = lib.mkOption {
-        type = lib.types.nullOr (
-          lib.types.submodule {
-            options = {
-              hwmonPathAbs = lib.mkOption {
-                type = lib.types.str;
-                description = "Runtime hwmon directory containing the CPU temperature sensor.";
-              };
-
-              inputFilename = lib.mkOption {
-                type = lib.types.str;
-                default = "temp1_input";
-                description = "CPU temperature input file within the hwmon directory.";
-              };
-            };
-          }
-        );
-        default = null;
-        description = "The machine's CPU temperature sensor.";
-      };
-    };
-
   flake.modules.homeManager.waybar =
     {
       lib,
@@ -32,7 +7,9 @@ _: {
       ...
     }:
     let
-      cpuTemperatureSensor = osConfig.hardware.sensors.cpuTemperature;
+      # The sensor option is owned by the quickshell feature. Read it only when
+      # that feature is composed, so a rollback to Waybar still evaluates.
+      cpuTemperatureSensor = osConfig.hardware.sensors.cpuTemperature or null;
 
       memoryPressure = pkgs.writeShellScript "waybar-memory-pressure" ''
         ${lib.getExe pkgs.gawk} '
@@ -63,6 +40,11 @@ _: {
       home.packages = [ pkgs.selfPackages.waycat ];
 
       services.playerctld.enable = true;
+
+      systemd.user.services.waybar.Unit.ConditionEnvironment = lib.mkForce [
+        "WAYLAND_DISPLAY"
+        "XDG_SESSION_DESKTOP=sway"
+      ];
 
       programs.waybar = {
         enable = true;

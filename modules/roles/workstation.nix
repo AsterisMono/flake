@@ -29,7 +29,7 @@
     sway
     unix-tools
     vicinae
-    waybar
+    quickshell
     xpipe
     zed
 

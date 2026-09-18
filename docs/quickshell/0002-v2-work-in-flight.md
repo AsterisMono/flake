@@ -1,6 +1,6 @@
 # 0002 — V2: Work in flight and herdr
 
-Status: selected feature and integration direction; implementation planned, not started.
+Status: steps 1–4 implemented and exercised against the live socket; the opt-in trial, window targeting and the remaining acceptance sweep are open. See [Implementation record](#implementation-record).
 
 Recorded: 2026-09-18.
 
@@ -8,7 +8,7 @@ Prerequisite: [0001 — V1: the everyday shell](0001-v1-core-shell.md).
 
 ## Intent
 
-Give ongoing agent work a quiet place in the desktop: visible enough to return to, unobtrusive enough to leave alone. **Work in flight** is a compact summary at the right of the bottom rail, opening a column of work that is running, needs the user's input, or is ready to revisit.
+Give ongoing agent work a quiet place in the desktop: visible enough to return to, unobtrusive enough to leave alone. **Work in flight** is a compact summary at the right of the bottom bar, opening a column of work that is running, needs the user's input, or is ready to revisit.
 
 The user's selected direction is to connect this to **herdr**. Herdr remains the authority for sessions, agents, and their detected state; Quickshell becomes a small, caring view onto that work. It does not become another agent orchestrator.
 
@@ -16,11 +16,9 @@ The user's selected direction is to connect this to **herdr**. Herdr remains the
 
 ## Archived exploration
 
-![Work in flight over the sky desktop, with overall glass C](prototype.png)
+[Open the interactive prototype](quickshell.prototype.html) and choose “Work in flight”; the URL query `?preview=work&glass=C` also selects this view. [V1's document](0001-v1-core-shell.md#archived-design) describes the shared material.
 
-[Open the interactive prototype](quickshell.prototype.html) and choose “Work in flight”; the URL query `?preview=work&glass=C` also selects this view. [V1's document](0001-v1-core-shell.md#archived-design) describes the shared assets and material.
-
-The image is a rendered HTML exploration at 1920 × 1080 logical pixels, not live herdr data. Prototype controls were hidden for the capture. The build/download/check rows, percentages, Stop and Retry actions are illustrative interaction samples. They are **not** an assertion that herdr supplies progress, build results, safe cancellation, or restart operations. Return thread bookmark controls remain visible in this archived exploration; that feature is not selected for V2.
+The exploration was reviewed as a rendered HTML capture at 1920 × 1080 logical pixels, not live herdr data; the capture is not kept in the repository. Prototype controls were hidden for it. The build/download/check rows, percentages, Stop and Retry actions are illustrative interaction samples. They are **not** an assertion that herdr supplies progress, build results, safe cancellation, or restart operations. Return thread bookmark controls remain visible in this archived exploration; that feature is not selected for V2.
 
 Carry forward the panel's feeling, grouping, restraint, and persistence of ready work. Replace its invented job semantics with the verified herdr model below.
 
@@ -29,7 +27,7 @@ Carry forward the panel's feeling, grouping, restraint, and persistence of ready
 V2 adds:
 
 - A shared herdr connection and normalized activity model.
-- A bottom-right summary such as `2 working · 1 ready`; `1 needs you` gets restrained attention when applicable.
+- A bottom-right summary of working / idle / waiting-on-you counts. Blocked agents and ready records share one “needs you” chip; a quiet session shows `N idle`, or `no agents` when herdr is up with none attached.
 - A frosted panel using V1's material, popup policy, keyboard behavior, output placement and reduced-motion treatment.
 - Explicit navigation back to the relevant agent; optional bounded recent-output inspection initiated by the user.
 - Honest unavailable/stale states, local dismissal of ready records, and reconciliation after reconnect.
@@ -38,7 +36,7 @@ V2 initially does **not** add generic process tracking, download/build hooks, au
 
 ## Interaction design
 
-Keep the bottom rail primarily for windows. Work in flight is one compact end section, not one widget per agent. Counts update without making task buttons continually reflow: reserve a modest summary width while visible and use a compact form on narrow outputs. With no relevant work and no retained ready records, remove the section; do not keep an empty dashboard on the desktop.
+Keep the bottom bar primarily for windows. Work in flight is one compact end section, not one widget per agent. Counts update without making task buttons continually reflow: reserve a modest summary width while visible and use a compact form on narrow outputs. With no relevant work and no retained ready records, remove the section; do not keep an empty dashboard on the desktop.
 
 The panel starts around 400 logical px wide, aligns with the triggering bottom-right section, and grows upward within the output. It is a list with separators, not stacked rounded cards. Use the same 40% backing opacity as V1; text remains opaque.
 
@@ -64,6 +62,16 @@ Readiness records persist locally until dismissal within a bounded session histo
 Loss of connection changes the source to “Disconnected — last seen …”, not “Failed.” If retained records exist, keep them visibly stale; if herdr has never been configured or available, V1 stays quiet without an error badge. Opening/reconnecting to the panel does not trigger a burst of completion notifications.
 
 ## Verified integration baseline
+
+### Verified during implementation (2026-09-18)
+
+Read-only probes of the running socket (`herdr 0.9.1`, protocol 22) and the bundled schema established the wire behavior the adapter is built on:
+
+- The server **answers one request per connection and then closes it**. A second request on the same connection fails with a broken pipe. Every ordinary request therefore opens its own short-lived connection.
+- `events.subscribe` returns `{"type":"subscription_started"}` and keeps the connection open for `{"event": …, "data": …}` envelopes. That connection also accepts **exactly one** request: a second `events.subscribe` on it resets the connection. Changing the subscription set — which is required when a pane starts hosting an agent, because `pane.agent_status_changed` needs a `pane_id` — means opening a fresh subscription, then reconciling.
+- Requests are newline-delimited `{id, method, params}`; replies are `{id, result}` or `{id, error:{code,message}}`. A read-only probe of a nonexistent target returned `agent_not_found`, and `agent.read` returned a bounded `pane_read` result.
+- Snapshot agents carry `pane_id`, `terminal_id`, `workspace_id`, `tab_id`, `agent`, `agent_status`, `revision`, `state_change_seq`, `cwd`/`foreground_cwd` and the terminal title; `agent_session` was absent in the observed session, so identity falls back to endpoint + terminal + pane and treats a missing session reference conservatively.
+- **Pane → desktop-window targeting is not derivable from the API.** Herdr panes are children of the herdr server, not of the terminal emulator window, and the API exposes no client list. The only honest per-session relation is process ancestry (herdr client → terminal emulator → Sway window), which says nothing about *which* window should be raised when several clients are attached. Per the navigation rules above, the shell therefore only asks herdr to focus, and says so instead of moving a guessed workspace.
 
 Repository and local inspection on 2026-09-18 found:
 
@@ -121,10 +129,12 @@ The inspected status event carries state and identifiers but no universal sequen
 
 | Module | Small public interface | Hidden responsibility |
 | --- | --- | --- |
-| WorkInFlight model | Items/groups/counts, source health; open/read/dismiss/undo | Presentation state, readiness retention, acknowledgement, freshness and stable ordering. |
+| WorkInFlight model | Items/groups/counts, source health; open/acknowledge | Presentation state, readiness retention, acknowledgement, freshness and stable ordering. |
+| WorkSummary | Bar chips and whether the section is visible | Compact vs full wording for the same counts. |
+| WorkRaise | Raise the hosting terminal when mapping is exact | Process ancestry vs Sway window pids. Silent no-op when the mapping is not exactly one window. |
 | Herdr adapter | Snapshot/change stream and explicit focus/read operations | Socket lifecycle, framing, request correlation, subscriptions, schema compatibility, identity and reconciliation. |
 | Fixture adapter | The same data/action boundary, deterministic simulated responses | Offline UI work and tests for blocked/done/disconnect/restart cases without touching real agents. |
-| Work panel and rail entry | Render models; invoke the above actions | Layout, keyboard access and interaction feedback only. |
+| Work panel and bar entry | Render models; invoke the above actions | Layout, keyboard access and interaction feedback only. |
 
 Use an adapter because there is a real external protocol and a real test fixture, not to build a general backend framework. Reuse V1's single popup host; keep one shared herdr model for all outputs. No duplicate socket subscribers or state stores per bar.
 
@@ -145,7 +155,7 @@ Verify exact request/event envelopes against the bundled schema: subscription na
 
 ### Navigation and privacy
 
-`agent.focus` addresses herdr's pane selection; it does not by itself prove which Sway window should be raised. Establish a reliable relation to the owning terminal window using verified process/session metadata. Never focus a guessed window based on its display title. If that relation cannot be established, clearly say that focus changed inside herdr and provide a safe route to the terminal rather than silently moving the wrong workspace.
+`agent.focus` addresses herdr's pane selection; it does not by itself prove which Sway window should be raised. Establish a reliable relation to the owning terminal window using verified process/session metadata. Never focus a guessed window based on its display title. If that relation cannot be established, leave the desktop alone: do not move a guessed workspace and do not add extra panel copy for the miss.
 
 Keep the initial action allowlist narrow: read state, user-requested bounded recent output, and explicit focus. Use pane/terminal identity with a freshness check before acting. Surface disappearance or permission errors instead of silently retrying a command against a reused pane ID.
 
@@ -155,9 +165,18 @@ The existing reviewr workflow stays in herdr. A future direct “Review” short
 
 ## Relationship to notifications
 
-Herdr already delivers system toasts. V1 receives those through its notification server; V2 should not emit a second toast for every observed herdr transition. The rail and Work in flight panel provide durable in-session context while ordinary notifications retain their own lifecycle.
+Herdr already delivers system toasts. V1 receives those through its notification server; V2 should not emit a second toast for every observed herdr transition. The bar and Work in flight panel provide durable in-session context while ordinary notifications retain their own lifecycle.
 
-Do not deduplicate by guessing from notification titles. If tighter linking is later useful, require an explicit shared identifier/capability. DND affects banners; it must not erase Work in flight state or conceal that an agent needs input. The V2 panel and notification center obey the same one-open-panel rule.
+Do not deduplicate by guessing from notification titles. If tighter linking is later useful, require an explicit shared identifier/capability. The V2 panel and notification center obey the same one-open-panel rule.
+
+**Do Not Disturb pauses banners, and nothing else (2026-09-19).** `Notices.dnd` governs:
+
+- new banners: a notification that arrives while DND is on is kept in the drawer and shown there, without a banner. A critical notification still gets its banner;
+- the bell glyph (`bell` / `bellOff`) and the line the drawer shows while it is on.
+
+It does **not** touch unread counts, critical emphasis, history retention, live-versus-archived state, or Work in flight state. An agent that needs input still says so while DND is on, and clearing the unread badge would hide the one durable signal the drawer has.
+
+Banners and history are two halves of one record: a banner is the transient view of a notification that also lives in the column, closing a banner is not dismissing the notification, and a transient notification gets a banner with an explicit “not saved to history” note instead of a history entry. Undo is deliberately absent from both halves.
 
 ## Ordered implementation plan
 
@@ -183,3 +202,60 @@ Do not deduplicate by guessing from notification titles. If tighter linking is l
 The remaining engineering questions are concrete: reliable desktop-window targeting, state quality for each supported agent, identity across restored sessions, and the pinned protocol's subscription/lifecycle behavior. Resolve those in the spike rather than obscuring them with optimistic UI.
 
 Generic build/download progress, safe cancellation/retry, durable cross-login history, remote sessions, and richer reviewr actions can follow if real use calls for them and their sources expose trustworthy contracts. They are not hidden prerequisites for delivering the selected Work in flight experience.
+
+## Implementation record
+
+Landed in V2, under [modules/apps/quickshell/](../../modules/apps/quickshell/):
+
+| Piece | File | Notes |
+| --- | --- | --- |
+| Herdr adapter | `work/HerdrClient.qml` | One connection per request, one long-lived subscription, pane-set-driven re-subscription, reconnect backoff, incompatible-protocol state, sanitized bounded reads. Read-only apart from the explicit `agent.focus` action. |
+| Fixture adapter | `work/FixtureSource.qml` | Same data and action boundary, deterministic scenarios selected with `QS_WORK_FIXTURE=flights\|disconnected\|ended\|empty\|incompatible`. Every string is sample data. |
+| Work in flight model | `work/WorkInFlight.qml` | Normalized rows and groups, stable ordering by attention, retained readiness records with per-completion identity, bounded 100-record history, honest source line. Opening a ready record acknowledges it. |
+| Bar summary | `work/WorkSummary.qml` | One compact end section: working / idle / waiting-on-you chips. Blocked plus ready share “needs you”. Quiet herdr is `N idle`, or `no agents` when the session has none. |
+| Host raise | `work/WorkRaise.qml` | After `agent.focus`, raise the hosting terminal only when process ancestry matches exactly one Sway window; otherwise leave the desktop alone. |
+| Panel | `popups/WorkPopup.qml`, `components/AgentRow.qml` | Prototype structure: header with description, group titles with counts, list rows with separators, quiet footer. Every agent herdr knows appears, grouped by attention (`Needs you`, `Ready when you are`, `In progress`, `Idle`), each as one plain line: title, status, context, and an honest note where the state needs one. A row is the control — clicking it opens that agent, and opening a ready record is what acknowledges it. No action buttons and no collapsed sections, at the user's request. |
+| Bar entry | `BottomBar.qml` | Renders `WorkSummary`; the section is present while herdr is reachable. |
+| Return to work | `work/WorkInFlight.qml`, `work/WorkRaise.qml`, `Desktop.qml`, `default.nix` | `agent.focus`, then the hosting terminal window is raised **only** when the herdr client's process ancestry matches exactly one Sway window. |
+| Wiring | `ShellState.qml`, `PopupHost.qml`, `default.nix` | Bottom-anchored popup at 400 logical px, `Runtime.herdrEndpoint` and `Runtime.herdrHostScript` derived from `programs.herdr.enable` and `$XDG_CONFIG_HOME`. |
+
+Endpoint: the shell connects only to the socket path derived from the machine's herdr configuration (`$XDG_CONFIG_HOME/herdr/herdr.sock`) and stays quiet when herdr is not part of the machine. Named herdr sessions and remote machines are out of scope for this round.
+
+Verified in the headless review instance (`/tmp/qs-work/review.sh`): fixture mixes, ended-session retention, disconnected presentation, hidden section when herdr is absent, and a live run against the running socket — snapshot, workspace labels, and a bounded `agent.read` all returned correctly without touching the session.
+
+Frame and failure modes were exercised against an adversarial stand-in socket (`/tmp/qs-work/fake-herdr.py`), one mode per run:
+
+| Mode | Expected | Observed |
+| --- | --- | --- |
+| valid snapshot | online, counts and one ready record | `1 needs you · 1 working · 1 ready`, ready record retained |
+| garbage line before a valid reply | frame skipped, reply still applied | online with the same counts |
+| reply split across writes | reassembled | online with the same counts |
+| oversized frame | bounded failure, honest source line | "Connected to herdr, but herdr sent an oversized frame." |
+| connection closed with no reply | disconnected, quiet | `disconnected`, section hidden |
+| reply later than the request deadline | timeout reported, no hang | "Connected to herdr, but herdr did not answer in time." |
+| working → blocked → working → done | labels and counts follow, `done` keeps a record | `working` → `needs you` → `working` → `ready to review` (record retained) |
+| source restart (socket gone for six seconds) | stale, then reconcile | `disconnected` with counts and the ready record kept, bounded retries, `online` again on the fresh subscription |
+
+Two implementation findings came out of that sweep and are fixed in `HerdrClient.qml`:
+
+- A `QLocalSocket` that has been closed or has errored cannot be revived by setting `connected` back to true, and a silent failure there left the panel claiming a connection it did not have. The subscription now owns a **fresh socket object per attempt**, with the client ignoring events from any socket that is no longer current.
+- An error reported by an abandoned attempt could arrive after a newer attempt had already connected, which produced a false "Disconnected". Errors and state changes are now ignored unless they belong to the current socket, and a handshake watchdog cycles the connection if a connected socket never acknowledges the subscription.
+
+### Material needs the compositor side
+
+The 40% backing only reads as glass when SwayFX blurs the layer surface behind it. That comes from the `layer_effects` rules for `quickshell-bar-top`, `quickshell-bar-bottom`, `quickshell-popup` and `quickshell-banner` in [sway.nix](../../modules/apps/sway.nix), and the shell cannot supply it itself: without those rules the bars, panel and banners look plainly transparent, which is exactly how a session reads if the running generation predates the rules. A running compositor picks them up from its configuration or from `swaymsg 'layer_effects "<namespace>" blur enable'`; persisting them means activating a generation that contains them.
+
+Popups keep the prototype's `Theme.glass` (`#20212b`, 0.40) over a blurred window. Measuring a headless capture over an unscaled wallpaper confirmed that both bars composite at the same 0.40 when the same backing colour is used, so the visible difference was never opacity: the bars sit on the bare wallpaper, which on this desktop is far brighter than the windows behind a popup, and the same 0.40 there reads as plain transparency. Two changes make the bars read like the panels:
+
+- `Theme.barGlass` — one denser backing (0.68) used by both bars only, so a bright or light wallpaper no longer dominates the bar. Text stays fully opaque, and the popups keep 0.40.
+- `blur_xray` on the two bar namespaces, which blurs the wallpaper itself — safe for the bars specifically, because tiled windows stop at the bars' exclusive zone and nothing else is ever behind them. Panels keep window blur, because that is what is behind them.
+
+The bar section follows the herdr server rather than the shell: it is present while a session is reachable (counts while work is in flight, `N idle` while it is quiet, `no agents` when the session has none) and gone when herdr is not running. This supersedes the earlier "remove the section when nothing is in flight" rule, at the user's request, and keeps one stable place to look for agent status.
+
+Still open:
+
+- Live trial measurement: overhead during ordinary use, and confirming that herdr's own system toasts still arrive once, unchanged.
+- A herdr client that is not inside a window this shell can see (ssh, detached server, a multiplexer) is left on the desktop; that miss stays silent.
+- Repeated herdr state quality per agent kind (how often `done` is really ready, how `blocked` reads in practice) is a user-observation item, not a code item.
+
+Not surfaced in V2, deliberately: bounded recent-output reads (the adapter's `agent.read` action was removed with the button that used it), the work panel's dismiss/Undo controls, and Stop/Retry. The state model above still describes what a later round would need if any of them comes back.
