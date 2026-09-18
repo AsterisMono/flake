@@ -11,6 +11,12 @@
         };
       };
 
+      boot.initrd.kernelModules = [
+        "nvidia"
+        "nvidia_modeset"
+        "nvidia_drm"
+      ];
+
       services.xserver.videoDrivers = [ "nvidia" ];
     };
 }
