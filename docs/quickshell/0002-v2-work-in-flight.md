@@ -171,12 +171,12 @@ Do not deduplicate by guessing from notification titles. If tighter linking is l
 
 **Do Not Disturb pauses banners, and nothing else (2026-09-19).** `Notices.dnd` governs:
 
-- new banners: a notification that arrives while DND is on is kept in the drawer and shown there, without a banner. A critical notification still gets its banner;
-- the bell glyph (`bell` / `bellOff`) and the line the drawer shows while it is on.
+- new banners: a notification that arrives while DND is on is kept in the panel and shown there, without a banner. A critical notification still gets its banner;
+- the bell glyph (`bell` / `bellOff`) in the panel's title row, which is the only indication while it is on; the panel carries no explanatory line.
 
-It does **not** touch unread counts, critical emphasis, history retention, live-versus-archived state, or Work in flight state. An agent that needs input still says so while DND is on, and clearing the unread badge would hide the one durable signal the drawer has.
+It does **not** touch unread counts, critical emphasis, history retention, live-versus-archived state, or Work in flight state. An agent that needs input still says so while DND is on, and clearing the unread badge would hide the one durable signal the panel has.
 
-Banners and history are two halves of one record: a banner is the transient view of a notification that also lives in the column, closing a banner is not dismissing the notification, and a transient notification gets a banner with an explicit “not saved to history” note instead of a history entry. Undo is deliberately absent from both halves.
+Banners and history are two halves of one record: a banner is the transient view of a notification that also lives in the panel, closing a banner is not dismissing the notification, and a transient notification gets a banner with an explicit “not saved to history” note instead of a history entry. Undo is deliberately absent from both halves.
 
 ## Ordered implementation plan
 

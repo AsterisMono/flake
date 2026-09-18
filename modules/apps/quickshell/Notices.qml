@@ -7,7 +7,7 @@ import Quickshell.Services.Notifications
 //
 // A record tracks the live notification object while its actions can still be
 // invoked, and keeps a snapshot after the client has been told it closed. The
-// drawer lists the history; banners are the transient half of the same record.
+// panel lists the history; banners are the transient half of the same record.
 // There is no Undo, by request. Do Not Disturb pauses banners and nothing else:
 // unread counts, critical emphasis, history and Work in flight are unaffected.
 Singleton {
@@ -17,7 +17,7 @@ Singleton {
   property var banners: []
   property bool dnd: false
 
-  // Bumped for changes that only alter a record's own content. The drawer's
+  // Bumped for changes that only alter a record's own content. The panel's
   // list keeps its identity, so it does not rebuild (and cannot swallow a click
   // that is already half way through) when a notification updates itself.
   property int revision: 0
@@ -188,7 +188,7 @@ Singleton {
     notices.bump();
   }
 
-  // Structural change: the drawer's list has to rebuild.
+  // Structural change: the panel's list has to rebuild.
   function touch() {
     notices.records = notices.records.slice();
   }
@@ -351,7 +351,7 @@ Singleton {
   }
 
   function forget(id) {
-    // Records reach the drawer as copies (a `var` property hands out copies of
+    // Records reach the panel as copies (a `var` property hands out copies of
     // its maps), so identity comparison never matches here: match on the
     // notification id instead.
     notices.records = notices.records.filter(function(item) {

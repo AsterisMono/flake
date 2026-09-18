@@ -30,8 +30,8 @@ All actions and data in the HTML are simulated and memory-only. Its preview tool
 
 ### Decisions already made
 
-- Notification layout **C**: a right-side column opened from the rightmost top-bar control.
-- Overall glass option **C**: **40% backing opacity** across both bars, the notification column, and popups. Text and icons remain fully opaque. This is a separate choice from notification layout C.
+- Notification layout **C**: the history opened from the rightmost top-bar control. It became an ordinary popup rather than a full-height column: anchored under the top bar, inset from the output's edge like every other popup, sized to its content, and scrollable once it reaches the available height.
+- Overall glass option **C**: **40% backing opacity** across both bars and every popup, including the notification panel. Text and icons remain fully opaque. This is a separate choice from notification layout C.
 - A sky background and blurred, frosted surfaces. The later explicit request for glass supersedes the earlier preference against gratuitous transparency; it does not call for glossy cards or decorative blur everywhere.
 - Power profile and idle inhibition move into the Battery popup. Keep awake gets a small bar indicator only while active.
 - Dense but breathable information, global workspaces and individual titled window buttons on both outputs.
@@ -80,7 +80,7 @@ On narrower outputs, shorten identity/date/media first, then collapse secondary 
 - Audio click opens volume/output controls, scroll adjusts by 1%, middle-click toggles mute, and right-click can retain the `pavucontrol` escape hatch. This deliberately changes the current primary-click mute behavior.
 - Workspace click and scroll switch predictably without wraparound. Window click activates its workspace/window; middle-click requests close. Avoid optimistic removal before compositor confirmation.
 - System tray items retain their native activation/menu behavior. Existing network/Bluetooth tray utilities remain usable; V1 does not need bespoke control panels for everything.
-- One interactive popup or drawer is open across the shell at a time. It opens on the invoking output, closes on Escape or outside click, and restores focus appropriately. Bars do not take keyboard focus at rest. Repeating an active trigger closes its panel.
+- One interactive popup is open across the shell at a time. It opens on the invoking output, closes on Escape or outside click, and restores focus appropriately. Bars do not take keyboard focus at rest. Repeating an active trigger closes its panel.
 - On output removal, close or relocate the panel safely. Shared state does not reset when an output is added or removed. Notification banners appear once, on the output the notification arrived on, with the focused output as the fallback.
 
 ### Battery and Keep awake
@@ -97,7 +97,7 @@ Preserve the current Swayidle sequence: lock at 300 seconds, DPMS off at 600, su
 
 The bell is the last control on the top bar. Unread count and critical attention are distinct from “how many entries are saved.” Merely opening the column is not a notification action; mark entries read when presented, without invoking their actions.
 
-Use a single scrollable history column with compact app/time metadata, title, readable body, and explicit actions. Avoid nested cards. Ordinary completion can wait quietly; critical events get a restrained edge/color and remain accessible. The drawer overlays the desktop, reserves no extra workspace, and ends above the bottom bar.
+Use a single scrollable history list with compact app/time metadata, title, readable body, and explicit actions. Avoid nested cards. Ordinary completion can wait quietly; critical events get a restrained edge/color and remain accessible. The panel overlays the desktop, reserves no extra workspace, and grows downwards with its content until the list scrolls.
 
 V1 policy:
 
@@ -149,7 +149,7 @@ This is an ownership map, not a requirement to create empty scaffolding. Add com
 
 The repository already uses SwayFX and enables blur. Real layer surfaces need explicit, stable Quickshell namespaces and corresponding SwayFX layer effects. [PanelWindow](https://quickshell.org/docs/v0.3.0/types/Quickshell/PanelWindow/) provides anchored exclusive bars; [WlrLayershell](https://quickshell.org/docs/v0.3.0/types/Quickshell.Wayland/WlrLayershell/) provides namespace and focus settings. Configure namespaces before mapping the windows.
 
-Use the compositor's [layer effects](https://github.com/WillPower3309/swayfx#layer-shell-effects) for live blur. Verify both bars and popup/notification surfaces; do not assume a Qt popup gets the same treatment automatically. If necessary, use a dedicated layer surface for a drawer instead of a popup type that cannot obtain the required material/focus behavior.
+Use the compositor's [layer effects](https://github.com/WillPower3309/swayfx#layer-shell-effects) for live blur. Verify both bars and popup/notification surfaces; do not assume a Qt popup gets the same treatment automatically. If necessary, use a dedicated layer surface for the notification panel instead of a popup type that cannot obtain the required material/focus behavior.
 
 The HTML contains a viewport-aligned blurred wallpaper fallback because the headless renderer did not paint `backdrop-filter`. That is a screenshot workaround, **not** a live-shell technique. Do not duplicate the wallpaper behind panels: real windows must blur correctly too. Keep the chosen 40% backing and calibrate blur/contrast on bright sky and busy application backgrounds. Do not apply opacity to the whole window, including text. V1 does not offer an opaque or reduced-transparency fallback.
 

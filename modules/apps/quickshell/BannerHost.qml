@@ -22,7 +22,7 @@ Scope {
     anchors.top: true
     anchors.right: true
     margins.top: Theme.barHeight + Theme.space2
-    margins.right: ShellState.kind === "notifications" ? Theme.drawerWidth + Theme.space4 : Theme.space3
+    margins.right: ShellState.kind === "notifications" ? Theme.space2 + Theme.noticePanelWidth + Theme.space4 : Theme.space3
 
     implicitWidth: Theme.bannerWidth
     implicitHeight: column.implicitHeight

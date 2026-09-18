@@ -164,6 +164,12 @@ _: {
           bindgesture swipe:3:left workspace next
           seat * hide_cursor when-typing enable
           blur enable
+          # SwayFX defaults to three blur passes. Each pass samples further past
+          # the edge of the surface being blurred, and at an output border that
+          # reach pulls neighbouring framebuffer content into the panel, showing
+          # up as a band as wide as the blur radius along the panel's edge. Two
+          # passes stay inside the surface and look the same.
+          blur_passes 2
           # Bars never have a window behind them: tiled windows stop at the
           # exclusive zone. Blurring the wallpaper is what gives them the same
           # frosted material as the popups, which blur whatever is behind them.
@@ -183,8 +189,13 @@ _: {
           }
           layer_effects "quickshell-popup" {
             blur enable
+            # SwayFX's default shadow (50% black, 20 px blur) reads as a heavy
+            # halo around a panel this large. A wider, much fainter shadow keeps
+            # the panel lifted without the glow.
             shadows enable
           }
+          shadow_blur_radius 24
+          shadow_color #0000001C
           # Banners are their own small overlay surface, so they get the same
           # frosted treatment as the popups.
           layer_effects "quickshell-banner" {

@@ -48,14 +48,16 @@ Scope {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: ShellState.open ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
 
-    anchors.top: ShellState.open && (!ShellState.bottom || ShellState.drawer)
-    anchors.bottom: ShellState.open && (ShellState.bottom || ShellState.drawer)
-    anchors.left: ShellState.open && !ShellState.drawer
-    anchors.right: ShellState.open && ShellState.drawer
+    anchors.top: ShellState.open && !ShellState.bottom
+    anchors.bottom: ShellState.open && ShellState.bottom
+    anchors.left: ShellState.open
 
-    margins.top: ShellState.drawer ? Theme.barHeight : Theme.barHeight + Theme.space1
-    margins.bottom: ShellState.drawer ? Theme.barHeight : Theme.barHeight + Theme.space1
-    margins.left: ShellState.drawer ? 0 : Math.max(
+    margins.top: Theme.barHeight + Theme.space1
+    margins.bottom: Theme.barHeight + Theme.space1
+    // Every popup keeps the same inset from the output's edge. SwayFX samples
+    // its layer blur past the surface's border, so a surface that sits flush
+    // against the screen edge keeps a faint bright band along that edge.
+    margins.left: Math.max(
       Theme.space2,
       Math.min(
         ShellState.anchorX - host.implicitWidth / 2,
@@ -63,8 +65,8 @@ Scope {
       )
     )
 
-    implicitWidth: ShellState.drawer ? Math.min(Theme.drawerWidth, host.availableWidth) : Math.min(ShellState.popupWidth, host.availableWidth - Theme.space4)
-    implicitHeight: ShellState.drawer ? Math.max(160, host.availableHeight - Theme.barHeight * 2) : Math.min(loader.item ? loader.item.implicitHeight : 0, host.maxContentHeight)
+    implicitWidth: Math.min(ShellState.popupWidth, host.availableWidth - Theme.space4)
+    implicitHeight: Math.min(loader.item ? loader.item.implicitHeight : 0, host.maxContentHeight)
 
     FocusScope {
       id: scope

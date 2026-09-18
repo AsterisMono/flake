@@ -112,7 +112,7 @@ Item {
         name: "close"
         onClicked: {
           // A banner's X only takes the banner away; the notification itself
-          // stays in the drawer until it is dismissed there.
+          // stays in the panel until it is dismissed there.
           if (card.banner)
             Notices.hideBanner(card.record.id);
           else

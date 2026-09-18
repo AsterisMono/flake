@@ -9,11 +9,15 @@ Rectangle {
 
   readonly property int padding: Theme.panelPadding
 
-  implicitWidth: Theme.drawerWidth
-  implicitHeight: 620
+  implicitWidth: Theme.noticePanelWidth
+  // The panel follows its content: short while there is nothing to show, and
+  // growing downwards as the history fills. The host caps it at the available
+  // height, after which the list scrolls.
+  implicitHeight: headerBlock.implicitHeight + listColumn.implicitHeight
   color: Theme.glass
   border.width: 1
   border.color: Theme.edge
+  radius: Theme.radius
 
   SystemClock {
     id: clock
@@ -49,7 +53,7 @@ Rectangle {
 
         Item {
           width: parent.width
-          implicitHeight: Math.max(titleRow.implicitHeight, headerClose.implicitHeight)
+          implicitHeight: titleRow.implicitHeight
 
           RowLayout {
             id: titleRow
@@ -73,46 +77,25 @@ Rectangle {
             }
 
             IconButton {
-              id: headerClose
-              name: "close"
-              onClicked: ShellState.close()
+              id: dndButton
+              name: Notices.dnd ? "bellOff" : "bell"
+              iconColor: Notices.dnd ? Theme.accent : Theme.muted
+              size: Theme.space5 + Theme.space1
+              onClicked: Notices.dnd = !Notices.dnd
+            }
+
+            IconButton {
+              id: clearButton
+              name: "trash"
+              iconColor: Notices.savedCount > 0 ? Theme.muted : Theme.dim
+              size: Theme.space5 + Theme.space1
+              opacity: Notices.savedCount > 0 ? 1 : 0.5
+              onClicked: {
+                if (Notices.savedCount > 0)
+                  Notices.clearAll();
+              }
             }
           }
-        }
-
-        Item {
-          width: parent.width
-          implicitHeight: Theme.space3
-        }
-
-        RowLayout {
-          width: parent.width
-          spacing: Theme.space2
-
-          ActionButton {
-            Layout.fillWidth: true
-            icon: Notices.dnd ? "bellOff" : "bell"
-            text: "Do Not Disturb"
-            selected: Notices.dnd
-            onClicked: Notices.dnd = !Notices.dnd
-          }
-
-          ActionButton {
-            icon: "trash"
-            text: "Clear all"
-            enabled: Notices.savedCount > 0
-            onClicked: Notices.clearAll()
-          }
-        }
-
-        Text {
-          width: parent.width
-          visible: Notices.dnd
-          text: "Banners are paused. New notifications still arrive here, and critical alerts still appear."
-          color: Theme.dim
-          font.family: Theme.reading
-          font.pixelSize: Theme.fontTiny
-          wrapMode: Text.Wrap
         }
 
         Item {

@@ -3,7 +3,7 @@ import QtQuick
 import Quickshell
 import qs.work
 
-// One interactive popup or drawer is open across the whole shell at a time.
+// One interactive popup is open across the whole shell at a time.
 Singleton {
   id: state
 
@@ -12,9 +12,8 @@ Singleton {
   property real anchorX: 0
 
   readonly property bool open: kind !== ""
-  readonly property bool drawer: kind === "notifications"
   readonly property bool bottom: kind === "windows" || kind === "work"
-  readonly property int popupWidth: kind === "work" ? 400 : Theme.popupWidth
+  readonly property int popupWidth: kind === "work" ? 400 : kind === "notifications" ? Theme.noticePanelWidth : Theme.popupWidth
 
   readonly property string popupFile: {
     switch (kind) {

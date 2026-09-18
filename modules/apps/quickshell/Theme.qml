@@ -7,9 +7,9 @@ Singleton {
 
   readonly property int barHeight: 30
   readonly property int popupWidth: 380
-  readonly property int drawerWidth: 384
+  readonly property int noticePanelWidth: 384
   // Banner column: the prototype's 360 at 13 px padding, kept narrow enough to
-  // stay clear of the notification drawer.
+  // stay clear of the notification panel.
   readonly property int bannerWidth: 360
   readonly property int radius: 3
 
