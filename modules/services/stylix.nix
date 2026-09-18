@@ -84,8 +84,8 @@ in
       stylix = {
         enable = true;
         image = pkgs.fetchurl {
-          url = "https://r2.requiem.garden/41.jpg";
-          hash = "sha256-Wgt0tcAAkxQg2u160iIOVQPiOOXCVLCkRNgNtI7zwfE=";
+          url = "https://r2.requiem.garden/sky.jpg";
+          hash = "sha256-8sDqpawyJB2Dj/2L6va039hjtXk4t+Zs7zhHNeHPHG8=";
         };
         base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
         polarity = "dark";
