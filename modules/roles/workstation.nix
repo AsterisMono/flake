@@ -6,6 +6,7 @@
     console
     fonts
     networkmanager
+    plymouth
     podman
     power
     stylix
