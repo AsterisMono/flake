@@ -32,12 +32,9 @@
         networking.hostName = "stylix-test";
         nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-        services.displayManager = {
-          defaultSession = "sway";
-          autoLogin = {
-            enable = true;
-            user = "nvirellia";
-          };
+        services.displayManager.autoLogin = {
+          enable = true;
+          user = "nvirellia";
         };
 
         virtualisation = {

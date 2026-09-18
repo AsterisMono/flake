@@ -27,6 +27,7 @@ _: {
       services = {
         dbus.packages = [ pkgs.tumbler ];
         udisks2.enable = true;
+        displayManager.defaultSession = lib.mkDefault "sway-uwsm";
       };
 
       systemd.user.targets."nixos-fake-graphical-session".enable = false;
