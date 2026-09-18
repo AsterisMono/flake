@@ -27,7 +27,8 @@ in
     let
       llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
       cshHome = "${config.home.homeDirectory}/.local/share/csh";
-      projectsRoot = "${config.home.homeDirectory}/Projects";
+      cshConfigFile = "${cshHome}/config.toml";
+      cshConfigDeployed = "${cshHome}/.config.toml.deployed";
       cshConfig = (pkgs.formats.toml { }).generate "csh-config.toml" {
         model = "deepseek-flash";
         model_provider = "deepseek";
@@ -49,32 +50,30 @@ in
       };
       csh = pkgs.writeShellApplication {
         name = "csh";
-        runtimeInputs = [
-          pkgs.coreutils
-          pkgs.git
-        ];
+        runtimeInputs = [ pkgs.coreutils ];
         text = ''
           export CODEX_HOME=${lib.escapeShellArg cshHome}
           DEEPSEEK_API_KEY="$(cat ${config.sops.secrets.deepseek_api_key.path})"
           export DEEPSEEK_API_KEY
 
-          project_root="$(git rev-parse --show-toplevel 2>/dev/null || printf '%s' "$PWD")"
-          trust_args=()
-          case "$project_root" in
-            "${projectsRoot}" | "${projectsRoot}"/*)
-              trust_args=(-c "projects={\"$project_root\"={trust_level=\"trusted\"}}")
-              ;;
-          esac
-
-          exec ${lib.getExe llmAgents.codex} "''${trust_args[@]}" "$@"
+          exec ${lib.getExe llmAgents.codex} "$@"
         '';
       };
     in
     {
-      home.file = {
-        ".local/share/csh/config.toml".source = cshConfig;
-        ".local/share/csh/models.json".source = ./csh/models.json;
-      };
+      home.file.".local/share/csh/models.json".source = ./csh/models.json;
+
+      # Codex persists trust levels, MCP servers, and TUI settings by
+      # rewriting config.toml, which fails against the read-only symlink that
+      # home.file creates. Keep a real copy instead: refresh it from the store
+      # while it is still untouched, then leave local edits alone.
+      home.activation.cshConfig = lib.hm.dag.entryAfter [ "writeBoundary" "linkGeneration" ] ''
+        if [ -L "${cshConfigFile}" ] || [ ! -e "${cshConfigFile}" ] \
+          || ${lib.getExe' pkgs.coreutils "cmp"} -s "${cshConfigFile}" "${cshConfigDeployed}"; then
+          $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${cshConfig}" "${cshConfigFile}"
+        fi
+        $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${cshConfig}" "${cshConfigDeployed}"
+      '';
 
       sops.secrets.deepseek_api_key = {
         format = "yaml";
