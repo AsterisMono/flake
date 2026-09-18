@@ -16,12 +16,12 @@
     firefox
     fish
     flatpak
+    gdm
     git
     keyring
     kitty
     neovim
     netbird-desktop
-    noctalia-greeter
     sing-box
     starship
     sway

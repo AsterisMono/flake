@@ -62,12 +62,6 @@
           priority = 10;
         }
       ];
-      programs.noctalia-greeter.settings.output = {
-        name = "HDMI-A-2";
-        width = 3840;
-        height = 2160;
-        scale = 1.333333;
-      };
       services.logind.settings.Login.HandlePowerKey = "hibernate";
     };
     homeModule = {
