@@ -103,7 +103,9 @@
       programs = {
         herdr = {
           enable = true;
-          plugins.reviewr = pkgs.selfPackages.herdr-reviewr;
+          plugins = {
+            inherit (pkgs.selfPackages) herdr-projects herdr-reviewr;
+          };
           settings = {
             onboarding = false;
             session.resume_agents_on_restore = true;
