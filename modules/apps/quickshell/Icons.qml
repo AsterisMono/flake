@@ -22,7 +22,7 @@ Singleton {
     "mutedHdmi": "󰽠",
     "battery": "󰁹",
     "memory": "󰍛",
-    "temp": "󰔄",
+    "temp": "\uf2c9",
     "up": "󰁝",
     "down": "󰁅",
     "eye": "󰈈",
