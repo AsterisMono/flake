@@ -22,11 +22,20 @@ Singleton {
 
   // Chosen glass option C: 40% backing opacity, fully opaque text.
   readonly property color glass: Qt.rgba(32 / 255, 33 / 255, 43 / 255, 0.40)
-  // The bars sit on the bare wallpaper, which is often far brighter than the
-  // windows behind a popup, so the same 40% reads as plain transparency there.
-  // One denser backing keeps both surfaces reading as the same frosted
-  // material; text stays fully opaque in either case.
-  readonly property color barGlass: Qt.rgba(32 / 255, 33 / 255, 43 / 255, 0.68)
+  // The bars sit on blurred wallpaper, which is often far brighter than the
+  // window content behind a popup, so the popup's 40% reads as plain
+  // transparency there. A workspace that holds a window gets a denser backing,
+  // which is what keeps both surfaces reading as the same frosted material;
+  // one showing bare wallpaper keeps the 40%. Text stays fully opaque either
+  // way.
+  readonly property real barOpacity: 0.68
+  readonly property real barEmptyOpacity: 0.40
+
+  function barGlass(occupied) {
+    const alpha = occupied ? theme.barOpacity : theme.barEmptyOpacity;
+    return Qt.rgba(32 / 255, 33 / 255, 43 / 255, alpha);
+  }
+
   readonly property color edge: Qt.rgba(1, 1, 1, 0.10)
   readonly property color separator: Qt.rgba(1, 1, 1, 0.10)
   readonly property color hover: Qt.rgba(1, 1, 1, 0.06)

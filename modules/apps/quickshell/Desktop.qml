@@ -46,6 +46,31 @@ Singleton {
     return null;
   }
 
+  // True when the workspace visible on a screen holds at least one window.
+  // Windows name their workspace, so a workspace no window names is only
+  // wallpaper. The window list is read before the monitor lookup on purpose:
+  // it is what keeps the bars' color binding live, and it is the only state
+  // that changes when a window opens on an empty workspace. The monitor lookup
+  // is a plain method call, so it is read fresh on every evaluation; until sway
+  // has answered it, the views sway marks visible on the output stand in.
+  function workspaceOccupied(screen) {
+    const windows = desktop.windows;
+    const monitor = screen ? I3.monitorFor(screen) : null;
+    const workspace = monitor ? monitor.activeWorkspace : null;
+
+    for (let i = 0; i < windows.length; i++) {
+      const window = windows[i];
+      if (workspace) {
+        if (window.workspace === workspace.name)
+          return true;
+      } else if (window.visible && screen && window.output === screen.name) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   function refresh() {
     if (tree.running) {
       desktop._dirty = true;
@@ -102,6 +127,9 @@ Singleton {
           "focused": node.focused === true,
           "urgent": node.urgent === true,
           "floating": node.type === "floating_con",
+          // Sway marks the views it is actually showing on an output; the
+          // bars fall back to it when the monitor's workspace is not known.
+          "visible": node.visible === true,
           "order": order[id]
         });
       }

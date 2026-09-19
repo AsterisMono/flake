@@ -23,7 +23,13 @@ PanelWindow {
 
   Rectangle {
     anchors.fill: parent
-    color: Theme.barGlass
+    color: Theme.barGlass(Desktop.workspaceOccupied(bar.screen))
+
+    Behavior on color {
+      ColorAnimation {
+        duration: Theme.motion
+      }
+    }
 
     Rectangle {
       anchors.left: parent.left
