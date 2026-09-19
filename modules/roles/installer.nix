@@ -14,7 +14,6 @@
       users.users.root.openssh.authorizedKeys.keys = [ config.constants.nvirellia.sshPubKey ];
 
       environment.systemPackages = with pkgs; [
-        _1password-cli
         age
         bat
         duf
@@ -33,6 +32,7 @@
         nixos-anywhere
         nixos-rebuild-ng
         ripgrep
+        sbctl
         sops
         ssh-to-age
         starship
@@ -48,37 +48,14 @@
             echo "NixOS installer"
             echo ""
             echo "  1. Connect to the network: nmtui"
-            echo "  2. Enter this flake's checkout"
-            echo "  3. Authenticate to the NixOS vault: op-login"
-            echo "  4. Review available workflows: just"
+            echo "  2. From your workstation, connect as root:"
+            echo "       ssh root@<this host>"
             echo ""
-            echo "Common recipes:"
+            echo "This environment holds no flake checkout and does not install"
+            echo "itself. Installations run from a workstation:"
             echo "  just generate-luks-password <machine>"
-            echo "  just bootstrap <machine> <disk>"
-            echo "  just install <machine> <target>"
+            echo "  just install <machine> root@<this host> <passphrase-file>"
             echo ""
-          end
-
-          function op-login --description "Authenticate with the NixOS vault service account"
-            set -l token
-            read --silent --prompt-str "1Password service account token: " token
-            echo
-
-            if test -z "$token"
-              echo "No token provided."
-              return 1
-            end
-
-            set -gx OP_SERVICE_ACCOUNT_TOKEN "$token"
-            set -e token
-
-            if op user get --me >/dev/null
-              echo "Authenticated to 1Password; use the NixOS vault."
-            else
-              set -e OP_SERVICE_ACCOUNT_TOKEN
-              echo "Authentication failed; the token was cleared."
-              return 1
-            end
           end
         '';
         shellAliases = {

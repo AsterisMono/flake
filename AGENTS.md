@@ -97,6 +97,6 @@ Preserve the `nixos-configurations-import-base` check. Encode new objective repo
 
 Bare `just` is informational and lists recipes. Even so, inspect a recipe before invoking it.
 
-Do not run remote, privileged, machine-mutating, disk, deployment, garbage-collection, or key-rewrite recipes without explicit authorization. This includes `deploy`, `boot`, `dryrun`, `install`, `bootstrap`, `rdeploy`, `generate-hardware-config`, `gc`, `scan-age-key`, and `updatekeys`.
+Do not run remote, privileged, machine-mutating, disk, deployment, garbage-collection, or key-rewrite recipes without explicit authorization. This includes `deploy`, `boot`, `dryrun`, `install`, `rdeploy`, `generate-hardware-config`, `generate-luks-password`, `gc`, `scan-age-key`, and `updatekeys`.
 
 Preserve unrelated work in a dirty worktree. Do not create commits unless requested. When a commit is requested, follow the repository history: use a concise, lowercase, imperative subject in the form `<scope>: <description>`, such as `sway: refine desktop integration`.
