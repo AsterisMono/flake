@@ -12,6 +12,22 @@
     skills
   ];
 
+  # NixOS provisions the token so the unprivileged Home Manager consumer reads
+  # it from a file instead of holding a decryption key of its own.
+  flake.modules.nixos.agents =
+    { config, ... }:
+    {
+      sops.secrets.deepseek_api_key = {
+        format = "yaml";
+        key = "deepseek_api_key";
+        sopsFile = config.constants.resources.getSecretPath "deepseek.yaml";
+        path = config.constants.resources.userSecretPaths.deepseek_api_key;
+        owner = config.constants.nvirellia.username;
+        group = config.users.users.${config.constants.nvirellia.username}.group;
+        mode = "0400";
+      };
+    };
+
   flake.modules.homeManager.agents =
     {
       config,
@@ -48,7 +64,7 @@
         runtimeInputs = [ pkgs.coreutils ];
         text = ''
           export CODEX_HOME=${lib.escapeShellArg cshHome}
-          DEEPSEEK_API_KEY="$(cat ${config.sops.secrets.deepseek_api_key.path})"
+          DEEPSEEK_API_KEY="$(cat ${config.constants.resources.userSecretPaths.deepseek_api_key})"
           export DEEPSEEK_API_KEY
 
           exec ${lib.getExe llmAgents.codex} "$@"
@@ -69,12 +85,6 @@
         fi
         $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${cshConfig}" "${cshConfigDeployed}"
       '';
-
-      sops.secrets.deepseek_api_key = {
-        format = "yaml";
-        key = "deepseek_api_key";
-        sopsFile = config.constants.resources.getSecretPath "deepseek.yaml";
-      };
 
       # Local skill packages and upstream sources pinned by revision and tree
       # hash. Herdr's `.agents/skills` holds internal workflows, so its public

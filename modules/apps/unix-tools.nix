@@ -75,7 +75,6 @@
 
     programs.atuin = {
       enable = true;
-      daemon.enable = true;
       enableFishIntegration = true;
       flags = [
         "--disable-up-arrow"
@@ -85,20 +84,12 @@
           enabled = true;
           send_last_command = true;
         };
-        auto_sync = true;
-        key_path = config.sops.secrets.atuin_key.path;
+        auto_sync = false;
         update_check = false;
         style = "compact";
         prefers_reduced_motion = true;
-        sync.records = true;
+        sync.records = false;
       };
     };
-
-    sops.secrets.atuin_key = {
-      format = "yaml";
-      sopsFile = config.constants.resources.getSecretPath "atuin.yaml";
-    };
-
-    systemd.user.services.atuin-daemon.Unit.After = [ "sops-nix.service" ];
   };
 }

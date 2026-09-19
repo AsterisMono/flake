@@ -7,6 +7,12 @@
 
     config.constants.resources = {
       getSecretPath = fileName: "${inputs.self}/modules/secrets/${fileName}";
+
+      # Runtime paths of secrets that NixOS provisions for an unprivileged
+      # consumer, so Home Manager can read the file without a key of its own.
+      userSecretPaths = {
+        deepseek_api_key = "/run/secrets/deepseek_api_key";
+      };
     };
   };
 }

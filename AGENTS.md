@@ -51,13 +51,13 @@ The age recipient model has two purposes:
 - A maintainer recipient permits editing encrypted documents.
 - A host recipient, derived from that host's SSH Ed25519 public key, permits NixOS activation to decrypt them through `sops.age.sshKeyPaths`.
 
-Home Manager uses the maintainer's age key file. Its secrets are provisioned by the `sops-nix` user service beneath the user's runtime directory rather than the system `/run/secrets` hierarchy. A user service consuming them must order itself after `sops-nix.service`.
+Every consumer reads a NixOS-provisioned secret, Home Manager programs included: declare the secret at the system level with `owner`, `group`, and `mode` for that consumer, publish its runtime path through `constants.resources.userSecretPaths`, and have the consumer read that path. There is no Home Manager sops module, so nothing outside NixOS activation decrypts a document and no key file has to live in a user's home.
 
 Follow these patterns:
 
 - Treat `modules/secrets/`, `.sops.yaml`, password hashes, key material, and personal identity constants as sensitive. Do not decrypt, print, rotate, or edit secret payloads unless the task explicitly requires it.
 - Never create a plaintext secret file. Edit encrypted documents with `sops`.
-- Declare each `sops.secrets.<name>` beside the service or feature that consumes it. Keep `modules/secrets/default.nix` limited to shared sops-nix setup and key discovery.
+- Declare each `sops.secrets.<name>` beside the service or feature that consumes it, including when the consumer is a Home Manager program. Keep `modules/secrets/default.nix` limited to shared sops-nix setup and key discovery.
 - Set `sopsFile` and any non-default `format` explicitly. Use the shared secret-path helper rather than duplicating repository paths.
 - Consume `config.sops.secrets.<name>.path`. Never read secret contents during Nix evaluation; sops-nix decrypts only during activation.
 - Use normal key extraction for a value from YAML or JSON. Set `key = ""` only when the consumer requires the whole decrypted document.
@@ -65,6 +65,7 @@ Follow these patterns:
 - Add `restartUnits` or `reloadUnits` when a running service must observe a changed secret.
 - Set `owner`, `group`, and `mode` no more permissively than the consumer requires.
 - For a password supplied through `hashedPasswordFile`, declare its secret with `neededForUsers = true` so it is available before user creation.
+- Give each encrypted document its own creation rule naming exactly the parties that decrypt it: only the hosts whose NixOS activation reads it, plus the maintainer when the document must stay editable. A host recipient decrypts the whole document, and `sops` applies only the first matching rule, so keep the patterns disjoint and free of catch-alls; a document that matches no rule fails to encrypt until its rule exists. A document with no maintainer recipient can only be re-keyed from a host that already decrypts it, with `just rewrap-secret` on that host, or recreated from the value that host decrypts.
 - When recipients change, update the affected encrypted documents with `sops updatekeys`; `just updatekeys` is the repository-wide convenience recipe. This rewrite requires explicit authorization.
 
 ## Packaging software
@@ -97,6 +98,6 @@ Preserve the `nixos-configurations-import-base` check. Encode new objective repo
 
 Bare `just` is informational and lists recipes. Even so, inspect a recipe before invoking it.
 
-Do not run remote, privileged, machine-mutating, disk, deployment, garbage-collection, or key-rewrite recipes without explicit authorization. This includes `deploy`, `boot`, `dryrun`, `install`, `rdeploy`, `generate-hardware-config`, `generate-luks-password`, `gc`, `scan-age-key`, and `updatekeys`.
+Do not run remote, privileged, machine-mutating, disk, deployment, garbage-collection, or key-rewrite recipes without explicit authorization. This includes `deploy`, `boot`, `dryrun`, `install`, `rdeploy`, `collect-machine-info`, `generate-luks-password`, `gc`, `rewrap-secret`, and `updatekeys`.
 
 Preserve unrelated work in a dirty worktree. Do not create commits unless requested. When a commit is requested, follow the repository history: use a concise, lowercase, imperative subject in the form `<scope>: <description>`, such as `sway: refine desktop integration`.
