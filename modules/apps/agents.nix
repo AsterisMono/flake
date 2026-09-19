@@ -17,6 +17,13 @@
   flake.modules.nixos.agents =
     { config, ... }:
     {
+      nix.settings = {
+        extra-substituters = [ "https://cache.numtide.com" ];
+        trusted-public-keys = [
+          "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+        ];
+      };
+
       sops.secrets.deepseek_api_key = {
         format = "yaml";
         key = "deepseek_api_key";
