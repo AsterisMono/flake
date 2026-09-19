@@ -76,10 +76,11 @@
         sopsFile = config.constants.resources.getSecretPath "deepseek.yaml";
       };
 
-      # Skill sources, pinned by revision and tree hash. Herdr publishes its
-      # own skill inside the Herdr repository, whose `.agents/skills` holds
-      # Herdr's internal workflows, so that one is pinned as a single file.
+      # Local skill packages and upstream sources pinned by revision and tree
+      # hash. Herdr's `.agents/skills` holds internal workflows, so its public
+      # skill is pinned as a single file.
       skills.install = [
+        pkgs.selfPackages.ask-astra
         (builtins.fetchTree {
           type = "github";
           owner = "mattpocock";
