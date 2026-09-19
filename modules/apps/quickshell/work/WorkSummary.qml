@@ -26,21 +26,21 @@ Singleton {
       return {
         "icon": "agentIdle",
         "text": WorkInFlight.agents.length === 0 ? "no agents" : WorkInFlight.agents.length + " idle",
-        "color": Theme.dim
+        "color": Theme.muted
       };
     case "incompatible":
       return { "icon": "agentAttention", "text": "unsupported", "color": Theme.amber };
     default:
-      return { "icon": "agentIdle", "text": "connecting", "color": Theme.dim };
+      return { "icon": "agentIdle", "text": "connecting", "color": Theme.muted };
     }
   }
 
   function parts(compact) {
     const list = [];
     if (WorkInFlight.workingCount > 0)
-      list.push({ "icon": "agentWorking", "text": compact ? String(WorkInFlight.workingCount) : WorkInFlight.workingCount + " working", "color": Theme.muted });
+      list.push({ "icon": "agentWorking", "text": compact ? String(WorkInFlight.workingCount) : WorkInFlight.workingCount + " working", "color": Theme.text });
     if (WorkInFlight.idleCount > 0)
-      list.push({ "icon": "agentIdle", "text": compact ? String(WorkInFlight.idleCount) : WorkInFlight.idleCount + " idle", "color": Theme.dim });
+      list.push({ "icon": "agentIdle", "text": compact ? String(WorkInFlight.idleCount) : WorkInFlight.idleCount + " idle", "color": Theme.muted });
     if (summary.waitingCount > 0)
       list.push({ "icon": "agentAttention", "text": compact ? String(summary.waitingCount) : summary.waitingCount + " " + summary.waitingWord, "color": Theme.amber });
     if (list.length === 0)

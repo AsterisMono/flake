@@ -18,7 +18,7 @@ Singleton {
   readonly property color dim: "#9d969e"
   readonly property color accent: "#a0bbc1"
   readonly property color amber: "#d3bb8f"
-  readonly property color red: "#d18f92"
+  readonly property color red: "#e5a3a5"
 
   // Chosen glass option C: 40% backing opacity, fully opaque text.
   readonly property color glass: Qt.rgba(32 / 255, 33 / 255, 43 / 255, 0.40)
@@ -26,11 +26,12 @@ Singleton {
   // window content behind a popup, so the popup's 40% reads as plain
   // transparency there. A workspace that holds a window gets a denser backing,
   // which is what keeps both surfaces reading as the same frosted material;
-  // one showing bare wallpaper backs off to 20%, which is enough to hold the
-  // text off the wallpaper without painting a strip over it. Text stays fully
-  // opaque either way.
-  readonly property real barOpacity: 0.68
-  readonly property real barEmptyOpacity: 0.20
+  // one showing bare wallpaper used to back off to 20%. Review renders over the
+  // live sky showed that state left secondary text near 2:1 and dim near 1:1,
+  // so both bars now keep one dense backing instead of changing legibility when
+  // the last window disappears. Text stays fully opaque either way.
+  readonly property real barOpacity: 0.84
+  readonly property real barEmptyOpacity: 0.84
 
   function barGlass(occupied) {
     const alpha = occupied ? theme.barOpacity : theme.barEmptyOpacity;

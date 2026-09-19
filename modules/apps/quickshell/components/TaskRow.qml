@@ -48,7 +48,7 @@ Item {
     anchors.rightMargin: Theme.space2
     anchors.verticalCenter: parent.verticalCenter
     text: control.windowData.workspace
-    color: Theme.dim
+    color: Theme.muted
     font.family: Theme.mono
     font.pixelSize: Theme.fontTiny
   }

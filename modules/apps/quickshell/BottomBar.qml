@@ -145,7 +145,7 @@ PanelWindow {
 
           Text {
             text: modelData.workspace
-            color: Theme.dim
+            color: Theme.muted
             font.family: Theme.mono
             font.pixelSize: Theme.fontMicro
           }
@@ -223,7 +223,7 @@ PanelWindow {
               Layout.alignment: Qt.AlignBaseline
               visible: index > 0
               text: "·"
-              color: Theme.dim
+              color: Theme.text
               font.family: Theme.mono
               font.pixelSize: Theme.fontBody
             }

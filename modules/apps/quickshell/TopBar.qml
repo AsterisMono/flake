@@ -78,16 +78,13 @@ PanelWindow {
       Text {
         id: clockText
         Layout.alignment: Qt.AlignVCenter
-        textFormat: Text.StyledText
         text: {
           const date = Qt.formatDateTime(clock.date, "ddd d MMM");
           const time = Qt.formatDateTime(clock.date, "HH:mm");
-          if (bar.compact)
-            return "<font color=\"" + Theme.muted + "\">" + time + "</font>";
-          return "<font color=\"" + Theme.muted + "\">" + date + "</font>"
-            + "<font color=\"" + Theme.dim + "\"> · </font>"
-            + "<font color=\"" + Theme.muted + "\">" + time + "</font>";
+          return bar.compact ? time : date + " · " + time;
         }
+        textFormat: Text.PlainText
+        color: Theme.text
         font.family: Theme.mono
         font.pixelSize: Theme.fontBody
       }
@@ -130,14 +127,14 @@ PanelWindow {
       Icon {
         Layout.alignment: Qt.AlignVCenter
         name: !Media.available ? "music" : (Media.playing ? "pause" : "play")
-        color: Theme.dim
+        color: Theme.muted
         size: Theme.iconSmall
       }
 
       Text {
         Layout.maximumWidth: 280
         text: Media.available ? Media.displayText : "Nothing playing"
-        color: Media.available ? Theme.muted : Theme.dim
+        color: Theme.muted
         font.family: Theme.mono
         font.pixelSize: Theme.fontBody
         elide: Text.ElideRight
@@ -268,7 +265,7 @@ PanelWindow {
       Icon {
         Layout.alignment: Qt.AlignVCenter
         name: Audio.indicatorIcon
-        color: Audio.muted ? Theme.dim : Theme.muted
+        color: Theme.muted
         size: Theme.iconSize
       }
 
