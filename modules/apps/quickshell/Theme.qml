@@ -26,10 +26,11 @@ Singleton {
   // window content behind a popup, so the popup's 40% reads as plain
   // transparency there. A workspace that holds a window gets a denser backing,
   // which is what keeps both surfaces reading as the same frosted material;
-  // one showing bare wallpaper keeps the 40%. Text stays fully opaque either
-  // way.
+  // one showing bare wallpaper backs off to 20%, which is enough to hold the
+  // text off the wallpaper without painting a strip over it. Text stays fully
+  // opaque either way.
   readonly property real barOpacity: 0.68
-  readonly property real barEmptyOpacity: 0.40
+  readonly property real barEmptyOpacity: 0.20
 
   function barGlass(occupied) {
     const alpha = occupied ? theme.barOpacity : theme.barEmptyOpacity;
