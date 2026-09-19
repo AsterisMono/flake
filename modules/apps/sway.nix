@@ -238,13 +238,13 @@ _: {
 
       systemd.user.services.sway-polkit-agent = {
         Unit = {
-          Description = "LXQt PolicyKit Authentication Agent for Sway";
+          Description = "GNOME PolicyKit Authentication Agent for Sway";
           PartOf = [ "graphical-session.target" ];
           After = [ "graphical-session.target" ];
           ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
         };
         Service = {
-          ExecStart = "${lib.getExe pkgs.lxqt.lxqt-policykit}";
+          ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
           Restart = "on-failure";
         };
         Install.WantedBy = [ "graphical-session.target" ];
