@@ -2,12 +2,6 @@
   inputs,
   ...
 }:
-let
-  herdrSkill = builtins.fetchurl {
-    url = "https://raw.githubusercontent.com/herdrdev/herdr/7b675f42af35508eab66ac42fe1598628597a893/skills/herdr/SKILL.md";
-    sha256 = "sha256-I3rSqy2BI+K7N5VtOkHu0UHy0ip8NuQVt4dsA5dnkJk=";
-  };
-in
 {
   flake-file.inputs = {
     llm-agents.url = "github:numtide/llm-agents.nix";
@@ -15,6 +9,7 @@ in
 
   flake.modules.aspects.agents.imports = with inputs.self.modules.aspects; [
     herdr
+    skills
   ];
 
   flake.modules.homeManager.agents =
@@ -80,6 +75,30 @@ in
         key = "deepseek_api_key";
         sopsFile = config.constants.resources.getSecretPath "deepseek.yaml";
       };
+
+      # Skill sources, pinned by revision and tree hash. Herdr publishes its
+      # own skill inside the Herdr repository, whose `.agents/skills` holds
+      # Herdr's internal workflows, so that one is pinned as a single file.
+      skills.install = [
+        (builtins.fetchTree {
+          type = "github";
+          owner = "mattpocock";
+          repo = "skills";
+          rev = "c55ee46073ed923f86ce59a5eb3b6d895095d1b7";
+          narHash = "sha256-L3CpIT2DeI+fUFl9fcygojtQo2DzEen69rMD1XqR1vM=";
+        })
+        (builtins.fetchTree {
+          type = "github";
+          owner = "ayghri";
+          repo = "i-have-adhd";
+          rev = "b15d0be58f55b33972ba3e39709e0e5208ef30cb";
+          narHash = "sha256-wnD5crIal23Vtk6GReG2vCkjDuhrpmhWXvrNUq5mZfE=";
+        })
+        (builtins.fetchurl {
+          url = "https://raw.githubusercontent.com/herdrdev/herdr/7b675f42af35508eab66ac42fe1598628597a893/skills/herdr/SKILL.md";
+          sha256 = "sha256-I3rSqy2BI+K7N5VtOkHu0UHy0ip8NuQVt4dsA5dnkJk=";
+        })
+      ];
 
       programs = {
         herdr = {
