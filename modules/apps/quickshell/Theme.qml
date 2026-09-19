@@ -24,14 +24,15 @@ Singleton {
   readonly property color glass: Qt.rgba(32 / 255, 33 / 255, 43 / 255, 0.40)
   // The bars sit on blurred wallpaper, which is often far brighter than the
   // window content behind a popup, so the popup's 40% reads as plain
-  // transparency there. A workspace that holds a window gets a denser backing,
-  // which is what keeps both surfaces reading as the same frosted material;
-  // one showing bare wallpaper used to back off to 20%. Review renders over the
-  // live sky showed that state left secondary text near 2:1 and dim near 1:1,
-  // so both bars now keep one dense backing instead of changing legibility when
-  // the last window disappears. Text stays fully opaque either way.
-  readonly property real barOpacity: 0.84
-  readonly property real barEmptyOpacity: 0.84
+  // transparency there. A workspace that holds a window takes the 0.72
+  // backing. One showing bare wallpaper is the only place the frosted material
+  // is seen unobstructed, and backs off to 0.50 for the airy look: measured
+  // over the live sky that leaves primary text 3.4 to 5.2 and secondary text
+  // 2.2 to 3.4, so readings over the brightest cloud sit below the 4.5 target.
+  // The empty bar is a deliberately softer surface there. dim stays reserved
+  // for dark popups, and text is fully opaque either way.
+  readonly property real barOpacity: 0.72
+  readonly property real barEmptyOpacity: 0.50
 
   function barGlass(occupied) {
     const alpha = occupied ? theme.barOpacity : theme.barEmptyOpacity;
