@@ -1,10 +1,17 @@
 {
   flake.modules.nixos.installer =
-    { modulesPath, pkgs, ... }:
+    {
+      config,
+      modulesPath,
+      pkgs,
+      ...
+    }:
     {
       imports = [
         "${modulesPath}/installer/cd-dvd/installation-cd-minimal.nix"
       ];
+
+      users.users.root.openssh.authorizedKeys.keys = [ config.constants.nvirellia.sshPubKey ];
 
       environment.systemPackages = with pkgs; [
         _1password-cli

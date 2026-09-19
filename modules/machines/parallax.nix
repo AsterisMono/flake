@@ -13,7 +13,7 @@
       i18n
       substituter-cn
     ];
-    diskoConfig = inputs.self.diskoConfigurations.xfs-swap;
+    diskoConfig = inputs.self.diskoConfigurations.xfs-workstation;
     hardware =
       {
         config,

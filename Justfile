@@ -22,12 +22,17 @@ boot: (_activate "boot")
 dryrun:
     nixos-rebuild dry-run --flake . --sudo -v -L
 
-install hostname target:
+# Install a machine over SSH with nixos-anywhere. Kexec discards whatever was
+# written to /run on the target, so a layout with a LUKS root needs its
+# passphrase passed as the third argument, the file produced by
+# `just generate-luks-password`. Server layouts need no third argument.
+install hostname target luks-key="":
     nix run github:nix-community/nixos-anywhere -- \
       --flake .#{{ hostname }} \
       --target-host {{ target }} \
       --copy-host-keys \
       --disko-mode disko \
+      {{ if luks-key == "" { "" } else { "--disk-encryption-keys /run/luks-password " + luks-key } }}
 
 bootstrap hostname disk:
     nix --extra-experimental-features "nix-command flakes" run 'github:nix-community/disko#disko-install' -- --flake .#{{ hostname }} --disk main {{ disk }}

@@ -68,10 +68,7 @@ _: {
       modifier = "Mod4";
       terminal = "${lib.getExe pkgs.uwsm} app -- ${lib.getExe pkgs.kitty}";
       wpctl = lib.getExe' pkgs.wireplumber "wpctl";
-      swaymsg = lib.getExe' pkgs.unstable.swayfx "swaymsg";
-      swaylock = lib.getExe config.programs.swaylock.package;
       vicinae = lib.getExe config.programs.vicinae.package;
-      systemctl = lib.getExe' pkgs.systemd "systemctl";
 
       annotateScreenshot = pkgs.writeShellApplication {
         name = "screenshot-annotate";
@@ -209,29 +206,6 @@ _: {
 
       programs.swaylock.enable = true;
 
-      services.swayidle = {
-        enable = true;
-        events = {
-          before-sleep = "${swaylock} -f";
-          after-resume = "${swaymsg} 'output * dpms on'";
-        };
-        timeouts = [
-          {
-            timeout = 300;
-            command = "${swaylock} -f";
-          }
-          {
-            timeout = 600;
-            command = "${swaymsg} 'output * dpms off'";
-            resumeCommand = "${swaymsg} 'output * dpms on'";
-          }
-          {
-            timeout = 1800;
-            command = "${systemctl} suspend-then-hibernate";
-          }
-        ];
-      };
-
       programs.gpg.enable = true;
 
       services.gpg-agent = {
@@ -280,12 +254,6 @@ _: {
         udiskie.enable = true;
       };
 
-      systemd.user.services = {
-        udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
-        swayidle.Unit.ConditionEnvironment = lib.mkForce [
-          "WAYLAND_DISPLAY"
-          "XDG_SESSION_DESKTOP=sway"
-        ];
-      };
+      systemd.user.services.udiskie.Unit.ConditionEnvironment = "XDG_SESSION_DESKTOP=sway";
     };
 }

@@ -13,7 +13,7 @@
       mira-agent
       honcho
     ];
-    diskoConfig = inputs.self.diskoConfigurations.xfs-with-quota;
+    diskoConfig = inputs.self.diskoConfigurations.xfs-workstation;
 
     # The server role turns fontconfig off ("no need for fonts on a server"),
     # but the browser toolset renders pages *on this host*, and Chromium with

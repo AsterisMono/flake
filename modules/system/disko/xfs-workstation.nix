@@ -1,5 +1,5 @@
 {
-  flake.diskoConfigurations.xfs-luks = {
+  flake.diskoConfigurations.xfs-workstation = {
     disko.devices = {
       disk = {
         main = {
@@ -15,6 +15,13 @@
                   format = "vfat";
                   mountpoint = "/boot";
                   mountOptions = [ "umask=0077" ];
+                };
+              };
+              swap = {
+                size = "32G";
+                content = {
+                  type = "swap";
+                  resumeDevice = true;
                 };
               };
               root = {
