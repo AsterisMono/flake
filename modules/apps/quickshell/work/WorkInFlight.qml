@@ -6,9 +6,11 @@ import qs.work
 
 // Normalized "work in flight" model.
 //
-// Source state, connection freshness and local acknowledgement stay separate:
-// a lost socket is not an agent failure, and dismissing a ready record is not
-// an agent state change. Herdr owns agent state; the shell only reports it.
+// A live projection of what herdr reports, and nothing else: rows and counts
+// come from the current agent list, so a completion stops waiting the moment
+// herdr stops calling that agent done. The shell keeps no history of its own,
+// and connection freshness stays separate from agent state: a lost socket is
+// not an agent failure. Herdr owns agent state; the shell only reports it.
 // Bar wording lives in WorkSummary; raising a terminal lives in WorkRaise.
 Singleton {
   id: work
@@ -17,12 +19,7 @@ Singleton {
   readonly property bool fixture: fixtureScenario !== ""
   readonly property var source: work.fixture ? FixtureSource : HerdrClient
 
-  property var records: []
-  property bool historyCapped: false
-  property string pendingAcknowledgeKey: ""
   property double nowMs: Date.now()
-
-  readonly property int historyLimit: 100
 
   readonly property var agents: source.agents
   readonly property string sourceState: source.state
@@ -32,19 +29,16 @@ Singleton {
 
   readonly property var workingAgents: work.agentsWithState("working")
   readonly property var blockedAgents: work.agentsWithState("blocked")
+  readonly property var doneAgents: work.agentsWithState("done")
   readonly property var otherAgents: work.agentsWithState("idle").concat(work.agentsWithState("unknown"))
-
-  readonly property var readyRecords: work.records.filter(function(record) {
-    return !record.acknowledged;
-  })
 
   readonly property int needsYouCount: work.blockedAgents.length
   readonly property int workingCount: work.workingAgents.length
-  readonly property int readyCount: work.readyRecords.length
+  readonly property int readyCount: work.doneAgents.length
   readonly property int idleCount: work.otherAgents.length
 
   readonly property var needsRows: work.rowsFromAgents(work.blockedAgents, "needs")
-  readonly property var readyRows: work.rowsFromRecords(work.readyRecords)
+  readonly property var readyRows: work.rowsFromAgents(work.doneAgents, "ready")
   readonly property var workingRows: work.rowsFromAgents(work.workingAgents, "working")
   readonly property var idleRows: work.rowsFromAgents(work.otherAgents, "idle")
 
@@ -116,136 +110,12 @@ Singleton {
     return Math.round(hours / 24) + " d ago";
   }
 
-  function recordKey(agent) {
-    const endpoint = work.fixture ? "fixture" : Runtime.herdrEndpoint;
-    return endpoint + "|" + agent.terminalId + "|" + agent.paneId + (agent.sessionKey !== "" ? "|" + agent.sessionKey : "");
-  }
-
-  function recordFromAgent(agent, noticedAtMs) {
-    return {
-      "key": work.recordKey(agent),
-      "paneId": agent.paneId,
-      "terminalId": agent.terminalId,
-      "workspaceId": agent.workspaceId,
-      "sessionKey": agent.sessionKey,
-      "agentName": agent.agentName,
-      "displayName": agent.displayName,
-      "title": agent.title,
-      "cwd": agent.cwd,
-      "stateChangeSeq": agent.stateChangeSeq,
-      "noticedAtMs": noticedAtMs,
-      "observedAtMs": noticedAtMs,
-      "acknowledged": false,
-      "ended": false,
-      "liveState": "done"
-    };
-  }
-
-  // Reconcile the retained readiness records against the latest authoritative
-  // snapshot. A later working → done transition carries a new state-change
-  // sequence and therefore creates a new record; metadata revisions, renames
-  // and reconnects do not.
-  function reconcile() {
-    const live = work.agents;
-    const seen = Date.now();
-    let next = work.records.slice();
-
-    for (let i = 0; i < live.length; i++) {
-      const agent = live[i];
-      const key = work.recordKey(agent);
-      let index = -1;
-      for (let j = 0; j < next.length; j++) {
-        if (next[j].key === key)
-          index = j;
-      }
-
-      if (agent.state === "done") {
-        if (index === -1) {
-          next.push(work.recordFromAgent(agent, seen));
-        } else if (next[index].stateChangeSeq !== agent.stateChangeSeq) {
-          next[index] = work.recordFromAgent(agent, seen);
-        } else {
-          next[index] = work.refreshRecord(next[index], agent, seen);
-        }
-        continue;
-      }
-
-      if (index !== -1) {
-        next[index] = work.refreshRecord(next[index], agent, seen);
-      }
-    }
-
-    const liveKeys = { };
-    for (let i = 0; i < live.length; i++)
-      liveKeys[work.recordKey(live[i])] = true;
-
-    for (let i = 0; i < next.length; i++) {
-      if (liveKeys[next[i].key])
-        continue;
-      if (work.fresh && !next[i].ended)
-        next[i] = work.withField(work.withField(next[i], "ended", true), "liveState", "");
-    }
-
-    if (next.length > work.historyLimit) {
-      next = work.prune(next);
-    }
-
-    work.records = next;
-  }
-
-  function refreshRecord(record, agent, seen) {
-    const updated = work.withField(record, "title", agent.title !== "" ? agent.title : record.title);
-    updated.cwd = agent.cwd !== "" ? agent.cwd : record.cwd;
-    updated.agentName = agent.agentName !== "" ? agent.agentName : record.agentName;
-    updated.displayName = agent.displayName !== "" ? agent.displayName : record.displayName;
-    updated.workspaceId = agent.workspaceId;
-    updated.liveState = agent.state;
-    updated.ended = false;
-    updated.observedAtMs = seen;
-    return updated;
-  }
-
-  function withField(record, field, value) {
-    const copy = { };
-    for (const key in record)
-      copy[key] = record[key];
-    copy[field] = value;
-    return copy;
-  }
-
-  function prune(list) {
-    const acknowledged = [];
-    const pending = [];
-    for (let i = 0; i < list.length; i++) {
-      if (list[i].acknowledged || list[i].ended)
-        acknowledged.push(list[i]);
-      else
-        pending.push(list[i]);
-    }
-    acknowledged.sort(function(a, b) {
-      return b.noticedAtMs - a.noticedAtMs;
-    });
-    const keep = pending.concat(acknowledged.slice(0, Math.max(0, work.historyLimit - pending.length)));
-    keep.sort(function(a, b) {
-      return b.noticedAtMs - a.noticedAtMs;
-    });
-    work.historyCapped = true;
-    return keep;
-  }
-
   // -- rows ----------------------------------------------------------------
 
   function rowsFromAgents(list, group) {
     const rows = [];
     for (let i = 0; i < list.length; i++)
       rows.push(work.agentRow(list[i], group));
-    return rows;
-  }
-
-  function rowsFromRecords(list) {
-    const rows = [];
-    for (let i = 0; i < list.length; i++)
-      rows.push(work.recordRow(list[i]));
     return rows;
   }
 
@@ -283,9 +153,10 @@ Singleton {
       stateColor = Theme.amber;
       note = "Herdr reports blocked; input may be needed.";
     } else if (agent.state === "done") {
-      stateLabel = "Ready";
+      stateLabel = "Ready to review";
       stateIcon = "ready";
       stateColor = Theme.accent;
+      note = "Herdr reports done. Ready for your review.";
     } else if (agent.state === "unknown") {
       stateLabel = "State unavailable";
       stateColor = Theme.dim;
@@ -295,7 +166,6 @@ Singleton {
     const title = agent.title !== "" ? agent.title : (agent.displayName !== "" ? agent.displayName : "Agent");
     return {
       "group": group,
-      "recordKey": "",
       "paneId": agent.paneId,
       "title": title,
       "context": work.contextLine(agent.displayName, agent.workspaceId, agent.cwd),
@@ -304,63 +174,8 @@ Singleton {
       "stateColor": stateColor,
       "note": note,
       "timeText": work.fresh ? "" : work.timeText("last seen", agent.observedAtMs),
-      "ended": false,
-      "stale": !work.fresh,
-      "acknowledged": false,
-      "liveState": agent.state,
       "openable": agent.paneId !== "" && work.sourceState !== "incompatible"
     };
-  }
-
-  function recordRow(record) {
-    const liveAgent = work.findAgent(record.paneId);
-    let note = "Herdr reports done. Ready for your review.";
-    if (record.ended)
-      note = "This session has ended. It was last seen " + work.relative(record.observedAtMs || record.noticedAtMs) + ".";
-    else if (liveAgent && liveAgent.state !== "done")
-      note = "Now " + work.stateWord(liveAgent.state) + "; this earlier review record is retained.";
-
-    const title = record.title !== "" ? record.title : (record.displayName !== "" ? record.displayName : "Agent");
-    return {
-      "group": "ready",
-      "recordKey": record.key,
-      "paneId": record.paneId,
-      "title": title,
-      "context": work.contextLine(record.displayName, record.workspaceId, record.cwd),
-      "stateLabel": "Ready to review",
-      "stateIcon": "ready",
-      "stateColor": Theme.accent,
-      "note": note,
-      "timeText": work.timeText("noticed", record.noticedAtMs),
-      "ended": record.ended,
-      "stale": !work.fresh,
-      "acknowledged": record.acknowledged,
-      "liveState": record.liveState || "",
-      "openable": !record.ended && record.paneId !== "" && work.sourceState !== "incompatible"
-    };
-  }
-
-  function findAgent(paneId) {
-    for (let i = 0; i < work.agents.length; i++) {
-      if (work.agents[i].paneId === paneId)
-        return work.agents[i];
-    }
-    return null;
-  }
-
-  function stateWord(state) {
-    switch (state) {
-    case "working":
-      return "working";
-    case "blocked":
-      return "waiting for you";
-    case "idle":
-      return "idle";
-    case "done":
-      return "ready to review";
-    default:
-      return "unclassified";
-    }
   }
 
   // -- actions -------------------------------------------------------------
@@ -373,17 +188,7 @@ Singleton {
   function open(row) {
     if (!row.openable)
       return;
-    work.pendingAcknowledgeKey = row.recordKey;
     source.focusAgent(row.paneId);
-  }
-
-  function acknowledge(key, acknowledged) {
-    const next = [];
-    for (let i = 0; i < work.records.length; i++) {
-      const record = work.records[i];
-      next.push(record.key === key ? work.withField(record, "acknowledged", acknowledged) : record);
-    }
-    work.records = next;
   }
 
   Timer {
@@ -396,23 +201,9 @@ Singleton {
   Connections {
     target: work.source
 
-    function onUpdateSeqChanged() {
-      work.reconcile();
-    }
-  }
-
-  Connections {
-    target: work.source
-
     function onFocusResult(paneId, ok, message) {
-      if (!ok) {
-        work.pendingAcknowledgeKey = "";
+      if (!ok)
         return;
-      }
-      if (work.pendingAcknowledgeKey !== "") {
-        work.acknowledge(work.pendingAcknowledgeKey, true);
-        work.pendingAcknowledgeKey = "";
-      }
       if (!work.fixture)
         WorkRaise.raiseHostWindow();
     }
@@ -421,6 +212,5 @@ Singleton {
   Component.onCompleted: {
     work.nowMs = Date.now();
     source.start();
-    work.reconcile();
   }
 }

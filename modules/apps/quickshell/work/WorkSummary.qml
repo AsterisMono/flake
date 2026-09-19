@@ -12,8 +12,9 @@ Singleton {
   readonly property bool visible: WorkInFlight.sourceState === "online" || WorkInFlight.sourceState === "incompatible"
   readonly property bool needsYou: WorkInFlight.needsYouCount > 0
 
-  // Blocked agents and ready records share one chip: the next step is the
-  // user's, which is the same wording the panel uses for its first group.
+  // Blocked agents and agents herdr reports done share one chip: the next step
+  // is the user's, which is the same wording the panel uses for its first
+  // group. Both counts are live, so the chip clears the moment herdr does.
   readonly property int waitingCount: WorkInFlight.needsYouCount + WorkInFlight.readyCount
   readonly property string waitingWord: summary.waitingCount === 1 ? "needs you" : "need you"
 

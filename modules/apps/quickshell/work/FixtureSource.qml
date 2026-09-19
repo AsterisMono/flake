@@ -7,7 +7,7 @@ import qs
 // action boundary as HerdrClient, so the Work in flight model and panel can be
 // exercised — and screenshotted — without touching a live session.
 //
-// Selected with QS_WORK_FIXTURE=flights|disconnected|ended|empty|incompatible.
+// Selected with QS_WORK_FIXTURE=flights|followup|disconnected|ended|empty|incompatible.
 // Every string here is sample data; nothing is read from or sent to herdr.
 Singleton {
   id: fixture
@@ -75,6 +75,19 @@ Singleton {
       return [
         fixture.flights,
         [fixture.flights[2]]
+      ];
+    case "followup":
+      // The agent the user answered in herdr keeps its identity and moves on
+      // instead of waiting for review: same pane, later state-change sequence.
+      return [
+        fixture.flights,
+        [
+          fixture.flights[0],
+          fixture.agent("w9:p5", "term_sample_ready", "w9", "w9:t2", "codex", "Review the tenant migration diff", "/home/nvirellia/Projects/nori-platform", "working", 89, 45000, false),
+          fixture.flights[2],
+          fixture.flights[3],
+          fixture.flights[4]
+        ]
       ];
     case "empty":
       return [[]];

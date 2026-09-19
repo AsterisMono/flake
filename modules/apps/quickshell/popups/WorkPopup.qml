@@ -184,15 +184,6 @@ ScrollFrame {
         wrapMode: Text.Wrap
       }
 
-      Text {
-        width: parent.width
-        visible: WorkInFlight.historyCapped
-        text: "Only the most recent " + WorkInFlight.historyLimit + " ready records are kept for this session."
-        color: Theme.dim
-        font.family: Theme.mono
-        font.pixelSize: Theme.fontMicro
-        wrapMode: Text.Wrap
-      }
     }
   }
 }
