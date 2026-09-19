@@ -43,7 +43,7 @@
           domain = "lotus.local";
         };
 
-        disko.devices.disk.main.device = "/dev/nvme0n1";
+        disko.devices.disk.main.device = "/dev/disk/by-id/nvme-YMTC_YMSS2CD08D25MC_YMB51T0JA25495102F";
 
         nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
         hardware.cpu.intel = {
