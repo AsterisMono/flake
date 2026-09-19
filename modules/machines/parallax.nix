@@ -66,7 +66,10 @@
           priority = 10;
         }
       ];
-      services.logind.settings.Login.HandlePowerKey = "hibernate";
+      # Hibernating to a swapfile needs a resume device and offset this machine
+      # does not have, so only suspend is available. The power key falls back
+      # to logind's default action.
+      systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
     homeModule = {
       wayland.windowManager.sway.config = {
