@@ -8,7 +8,7 @@ _: {
             options = {
               hwmonPathAbs = lib.mkOption {
                 type = lib.types.str;
-                description = "Runtime hwmon directory containing the CPU temperature sensor.";
+                description = "Runtime hwmon directory whose hwmon device contains the CPU temperature sensor.";
               };
 
               inputFilename = lib.mkOption {
@@ -35,9 +35,10 @@ _: {
     let
       cpuTemperatureSensor = osConfig.hardware.sensors.cpuTemperature or null;
 
-      sensorPath = lib.optionalString (
+      sensorDirectory = lib.optionalString (
         cpuTemperatureSensor != null
-      ) "${cpuTemperatureSensor.hwmonPathAbs}/${cpuTemperatureSensor.inputFilename}";
+      ) cpuTemperatureSensor.hwmonPathAbs;
+      sensorInput = lib.optionalString (cpuTemperatureSensor != null) cpuTemperatureSensor.inputFilename;
 
       # Emits one JSON object per sample. Missing or unreadable metrics are
       # reported as null so the shell can distinguish "unavailable" from zero.
@@ -50,7 +51,8 @@ _: {
           pkgs.systemd
         ];
         text = ''
-          sensor="''${1:-}"
+          sensor_dir="''${1:-}"
+          sensor_input="''${2:-temp1_input}"
           state_dir="''${XDG_RUNTIME_DIR:-/tmp}/quickshell-health"
           mkdir -p "$state_dir"
 
@@ -135,7 +137,22 @@ _: {
           fi
 
           temperature=null
-          if [ -n "$sensor" ] && [ -r "$sensor" ]; then
+          # The configured directory is the parent of the hwmon device, whose
+          # numeric suffix is assigned at runtime and changes across boots.
+          sensor=""
+          if [ -n "$sensor_dir" ]; then
+            if [ -r "$sensor_dir/$sensor_input" ]; then
+              sensor="$sensor_dir/$sensor_input"
+            else
+              for candidate in "$sensor_dir"/hwmon*/"$sensor_input"; do
+                if [ -r "$candidate" ]; then
+                  sensor="$candidate"
+                  break
+                fi
+              done
+            fi
+          fi
+          if [ -n "$sensor" ]; then
             raw=$(cat "$sensor")
             temperature=$(awk -v raw="$raw" 'BEGIN { printf "%.1f", raw / 1000 }')
           fi
@@ -220,7 +237,8 @@ _: {
           readonly property string herdrEndpoint: ${qmlString herdrEndpoint};
           readonly property string swaymsg: ${qmlString (lib.getExe' swayPackage "swaymsg")};
           readonly property string healthScript: ${qmlString (lib.getExe healthScript)};
-          readonly property string sensorPath: ${qmlString sensorPath};
+          readonly property string sensorDirectory: ${qmlString sensorDirectory};
+          readonly property string sensorInput: ${qmlString sensorInput};
           readonly property string herdrHostScript: ${
             qmlString (if herdrEndpoint == "" then "" else lib.getExe herdrHostScript)
           };

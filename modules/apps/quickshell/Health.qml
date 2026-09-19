@@ -121,7 +121,7 @@ Singleton {
 
   Process {
     id: sampler
-    command: [Runtime.healthScript, Runtime.sensorPath]
+    command: [Runtime.healthScript, Runtime.sensorDirectory, Runtime.sensorInput]
 
     stdout: StdioCollector {
       onStreamFinished: health.apply(text)

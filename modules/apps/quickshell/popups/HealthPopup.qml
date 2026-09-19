@@ -13,7 +13,7 @@ ScrollFrame {
   readonly property var rows: {
     const result = [];
     const missing = Health.valid ? "" : "unavailable";
-    if (Runtime.sensorPath !== "")
+    if (Runtime.sensorDirectory !== "")
       result.push({ "label": "CPU temperature", "value": missing !== "" ? missing : (Health.hasTemp ? Health.temperature.toFixed(1) + " °C" : "unavailable"), "color": missing === "" && Health.hasTemp ? Theme.text : Theme.dim });
     result.push({ "label": "Memory", "value": missing !== "" ? missing : Health.formatGib(Health.memoryUsed) + " / " + Health.formatGib(Health.memoryTotal) + " GiB", "color": missing === "" ? Theme.text : Theme.dim });
     result.push({ "label": "Swap", "value": missing !== "" ? missing : Health.formatGib(Health.swapUsed) + " / " + Health.formatGib(Health.swapTotal) + " GiB", "color": missing === "" ? Theme.text : Theme.dim });
