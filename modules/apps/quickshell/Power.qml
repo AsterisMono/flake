@@ -68,6 +68,11 @@ Singleton {
     return "About " + minutes + " min";
   }
 
+  readonly property bool charging: power.hasBattery && device.state === UPowerDeviceState.Charging
+  // UPower reports this for the whole system, so it is only meaningful as a
+  // "connected to DC" signal once a battery has been found.
+  readonly property bool pluggedIn: power.hasBattery && !UPower.onBattery
+
   readonly property bool performanceAvailable: PowerProfiles.hasPerformanceProfile
   readonly property int profile: PowerProfiles.profile
   readonly property int degradationReason: PowerProfiles.degradationReason
@@ -75,8 +80,11 @@ Singleton {
   // On a desktop without a battery the bar entry still has to communicate
   // power-profile control rather than charge.
   readonly property string indicatorIcon: {
-    if (power.hasBattery)
-      return "battery";
+    if (power.hasBattery) {
+      if (power.charging)
+        return "batteryCharging";
+      return power.pluggedIn ? "plug" : "battery";
+    }
     switch (power.profile) {
     case PowerProfile.Performance:
       return "profilePerformance";

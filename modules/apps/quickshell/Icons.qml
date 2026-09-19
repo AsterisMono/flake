@@ -21,6 +21,9 @@ Singleton {
     "volumeHdmi": "󰽟",
     "mutedHdmi": "󰽠",
     "battery": "󰁹",
+    "batteryCharging": "󰂄",
+    // Plug glyph (U+F1E6), also used for the balanced power profile.
+    "plug": "\uf1e6",
     "memory": "󰍛",
     "temp": "\uf2c9",
     "up": "󰁝",
