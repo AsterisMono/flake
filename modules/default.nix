@@ -1,6 +1,6 @@
 { inputs, ... }: {
   flake-file.inputs = {
-    nixpkgs.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.xz";
+    nixpkgs.url = "https://channels.nixos.org/nixos-26.05/nixexprs.tar.zst";
     systems.url = "github:nix-systems/default";
   };
 
