@@ -11,6 +11,7 @@
     power
     stylix
     u2f
+    zswap
 
     _1password
     agents

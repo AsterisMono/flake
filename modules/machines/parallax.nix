@@ -9,7 +9,6 @@
       nvidia
       hmcl
       steam
-      zswap
       i18n
       substituter-cn
     ];
