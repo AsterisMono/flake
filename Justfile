@@ -49,15 +49,21 @@ install hostname target luks-key="":
       --disko-mode disko \
       {{ if luks-key == "" { "" } else { "--disk-encryption-keys /run/luks-password " + quote(luks-key) } }}
 
-# Print hardware facts for a machine, to fill in its `hardware` block.
+# Print the age recipient and hardware facts needed to prepare a machine.
+#
+# Read-only, but the target must already be reachable over SSH.
 [group('provisioning')]
-generate-hardware-config target:
-    ssh {{ target }} "nix shell nixpkgs#nixos-install-tools -c nixos-generate-config --show-hardware-config --no-filesystems"
+[doc("Print the age recipient and hardware facts needed to prepare a machine.")]
+collect-machine-info target:
+    #!/usr/bin/env bash
+    set -euo pipefail
 
-# Print the age recipient derived from a machine's SSH host key.
-[group('provisioning')]
-scan-age-key target:
+    echo "== age recipient =="
     ssh {{ target }} cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age
+
+    echo
+    echo "== hardware configuration =="
+    ssh {{ target }} "nix shell nixpkgs#nixos-install-tools -c nixos-generate-config --show-hardware-config --no-filesystems"
 
 # Build the installer ISO that boots new hardware.
 [group('provisioning')]
@@ -148,6 +154,72 @@ prompt-luks-password machine:
 updatekeys:
     find modules/secrets -maxdepth 1 -type f \( -name '*.yaml' -o -name '*.json' -o -name '*.env' -o -name '*.ini' \) -print0 \
       | xargs -0 -r -n1 sops updatekeys -y
+
+# Re-key a secret document from a machine that already decrypts it.
+#
+# `updatekeys` cannot reach a document the maintainer is not a recipient of, so
+# a host that reads it does the work with its own SSH host key as the age
+# identity. Run this as yourself on that host; only the key read needs sudo.
+#
+#   just rewrap-secret deepseek.yaml --add-age age1...
+#   just rewrap-secret deepseek.yaml --add-age age1... --rm-age age1...
+#
+# The recipient check is a pre-flight check, not proof: sops also uses any other
+# identity on this machine, such as the maintainer key file.
+#
+# Run it from the repository: sops loads `.sops.yaml` and needs a creation rule
+# that matches the document.
+[group('secrets')]
+[doc("Re-key a secret document from a machine that already decrypts it.")]
+[positional-arguments]
+rewrap-secret file +args:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    file=$1
+    shift
+
+    case $file in
+      */*) ;;
+      *) file="modules/secrets/$file" ;;
+    esac
+
+    if [[ ! -f $file ]]; then
+      echo "no such secret document: $file" >&2
+      exit 1
+    fi
+    if [[ $# -eq 0 ]]; then
+      echo "give sops a change to make: --add-age age1... or --rm-age age1..." >&2
+      exit 1
+    fi
+
+    host_key=/etc/ssh/ssh_host_ed25519_key
+    recipient=$(ssh-to-age < "$host_key.pub")
+    if ! grep -q "$recipient" "$file"; then
+      echo "$file does not list this host ($recipient) as a recipient," >&2
+      echo "so this machine cannot unwrap its data key. Use a host that can." >&2
+      exit 1
+    fi
+
+    identity=$(sudo cat "$host_key" | ssh-to-age -private-key)
+    if [[ -z $identity ]]; then
+      echo "could not derive an age identity from $host_key" >&2
+      exit 1
+    fi
+    export SOPS_AGE_KEY="$identity"
+
+    # Keep the current ciphertext and write the replacement next to it, so a
+    # failed or interrupted run cannot truncate the only copy.
+    backup=$(mktemp --tmpdir="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}" "$(basename "$file").XXXXXXXX.bak")
+    cp -a "$file" "$backup"
+    tmp=$(mktemp --tmpdir="$(dirname "$file")" ".$(basename "$file").XXXXXXXX")
+    trap 'rm -f "$tmp"' EXIT
+    sops -r "$@" --output "$tmp" "$file"
+    mv "$tmp" "$file"
+
+    echo "previous ciphertext kept at $backup"
+    echo "recipients now:"
+    grep -oE 'age1[0-9a-z]+' "$file" | sort -u
 
 # --- Repository -------------------------------------------------------------
 
