@@ -294,6 +294,7 @@ _: {
           PartOf = [ "graphical-session.target" ];
           StartLimitIntervalSec = 60;
           StartLimitBurst = 5;
+          X-Restart-Triggers = [ configDir ];
         };
         Service = {
           Restart = "on-failure";
