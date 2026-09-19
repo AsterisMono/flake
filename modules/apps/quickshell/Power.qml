@@ -8,7 +8,9 @@ Singleton {
 
   readonly property var device: UPower.displayDevice
   readonly property bool hasBattery: device !== null && device.ready && device.isLaptopBattery
-  readonly property real percent: power.hasBattery ? device.percentage : 0
+  // UPowerDevice.percentage is a 0-1 fraction (energy / energyCapacity), so it
+  // is scaled here: every consumer treats this value as 0-100.
+  readonly property real percent: power.hasBattery ? device.percentage * 100 : 0
 
   property bool awake: false
   property int awakeMinutes: 60
