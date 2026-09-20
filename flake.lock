@@ -102,6 +102,22 @@
         "type": "github"
       }
     },
+    "catppuccin-zed": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1789753643,
+        "narHash": "sha256-oR27ofTVtKOw14F9cr4dDhMmRj4L888woOQ9if+Wno4=",
+        "owner": "catppuccin",
+        "repo": "zed",
+        "rev": "4314cb05c74d141b7962290a41d6087e8c0ad02f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "zed",
+        "type": "github"
+      }
+    },
     "crane": {
       "locked": {
         "lastModified": 1781825982,
@@ -590,6 +606,7 @@
     },
     "root": {
       "inputs": {
+        "catppuccin-zed": "catppuccin-zed",
         "disko": "disko",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts",
@@ -607,8 +624,7 @@
         "sfd-nix": "sfd-nix",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
-        "systems": "systems_2",
-        "zed-glassy-nord": "zed-glassy-nord"
+        "systems": "systems_2"
       }
     },
     "rust-overlay": {
@@ -820,22 +836,6 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
-        "type": "github"
-      }
-    },
-    "zed-glassy-nord": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1749327740,
-        "narHash": "sha256-r5JeK82KIrWOfPDchLhYcPUECJyOkFg+kxTjRpI6T54=",
-        "owner": "matt-gilb",
-        "repo": "zed_glassy-nord",
-        "rev": "85a30524c022eb7a84852089a1b2c276c901234b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "matt-gilb",
-        "repo": "zed_glassy-nord",
         "type": "github"
       }
     }

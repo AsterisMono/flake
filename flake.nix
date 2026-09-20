@@ -4,6 +4,10 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
+    catppuccin-zed = {
+      url = "github:catppuccin/zed";
+      flake = false;
+    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -60,9 +64,5 @@
       };
     };
     systems.url = "github:nix-systems/default";
-    zed-glassy-nord = {
-      url = "github:matt-gilb/zed_glassy-nord";
-      flake = false;
-    };
   };
 }
