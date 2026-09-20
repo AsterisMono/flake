@@ -107,6 +107,13 @@
         })
         (builtins.fetchTree {
           type = "github";
+          owner = "jakubkrehel";
+          repo = "skills";
+          rev = "267330e1adfc66a718fb65fa6918c1f06d0a689e";
+          narHash = "sha256-N0ip9CCwXy1x7707waHQRlitoMT23Yu9NpCA4NFzXmA=";
+        })
+        (builtins.fetchTree {
+          type = "github";
           owner = "ayghri";
           repo = "i-have-adhd";
           rev = "b15d0be58f55b33972ba3e39709e0e5208ef30cb";
