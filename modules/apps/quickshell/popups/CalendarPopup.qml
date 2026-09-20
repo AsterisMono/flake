@@ -77,7 +77,7 @@ PopupFrame {
         width: popup.cellWidth
         horizontalAlignment: Text.AlignHCenter
         text: modelData
-        color: Theme.dim
+        color: Theme.muted
         font.family: Theme.mono
         font.pixelSize: Theme.fontTiny
       }

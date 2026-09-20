@@ -8,22 +8,22 @@ ScrollFrame {
 
   padding: Theme.panelPadding
 
-  readonly property color pressureColor: Health.pressureLevel === 2 ? Theme.red : Theme.amber
+  readonly property color pressureColor: Health.pressureLevel === 2 ? Theme.critical : Theme.attention
 
   readonly property var rows: {
     const result = [];
     const missing = Health.valid ? "" : "unavailable";
     if (Runtime.sensorDirectory !== "")
-      result.push({ "label": "CPU temperature", "value": missing !== "" ? missing : (Health.hasTemp ? Health.temperature.toFixed(1) + " °C" : "unavailable"), "color": missing === "" && Health.hasTemp ? Theme.text : Theme.dim });
-    result.push({ "label": "Memory", "value": missing !== "" ? missing : Health.formatGib(Health.memoryUsed) + " / " + Health.formatGib(Health.memoryTotal) + " GiB", "color": missing === "" ? Theme.text : Theme.dim });
-    result.push({ "label": "Swap", "value": missing !== "" ? missing : Health.formatGib(Health.swapUsed) + " / " + Health.formatGib(Health.swapTotal) + " GiB", "color": missing === "" ? Theme.text : Theme.dim });
-    result.push({ "label": "Zswap / swapped", "value": missing !== "" ? missing : Health.formatGib(Health.zswap) + " / " + Health.formatGib(Health.zswapped) + " GiB", "color": missing === "" ? Theme.text : Theme.dim });
-    result.push({ "label": "PSI some · 10 / 60 / 300 s", "value": missing !== "" ? missing : Health.psiSome10.toFixed(0) + " / " + Health.psiSome60.toFixed(0) + " / " + Health.psiSome300.toFixed(0) + "%", "color": missing === "" && Health.pressureLevel > 0 ? popup.pressureColor : (missing === "" ? Theme.text : Theme.dim) });
-    result.push({ "label": "PSI full · 10 / 60 / 300 s", "value": missing !== "" ? missing : Health.psiFull10.toFixed(0) + " / " + Health.psiFull60.toFixed(0) + " / " + Health.psiFull300.toFixed(0) + "%", "color": missing === "" && Health.pressureLevel > 0 ? popup.pressureColor : (missing === "" ? Theme.text : Theme.dim) });
-    result.push({ "label": "Network interface", "value": missing !== "" ? missing : (Health.netValid ? Health.iface : "unavailable"), "color": missing === "" && Health.netValid ? Theme.text : Theme.dim });
-    result.push({ "label": "Upload / download", "value": missing !== "" ? missing : Health.formatRate(Health.netUp) + " / " + Health.formatRate(Health.netDown), "color": missing === "" ? Theme.text : Theme.dim });
+      result.push({ "label": "CPU temperature", "value": missing !== "" ? missing : (Health.hasTemp ? Health.temperature.toFixed(1) + " °C" : "unavailable"), "color": missing === "" && Health.hasTemp ? Theme.text : Theme.muted });
+    result.push({ "label": "Memory", "value": missing !== "" ? missing : Health.formatGib(Health.memoryUsed) + " / " + Health.formatGib(Health.memoryTotal) + " GiB", "color": missing === "" ? Theme.text : Theme.muted });
+    result.push({ "label": "Swap", "value": missing !== "" ? missing : Health.formatGib(Health.swapUsed) + " / " + Health.formatGib(Health.swapTotal) + " GiB", "color": missing === "" ? Theme.text : Theme.muted });
+    result.push({ "label": "Zswap / swapped", "value": missing !== "" ? missing : Health.formatGib(Health.zswap) + " / " + Health.formatGib(Health.zswapped) + " GiB", "color": missing === "" ? Theme.text : Theme.muted });
+    result.push({ "label": "PSI some · 10 / 60 / 300 s", "value": missing !== "" ? missing : Health.psiSome10.toFixed(0) + " / " + Health.psiSome60.toFixed(0) + " / " + Health.psiSome300.toFixed(0) + "%", "color": missing === "" && Health.pressureLevel > 0 ? popup.pressureColor : (missing === "" ? Theme.text : Theme.muted) });
+    result.push({ "label": "PSI full · 10 / 60 / 300 s", "value": missing !== "" ? missing : Health.psiFull10.toFixed(0) + " / " + Health.psiFull60.toFixed(0) + " / " + Health.psiFull300.toFixed(0) + "%", "color": missing === "" && Health.pressureLevel > 0 ? popup.pressureColor : (missing === "" ? Theme.text : Theme.muted) });
+    result.push({ "label": "Network interface", "value": missing !== "" ? missing : (Health.netValid ? Health.iface : "unavailable"), "color": missing === "" && Health.netValid ? Theme.text : Theme.muted });
+    result.push({ "label": "Upload / download", "value": missing !== "" ? missing : Health.formatRate(Health.netUp) + " / " + Health.formatRate(Health.netDown), "color": missing === "" ? Theme.text : Theme.muted });
     if (missing === "" && Health.failedTotal > 0)
-      result.push({ "label": "Failed units · system / user", "value": Health.failedSystem + " / " + Health.failedUser, "color": Theme.red });
+      result.push({ "label": "Failed units · system / user", "value": Health.failedSystem + " / " + Health.failedUser, "color": Theme.critical });
     return result;
   }
 
@@ -69,7 +69,7 @@ ScrollFrame {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 1
-        color: Qt.rgba(76 / 255, 86 / 255, 106 / 255, 0.44)
+        color: Theme.separator
       }
     }
   }

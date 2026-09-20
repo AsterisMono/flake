@@ -44,7 +44,7 @@ Rectangle {
         Text {
           width: parent.width
           text: Qt.formatDateTime(clock.date, "dddd, MMM d")
-          color: Theme.dim
+          color: Theme.muted
           font.family: Theme.mono
           font.pixelSize: Theme.fontMicro
           font.letterSpacing: 1.2
@@ -87,7 +87,7 @@ Rectangle {
             IconButton {
               id: clearButton
               name: "trash"
-              iconColor: Notices.savedCount > 0 ? Theme.muted : Theme.dim
+              iconColor: Notices.savedCount > 0 ? Theme.muted : Theme.muted
               size: Theme.space5 + Theme.space1
               opacity: Notices.savedCount > 0 ? 1 : 0.5
               onClicked: {
@@ -145,7 +145,7 @@ Rectangle {
             Icon {
               anchors.horizontalCenter: parent.horizontalCenter
               name: "bell"
-              color: Theme.dim
+              color: Theme.muted
               size: Theme.iconLarge
             }
 

@@ -156,7 +156,7 @@ PanelWindow {
       onClicked: ShellState.toggle("health", bar.screen, Theme.centerX(healthButton))
 
       Waycat {
-        color: Health.pressureLevel === 2 ? Theme.red : Theme.muted
+        color: Health.pressureLevel === 2 ? Theme.critical : Theme.muted
         size: 19
       }
 
@@ -204,8 +204,8 @@ PanelWindow {
           visible: Health.failedTotal > 0
           name: "alert"
           value: Health.failedTotal
-          color: Theme.red
-          iconColor: Theme.red
+          color: Theme.critical
+          iconColor: Theme.critical
         }
       }
 
@@ -213,8 +213,8 @@ PanelWindow {
         visible: Health.pressureLevel > 0
         name: "alert"
         value: "PSI " + Math.round(Health.psiSome60) + "%"
-        color: Health.pressureLevel === 2 ? Theme.red : Theme.amber
-        iconColor: Health.pressureLevel === 2 ? Theme.red : Theme.amber
+        color: Health.pressureLevel === 2 ? Theme.critical : Theme.attention
+        iconColor: Health.pressureLevel === 2 ? Theme.critical : Theme.attention
       }
     }
 
@@ -330,7 +330,7 @@ PanelWindow {
       Icon {
         Layout.alignment: Qt.AlignVCenter
         name: Notices.dnd ? "bellOff" : "bell"
-        color: Notices.hasUnreadCritical ? Theme.amber : Theme.muted
+        color: Notices.hasUnreadCritical ? Theme.attention : Theme.muted
         size: Theme.iconSize
       }
 

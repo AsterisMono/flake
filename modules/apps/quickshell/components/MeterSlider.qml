@@ -34,7 +34,7 @@ Item {
     anchors.verticalCenter: parent.verticalCenter
     height: 3
     radius: 1
-    color: Theme.separator
+    color: Theme.track
 
     Rectangle {
       anchors.left: parent.left
@@ -51,6 +51,8 @@ Item {
     height: 9
     radius: 4.5
     color: Theme.text
+    border.width: 1
+    border.color: Theme.thumbBorder
     x: Math.max(0, Math.min(track.width - width, track.width * slider.ratio - width / 2))
     anchors.verticalCenter: parent.verticalCenter
   }

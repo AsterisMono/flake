@@ -26,7 +26,7 @@ PopupFrame {
       Text {
         width: 80
         text: modelData.label
-        color: Theme.dim
+        color: Theme.muted
         font.family: Theme.mono
         font.pixelSize: Theme.fontSmall
       }

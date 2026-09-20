@@ -54,6 +54,14 @@ The implementation details below are proposed ways of delivering these choices, 
 
 These are logical sizes, not physical pixels on the 27-inch 4K display. Validate at the actual output scales before freezing typography. Active tasks use a narrow accent rule and a quiet tonal change; ambient metrics stay secondary. Hover and keyboard focus reveal interactivity without making the resting bar busy.
 
+### Colours come from Stylix
+
+The table above records the prototype's own palette. The shell no longer carries those values: `Theme.qml` names the roles it renders and reads the primitives from the machine's base16 scheme, which reaches it as a generated `StylixPalette.qml`. `stylix.targets.quickshell` is what hands the palette over, and the shell keeps a Catppuccin Mocha fallback so that a machine built without Stylix still has a complete theme. Changing the scheme therefore changes the shell without a QML edit.
+
+Under Catppuccin Mocha that maps primary text to base05, secondary text to base04, accent to base0D, attention to base0A, critical to base08, and every glass backing to base00. base03 is deliberately unused: at 3.4:1 against an opaque base00 it is not a readable text colour, and every quiet string in this shell is still meant to be read, so secondary labels, headings and "unavailable" readings share base04 and hierarchy comes from size, weight and spacing.
+
+The alphas did not change with the scheme, and neither did their shortfall. Measured against the current wallpaper's brightest cloud, the occupied bar leaves primary text at 5.9:1 and secondary text at 3.8:1, while the empty bar leaves them at 3.4:1 and 2.2:1; a popup or banner at 0.40 over the brightest pixel anywhere leaves primary text at 2.2:1. Denser backings would meet the 4.5:1 target for normal text and hide the wallpaper the material exists to show, so the compromise stands as a deliberate one. These are calculated samples over the wallpaper rather than captures of the composited output, so a live measurement is still owed.
+
 Use restrained personal details already present, such as the small flag and a quiet cat silhouette. Continuous decorative cat animation is not required. The bar may show the NixOS version; the identity popup still holds the fuller machine and system details.
 
 ### Composition and limited space

@@ -47,7 +47,7 @@ Item {
     anchors.right: parent.right
     anchors.bottom: parent.bottom
     height: 2
-    color: control.attention ? Theme.amber : (control.active ? Theme.accent : "transparent")
+    color: control.attention ? Theme.attention : (control.active ? Theme.accent : "transparent")
   }
 
   RowLayout {

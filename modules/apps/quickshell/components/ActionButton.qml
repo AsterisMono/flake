@@ -22,9 +22,9 @@ Item {
   Rectangle {
     anchors.fill: parent
     radius: Theme.space1
-    color: control.selected ? Theme.selected : (mouse.pressed && control.enabled ? Qt.rgba(1, 1, 1, 0.18) : (control.hovered ? Qt.rgba(1, 1, 1, 0.13) : Qt.rgba(1, 1, 1, 0.08)))
+    color: control.selected ? Theme.selected : (mouse.pressed && control.enabled ? Theme.fillPressed : (control.hovered ? Theme.fillHover : Theme.fill))
     border.width: 1
-    border.color: control.selected || control.activeFocus ? Theme.accent : (control.hovered ? Qt.rgba(1, 1, 1, 0.28) : Qt.rgba(1, 1, 1, 0.18))
+    border.color: control.selected || control.activeFocus ? Theme.accent : (control.hovered ? Theme.borderHover : Theme.border)
 
     Behavior on color {
       ColorAnimation {

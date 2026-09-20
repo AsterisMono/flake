@@ -94,7 +94,7 @@ Item {
       visible: control.row.context !== ""
       width: parent.width
       text: control.row.context
-      color: Theme.dim
+      color: Theme.muted
       font.family: Theme.mono
       font.pixelSize: Theme.fontMicro
       elide: Text.ElideRight
@@ -104,7 +104,7 @@ Item {
       visible: control.row.timeText !== ""
       width: parent.width
       text: control.row.timeText
-      color: Theme.dim
+      color: Theme.muted
       font.family: Theme.mono
       font.pixelSize: Theme.fontMicro
       elide: Text.ElideRight

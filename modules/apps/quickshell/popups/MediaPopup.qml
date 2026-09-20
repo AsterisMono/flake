@@ -27,7 +27,7 @@ PopupFrame {
       anchors.verticalCenter: parent.verticalCenter
       width: 92
       height: 92
-      color: Theme.selected
+      color: Theme.fill
       border.width: 1
       border.color: Theme.edge
 
@@ -44,7 +44,7 @@ PopupFrame {
         anchors.centerIn: parent
         visible: !popup.player || popup.player.trackArtUrl === ""
         name: "music"
-        color: Theme.dim
+        color: Theme.muted
         size: Theme.iconDisplay
       }
     }
@@ -79,7 +79,7 @@ PopupFrame {
       Text {
         width: parent.width
         text: popup.player ? (popup.player.trackAlbum || "") : ""
-        color: Theme.dim
+        color: Theme.muted
         font.family: Theme.reading
         font.pixelSize: Theme.fontTiny
         elide: Text.ElideRight
@@ -116,7 +116,7 @@ PopupFrame {
     Text {
       Layout.fillWidth: true
       text: popup.player ? formatTime(popup.player.position) : "0:00"
-      color: Theme.dim
+      color: Theme.muted
       font.family: Theme.mono
       font.pixelSize: Theme.fontTiny
     }
@@ -125,7 +125,7 @@ PopupFrame {
       Layout.fillWidth: true
       horizontalAlignment: Text.AlignRight
       text: popup.player ? formatTime(popup.player.length) : "0:00"
-      color: Theme.dim
+      color: Theme.muted
       font.family: Theme.mono
       font.pixelSize: Theme.fontTiny
     }

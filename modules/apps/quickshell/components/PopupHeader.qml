@@ -27,7 +27,7 @@ Item {
     Text {
       visible: header.kicker !== ""
       text: header.kicker
-      color: Theme.dim
+      color: Theme.muted
       font.family: Theme.mono
       font.pixelSize: Theme.fontTiny
       font.letterSpacing: 1.2

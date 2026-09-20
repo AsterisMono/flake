@@ -39,7 +39,7 @@ PopupFrame {
   Text {
     width: parent.width
     text: "Power profile"
-    color: Theme.dim
+    color: Theme.muted
     font.family: Theme.mono
     font.pixelSize: Theme.fontTiny
     font.letterSpacing: 1.1
@@ -79,7 +79,7 @@ PopupFrame {
     width: parent.width
     visible: !Power.performanceAvailable
     text: "This machine does not offer a Performance profile."
-    color: Theme.dim
+    color: Theme.muted
     font.family: Theme.reading
     font.pixelSize: Theme.fontTiny
     wrapMode: Text.Wrap
@@ -89,7 +89,7 @@ PopupFrame {
     width: parent.width
     visible: Power.degradationReason !== PerformanceDegradationReason.None
     text: "Performance is currently reduced by the system."
-    color: Theme.amber
+    color: Theme.attention
     font.family: Theme.reading
     font.pixelSize: Theme.fontTiny
     wrapMode: Text.Wrap

@@ -213,6 +213,66 @@ _: {
 
       qmlList = values: "[${lib.concatMapStringsSep ", " qmlString values}]";
 
+      # Stylix owns the palette and the shell owns what each role means.
+      # `stylix.targets.quickshell` fills these slots; the shell names what they
+      # mean in Theme.qml, so a scheme change reaches the shell without editing
+      # QML.
+      base16Slots = [
+        "base00"
+        "base01"
+        "base02"
+        "base03"
+        "base04"
+        "base05"
+        "base06"
+        "base07"
+        "base08"
+        "base09"
+        "base0A"
+        "base0B"
+        "base0C"
+        "base0D"
+        "base0E"
+        "base0F"
+      ];
+
+      # The palette the shell falls back to when it is built without Stylix.
+      # Catppuccin Mocha, the scheme this workstation runs, so the shell is
+      # never left with a half-defined theme.
+      defaultPalette = {
+        base00 = "#1e1e2e";
+        base01 = "#313244";
+        base02 = "#45475a";
+        base03 = "#6c7086";
+        base04 = "#a6adc8";
+        base05 = "#cdd6f4";
+        base06 = "#f5e0dc";
+        base07 = "#b4befe";
+        base08 = "#f38ba8";
+        base09 = "#fab387";
+        base0A = "#f9e2af";
+        base0B = "#a6e3a1";
+        base0C = "#94e2d5";
+        base0D = "#89b4fa";
+        base0E = "#cba6f7";
+        base0F = "#f2cdcd";
+      };
+
+      paletteQml = pkgs.writeText "StylixPalette.qml" ''
+        pragma Singleton
+        import QtQuick
+        import Quickshell
+
+        // Generated from the base16 palette the shell was themed with.
+        // Primitives only: read these through Theme.qml, never directly from a
+        // component.
+        Singleton {
+        ${lib.concatMapStringsSep "\n" (
+          slot: "  readonly property color ${slot}: ${qmlString config.programs.quickshell.palette.${slot}}"
+        ) base16Slots}
+        }
+      '';
+
       # Herdr owns its socket; the shell only ever connects to it. The default
       # session lives beside herdr's configuration, and the endpoint stays
       # empty when herdr is not part of this machine, which keeps V1 quiet.
@@ -263,43 +323,58 @@ _: {
         cp -r ${./.}/. $out/
         rm -f $out/default.nix
         cp ${runtimeQml} $out/Runtime.qml
+        cp ${paletteQml} $out/StylixPalette.qml
       '';
     in
     {
-      programs.quickshell = {
-        enable = true;
-        package = pkgs.quickshell;
-        activeConfig = "desk";
-        configs.desk = configDir;
-        systemd = {
-          enable = true;
-          target = "graphical-session.target";
-        };
+      options.programs.quickshell.palette = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+        apply = palette: defaultPalette // palette;
+        description = ''
+          Base16 slots the shell renders from, as `#rrggbb` strings.
+          `stylix.targets.quickshell` sets the whole set from the machine's
+          scheme; slots left unset fall back to Catppuccin Mocha, so the shell
+          always has a complete palette.
+        '';
       };
 
-      # MPRIS player choice is kept stable across player restarts.
-      services.playerctld.enable = true;
-
-      # waycat supplies both the health-bar animation process and the
-      # "polycat" font its frames are drawn with. The shell consumes it, so it
-      # installs the package itself.
-      home.packages = [ pkgs.selfPackages.waycat ];
-
-      systemd.user.services.quickshell = {
-        Unit = {
-          ConditionEnvironment = [
-            "WAYLAND_DISPLAY"
-            "XDG_SESSION_DESKTOP=sway"
-          ];
-          PartOf = [ "graphical-session.target" ];
-          StartLimitIntervalSec = 60;
-          StartLimitBurst = 5;
-          X-Restart-Triggers = [ configDir ];
+      config = {
+        programs.quickshell = {
+          enable = true;
+          package = pkgs.quickshell;
+          activeConfig = "desk";
+          configs.desk = configDir;
+          systemd = {
+            enable = true;
+            target = "graphical-session.target";
+          };
         };
-        Service = {
-          Restart = "on-failure";
-          RestartSec = 2;
-          TimeoutStopSec = 5;
+
+        # MPRIS player choice is kept stable across player restarts.
+        services.playerctld.enable = true;
+
+        # waycat supplies both the health-bar animation process and the
+        # "polycat" font its frames are drawn with. The shell consumes it, so it
+        # installs the package itself.
+        home.packages = [ pkgs.selfPackages.waycat ];
+
+        systemd.user.services.quickshell = {
+          Unit = {
+            ConditionEnvironment = [
+              "WAYLAND_DISPLAY"
+              "XDG_SESSION_DESKTOP=sway"
+            ];
+            PartOf = [ "graphical-session.target" ];
+            StartLimitIntervalSec = 60;
+            StartLimitBurst = 5;
+            X-Restart-Triggers = [ configDir ];
+          };
+          Service = {
+            Restart = "on-failure";
+            RestartSec = 2;
+            TimeoutStopSec = 5;
+          };
         };
       };
     };

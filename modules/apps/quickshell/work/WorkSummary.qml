@@ -29,7 +29,7 @@ Singleton {
         "color": Theme.muted
       };
     case "incompatible":
-      return { "icon": "agentAttention", "text": "unsupported", "color": Theme.amber };
+      return { "icon": "agentAttention", "text": "unsupported", "color": Theme.attention };
     default:
       return { "icon": "agentIdle", "text": "connecting", "color": Theme.muted };
     }
@@ -42,7 +42,7 @@ Singleton {
     if (WorkInFlight.idleCount > 0)
       list.push({ "icon": "agentIdle", "text": compact ? String(WorkInFlight.idleCount) : WorkInFlight.idleCount + " idle", "color": Theme.muted });
     if (summary.waitingCount > 0)
-      list.push({ "icon": "agentAttention", "text": compact ? String(summary.waitingCount) : summary.waitingCount + " " + summary.waitingWord, "color": Theme.amber });
+      list.push({ "icon": "agentAttention", "text": compact ? String(summary.waitingCount) : summary.waitingCount + " " + summary.waitingWord, "color": Theme.attention });
     if (list.length === 0)
       list.push(summary.quietPart);
     return list;

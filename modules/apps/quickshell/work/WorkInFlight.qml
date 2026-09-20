@@ -141,7 +141,7 @@ Singleton {
   function agentRow(agent, group) {
     let stateLabel = "Idle";
     let stateIcon = "";
-    let stateColor = Theme.dim;
+    let stateColor = Theme.muted;
     let note = "";
     if (agent.state === "working") {
       stateLabel = "Working";
@@ -150,7 +150,7 @@ Singleton {
     } else if (agent.state === "blocked") {
       stateLabel = "Needs you";
       stateIcon = "blocked";
-      stateColor = Theme.amber;
+      stateColor = Theme.attention;
       note = "Herdr reports blocked; input may be needed.";
     } else if (agent.state === "done") {
       stateLabel = "Ready to review";
@@ -159,7 +159,7 @@ Singleton {
       note = "Herdr reports done. Ready for your review.";
     } else if (agent.state === "unknown") {
       stateLabel = "State unavailable";
-      stateColor = Theme.dim;
+      stateColor = Theme.muted;
       note = "Herdr cannot classify this agent right now.";
     }
 

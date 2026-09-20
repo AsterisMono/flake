@@ -69,7 +69,7 @@ PanelWindow {
           Layout.fillWidth: true
           horizontalAlignment: Text.AlignHCenter
           text: modelData.name
-          color: modelData.urgent ? Theme.amber : (modelData.focused ? Theme.text : Theme.muted)
+          color: modelData.urgent ? Theme.attention : (modelData.focused ? Theme.text : Theme.muted)
           font.family: Theme.mono
           font.pixelSize: Theme.fontBody
           elide: Text.ElideRight
@@ -137,7 +137,7 @@ PanelWindow {
           Text {
             Layout.fillWidth: true
             text: modelData.title
-            color: modelData.urgent ? Theme.amber : (modelData.focused ? Theme.text : Theme.muted)
+            color: modelData.urgent ? Theme.attention : (modelData.focused ? Theme.text : Theme.muted)
             font.family: Theme.mono
             font.pixelSize: Theme.fontBody
             elide: Text.ElideRight

@@ -85,7 +85,7 @@ ScrollFrame {
       Icon {
         Layout.alignment: Qt.AlignVCenter
         name: "blocked"
-        color: WorkInFlight.sourceState === "incompatible" ? Theme.amber : Theme.dim
+        color: WorkInFlight.sourceState === "incompatible" ? Theme.attention : Theme.muted
         size: 13
       }
 
@@ -93,7 +93,7 @@ ScrollFrame {
         Layout.fillWidth: true
         Layout.alignment: Qt.AlignVCenter
         text: WorkInFlight.sourceLine
-        color: WorkInFlight.sourceState === "incompatible" ? Theme.amber : Theme.muted
+        color: WorkInFlight.sourceState === "incompatible" ? Theme.attention : Theme.muted
         font.family: Theme.reading
         font.pixelSize: Theme.fontSmall
         wrapMode: Text.Wrap
@@ -132,7 +132,7 @@ ScrollFrame {
             anchors.leftMargin: Theme.panelPadding
             anchors.rightMargin: Theme.panelPadding
             text: sectionItem.section.title + " · " + sectionItem.section.rows.length
-            color: Theme.dim
+            color: Theme.muted
             font.family: Theme.mono
             font.pixelSize: Theme.fontTiny
           }
@@ -178,7 +178,7 @@ ScrollFrame {
       Text {
         width: parent.width
         text: WorkInFlight.sourceLine
-        color: Theme.dim
+        color: Theme.muted
         font.family: Theme.mono
         font.pixelSize: Theme.fontMicro
         wrapMode: Text.Wrap

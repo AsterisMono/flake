@@ -38,7 +38,7 @@ Item {
     anchors.top: parent.top
     anchors.bottom: parent.bottom
     width: 2
-    color: Theme.red
+    color: Theme.critical
   }
 
   Rectangle {
@@ -98,7 +98,7 @@ Item {
         anchors.rightMargin: Theme.space2
         anchors.verticalCenter: parent.verticalCenter
         text: Notices.relativeTime(card.record.timeMs)
-        color: Theme.dim
+        color: Theme.muted
         font.family: Theme.mono
         font.pixelSize: Theme.fontTiny
       }
@@ -186,7 +186,7 @@ Item {
       visible: card.banner && card.record.transient
       width: parent.width
       text: "Transient · not saved to history"
-      color: Theme.dim
+      color: Theme.muted
       font.family: Theme.reading
       font.pixelSize: Theme.fontMicro
       wrapMode: Text.Wrap

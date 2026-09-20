@@ -84,10 +84,10 @@ in
       stylix = {
         enable = true;
         image = pkgs.fetchurl {
-          url = "https://r2.requiem.garden/sky.jpg";
-          hash = "sha256-8sDqpawyJB2Dj/2L6va039hjtXk4t+Zs7zhHNeHPHG8=";
+          url = "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/pink-clouds.jpg";
+          hash = "sha256-RDtuIgJE3gEzdzHh/pXZi1LcNFgSw1WfTH3ALe6/plI=";
         };
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
         polarity = "dark";
         cursor = {
           name = "macOS";
@@ -136,10 +136,38 @@ in
       };
     };
 
-  flake.modules.homeManager.stylix = {
-    stylix.targets = {
-      firefox.enable = false;
-      zed.enable = false;
+  flake.modules.homeManager.stylix =
+    {
+      config,
+      lib,
+      options,
+      ...
+    }:
+    let
+      # `colors.withHashtag` carries derived keys (`base00-hex`, `base00-dec-r`)
+      # and slots beyond the sixteen, so the shell's palette is taken by name
+      # rather than by copying the whole set.
+      base16Slots = lib.filterAttrs (
+        name: _: builtins.match "base0[0-9A-F]" name != null
+      ) config.lib.stylix.colors.withHashtag;
+    in
+    {
+      # Quickshell draws its own surfaces, so this target has nothing of its own
+      # to write: the shell renders from the base16 primitives and Theme.qml
+      # names the roles. The target hands the palette over, and the shell keeps
+      # its own default so that disabling the target leaves a complete theme.
+      options.stylix.targets.quickshell.enable = config.lib.stylix.mkEnableTarget "Quickshell" true;
+
+      config = {
+        stylix.targets = {
+          firefox.enable = false;
+          zed.enable = false;
+        };
+      }
+      // lib.optionalAttrs (options.programs ? quickshell) {
+        programs.quickshell.palette = lib.mkIf (
+          config.stylix.enable && config.stylix.targets.quickshell.enable
+        ) base16Slots;
+      };
     };
-  };
 }

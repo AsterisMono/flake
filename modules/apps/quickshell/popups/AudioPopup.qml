@@ -22,7 +22,7 @@ PopupFrame {
     Icon {
       Layout.alignment: Qt.AlignVCenter
       name: Audio.muted ? "muted" : "volume"
-      color: Audio.muted ? Theme.dim : Theme.muted
+      color: Audio.muted ? Theme.muted : Theme.muted
       size: Theme.iconMedium
     }
 
@@ -55,7 +55,7 @@ PopupFrame {
   Text {
     width: parent.width
     text: "Click for controls · middle-click mutes · scroll changes by 1%"
-    color: Theme.dim
+    color: Theme.muted
     font.family: Theme.reading
     font.pixelSize: Theme.fontTiny
     wrapMode: Text.Wrap
@@ -64,7 +64,7 @@ PopupFrame {
   Text {
     width: parent.width
     text: "Output device"
-    color: Theme.dim
+    color: Theme.muted
     font.family: Theme.mono
     font.pixelSize: Theme.fontTiny
     font.letterSpacing: 1.1
