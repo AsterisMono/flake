@@ -122,6 +122,40 @@ _: {
             background-image: none !important;
           }
 
+          /* Glass chrome without seams: the bars, the sidebar and the page are
+           * meant to read as one pane, so neither the toolbox nor the splitter
+           * draws a hairline between them.
+           *
+           * The contrast modes keep Firefox's own separators, which is where
+           * the edges of that pane are worth seeing. */
+          @media (forced-colors: none) and (prefers-contrast: no-preference) {
+            /* The splitter is the sidebar's drag handle, and the pixel of
+             * backdrop it used to show was the hairline beside the sidebar. It
+             * now carries the bars' own tint, so the sidebar and the page meet
+             * inside the same glass. */
+            #sidebar-splitter {
+              width: 1px !important;
+              background-color: color-mix(in srgb, var(--toolbar-background-color, #313244) 72%, transparent) !important;
+              border: none !important;
+            }
+
+            /* Both surfaces draw an edge of their own — the content area an
+             * outline on all four sides, the sidebar a rounded card with a
+             * shadow — and each lands on the seam as a second line. Split-view
+             * panes keep theirs, where the outline marks the active pane. */
+            #sidebar,
+            #tabbrowser-tabpanels > :not(.split-view-panel) .browserContainer {
+              outline: none !important;
+              box-shadow: none !important;
+            }
+
+            /* Firefox separates the toolbox from the page with a painted
+             * hairline, which the bars do not want. */
+            #navigator-toolbox {
+              border-bottom: none !important;
+            }
+          }
+
           /* In the revamped sidebar the panel is hosted by a small chrome
            * document of its own, whose surfaces are not reachable from the
            * window's stylesheet. */
