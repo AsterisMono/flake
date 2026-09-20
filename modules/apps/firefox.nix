@@ -149,6 +149,14 @@ _: {
               box-shadow: none !important;
             }
 
+            /* The content area backs every page with an opaque colour, which
+             * would make the pages that paint no background of their own — the
+             * new tab page above all — a plate inside the glass. It takes the
+             * bars' tint, so those pages sit on the same material. */
+            .browserContainer {
+              background-color: color-mix(in srgb, var(--toolbar-background-color, #313244) 72%, transparent) !important;
+            }
+
             /* Firefox separates the toolbox from the page with a painted
              * hairline, which the bars do not want. */
             #navigator-toolbox {
@@ -243,6 +251,16 @@ _: {
             #root .CtxMenu .box,
             #root .CtxMenu .sub-menu {
               background-color: var(--popup-bg) !important;
+            }
+          }
+
+          /* The new tab page paints a flat backdrop of its own over the whole
+           * content area, which is what made it a plate rather than the same
+           * glass as the chrome. It has no background of its own to lose. */
+          @-moz-document url-prefix("about:newtab"), url-prefix("about:home"), url-prefix("about:blank") {
+            html,
+            body {
+              background-color: transparent !important;
             }
           }
         '';
