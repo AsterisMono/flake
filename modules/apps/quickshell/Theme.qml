@@ -44,13 +44,15 @@ Singleton {
   // backing. One showing bare wallpaper is the only place the frosted material
   // is seen unobstructed, and backs off to 0.50 for the airy look.
   //
-  // Re-measured against the current wallpaper's brightest cloud, the occupied
-  // bar leaves base05 at 5.9:1 and base04 at 3.8:1; the empty bar leaves them
-  // at 3.4:1 and 2.2:1. Primary text therefore meets 4.5:1 except on an empty
-  // bar, and secondary text only where the wallpaper is darker than its
-  // brightest cloud. A backing dense enough to clear both would hide the
-  // wallpaper the material exists to show, so the shortfall is deliberate and
-  // still wants a capture on the real output rather than a calculated sample.
+  // Measured against the brightest region of each bar's own band on the
+  // current wallpaper, the occupied bar leaves base05 at 7.3:1 and base04 at
+  // 4.7:1, and the empty bar leaves them at 4.9:1 and 3.2:1, so primary text
+  // clears 4.5:1 on both bars in both states. Secondary text still falls short
+  // on the empty bar, and a popup or banner at 0.40 over the brightest pixel
+  // anywhere leaves primary text at 2.2:1. A backing dense enough to clear
+  // those too would hide the wallpaper the material exists to show, so the
+  // shortfall is deliberate and still wants a capture on the real output
+  // rather than a calculated sample.
   readonly property real barOpacity: 0.72
   readonly property real barEmptyOpacity: 0.50
 

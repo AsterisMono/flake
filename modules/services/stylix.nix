@@ -84,8 +84,8 @@ in
       stylix = {
         enable = true;
         image = pkgs.fetchurl {
-          url = "https://raw.githubusercontent.com/orangci/walls-catppuccin-mocha/master/pink-clouds.jpg";
-          hash = "sha256-RDtuIgJE3gEzdzHh/pXZi1LcNFgSw1WfTH3ALe6/plI=";
+          url = "https://r2.requiem.garden/yanhao-fang-s20ggpkor58-unsplash.jpg";
+          hash = "sha256-8AcfgbsdVHbEQ6s+UJgZrCPvAYQD6y84L25jZQ+9AeM=";
         };
         base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
         polarity = "dark";
