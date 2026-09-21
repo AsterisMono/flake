@@ -12,6 +12,9 @@
       netbird
       mira-agent
       honcho
+
+      # Headless login
+      nvirellia
     ];
     diskoConfig = inputs.self.diskoConfigurations.workstation-legacy;
 
