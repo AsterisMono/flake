@@ -39,6 +39,26 @@ Scope {
     readonly property int availableWidth: host.screen ? host.screen.width : 1920
     readonly property int availableHeight: host.screen ? host.screen.height : 1080
     readonly property int maxContentHeight: Math.max(160, host.availableHeight - Theme.barHeight * 2 - Theme.space4)
+    readonly property int barInset: Theme.barHeight + Theme.space1
+    // Every popup keeps the same inset from the output's edge. SwayFX samples
+    // its layer blur past the surface's border, so a surface that sits flush
+    // against the screen edge keeps a faint bright band along that edge.
+    readonly property int insetX: Math.max(
+      Theme.space2,
+      Math.min(
+        ShellState.anchorX - host.implicitWidth / 2,
+        host.availableWidth - host.implicitWidth - Theme.space2
+      )
+    )
+    // The popup's own rectangle on its output. The OSD yields to a popup it
+    // would overlap, so the frame is stated once, here, where both the anchors
+    // and the height the loaded popup asked for are known.
+    readonly property rect frame: Qt.rect(
+      host.insetX,
+      ShellState.bottom ? host.availableHeight - host.barInset - host.implicitHeight : host.barInset,
+      host.implicitWidth,
+      host.implicitHeight
+    )
 
     visible: ShellState.open
     screen: ShellState.screen
@@ -52,18 +72,9 @@ Scope {
     anchors.bottom: ShellState.open && ShellState.bottom
     anchors.left: ShellState.open
 
-    margins.top: Theme.barHeight + Theme.space1
-    margins.bottom: Theme.barHeight + Theme.space1
-    // Every popup keeps the same inset from the output's edge. SwayFX samples
-    // its layer blur past the surface's border, so a surface that sits flush
-    // against the screen edge keeps a faint bright band along that edge.
-    margins.left: Math.max(
-      Theme.space2,
-      Math.min(
-        ShellState.anchorX - host.implicitWidth / 2,
-        host.availableWidth - host.implicitWidth - Theme.space2
-      )
-    )
+    margins.top: host.barInset
+    margins.bottom: host.barInset
+    margins.left: host.insetX
 
     implicitWidth: Math.min(ShellState.popupWidth, host.availableWidth - Theme.space4)
     implicitHeight: Math.min(loader.item ? loader.item.implicitHeight : 0, host.maxContentHeight)
@@ -101,5 +112,13 @@ Scope {
       if (visible)
         scope.forceActiveFocus();
     }
+  }
+
+  // ShellState is where the OSD looks for the popup's frame, and this is the
+  // one place that frame is known.
+  Binding {
+    target: ShellState
+    property: "frame"
+    value: ShellState.open ? host.frame : Qt.rect(0, 0, 0, 0)
   }
 }

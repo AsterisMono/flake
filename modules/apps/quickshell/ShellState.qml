@@ -11,6 +11,12 @@ Singleton {
   property var screen: null
   property real anchorX: 0
 
+  // The open popup's own rectangle on its output, in output-local coordinates,
+  // published by PopupHost. The OSD is the only other transient surface the
+  // shell puts on an output, and it yields to a popup it would overlap; this is
+  // the one place that geometry exists.
+  property rect frame: Qt.rect(0, 0, 0, 0)
+
   readonly property bool open: kind !== ""
   readonly property bool bottom: kind === "windows" || kind === "work"
   readonly property int popupWidth: kind === "work" ? 400 : kind === "notifications" ? Theme.noticePanelWidth : Theme.popupWidth

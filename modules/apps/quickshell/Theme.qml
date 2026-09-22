@@ -11,6 +11,10 @@ Singleton {
   // Banner column: the prototype's 360 at 13 px padding, kept narrow enough to
   // stay clear of the notification panel.
   readonly property int bannerWidth: 360
+  // The OSD is one fixed width: the gauge keeps a single physical scale, and
+  // the plate never changes size between "Muted", "Brightness" and a three
+  // digit reading.
+  readonly property int osdWidth: 288
   readonly property int radius: 3
 
   // Roles, not values. The primitives come from Stylix through the generated StylixPalette singleton, so
@@ -60,6 +64,17 @@ Singleton {
     const alpha = occupied ? theme.barOpacity : theme.barEmptyOpacity;
     return withAlpha(StylixPalette.base00, alpha);
   }
+
+  // The one surface that does not take the 40% material. A popup is anchored
+  // under its bar control and read at leisure; the OSD lands on whatever the
+  // user is working in, at the bottom centre of an arbitrary window, and is
+  // gone 1.2 s after the last change, so it is read once and in passing.
+  // Composited over white at 85%, this scheme keeps primary text at 7.1:1 and
+  // secondary text at 4.6:1, which is the pair the card actually relies on.
+  // Like every number above, that is arithmetic over the palette rather than a
+  // reading of a real output: the honest check is a capture with the card over
+  // a white document.
+  readonly property color osdGlass: withAlpha(StylixPalette.base00, 0.85)
 
   // Neutral overlays are the scheme's lightest text colour at low alpha rather
   // than white, so they carry the palette's tint and follow a polarity change.

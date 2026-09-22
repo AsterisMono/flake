@@ -62,7 +62,7 @@ PopupFrame {
 
     Text {
       Layout.alignment: Qt.AlignVCenter
-      text: Math.round(Brightness.percent) + "%"
+      text: Math.round(Brightness.shownPercent) + "%"
       color: Theme.text
       font.family: Theme.mono
       font.pixelSize: Theme.fontBody
@@ -74,7 +74,7 @@ PopupFrame {
     visible: Brightness.available
     from: 0
     to: 100
-    value: Brightness.percent
+    value: Brightness.shownPercent
     live: true
     onMoved: Brightness.setPercent(value)
   }

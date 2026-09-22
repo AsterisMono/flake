@@ -198,6 +198,12 @@ _: {
           layer_effects "quickshell-banner" {
             blur enable
           }
+          # The OSD is the other small transient surface: the same blur behind
+          # the shell's denser card material. It carries no shadow, because
+          # unlike a popup it has no panel to be lifted away from.
+          layer_effects "quickshell-osd" {
+            blur enable
+          }
           default_dim_inactive 0.1
           for_window [app_id="com.gabm.satty"] floating enable
           exec uwsm finalize

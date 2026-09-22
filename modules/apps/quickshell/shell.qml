@@ -17,4 +17,5 @@ ShellRoot {
 
   PopupHost {}
   BannerHost {}
+  OsdHost {}
 }
