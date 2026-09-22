@@ -138,7 +138,7 @@ _: {
                 "${modifier}+c" = "kill";
                 "${modifier}+space" = "exec ${menu}";
                 "${modifier}+Alt+Space" = "focus mode_toggle";
-                "${modifier}+Escape" = "exec swaylock";
+                "${modifier}+Escape" = "exec ${lib.getExe config.programs.swaylock.package}";
                 "${modifier}+Shift+e" = "exec ${lib.getExe confirmLogout}";
                 "${modifier}+Shift+s" = "exec grimshot copy anything";
                 "${modifier}+Shift+a" = "exec ${lib.getExe annotateScreenshot}";
@@ -204,7 +204,70 @@ _: {
         '';
       };
 
-      programs.swaylock.enable = true;
+      # Keep Stylix's wallpaper and palette. The clock sits directly on the
+      # upper-left of the wallpaper, with a small underline for input feedback.
+      stylix.targets.swaylock.colors.enable = false;
+      programs.swaylock = {
+        enable = true;
+        package = pkgs.selfPackages.swaylock-effects;
+        settings =
+          let
+            colors = config.lib.stylix.colors;
+            transparent = "00000000";
+          in
+          {
+            clock = true;
+            timestr = "%H:%M";
+            datestr = "%A, %B %d";
+            font = config.stylix.fonts.sansSerif.name;
+            indicator = true;
+            indicator-radius = 120;
+            indicator-thickness = 3;
+            # The native position options refer to the indicator's centre.
+            # These offsets put the clock's ink about 64 logical pixels in.
+            indicator-x-position = 184;
+            indicator-y-position = 187;
+            indicator-caps-lock = true;
+
+            effect-blur = "7x3";
+            effect-vignette = "0.55:0.35";
+            color = colors.base00;
+            inside-color = transparent;
+            inside-clear-color = transparent;
+            inside-caps-lock-color = transparent;
+            inside-ver-color = transparent;
+            inside-wrong-color = transparent;
+
+            ring-color = transparent;
+            ring-clear-color = colors.base04;
+            ring-caps-lock-color = colors.base0A;
+            ring-ver-color = colors.base0B;
+            ring-wrong-color = colors.base08;
+            key-hl-color = colors.base0D;
+            bs-hl-color = colors.base0E;
+            caps-lock-key-hl-color = colors.base0A;
+            caps-lock-bs-hl-color = colors.base0E;
+
+            line-color = transparent;
+            line-clear-color = transparent;
+            line-caps-lock-color = transparent;
+            line-ver-color = transparent;
+            line-wrong-color = transparent;
+            separator-color = transparent;
+
+            text-color = colors.base05;
+            text-clear-color = colors.base04;
+            text-caps-lock-color = colors.base0A;
+            text-ver-color = colors.base0B;
+            text-wrong-color = colors.base08;
+            text-clear = "Cleared";
+            text-ver = "Verifying";
+            text-wrong = "Try again";
+            layout-bg-color = "${colors.base00}d9";
+            layout-border-color = transparent;
+            layout-text-color = colors.base05;
+          };
+      };
 
       programs.gpg.enable = true;
 

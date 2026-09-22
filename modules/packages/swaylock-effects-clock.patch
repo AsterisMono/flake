@@ -1,0 +1,77 @@
+--- a/render.c
++++ b/render.c
+@@ -327,17 +327,14 @@
+ 			}
+ 		} else if (text_l1 && text_l2) {
+ 			cairo_text_extents_t extents_l1, extents_l2;
+-			cairo_font_extents_t fe_l1, fe_l2;
+ 			double x_l1, y_l1, x_l2, y_l2;
+ 
+-			/* Top */
++			/* Large clock, scaled with the output independently of status text. */
++			cairo_set_font_size(cairo, arc_radius * 0.8);
+ 
+ 			cairo_text_extents(cairo, text_l1, &extents_l1);
+-			cairo_font_extents(cairo, &fe_l1);
+-			x_l1 = (buffer_width / 2) -
+-				(extents_l1.width / 2 + extents_l1.x_bearing);
+-			y_l1 = (buffer_diameter / 2) +
+-				(fe_l1.height / 2 - fe_l1.descent) - arc_radius / 10.0f;
++			x_l1 = (buffer_width / 2) - arc_radius - extents_l1.x_bearing;
++			y_l1 = -extents_l1.y_bearing;
+ 
+ 			cairo_move_to(cairo, x_l1, y_l1);
+ 			cairo_show_text(cairo, text_l1);
+@@ -348,29 +345,41 @@
+ 
+ 			cairo_set_font_size(cairo, arc_radius / 6.0f);
+ 			cairo_text_extents(cairo, text_l2, &extents_l2);
+-			cairo_font_extents(cairo, &fe_l2);
+-			x_l2 = (buffer_width / 2) -
+-				(extents_l2.width / 2 + extents_l2.x_bearing);
+-			y_l2 = (buffer_diameter / 2) +
+-				(fe_l2.height / 2 - fe_l2.descent) + arc_radius / 3.5f;
++			x_l2 = (buffer_width / 2) - arc_radius - extents_l2.x_bearing;
++			y_l2 = extents_l1.height + 18 * surface->scale - extents_l2.y_bearing;
+ 
+ 			cairo_move_to(cairo, x_l2, y_l2);
+ 			cairo_show_text(cairo, text_l2);
+ 			cairo_close_path(cairo);
+ 			cairo_new_sub_path(cairo);
+ 
+-			if (new_width < extents_l1.width)
+-				new_width = extents_l1.width;
+-			if (new_width < extents_l2.width)
+-				new_width = extents_l2.width;
++			/* A short underline gives input feedback without crossing the clock. */
++			if (state->auth_state == AUTH_STATE_INPUT ||
++					state->auth_state == AUTH_STATE_BACKSPACE) {
++				cairo_set_source_u32(cairo, state->auth_state == AUTH_STATE_INPUT
++					? state->args.colors.key_highlight : state->args.colors.bs_highlight);
++				cairo_set_line_width(cairo, arc_thickness);
++				double x = buffer_width / 2 - arc_radius;
++				double y = y_l2 + extents_l2.y_bearing + extents_l2.height
++					+ 16 * surface->scale;
++				cairo_move_to(cairo, x, y);
++				cairo_line_to(cairo, x + 32 * surface->scale, y);
++				cairo_stroke(cairo);
++			}
++
++			/* Left-aligned text may extend past the original circle's right edge. */
++			if (new_width < 2 * extents_l1.width)
++				new_width = 2 * extents_l1.width;
++			if (new_width < 2 * extents_l2.width)
++				new_width = 2 * extents_l2.width;
+ 
+ 
+ 			cairo_set_font_size(cairo, font_size);
+ 		}
+ 
+ 		// Typing indicator: Highlight random part on keypress
+-		if (state->auth_state == AUTH_STATE_INPUT
+-				|| state->auth_state == AUTH_STATE_BACKSPACE) {
++		if (!state->args.clock && (state->auth_state == AUTH_STATE_INPUT
++				|| state->auth_state == AUTH_STATE_BACKSPACE)) {
+ 
+ 			static double highlight_start = 0;
+ 			if (state->indicator_dirty) {
