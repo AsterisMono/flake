@@ -5,6 +5,7 @@ import Quickshell.Services.SystemTray
 import Quickshell.Wayland
 import qs
 import qs.components
+import qs.work
 
 PanelWindow {
   id: bar
@@ -42,9 +43,14 @@ PanelWindow {
   }
 
   // Attached to a long-lived bar surface so closing a popup cannot end it.
+  // Herdr's working, blocked and unseen done agents keep automatic lock and
+  // sleep paused. Stale snapshots and fixture data must not keep us awake.
   IdleInhibitor {
     window: bar
-    enabled: Power.awakeActive
+    enabled: Power.awakeActive || (
+      !WorkInFlight.fixture && WorkInFlight.fresh && WorkInFlight.hasSnapshot
+      && (WorkInFlight.workingCount > 0 || WorkInFlight.needsYouCount > 0 || WorkInFlight.readyCount > 0)
+    )
   }
 
   SystemClock {
