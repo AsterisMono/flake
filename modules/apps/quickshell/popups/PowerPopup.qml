@@ -36,6 +36,59 @@ PopupFrame {
     }
   }
 
+  // The display backlight lives here rather than in the bar: it is one more
+  // machine control, and the bar already carries a reading for every other
+  // device it shows.
+  RowLayout {
+    width: parent.width
+    visible: Brightness.available
+    spacing: Theme.space2
+
+    Text {
+      Layout.fillWidth: true
+      text: "Brightness"
+      color: Theme.muted
+      font.family: Theme.mono
+      font.pixelSize: Theme.fontTiny
+      font.letterSpacing: 1.1
+    }
+
+    Icon {
+      Layout.alignment: Qt.AlignVCenter
+      name: Brightness.indicatorIcon
+      color: Theme.muted
+      size: Theme.iconSize
+    }
+
+    Text {
+      Layout.alignment: Qt.AlignVCenter
+      text: Math.round(Brightness.percent) + "%"
+      color: Theme.text
+      font.family: Theme.mono
+      font.pixelSize: Theme.fontBody
+    }
+  }
+
+  MeterSlider {
+    width: parent.width
+    visible: Brightness.available
+    from: 0
+    to: 100
+    value: Brightness.percent
+    live: true
+    onMoved: Brightness.setPercent(value)
+  }
+
+  Text {
+    width: parent.width
+    visible: Brightness.failed
+    text: "The backlight did not accept that change; the reading above is what the machine reports."
+    color: Theme.attention
+    font.family: Theme.reading
+    font.pixelSize: Theme.fontTiny
+    wrapMode: Text.Wrap
+  }
+
   Text {
     width: parent.width
     text: "Power profile"

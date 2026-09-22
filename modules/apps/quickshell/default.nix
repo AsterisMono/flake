@@ -280,6 +280,7 @@ _: {
         if (config.programs.herdr.enable or false) then "${config.xdg.configHome}/herdr/herdr.sock" else "";
 
       swayPackage = config.wayland.windowManager.sway.package;
+      brightnessctl = lib.getExe pkgs.brightnessctl;
       kitty = lib.getExe pkgs.kitty;
       btop = lib.getExe pkgs.btop;
       waycat = lib.getExe pkgs.selfPackages.waycat;
@@ -303,6 +304,7 @@ _: {
             qmlString (if herdrEndpoint == "" then "" else lib.getExe herdrHostScript)
           };
           readonly property string pavucontrol: ${qmlString (lib.getExe pkgs.pavucontrol)};
+          readonly property string brightnessctl: ${qmlString brightnessctl};
           readonly property string waycat: ${qmlString waycat};
           readonly property var btopCommand: ${
             qmlList [

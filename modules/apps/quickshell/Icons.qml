@@ -20,6 +20,11 @@ Singleton {
     "muted": "󰝟",
     "volumeHdmi": "󰽟",
     "mutedHdmi": "󰽠",
+    // Material's brightness_4, brightness_5 and brightness_7: one step per
+    // level, so the reading has a shape as well as a number.
+    "brightnessLow": "󰃝",
+    "brightnessMedium": "󰃞",
+    "brightnessHigh": "󰃠",
     "battery": "󰁹",
     "batteryCharging": "󰂄",
     // Plug glyph (U+F1E6), also used for the balanced power profile.

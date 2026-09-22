@@ -95,6 +95,8 @@ On narrower outputs, shorten identity/date/media first, then collapse secondary 
 
 The Battery popup owns charge/time details, available power profiles, and Keep awake. On a desktop without a battery, expose the same controls through a compact Power entry rather than hiding idle inhibition. Show unavailable/degraded profile states honestly.
 
+The display backlight joins this popup as a slider rather than taking its own bar entry, added after V1: the top bar already carries one reading per device, and brightness is something adjusted rather than watched. The slider and the compositor's brightness keys read and write the same brightnessctl device, the slider is absent on a machine with no backlight, and a change the backlight rejects falls back to the reading the machine reports.
+
 Keep awake offers 30 minutes, 1 hour, and explicitly “Until turned off”; default to a bounded hour. Display the remaining time in the popup and a small persistent indicator in the bar. Explain that it temporarily prevents automatic idle behavior, not that it disables all locking.
 
 Attach the live inhibitor to a long-lived bar surface, not the popup: closing the popup must not end it. Use a deadline that is rechecked after suspend/resume and output changes. Cold shell restart resets inhibition off; do not silently persist “forever.” Verify actual compositor behavior before deciding whether one inhibitor or one per visible output is needed. Quickshell's [IdleInhibitor](https://quickshell.org/docs/v0.3.0/types/Quickshell.Wayland/IdleInhibitor/) is surface-associated, so fullscreen/visibility behavior is an implementation gate.
