@@ -219,7 +219,9 @@ _: {
             clock = true;
             timestr = "%H:%M";
             datestr = "%A, %B %d";
-            font = config.stylix.fonts.sansSerif.name;
+            # Cairo's toy text API does not fall back for missing glyphs.
+            # This face, installed by the fonts aspect, covers Latin and CJK.
+            font = "Noto Sans CJK SC";
             indicator = true;
             indicator-radius = 120;
             indicator-thickness = 3;
@@ -241,7 +243,7 @@ _: {
             ring-color = transparent;
             ring-clear-color = colors.base04;
             ring-caps-lock-color = colors.base0A;
-            ring-ver-color = colors.base0B;
+            ring-ver-color = transparent;
             ring-wrong-color = colors.base08;
             key-hl-color = colors.base0D;
             bs-hl-color = colors.base0E;
