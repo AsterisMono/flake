@@ -153,7 +153,7 @@
       ++ (with llmAgents; [
         codex
         cursor-agent
-        opencode
+        opencode2
         dsh
       ])
       ++ (with pkgs; [
