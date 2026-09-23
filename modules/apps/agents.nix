@@ -153,6 +153,7 @@
       home.packages = [
         csh
       ]
+      ++ [ llmAgents."grok-bot" ]
       ++ (with llmAgents; [
         codex
         cursor-agent
