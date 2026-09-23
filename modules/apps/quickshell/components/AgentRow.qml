@@ -46,23 +46,33 @@ Item {
     anchors.topMargin: Theme.space3
     spacing: Theme.space2
 
+    Text {
+      width: parent.width
+      text: control.row.title
+      color: Theme.text
+      font.family: Theme.reading
+      font.pixelSize: Theme.fontTitle
+      font.weight: Font.Medium
+      wrapMode: Text.Wrap
+      maximumLineCount: 2
+      elide: Text.ElideRight
+    }
+
     Item {
       width: parent.width
-      implicitHeight: Math.max(titleText.implicitHeight, stateRow.implicitHeight)
+      implicitHeight: Math.max(contextText.implicitHeight, stateRow.implicitHeight)
 
       Text {
-        id: titleText
+        id: contextText
+        visible: control.row.context !== ""
         anchors.left: parent.left
         anchors.right: stateRow.left
         anchors.rightMargin: Theme.space2
         anchors.top: parent.top
-        text: control.row.title
-        color: Theme.text
-        font.family: Theme.reading
-        font.pixelSize: Theme.fontTitle
-        font.weight: Font.Medium
-        wrapMode: Text.Wrap
-        maximumLineCount: 2
+        text: control.row.context
+        color: Theme.muted
+        font.family: Theme.mono
+        font.pixelSize: Theme.fontMicro
         elide: Text.ElideRight
       }
 
@@ -88,16 +98,6 @@ Item {
           font.pixelSize: Theme.fontTiny
         }
       }
-    }
-
-    Text {
-      visible: control.row.context !== ""
-      width: parent.width
-      text: control.row.context
-      color: Theme.muted
-      font.family: Theme.mono
-      font.pixelSize: Theme.fontMicro
-      elide: Text.ElideRight
     }
 
     Text {

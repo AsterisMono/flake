@@ -12,6 +12,7 @@ ScrollFrame {
 
   padding: 0
   panelWidth: 400
+  contentSpacing: 0
 
   // Attention order. The last section that has rows is flagged so its final row
   // can drop its rule: the footer's divider follows immediately.
@@ -32,9 +33,9 @@ ScrollFrame {
     return all;
   }
 
-  Item {
+  headerContent: [Item {
     width: parent ? parent.width : panel.panelWidth
-    implicitHeight: heading.implicitHeight + Theme.space5 + Theme.space3
+    implicitHeight: heading.implicitHeight + Theme.space5
 
     PopupHeader {
       id: heading
@@ -44,12 +45,77 @@ ScrollFrame {
       anchors.leftMargin: Theme.panelPadding
       anchors.rightMargin: Theme.panelPadding
       anchors.topMargin: Theme.space5
-      title: "Work in flight"
+      title: "Agents"
       titleFamily: Theme.reading
       titleSize: Theme.fontHeading
       titleWeight: Font.Medium
-      note: "You can leave these here. Finished work will wait."
       onCloseRequested: ShellState.close()
+    }
+  }, Item {
+    width: parent ? parent.width : panel.panelWidth
+    implicitHeight: accountColumn.implicitHeight + Theme.space5 * 2
+
+    Column {
+      id: accountColumn
+      anchors.left: parent.left
+      anchors.right: parent.right
+      anchors.top: parent.top
+      anchors.leftMargin: Theme.panelPadding
+      anchors.rightMargin: Theme.panelPadding
+      anchors.topMargin: Theme.space5
+      spacing: Theme.space2
+
+      Text {
+        width: parent.width
+        bottomPadding: Theme.space1
+        text: "ACCOUNT USAGE"
+        color: Theme.muted
+        font.family: Theme.mono
+        font.pixelSize: Theme.fontTiny
+      }
+
+      BalanceRow {
+        visible: !AgentUsage.codexOk
+        label: "Codex"
+        ok: false
+        loaded: AgentUsage.codexLoaded
+      }
+
+      Repeater {
+        model: AgentUsage.codexWindows
+
+        delegate: QuotaRow {
+          required property var modelData
+          label: (modelData.limit === "codex" ? "Codex" : modelData.limit)
+            + " " + AgentUsage.windowLabel(modelData.minutes)
+          percent: modelData.remaining
+          note: AgentUsage.resetLabel(modelData.resetsAt)
+        }
+      }
+
+      BalanceRow {
+        visible: !AgentUsage.deepseekOk
+        label: "DeepSeek balance"
+        ok: false
+        loaded: AgentUsage.deepseekLoaded
+      }
+
+      Repeater {
+        model: AgentUsage.deepseekBalances
+
+        delegate: BalanceRow {
+          required property var modelData
+          label: "DeepSeek balance"
+          value: modelData.total + " " + modelData.currency
+        }
+      }
+
+      BalanceRow {
+        label: "OpenRouter balance"
+        value: AgentUsage.openrouterBalance
+        ok: AgentUsage.openrouterOk
+        loaded: AgentUsage.openrouterLoaded
+      }
     }
 
     Rectangle {
@@ -59,7 +125,7 @@ ScrollFrame {
       height: 1
       color: Theme.separator
     }
-  }
+  }]
 
   // Source honesty: a lost socket or an unsupported protocol says so before
   // any row is read.

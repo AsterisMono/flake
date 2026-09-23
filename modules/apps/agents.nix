@@ -33,6 +33,16 @@
         group = config.users.users.${config.constants.nvirellia.username}.group;
         mode = "0400";
       };
+
+      sops.secrets.openrouter_management_key = {
+        format = "yaml";
+        key = "openrouter_management_key";
+        sopsFile = config.constants.resources.getSecretPath "openrouter.yaml";
+        path = config.constants.resources.userSecretPaths.openrouter_management_key;
+        owner = config.constants.nvirellia.username;
+        group = config.users.users.${config.constants.nvirellia.username}.group;
+        mode = "0400";
+      };
     };
 
   flake.modules.homeManager.agents =

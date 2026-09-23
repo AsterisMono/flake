@@ -30,3 +30,9 @@ creation_rules:
       - age:
           - *asymmetry
           - *parallax
+  - path_regex: ^modules/secrets/openrouter\.yaml$
+    key_groups:
+      - age:
+          - *noa
+          - *asymmetry
+          - *parallax

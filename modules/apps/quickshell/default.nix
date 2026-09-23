@@ -1,4 +1,5 @@
-_: {
+{ inputs, ... }:
+{
   flake.modules.nixos.quickshell =
     { lib, ... }:
     {
@@ -208,6 +209,14 @@ _: {
         '';
       };
 
+      agentUsageScript = pkgs.writeShellApplication {
+        name = "quickshell-agent-usage";
+        runtimeInputs = [ pkgs.python3 ];
+        text = ''
+          exec python3 ${./agent-usage.py} "$@"
+        '';
+      };
+
       qmlString =
         value: "\"${lib.replaceStrings [ "\\" "\"" "\n" ] [ "\\\\" "\\\"" " " ] (toString value)}\"";
 
@@ -296,6 +305,12 @@ _: {
           readonly property string homeDirectory: ${qmlString config.home.homeDirectory};
           readonly property string nixosVersion: ${qmlString osConfig.system.nixos.label};
           readonly property string herdrEndpoint: ${qmlString herdrEndpoint};
+          readonly property string agentUsageScript: ${qmlString (lib.getExe agentUsageScript)};
+          readonly property string codexExecutable: ${
+            qmlString (lib.getExe inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex)
+          };
+          readonly property string deepseekKeyPath: ${qmlString osConfig.constants.resources.userSecretPaths.deepseek_api_key};
+          readonly property string openrouterKeyPath: ${qmlString osConfig.constants.resources.userSecretPaths.openrouter_management_key};
           readonly property string swaymsg: ${qmlString (lib.getExe' swayPackage "swaymsg")};
           readonly property string healthScript: ${qmlString (lib.getExe healthScript)};
           readonly property string sensorDirectory: ${qmlString sensorDirectory};
