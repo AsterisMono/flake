@@ -110,13 +110,6 @@
         pkgs.selfPackages.ask-astra
         (builtins.fetchTree {
           type = "github";
-          owner = "mattpocock";
-          repo = "skills";
-          rev = "c55ee46073ed923f86ce59a5eb3b6d895095d1b7";
-          narHash = "sha256-L3CpIT2DeI+fUFl9fcygojtQo2DzEen69rMD1XqR1vM=";
-        })
-        (builtins.fetchTree {
-          type = "github";
           owner = "jakubkrehel";
           repo = "skills";
           rev = "267330e1adfc66a718fb65fa6918c1f06d0a689e";
@@ -165,6 +158,7 @@
         cursor-agent
         opencode2
         dsh
+        pi
       ])
       ++ (with pkgs; [
         bubblewrap
