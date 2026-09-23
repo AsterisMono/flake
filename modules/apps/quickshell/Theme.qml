@@ -156,6 +156,16 @@ Singleton {
       "telegram": "\uf2c6",
       "Slack": "\uf198",
       "slack": "\uf198",
+      // A Flatpak window is named after the application id rather than the
+      // class, so the reverse-DNS spelling needs its own entry.
+      "com.slack.Slack": "\uf198",
+      // Obsidian names itself through the desktop entry and carries the
+      // Flathub id as its Electron desktop name. Nerd Fonts ships no Obsidian
+      // mark, so the gem stands in for it.
+      "obsidian": "\uf219",
+      "Obsidian": "\uf219",
+      "md.Obsidian": "\uf219",
+      "md.obsidian.Obsidian": "\uf219",
       "Thunar": "\uf07b",
       "thunar": "\uf07b",
       "1Password": "\uf023",

@@ -104,7 +104,10 @@ Singleton {
       if (node.type === "workspace")
         workspaceName = node.name || workspaceName;
 
-      const appId = node.app_id || "";
+      // Wayland clients name themselves through app_id; an XWayland window
+      // carries only its X11 class, which stands in for the same purpose so a
+      // task button can find the application's mark either way.
+      const appId = node.app_id || (node.window_properties && node.window_properties.class) || "";
       const isContainer = node.type === "con" || node.type === "floating_con";
       const hasWindow = isContainer && (node.window !== null && node.window !== undefined || appId !== "");
 
