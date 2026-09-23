@@ -25,6 +25,7 @@
     kitty
     neovim
     netbird-desktop
+    obsidian
     sing-box
     starship
     sway
