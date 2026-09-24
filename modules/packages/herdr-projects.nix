@@ -7,16 +7,16 @@ _: {
     {
       packages.herdr-projects = pkgs.rustPlatform.buildRustPackage (finalAttrs: {
         pname = "herdr-projects";
-        version = "0.1.0";
+        version = "0.2.5";
 
         src = pkgs.fetchFromGitHub {
           owner = "eliasstravik";
           repo = "herdr-projects";
-          rev = "a4cdb0a69713d982d96f9062548cf885f013c442";
-          hash = "sha256-/2u2qpZ+YhrWFgZ436a+jEYeDHAwqf7vMPW0ukqzo1s=";
+          rev = "05060c285303fd46cef778cd95750311e715a580";
+          hash = "sha256-JqEACceyqOhY7BP953xkc+l5lZ+VFmcZrWtm80DcgIA=";
         };
 
-        cargoHash = "sha256-H3d/XOpDL4ORSKNqkcC/r4avReBW7sqAgVma0wAlHZM=";
+        cargoHash = "sha256-0a6c8DFxCYJcVpeou5oKHxhDAkBvddWPx+eNBf2ZqF4=";
 
         # The manifest addresses the plugin's own binary the way
         # `herdr plugin install` builds it — `cargo build --release` inside the
