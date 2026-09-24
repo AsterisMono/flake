@@ -165,6 +165,9 @@
         bubblewrap
         jq
         python3
+        # Same build the Herdr plugin runs, exposed on PATH so the
+        # `herdr-projects` CLI works from a shell.
+        selfPackages.herdr-projects
         selfPackages.zed-delta
       ]);
     };
