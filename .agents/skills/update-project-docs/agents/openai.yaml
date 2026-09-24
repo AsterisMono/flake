@@ -1,0 +1,3 @@
+interface:
+  display_name: 'Update Project Docs'
+  short_description: 'Keep project guidance and user docs concise'
