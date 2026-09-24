@@ -106,13 +106,6 @@
       programs = {
         herdr = {
           enable = true;
-          # The sidebar rows, popup key and tab-bar count `herdr-projects
-          # configure` would add, plus the progress hooks for the harnesses
-          # Herdr starts.
-          projects = {
-            enable = true;
-            hooks.enable = true;
-          };
           reviewr.enable = true;
           settings = {
             onboarding = false;
@@ -138,9 +131,6 @@
         bubblewrap
         jq
         python3
-        # Same build the Herdr plugin runs, exposed on PATH so the
-        # `herdr-projects` CLI works from a shell.
-        selfPackages.herdr-projects
         selfPackages.zed-delta
       ]);
     };
