@@ -75,7 +75,7 @@ Read-only probes of the running socket (`herdr 0.9.1`, protocol 22) and the bund
 
 Repository and local inspection on 2026-09-18 found:
 
-- [herdr.nix](../../modules/apps/herdr.nix) already manages the package, TOML configuration, and declared plugin links.
+- [herdr/default.nix](../../modules/apps/herdr/default.nix) already manages the package, TOML configuration, and declared plugin links.
 - [agents.nix](../../modules/apps/agents.nix) composes herdr, enables the existing reviewr integration, and selects system toast delivery. Keep that workflow intact.
 - A Waybar-oriented summary tool, `wayherdr`, packaged the same data for the old bar. The Waybar module never mounted it, and it was dropped with the rest of the Waybar feature; formatted Waybar output is not the basis for the new data model.
 - The installed CLI reported **herdr 0.9.1**. Its bundled `herdr api schema --json` reported **protocol 22**, schema version 1. These are observed compatibility facts, not permission to pin or update dependencies in this change.

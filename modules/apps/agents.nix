@@ -131,19 +131,17 @@
       programs = {
         herdr = {
           enable = true;
-          plugins = {
-            inherit (pkgs.selfPackages) herdr-projects herdr-reviewr;
+          # The sidebar rows, popup key and tab-bar count `herdr-projects
+          # configure` would add, plus the progress hooks for the harnesses
+          # Herdr starts.
+          projects = {
+            enable = true;
+            hooks.enable = true;
           };
+          reviewr.enable = true;
           settings = {
             onboarding = false;
             session.resume_agents_on_restore = true;
-            keys.command = [
-              {
-                key = "alt+r";
-                type = "plugin_action";
-                command = "persiyanov.reviewr.toggle";
-              }
-            ];
             theme.name = "terminal";
             ui.toast.delivery = "system";
           };

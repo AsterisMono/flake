@@ -26,6 +26,14 @@
         name: _: "${config.xdg.configHome}/herdr/plugins/${name}"
       ) cfg.plugins;
       herdrCommand = if cfg.package == null then "herdr" else lib.escapeShellArg (lib.getExe cfg.package);
+
+      # The plugin modules beside this file add their sidebar rows, keys and
+      # tab-bar entries through `pluginSettings`. A contribution receives the
+      # settings collected so far and returns the whole subtree it owns, so it
+      # can append to arrays the user or another plugin already set.
+      settings = lib.foldl' (
+        collected: contribute: lib.recursiveUpdate collected (contribute collected)
+      ) cfg.settings cfg.pluginSettings;
     in
     {
       options.programs.herdr = {
@@ -55,6 +63,9 @@
             Herdr configuration written to
             $XDG_CONFIG_HOME/herdr/config.toml. See
             https://herdr.dev/docs/configuration/ for supported settings.
+
+            The plugin modules beside this file append their sidebar rows,
+            keys and tab-bar entry to these settings.
           '';
         };
 
@@ -71,6 +82,17 @@
             must be a directory containing a herdr-plugin.toml manifest. The
             directory is copied into $XDG_CONFIG_HOME/herdr/plugins/<name> and
             linked with `herdr plugin link --enabled` during activation.
+          '';
+        };
+
+        pluginSettings = lib.mkOption {
+          type = lib.types.listOf (lib.types.functionTo tomlFormat.type);
+          default = [ ];
+          internal = true;
+          description = ''
+            Herdr settings contributed by the plugin modules beside this file.
+            Each function receives the settings collected so far and returns
+            the part it owns, which is merged into them.
           '';
         };
       };
@@ -92,7 +114,7 @@
         home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
 
         xdg.configFile = {
-          "herdr/config.toml".source = tomlFormat.generate "herdr-config.toml" cfg.settings;
+          "herdr/config.toml".source = tomlFormat.generate "herdr-config.toml" settings;
         }
         // pluginEntries;
 
