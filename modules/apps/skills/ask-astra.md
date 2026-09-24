@@ -1,6 +1,8 @@
 ---
 name: ask-astra
 description: "Consult gpt-6-astra through Herdr for design advice and substantive reviews that benefit from extensive thinking. Use for difficult architectural tradeoffs, challenging a proposed approach, or an independent review of consequential changes. Requires a Herdr-managed caller."
+metadata:
+  short-description: Consult Astra for deep design and review advice
 ---
 
 # Ask Astra

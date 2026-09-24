@@ -103,31 +103,6 @@
         $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${cshConfig}" "${cshConfigDeployed}"
       '';
 
-      # Local skill packages and upstream sources pinned by revision and tree
-      # hash. Herdr's `.agents/skills` holds internal workflows, so its public
-      # skill is pinned as a single file.
-      skills.install = [
-        pkgs.selfPackages.ask-astra
-        (builtins.fetchTree {
-          type = "github";
-          owner = "jakubkrehel";
-          repo = "skills";
-          rev = "267330e1adfc66a718fb65fa6918c1f06d0a689e";
-          narHash = "sha256-N0ip9CCwXy1x7707waHQRlitoMT23Yu9NpCA4NFzXmA=";
-        })
-        (builtins.fetchTree {
-          type = "github";
-          owner = "ayghri";
-          repo = "i-have-adhd";
-          rev = "b15d0be58f55b33972ba3e39709e0e5208ef30cb";
-          narHash = "sha256-wnD5crIal23Vtk6GReG2vCkjDuhrpmhWXvrNUq5mZfE=";
-        })
-        (builtins.fetchurl {
-          url = "https://raw.githubusercontent.com/herdrdev/herdr/7b675f42af35508eab66ac42fe1598628597a893/skills/herdr/SKILL.md";
-          sha256 = "sha256-I3rSqy2BI+K7N5VtOkHu0UHy0ip8NuQVt4dsA5dnkJk=";
-        })
-      ];
-
       programs = {
         herdr = {
           enable = true;

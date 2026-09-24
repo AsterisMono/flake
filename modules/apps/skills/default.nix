@@ -36,7 +36,8 @@ let
     else
       [ ];
 
-  # The frontmatter is the only place that a lone SKILL.md carries its name.
+  # The frontmatter is the only place that a lone Markdown skill file carries
+  # its name.
   declaredName =
     file:
     let
@@ -75,6 +76,10 @@ let
         name = declaredName source;
       in
       lib.optionalAttrs (name != null) { ${name} = source; };
+
+  localSkills = lib.mapAttrsToList (name: _: ./. + "/${name}") (
+    lib.filterAttrs (name: type: type == "regular" && lib.hasSuffix ".md" name) (builtins.readDir ./.)
+  );
 in
 {
   flake.modules.homeManager.skills =
@@ -91,7 +96,7 @@ in
 
       empty = builtins.filter (source: skillsOf source == { }) cfg.install;
 
-      # A lone SKILL.md becomes a skill directory in the store, so installed
+      # A lone Markdown file becomes a skill directory in the store, so installed
       # skills all have the shape agents expect.
       skillDirectory =
         name: source:
@@ -120,19 +125,43 @@ in
         '';
         description = ''
           Skill sources to install for the user. Each entry is a fetched source
-          tree or a single SKILL.md, and every skill the source provides is
+          tree or a single Markdown skill file, and every skill the source provides is
           linked into `$HOME/.agents/skills/<name>`, the generic location
           shared by agents that read the `.agents/skills` convention.
           Agent-specific skill directories are not written.
 
           A source tree keeps its skills in directories containing a SKILL.md
           below `skills/` or `.agents/skills/`, or publishes them through
-          `.claude-plugin/plugin.json`. A lone SKILL.md is installed under the
+          `.claude-plugin/plugin.json`. A lone skill file is installed under the
           name its frontmatter declares.
         '';
       };
 
       config = {
+        # Upstream sources are pinned by revision and tree hash. Herdr's
+        # `.agents/skills` holds internal workflows, so its public skill is
+        # pinned as a single file.
+        skills.install = localSkills ++ [
+          (builtins.fetchTree {
+            type = "github";
+            owner = "jakubkrehel";
+            repo = "skills";
+            rev = "267330e1adfc66a718fb65fa6918c1f06d0a689e";
+            narHash = "sha256-N0ip9CCwXy1x7707waHQRlitoMT23Yu9NpCA4NFzXmA=";
+          })
+          (builtins.fetchTree {
+            type = "github";
+            owner = "ayghri";
+            repo = "i-have-adhd";
+            rev = "b15d0be58f55b33972ba3e39709e0e5208ef30cb";
+            narHash = "sha256-wnD5crIal23Vtk6GReG2vCkjDuhrpmhWXvrNUq5mZfE=";
+          })
+          (builtins.fetchurl {
+            url = "https://raw.githubusercontent.com/herdrdev/herdr/7b675f42af35508eab66ac42fe1598628597a893/skills/herdr/SKILL.md";
+            sha256 = "sha256-I3rSqy2BI+K7N5VtOkHu0UHy0ip8NuQVt4dsA5dnkJk=";
+          })
+        ];
+
         assertions = [
           {
             assertion = empty == [ ];
