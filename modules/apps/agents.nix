@@ -57,6 +57,13 @@
       cshHome = "${config.home.homeDirectory}/.local/share/csh";
       cshConfigFile = "${cshHome}/config.toml";
       cshConfigDeployed = "${cshHome}/.config.toml.deployed";
+      # Upstream installs the v2 binary as `opencode2` so it can coexist with
+      # v1 `opencode`. Expose it under the plain name as a real command, so
+      # every consumer sees it: shells, scripts, and agent runners such as
+      # paseo all resolve `opencode` through PATH.
+      opencode = pkgs.writeShellScriptBin "opencode" ''
+        exec ${lib.getExe llmAgents.opencode2} "$@"
+      '';
       cshConfig = (pkgs.formats.toml { }).generate "csh-config.toml" {
         model = "deepseek-flash";
         model_provider = "deepseek";
@@ -118,6 +125,7 @@
 
       home.packages = [
         csh
+        opencode
       ]
       ++ [ llmAgents."grok-bot" ]
       ++ (with llmAgents; [
