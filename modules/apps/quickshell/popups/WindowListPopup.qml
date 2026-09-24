@@ -12,7 +12,7 @@ ScrollFrame {
   }
 
   Repeater {
-    model: Desktop.windowsForList
+    model: Desktop.windows
 
     delegate: TaskRow {
       required property var modelData

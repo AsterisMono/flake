@@ -10,6 +10,10 @@ import Quickshell.Io
 Singleton {
   id: desktop
 
+  // Task buttons are ordered by workspace, then by the window's own position on
+  // the screen, reading left to right and top to bottom. The first-seen
+  // sequence only separates containers that share a position, such as the
+  // windows of a tabbed or stacked container.
   property var windows: []
   property int focusedWindowId: -1
   property string focusedMonitorName: ""
@@ -33,6 +37,27 @@ Singleton {
   }
 
   readonly property var focusedWorkspace: I3.focusedWorkspace
+
+  readonly property var workspaceRanks: {
+    const ranks = ({});
+    const list = desktop.workspaces;
+    for (let i = 0; i < list.length; i++)
+      ranks[list[i].name] = i;
+    return ranks;
+  }
+
+  function compareWindows(a, b) {
+    const ranks = desktop.workspaceRanks;
+    const ar = ranks[a.workspace] !== undefined ? ranks[a.workspace] : 9999;
+    const br = ranks[b.workspace] !== undefined ? ranks[b.workspace] : 9999;
+    if (ar !== br)
+      return ar - br;
+    if (a.rectX !== b.rectX)
+      return a.rectX - b.rectX;
+    if (a.rectY !== b.rectY)
+      return a.rectY - b.rectY;
+    return a.order - b.order;
+  }
 
   readonly property var focusedScreen: {
     const name = focusedMonitorName;
@@ -127,6 +152,10 @@ Singleton {
           "pid": Number(node.pid || 0),
           "workspace": workspaceName,
           "output": outputName,
+          // The container's layout position within its workspace; it is what
+          // orders windows that share a workspace.
+          "rectX": node.rect ? Number(node.rect.x) : 0,
+          "rectY": node.rect ? Number(node.rect.y) : 0,
           "focused": node.focused === true,
           "urgent": node.urgent === true,
           "floating": node.type === "floating_con",
@@ -154,7 +183,7 @@ Singleton {
     }
 
     found.sort(function(a, b) {
-      return a.order - b.order;
+      return desktop.compareWindows(a, b);
     });
 
     let focused = -1;
@@ -176,33 +205,27 @@ Singleton {
     if (capacity <= 0 || list.length <= capacity)
       return list;
 
-    let visible = list.slice(0, capacity);
-    let active = null;
+    // The bar shows the first slots of the ordered list and, when the focused
+    // window falls outside them, swaps it in for the last slot. The result is
+    // read back in list order, so the buttons stay sorted.
+    const chosen = ({});
+    for (let i = 0; i < capacity; i++)
+      chosen[i] = true;
+
     for (let i = 0; i < list.length; i++) {
-      if (list[i].focused)
-        active = list[i];
+      if (list[i].focused && !chosen[i]) {
+        delete chosen[capacity - 1];
+        chosen[i] = true;
+        break;
+      }
     }
 
-    if (active && visible.indexOf(active) === -1)
-      visible = visible.slice(0, capacity - 1).concat([active]);
-
+    const visible = [];
+    for (let i = 0; i < list.length; i++) {
+      if (chosen[i])
+        visible.push(list[i]);
+    }
     return visible;
-  }
-
-  readonly property var windowsForList: {
-    const workspaceOrder = ({});
-    for (let i = 0; i < desktop.workspaces.length; i++)
-      workspaceOrder[desktop.workspaces[i].name] = i;
-
-    const list = desktop.windows.slice();
-    list.sort(function(a, b) {
-      const ao = workspaceOrder[a.workspace] !== undefined ? workspaceOrder[a.workspace] : 9999;
-      const bo = workspaceOrder[b.workspace] !== undefined ? workspaceOrder[b.workspace] : 9999;
-      if (ao !== bo)
-        return ao - bo;
-      return a.order - b.order;
-    });
-    return list;
   }
 
   function activateWindow(id) {

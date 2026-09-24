@@ -74,7 +74,9 @@ BOTTOM workspaces         | individual titled windows …                       
 
 The top has three layout zones. Media occupies a bounded center zone and truncates before colliding with status. The right cluster groups related readings with subtle separators: throughput; temperature/memory/pressure/failed units; battery; audio; tray; notifications. Healthy or absent optional signals do not create empty slots.
 
-The bottom is a navigation bar: global workspaces first, then one button per window, including windows on other workspaces/outputs. Keep order stable when titles or focus change. Task widths adapt within a useful range (prototype: approximately 120–260 px), then overflow into a titled window list. Preserve workspace identity in that list. Do not silently drop windows or reserve a V2-shaped empty space in V1.
+The bottom is a navigation bar: global workspaces first, then one button per window, including windows on other workspaces/outputs. Task widths adapt within a useful range (prototype: approximately 120–260 px), then overflow into a titled window list, which carries the same order. Preserve workspace identity in that list. Do not silently drop windows or reserve a V2-shaped empty space in V1.
+
+Buttons are ordered by workspace, then by the window's own position on the screen. Workspace 1 precedes workspace 2, and two windows on one workspace read left to right and top to bottom, following their layout. Containers that share a position — the windows of a tabbed or stacked container — keep their first-seen order. Titles and focus never reorder the buttons, but moving or resizing a window does; that replaces the earlier "keep order stable" rule at the user's request.
 
 On narrower outputs, shorten identity/date/media first, then collapse secondary telemetry into its health entry. Preserve window access, workspace switching, battery/awake status, audio, and the bell. Test portrait and mixed-scale displays, not just the wide reference render.
 
@@ -129,7 +131,7 @@ Build a small set of modules with real responsibilities. Visual components consu
 | Module | Public surface | Complexity it owns |
 | --- | --- | --- |
 | Shell session / popup host | Current open panel and output; open/close; focus restoration | One-panel policy, geometry, hotplug and keyboard ownership. |
-| Desktop model | Workspaces, windows, focused IDs; activate/switch/close | Sway IPC identity, tree/event reconciliation, floating/Xwayland windows and workspace moves. |
+| Desktop model | Workspaces, windows, focused IDs; activate/switch/close | Sway IPC identity, tree/event reconciliation, floating/Xwayland windows, workspace moves and the workspace-then-position task order. |
 | Notifications | History, unread/DND; dismiss/undo/invoke | D-Bus ownership, live versus archived lifecycle, replacement, timeouts, safe content. |
 | Health | Metric snapshot and failure/availability flags | Shared sampling, counter resets, hwmon paths, PSI and failed-unit queries. |
 | Power, audio, media, tray | Their native state and narrow user actions | Service disappearance, device/player identity and operation errors. Keep these separate where their lifecycles differ. |
@@ -203,7 +205,7 @@ Each checkpoint should leave a testable result. Do not wait until a full shell e
 
 ### Release gate and rollback
 
-- Exercise two outputs, output unplug/replug, fractional scaling, portrait geometry, many windows, long/CJK titles, fullscreen, scratchpad and compositor reconnect.
+- Exercise two outputs, output unplug/replug, fractional scaling, portrait geometry, many windows, long/CJK titles, fullscreen, scratchpad and compositor reconnect. Confirm task order follows workspace and on-screen position when windows are moved, resized, stacked or tabbed, and that the overflow list matches the bar.
 - Verify only one poller per metric and one notification server regardless of output count. Measure idle CPU, wakeups, and memory against the current Waybar/Mako baseline under the same conditions; investigate sustained regressions rather than inventing a target from the HTML.
 - Validate malicious/oversized notification input, stale actions, transient/replaced/critical notifications, clear, DND and process restart.
 - Verify Keep awake survives popup closure, expires correctly after resume, and does not bypass explicit lock/before-sleep protection.
