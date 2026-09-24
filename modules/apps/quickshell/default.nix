@@ -310,6 +310,7 @@
             qmlString (lib.getExe inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.codex)
           };
           readonly property string deepseekKeyPath: ${qmlString osConfig.constants.resources.userSecretPaths.deepseek_api_key};
+          readonly property string opencodeKeyPath: ${qmlString osConfig.constants.resources.userSecretPaths.opencode_api_key};
           readonly property string openrouterKeyPath: ${qmlString osConfig.constants.resources.userSecretPaths.openrouter_management_key};
           readonly property string swaymsg: ${qmlString (lib.getExe' swayPackage "swaymsg")};
           readonly property string healthScript: ${qmlString (lib.getExe healthScript)};

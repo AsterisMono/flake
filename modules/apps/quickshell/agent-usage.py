@@ -1,5 +1,6 @@
 """Read account usage for the Quickshell work panel."""
 
+import datetime
 import json
 import os
 import selectors
@@ -9,6 +10,16 @@ import time
 import urllib.error
 import urllib.request
 from decimal import Decimal, InvalidOperation
+
+OPENCODE_USAGE_URL = "https://opencode.ai/zen/go/v1/usage"
+
+# The Go plan meters three windows and names them without their lengths, so the
+# lengths live here, where only the panel's window labels read them.
+OPENCODE_WINDOWS = (
+    ("rolling", 5 * 60),
+    ("weekly", 7 * 1440),
+    ("monthly", 30 * 1440),
+)
 
 
 def codex(executable):
@@ -116,6 +127,51 @@ def openrouter(key_path):
     return {"ok": True, "balance": f"{remaining:.2f}", "currency": "USD"}
 
 
+def opencode_reset(timestamp):
+    if not isinstance(timestamp, str):
+        return None
+    return int(datetime.datetime.fromisoformat(timestamp.replace("Z", "+00:00")).timestamp())
+
+
+def opencode(key_path):
+    with open(key_path, encoding="utf-8") as key_file:
+        key = key_file.read().strip()
+    if not key:
+        return {"ok": False}
+    request = urllib.request.Request(
+        OPENCODE_USAGE_URL,
+        headers={
+            "Authorization": "Bearer " + key,
+            # Cloudflare fronts the endpoint and refuses urllib's own signature
+            # outright, so the request names the consumer instead.
+            "User-Agent": "quickshell-agent-usage",
+            "Accept": "application/json",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=10) as response:
+        data = json.load(response)
+    buckets = data.get("usage") or {}
+    windows = []
+    for name, minutes in OPENCODE_WINDOWS:
+        window = buckets.get(name) or {}
+        percent = window.get("percent")
+        if percent is None:
+            continue
+        used = float(percent)
+        windows.append(
+            {
+                "limit": "OpenCode Go",
+                "minutes": minutes,
+                "remaining": max(0.0, min(100.0, 100.0 - used)),
+                # An untouched window reports "now" plus its own length rather
+                # than a real boundary, so only a window that has been used
+                # carries a reset worth naming.
+                "resetsAt": opencode_reset(window.get("resetsAt")) if used > 0 else None,
+            }
+        )
+    return {"ok": bool(windows), "windows": windows}
+
+
 def main():
     try:
         if sys.argv[1] == "codex":
@@ -124,6 +180,8 @@ def main():
             output = deepseek(sys.argv[2])
         elif sys.argv[1] == "openrouter":
             output = openrouter(sys.argv[2])
+        elif sys.argv[1] == "opencode":
+            output = opencode(sys.argv[2])
         else:
             output = {"ok": False}
     except (OSError, ValueError, InvalidOperation, KeyError, IndexError, subprocess.TimeoutExpired, urllib.error.URLError):

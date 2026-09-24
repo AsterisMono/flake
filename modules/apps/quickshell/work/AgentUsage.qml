@@ -17,6 +17,9 @@ Singleton {
   property bool openrouterLoaded: false
   property bool openrouterOk: false
   property string openrouterBalance: ""
+  property bool opencodeLoaded: false
+  property bool opencodeOk: false
+  property var opencodeWindows: []
   property int nowSeconds: Math.floor(Date.now() / 1000)
 
   function refresh() {
@@ -28,6 +31,9 @@ Singleton {
     }
     if (!openrouterProcess.running) {
       openrouterProcess.running = true;
+    }
+    if (!opencodeProcess.running) {
+      opencodeProcess.running = true;
     }
   }
 
@@ -67,6 +73,18 @@ Singleton {
     }
   }
 
+  function applyOpencode(output) {
+    usage.opencodeLoaded = true;
+    try {
+      const data = JSON.parse(output);
+      usage.opencodeOk = data.ok === true;
+      usage.opencodeWindows = usage.opencodeOk ? data.windows : [];
+    } catch (error) {
+      usage.opencodeOk = false;
+      usage.opencodeWindows = [];
+    }
+  }
+
   function windowLabel(minutes) {
     if (!Number.isFinite(minutes) || minutes <= 0)
       return "limit";
@@ -92,6 +110,14 @@ Singleton {
     if (hours > 0)
       return "resets in " + hours + "h " + minutes % 60 + "m";
     return "resets in " + minutes + "m";
+  }
+
+  // A window that has not been touched reports a placeholder boundary, which
+  // the source drops: no reset is named and the row says nothing about one.
+  function quotaNote(reading) {
+    if (reading.resetsAt === null || reading.resetsAt === undefined)
+      return "";
+    return usage.resetLabel(reading.resetsAt);
   }
 
   Timer {
@@ -143,6 +169,18 @@ Singleton {
     onExited: function(exitCode, exitStatus) {
       if (exitCode !== 0)
         usage.applyOpenrouter("{}");
+    }
+  }
+
+  Process {
+    id: opencodeProcess
+    command: [Runtime.agentUsageScript, "opencode", Runtime.opencodeKeyPath]
+    stdout: StdioCollector {
+      onStreamFinished: usage.applyOpencode(text)
+    }
+    onExited: function(exitCode, exitStatus) {
+      if (exitCode !== 0)
+        usage.applyOpencode("{}");
     }
   }
 }

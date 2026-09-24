@@ -94,6 +94,24 @@ ScrollFrame {
       }
 
       BalanceRow {
+        visible: !AgentUsage.opencodeOk
+        label: "OpenCode Go"
+        ok: false
+        loaded: AgentUsage.opencodeLoaded
+      }
+
+      Repeater {
+        model: AgentUsage.opencodeWindows
+
+        delegate: QuotaRow {
+          required property var modelData
+          label: modelData.limit + " " + AgentUsage.windowLabel(modelData.minutes)
+          percent: modelData.remaining
+          note: AgentUsage.quotaNote(modelData)
+        }
+      }
+
+      BalanceRow {
         visible: !AgentUsage.deepseekOk
         label: "DeepSeek balance"
         ok: false
