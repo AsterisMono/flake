@@ -140,8 +140,9 @@
         apiKeyEnv = "DEEPSEEK_API_KEY";
         apiKeyPath = config.constants.resources.userSecretPaths.deepseek_api_key;
       };
-      # OpenCode Go serves its subscription models over a Responses-compatible
-      # endpoint, so Codex can drive them once it knows their metadata.
+      # OpenCode Go exposes the Responses API Codex speaks for only part of its
+      # catalog, and grok refuses the reasoning items Codex replays, so the
+      # catalog holds the one model that answers there and survives a turn.
       ocshConfig = (pkgs.formats.toml { }).generate "ocsh-config.toml" {
         forced_login_method = "api";
         model = "deepseek-v4.1-flash";
@@ -165,6 +166,12 @@
     in
     {
       home.file.".local/share/csh/models.json".source = ./csh/models.json;
+      # Codex speaks only the Responses API, so the catalog may list only the
+      # models OpenCode Go serves there; its chat-completions models answer 503.
+      # The entries are adapted to what Go actually accepts: plain function
+      # tools, no responses-lite (it inlines tool schemas as `additional_tools`,
+      # which Go drops) and no code mode (it sends a custom `exec` tool, which
+      # Go rejects).
       home.file.".local/share/ocsh/models.json".source = ./ocsh/models.json;
 
       home.activation.cshConfig = mkCodexConfigActivation {
