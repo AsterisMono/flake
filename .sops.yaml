@@ -36,3 +36,9 @@ creation_rules:
           - *noa
           - *asymmetry
           - *parallax
+  - path_regex: ^modules/secrets/opencode\.yaml$
+    key_groups:
+      - age:
+          - *noa
+          - *asymmetry
+          - *parallax

@@ -43,6 +43,16 @@
         group = config.users.users.${config.constants.nvirellia.username}.group;
         mode = "0400";
       };
+
+      sops.secrets.opencode_api_key = {
+        format = "yaml";
+        key = "opencode_api_key";
+        sopsFile = config.constants.resources.getSecretPath "opencode.yaml";
+        path = config.constants.resources.userSecretPaths.opencode_api_key;
+        owner = config.constants.nvirellia.username;
+        group = config.users.users.${config.constants.nvirellia.username}.group;
+        mode = "0400";
+      };
     };
 
   flake.modules.homeManager.agents =
@@ -57,6 +67,9 @@
       cshHome = "${config.home.homeDirectory}/.local/share/csh";
       cshConfigFile = "${cshHome}/config.toml";
       cshConfigDeployed = "${cshHome}/.config.toml.deployed";
+      ocshHome = "${config.home.homeDirectory}/.local/share/ocsh";
+      ocshConfigFile = "${ocshHome}/config.toml";
+      ocshConfigDeployed = "${ocshHome}/.config.toml.deployed";
       # Upstream installs the v2 binary as `opencode2` so it can coexist with
       # v1 `opencode`. Expose it under the plain name as a real command, so
       # every consumer sees it: shells, scripts, and agent runners such as
@@ -64,6 +77,44 @@
       opencode = pkgs.writeShellScriptBin "opencode" ''
         exec ${lib.getExe llmAgents.opencode2} "$@"
       '';
+      # Every shell runs the same Codex binary against a different provider, so
+      # each gets its own CODEX_HOME and reads its API key from the file NixOS
+      # provisioned for it.
+      mkCodexShell =
+        {
+          name,
+          codexHome,
+          apiKeyEnv,
+          apiKeyPath,
+        }:
+        pkgs.writeShellApplication {
+          inherit name;
+          runtimeInputs = [ pkgs.coreutils ];
+          text = ''
+            export CODEX_HOME=${lib.escapeShellArg codexHome}
+            ${apiKeyEnv}="$(cat ${apiKeyPath})"
+            export ${apiKeyEnv}
+
+            exec ${lib.getExe llmAgents.codex} "$@"
+          '';
+        };
+      # Codex persists trust levels, MCP servers, and TUI settings by rewriting
+      # config.toml, which fails against the read-only symlink that home.file
+      # creates. Keep a real copy instead: refresh it from the store while it is
+      # still untouched, then leave local edits alone.
+      mkCodexConfigActivation =
+        {
+          configFile,
+          deployedFile,
+          generated,
+        }:
+        lib.hm.dag.entryAfter [ "writeBoundary" "linkGeneration" ] ''
+          if [ -L "${configFile}" ] || [ ! -e "${configFile}" ] \
+            || ${lib.getExe' pkgs.coreutils "cmp"} -s "${configFile}" "${deployedFile}"; then
+            $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${generated}" "${configFile}"
+          fi
+          $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${generated}" "${deployedFile}"
+        '';
       cshConfig = (pkgs.formats.toml { }).generate "csh-config.toml" {
         model = "deepseek-flash";
         model_provider = "deepseek";
@@ -83,32 +134,49 @@
           env_key = "DEEPSEEK_API_KEY";
         };
       };
-      csh = pkgs.writeShellApplication {
+      csh = mkCodexShell {
         name = "csh";
-        runtimeInputs = [ pkgs.coreutils ];
-        text = ''
-          export CODEX_HOME=${lib.escapeShellArg cshHome}
-          DEEPSEEK_API_KEY="$(cat ${config.constants.resources.userSecretPaths.deepseek_api_key})"
-          export DEEPSEEK_API_KEY
-
-          exec ${lib.getExe llmAgents.codex} "$@"
-        '';
+        codexHome = cshHome;
+        apiKeyEnv = "DEEPSEEK_API_KEY";
+        apiKeyPath = config.constants.resources.userSecretPaths.deepseek_api_key;
+      };
+      # OpenCode Go serves its subscription models over a Responses-compatible
+      # endpoint, so Codex can drive them once it knows their metadata.
+      ocshConfig = (pkgs.formats.toml { }).generate "ocsh-config.toml" {
+        forced_login_method = "api";
+        model = "deepseek-v4.1-flash";
+        model_catalog_json = "${ocshHome}/models.json";
+        model_provider = "opencode-go";
+        model_reasoning_effort = "high";
+        web_search = "disabled";
+        model_providers.opencode-go = {
+          name = "opencode-go";
+          base_url = "https://opencode.ai/zen/go/v1";
+          wire_api = "responses";
+          env_key = "OPENCODE_API_KEY";
+        };
+      };
+      ocsh = mkCodexShell {
+        name = "ocsh";
+        codexHome = ocshHome;
+        apiKeyEnv = "OPENCODE_API_KEY";
+        apiKeyPath = config.constants.resources.userSecretPaths.opencode_api_key;
       };
     in
     {
       home.file.".local/share/csh/models.json".source = ./csh/models.json;
+      home.file.".local/share/ocsh/models.json".source = ./ocsh/models.json;
 
-      # Codex persists trust levels, MCP servers, and TUI settings by
-      # rewriting config.toml, which fails against the read-only symlink that
-      # home.file creates. Keep a real copy instead: refresh it from the store
-      # while it is still untouched, then leave local edits alone.
-      home.activation.cshConfig = lib.hm.dag.entryAfter [ "writeBoundary" "linkGeneration" ] ''
-        if [ -L "${cshConfigFile}" ] || [ ! -e "${cshConfigFile}" ] \
-          || ${lib.getExe' pkgs.coreutils "cmp"} -s "${cshConfigFile}" "${cshConfigDeployed}"; then
-          $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${cshConfig}" "${cshConfigFile}"
-        fi
-        $DRY_RUN_CMD ${lib.getExe' pkgs.coreutils "install"} -m 0644 "${cshConfig}" "${cshConfigDeployed}"
-      '';
+      home.activation.cshConfig = mkCodexConfigActivation {
+        configFile = cshConfigFile;
+        deployedFile = cshConfigDeployed;
+        generated = cshConfig;
+      };
+      home.activation.ocshConfig = mkCodexConfigActivation {
+        configFile = ocshConfigFile;
+        deployedFile = ocshConfigDeployed;
+        generated = ocshConfig;
+      };
 
       programs = {
         herdr = {
@@ -125,6 +193,7 @@
 
       home.packages = [
         csh
+        ocsh
         opencode
       ]
       ++ [ llmAgents."grok-bot" ]
