@@ -31,9 +31,17 @@ collect again.
 
 ## 2. Define or confirm the machine
 
-Work in `modules/machines/<machine>.nix`: import the roles and aspects the
-machine needs, set `diskoConfig` to the chosen layout, and keep identity and
-hardware facts in that file.
+Work in `modules/machines/<machine>.nix`. Define `machines.<machine>` as an
+`aspects`-class submodule with its `system`, importing `base` and the other roles
+and aspects it needs from `inputs.self.modules.aspects`. Set `diskoConfig` to the
+chosen layout and keep detected facts in `hardware`; reserve `nixosModule` and
+`homeModule` for manual interventions. The machine definition generates
+`flake.nixosConfigurations.<machine>`.
+
+Native NixOS and Home Manager modules with the same feature name are paired
+automatically into an aspect. Declare `flake.modules.aspects.<feature>` directly
+when adding dependencies or other contributions. Keep host-specific identity,
+hardware facts, and disk selection in the machine file.
 
 Read the target disk on the target, and prefer its stable by-id path:
 

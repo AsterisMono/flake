@@ -5,7 +5,7 @@ description: Reconcile AGENTS.md and README.md with project skills, plans, and r
 
 # Update Project Docs
 
-Keep AGENTS.md and README.md concise. References to important files, skills, or other docs are optional; use them where they help the reader. Give each document a `Last updated at` commit marker.
+Keep AGENTS.md and README.md concise. References to important files or other docs are optional; use them where they help the reader. Give each document a `Last updated at` commit marker.
 
 ## Establish what changed
 
@@ -15,9 +15,10 @@ Skills describe how contributors work; plans describe intended behavior. Confirm
 
 ## AGENTS.md: durable guidance
 
-Keep common knowledge and standing project-wide rules that remain useful across ordinary changes, such as language constraints, commit conventions, environment policy, and testing or lifecycle requirements. State important rules directly in AGENTS.md. It may reference important files and skills, but need not be a reference list.
+Keep common knowledge and standing project-wide rules that remain useful across ordinary changes, such as language constraints, commit conventions, environment policy, and testing or lifecycle requirements. State important rules directly in AGENTS.md. It may reference important files or supporting docs, but need not be a reference list.
 
-- Move workflows, procedures, checklists, and detailed task instructions into the appropriate project skill, preserving their requirements. Add a brief reference when useful. Do not extract a standing rule merely because it could also appear in a skill.
+- Do not add or retain skill lists or catalogs in AGENTS.md; the harness automatically injects the available skills.
+- Move workflows, procedures, checklists, and detailed task instructions into the appropriate project skill, preserving their requirements. Do not extract a standing rule merely because it could also appear in a skill.
 - Remove snapshots of code or documentation: directory inventories, current architecture, tool versions, feature status, and descriptions of what files currently contain.
 - Prefer an existing skill over a duplicate. If a new skill is needed, keep it scoped to the extracted task. Repair references affected by the move, including skills that previously sent readers to AGENTS.md or README.md for those details.
 
