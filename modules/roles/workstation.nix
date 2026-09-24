@@ -27,6 +27,7 @@
     netbird-desktop
     obsidian
     sing-box
+    splayer-next
     starship
     sway
     unix-tools
