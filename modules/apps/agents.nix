@@ -126,6 +126,7 @@
         opencode2
         dsh
         pi
+        paseo-desktop
       ])
       ++ (with pkgs; [
         bubblewrap
