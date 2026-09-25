@@ -7,34 +7,52 @@ _: {
       ...
     }:
     {
-      assertions = [
-        {
-          assertion = !(config.services.netbird.clients ? sne-connect);
-          message = "The netbird-desktop and netbird aspects cannot be used together.";
-        }
-      ];
+      options.netbird.clientCgroups = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        readOnly = true;
+        description = ''
+          Cgroups of this machine's NetBird client services.
 
-      services.resolved.enable = true;
-
-      services.netbird = {
-        package = pkgs.unstable.netbird;
-        ui.enable = false;
-
-        clients.default = {
-          name = "netbird";
-          interface = "wt0";
-          port = 51820;
-          environment.NB_CONFIG = lib.mkForce "/var/lib/netbird/default.json";
-          openFirewall = true;
-          openInternalFirewall = true;
-        };
+          NetBird reaches its management, relays and peers with its own
+          WireGuard, STUN and relay traffic, which does not survive being
+          proxied, so consumers use these to keep it outside the sing-box tun.
+        '';
       };
 
-      users.users.${config.constants.nvirellia.username}.extraGroups = [
-        config.services.netbird.clients.default.user.group
-      ];
+      config = {
+        netbird.clientCgroups = lib.mapAttrsToList (
+          _: client: "system.slice/${client.service.name}.service"
+        ) config.services.netbird.clients;
 
-      systemd.services.netbird.serviceConfig.StateDirectoryMode = lib.mkForce "0777";
+        assertions = [
+          {
+            assertion = !(config.services.netbird.clients ? sne-connect);
+            message = "The netbird-desktop and netbird aspects cannot be used together.";
+          }
+        ];
+
+        services.resolved.enable = true;
+
+        services.netbird = {
+          package = pkgs.unstable.netbird;
+          ui.enable = false;
+
+          clients.default = {
+            name = "netbird";
+            interface = "wt0";
+            port = 51820;
+            environment.NB_CONFIG = lib.mkForce "/var/lib/netbird/default.json";
+            openFirewall = true;
+            openInternalFirewall = true;
+          };
+        };
+
+        users.users.${config.constants.nvirellia.username}.extraGroups = [
+          config.services.netbird.clients.default.user.group
+        ];
+
+        systemd.services.netbird.serviceConfig.StateDirectoryMode = lib.mkForce "0777";
+      };
     };
 
   flake.modules.homeManager.netbird-desktop =
