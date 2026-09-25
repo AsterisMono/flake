@@ -1,6 +1,6 @@
 keys:
   - &noa age155rf8ggpnmdmcpwkd4gj3qy8j05wdtz7cwf96k50um6xly40h3wqc8pthy
-  - &mira age1fca2dlmqukt48zg89lrd0k2s5q8w52f9z3tyrfzcr2r2sj8gegxssldpzp
+  - &grokbox age1fca2dlmqukt48zg89lrd0k2s5q8w52f9z3tyrfzcr2r2sj8gegxssldpzp
   - &asymmetry age1r6yhequnuznq8chh6l6zq4mwdmf3htcffsxndg4r542qffuj4chsdzlgws
   - &parallax age1umq8y8qy5af02krxupz4lfa3tg6x2mcdhzsdatlmmttgpdyz7fqs3w69rx
 creation_rules:
@@ -11,17 +11,17 @@ creation_rules:
   # editable. sops applies the first matching rule, so keep the patterns
   # disjoint; there is no catch-all, and a document that matches no rule cannot
   # be encrypted until one names exactly who decrypts it.
-  - path_regex: modules/secrets/(honcho\.env|mira-agent\.yaml|netbird\.yaml)$
+  - path_regex: ^modules/secrets/netbird\.yaml$
     key_groups:
       - age:
           - *noa
-          - *mira
+          - *grokbox
   - path_regex: modules/secrets/sing-box\.json$
     key_groups:
       - age:
           - *noa
           - *asymmetry
-          - *mira
+          - *grokbox
           - *parallax
   # Only the workstations decrypt this: both read it through NixOS provisioning,
   # so the document has no maintainer recipient and is write-once by design.

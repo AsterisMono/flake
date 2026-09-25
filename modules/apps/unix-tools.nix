@@ -27,9 +27,9 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      settings."mira" = {
+      settings."grokbox" = {
         HostName = "10.0.0.21";
-        User = "mira";
+        User = "root";
       };
     };
 
