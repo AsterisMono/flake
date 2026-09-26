@@ -9,6 +9,7 @@
     plymouth
     podman
     power
+    sleep
     stylix
     u2f
     zswap

@@ -43,8 +43,9 @@ PanelWindow {
   }
 
   // Attached to a long-lived bar surface so closing a popup cannot end it.
-  // Herdr's working, blocked and unseen done agents keep automatic lock and
-  // sleep paused. Stale snapshots and fixture data must not keep us awake.
+  // Herdr's working, blocked and unseen done agents keep the automatic dim,
+  // screen off and sleep sequence paused. Stale snapshots and fixture data must
+  // not keep us awake.
   IdleInhibitor {
     window: bar
     enabled: Power.awakeActive || (

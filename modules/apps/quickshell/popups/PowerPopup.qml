@@ -191,8 +191,8 @@ PopupFrame {
   Text {
     width: parent.width
     text: Power.awakeActive
-      ? Power.awakeSummary + ". Automatic idle behavior is paused; manual locking and before-sleep locking still work."
-      : "Pauses automatic lock and sleep while you read or present. Manual locking and before-sleep locking still work."
+      ? Power.awakeSummary + ". Automatic dimming, screen off and sleep are paused; locking by hand and by closing a laptop lid still work."
+      : "Pauses automatic dimming, screen off and sleep while you read or present. Locking by hand and by closing a laptop lid still work."
     color: Theme.muted
     font.family: Theme.reading
     font.pixelSize: Theme.fontTiny

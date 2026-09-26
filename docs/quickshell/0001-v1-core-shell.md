@@ -103,7 +103,7 @@ Keep awake offers 30 minutes, 1 hour, and explicitly “Until turned off”; def
 
 Attach the live inhibitor to a long-lived bar surface, not the popup: closing the popup must not end it. Use a deadline that is rechecked after suspend/resume and output changes. Cold shell restart resets inhibition off; do not silently persist “forever.” Verify actual compositor behavior before deciding whether one inhibitor or one per visible output is needed. Quickshell's [IdleInhibitor](https://quickshell.org/docs/v0.3.0/types/Quickshell.Wayland/IdleInhibitor/) is surface-associated, so fullscreen/visibility behavior is an implementation gate.
 
-Preserve the current Swayidle sequence: lock at 300 seconds, DPMS off at 600, suspend-then-hibernate at 1800, and unconditional locking before sleep. Test Keep awake against that exact configuration; manual locking and before-sleep locking must remain effective.
+Preserve the Swayidle sequence: dim at 300 seconds, DPMS off at 600, and suspend at 900, hibernating only after the configured time in suspend and only where hibernation is available. Idle never locks the session; closing the laptop lid is the only automatic lock. Test Keep awake against that configuration; manual locking and lid locking must remain effective.
 
 ### Notification center
 
@@ -208,7 +208,7 @@ Each checkpoint should leave a testable result. Do not wait until a full shell e
 - Exercise two outputs, output unplug/replug, fractional scaling, portrait geometry, many windows, long/CJK titles, fullscreen, scratchpad and compositor reconnect. Confirm task order follows workspace and on-screen position when windows are moved, resized, stacked or tabbed, and that the overflow list matches the bar.
 - Verify only one poller per metric and one notification server regardless of output count. Measure idle CPU, wakeups, and memory against the current Waybar/Mako baseline under the same conditions; investigate sustained regressions rather than inventing a target from the HTML.
 - Validate malicious/oversized notification input, stale actions, transient/replaced/critical notifications, clear, DND and process restart.
-- Verify Keep awake survives popup closure, expires correctly after resume, and does not bypass explicit lock/before-sleep protection.
+- Verify Keep awake survives popup closure, expires correctly after resume, and does not bypass explicit locking or the lid lock.
 - Keep pure model/lifecycle tests separate from QML interaction tests and a real SwayFX integration checklist. Nix validation must preserve `nixos-configurations-import-base`; no blanket dependency update is part of this work.
 - Test first in the existing VM/test configuration where practical, then on a real output with explicit activation approval. A VM may not establish final blur/performance quality.
 - Rollback restores the previous Waybar aspect, its sensor-option owner and service conditions, and Mako as the sole notification daemon, or uses the previous working NixOS generation. Keep that complete path available until normal daily use is verified. Do not deploy or alter the running session merely to prepare these plans.

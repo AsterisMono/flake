@@ -9,7 +9,6 @@
       secure-boot
       i18n
       substituter-cn
-      sleep
     ];
     diskoConfig = inputs.self.diskoConfigurations.xfs-workstation;
     hardware =
