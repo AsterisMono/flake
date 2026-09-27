@@ -16,9 +16,9 @@ The user's selected direction is to connect this to **herdr**. Herdr remains the
 
 ## Archived exploration
 
-[Open the interactive prototype](quickshell.prototype.html) and choose “Work in flight”; the URL query `?preview=work&glass=C` also selects this view. [V1's document](0001-v1-core-shell.md#archived-design) describes the shared material.
+[Open the interactive prototype](quickshell.prototype.html?popup=work). The default material is Clearlooks 2; `?theme=glass` is the Stylix glass reading. The panel matches `popups/WorkPopup.qml`: Agents, account usage, attention groups, and a source line. A row opens that agent and nothing else. There is no Return thread, no progress percentage, and no Stop or Retry. [V1's document](0001-v1-core-shell.md#archived-design) records the earlier shared material.
 
-The exploration was reviewed as a rendered HTML capture at 1920 × 1080 logical pixels, not live herdr data; the capture is not kept in the repository. Prototype controls were hidden for it. The build/download/check rows, percentages, Stop and Retry actions are illustrative interaction samples. They are **not** an assertion that herdr supplies progress, build results, safe cancellation, or restart operations. Return thread bookmark controls remain visible in this archived exploration; that feature is not selected for V2.
+The 2026-09-18 exploration was reviewed as a rendered HTML capture at 1920 × 1080 logical pixels, not live herdr data; the capture is not kept in the repository. Prototype controls were hidden for it. The build/download/check rows, percentages, Stop and Retry actions in that older file were illustrative interaction samples. They were **not** an assertion that herdr supplies progress, build results, safe cancellation, or restart operations, and they are not in the rebuilt prototype. Return thread was visible in that exploration and is not selected for V2.
 
 Carry forward the panel's feeling, grouping, restraint, and persistence of ready work. Replace its invented job semantics with the verified herdr model below.
 

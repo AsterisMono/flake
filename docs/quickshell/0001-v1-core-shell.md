@@ -16,15 +16,17 @@ The emotional direction is a quiet workstation, soft technical precision, and a 
 | --- | --- |
 | V1, this document | Both bars, workspaces and titled window tasks, status and media, calendar, audio, battery/power/Keep awake, notification center, multi-output behavior, and Nix/session integration. |
 | V2, document 0002 | Work in flight connected to herdr, using the V1 visual and popup infrastructure. |
-| Explored, not selected | Return thread: notes attached to windows. Preserved in the prototype, but not an implementation requirement for either release. |
+| Explored, not selected | Return thread: notes attached to windows. Not in the live shell, and not in the rebuilt HTML prototype. |
 
 V1 must be useful and complete without herdr. This is not a one-for-one widget port, nor a broader replacement for the launcher, lock screen, compositor, or session manager.
 
 ## Archived design
 
-- [Interactive HTML prototype](quickshell.prototype.html): copied unchanged from the working prototype. Open locally in a browser. Choose “Work in flight,” or the rightmost bell; the default also demonstrates the unselected Return thread exploration.
+- [Interactive HTML prototype](quickshell.prototype.html): rebuilt from the live QML on 2026-09-27 and kept in sync with `modules/apps/quickshell.prototype.html`. Open it in a browser. The default material is Clearlooks 2; `?theme=glass` restores the Stylix glass reading. `?popup=work` or `?popup=notifications` opens those panels. `?dock=0` hides the prototype palette. Return thread, the old notification-layout switcher, and job-progress controls are not in this file.
 
-The prototype was reviewed as a browser render at 1920 × 1080 logical pixels, with prototype controls and the V2/Return thread affordances hidden for the V1 projection. Renders and the generated sky wallpaper are not kept in the repository; the page falls back to its flat backing colour, and the wallpaper's provenance and prompt stay recorded in the HTML comment. It is not a running Quickshell session.
+Clearlooks is a prototype material only. The live shell still reads its colours from Stylix through `Theme.qml`.
+
+The notes below describe the 2026-09-18 review of the earlier desk-rails prototype, which this file replaces. That review used a 1920 × 1080 browser render, with prototype controls and the V2/Return thread affordances hidden for the V1 projection. Renders and the generated sky wallpaper are not kept in the repository; the page paints a CSS stand-in, and the wallpaper prompt stays in the HTML comment. It is not a running Quickshell session.
 
 All actions and data in the HTML are simulated and memory-only. Its preview toolbar, alternate layouts, sample jobs, and JavaScript are not production requirements. Preserve it as a design artifact, not a starting application architecture.
 
