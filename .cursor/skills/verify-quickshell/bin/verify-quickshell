@@ -1,0 +1,999 @@
+#!/usr/bin/env bash
+# Drive the real desk-bars Quickshell (modules/apps/quickshell/shell.qml)
+# inside an isolated headless Sway this script starts. Never the HTML prototype,
+# and never the machine's systemd user service.
+# Contract: .cursor/skills/verify-quickshell/SKILL.md
+set -euo pipefail
+
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+SKILL_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+REPO_ROOT=$(cd "$SKILL_DIR/../../.." && pwd)
+SCRATCH="$SKILL_DIR/scratch"
+EVIDENCE_ROOT="$SKILL_DIR/evidence"
+QML_SRC="$REPO_ROOT/modules/apps/quickshell"
+
+CLICK_X=1860
+CLICK_Y=1065
+SCREEN_W=1920
+SCREEN_H=1080
+
+usage() {
+  cat <<EOF
+usage: verify-quickshell <command>
+
+  launch
+  doctor
+  drive <feature-id>
+  step <step-id>
+  steps
+  cleanup
+
+feature ids:
+  work-fixture-flights
+  work-fixture-empty
+  shell-isolated-session
+  qml-shell-entrypoint
+
+Starts headless Sway and quickshell -p on a copy of modules/apps/quickshell.
+Does not start systemd user services, does not deploy, and does not open
+modules/apps/quickshell.prototype.html.
+EOF
+}
+
+require_repo() {
+  if [[ ! -f "$REPO_ROOT/flake.nix" || ! -f "$QML_SRC/shell.qml" ]]; then
+    echo "verify-quickshell: $REPO_ROOT is not the flake checkout" >&2
+    exit 1
+  fi
+}
+
+nix_setup() {
+  set +u
+  if [[ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
+    # shellcheck disable=SC1091
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  fi
+  set -u
+  if [[ "${NIX_CONFIG:-}" != *flakes* ]]; then
+    if [[ -n "${NIX_CONFIG:-}" ]]; then
+      export NIX_CONFIG="${NIX_CONFIG}"$'\nexperimental-features = nix-command flakes'
+    else
+      export NIX_CONFIG=$'experimental-features = nix-command flakes'
+    fi
+  fi
+}
+
+have_nix() {
+  nix_setup
+  command -v nix >/dev/null 2>&1
+}
+
+load_run() {
+  local expected_root=$REPO_ROOT
+  if [[ ! -f "$SCRATCH/run.env" ]]; then
+    echo "verify-quickshell: no verification run; launch first" >&2
+    exit 1
+  fi
+  # shellcheck disable=SC1091
+  source "$SCRATCH/run.env"
+  if [[ "$REPO_ROOT" != "$expected_root" ]]; then
+    echo "verify-quickshell: run env repo $REPO_ROOT does not match $expected_root" >&2
+    exit 1
+  fi
+}
+
+foreign_session() {
+  [[ -n "${WAYLAND_DISPLAY:-}" || -n "${SWAYSOCK:-}" ]]
+}
+
+other_compositors() {
+  pgrep -ax quickshell || true
+  pgrep -ax sway || true
+}
+
+nix_build_tools() {
+  nix_setup
+  local expr
+  expr=$(cat <<EOF
+let
+  flake = builtins.getFlake "${REPO_ROOT}";
+  system = builtins.currentSystem;
+  pkgs = import flake.inputs.nixpkgs { inherit system; };
+in
+pkgs.buildEnv {
+  name = "verify-quickshell-tools";
+  paths = with pkgs; [
+    quickshell
+    sway
+    grim
+    dbus
+    mesa
+    libglvnd
+    fontconfig
+    dejavu_fonts
+    pkg-config
+    wayland
+    wayland.dev
+  ];
+}
+EOF
+)
+  # A caller LD_LIBRARY_PATH from a previous software-GL session breaks Nix.
+  env -u LD_LIBRARY_PATH -u LIBGL_DRIVERS_PATH -u LIBGL_ALWAYS_SOFTWARE \
+    -u GALLIUM_DRIVER -u __EGL_VENDOR_LIBRARY_DIRS -u QT_PLUGIN_PATH \
+    nix build --impure --no-link -o "$SCRATCH/tools" --expr "$expr"
+}
+
+compile_pointer() {
+  local pc
+  pc=$(find "$SCRATCH/tools" -name 'wayland-client.pc' -print -quit)
+  if [[ -z "$pc" ]]; then
+    echo "verify-quickshell: wayland-client.pc missing from the tool env" >&2
+    return 1
+  fi
+  if ! command -v gcc >/dev/null 2>&1; then
+    echo "verify-quickshell: gcc is not on PATH; the pointer helper cannot be built" >&2
+    return 1
+  fi
+  PKG_CONFIG_PATH=$(dirname "$pc") \
+    "$SCRATCH/tools/bin/pkg-config" --exists wayland-client
+  # shellcheck disable=SC2046
+  PKG_CONFIG_PATH=$(dirname "$pc") gcc -O2 -I"$SCRIPT_DIR" -o "$SCRATCH/pointer-click" \
+    "$SCRIPT_DIR/pointer-click.c" "$SCRIPT_DIR/vpointer.c" \
+    $("$SCRATCH/tools/bin/pkg-config" --cflags --libs wayland-client)
+}
+
+write_scaffolding() {
+  local config="$SCRATCH/config"
+  local stubs="$SCRATCH/stubs"
+  rm -rf "$config" "$stubs"
+  mkdir -p "$config" "$stubs"
+  cp -a "$QML_SRC"/. "$config"/
+  rm -f "$config/default.nix"
+  cat >"$stubs/health" <<'EOF'
+#!/bin/sh
+printf '%s\n' '{"iface":"lo","netUp":0,"netDown":0,"memUsed":1,"memTotal":8,"swapUsed":0,"swapTotal":0,"zswap":0,"zswapped":0,"psiSome10":0,"psiSome60":0,"psiSome300":0,"psiFull10":0,"psiFull60":0,"psiFull300":0,"temp":null,"failedSystem":0,"failedUser":0}'
+EOF
+  cat >"$stubs/waycat" <<'EOF'
+#!/bin/sh
+printf '%s\n' 'A'
+exec sleep 3600
+EOF
+  cat >"$stubs/brightnessctl" <<'EOF'
+#!/bin/sh
+exit 1
+EOF
+  cat >"$stubs/usage" <<'EOF'
+#!/bin/sh
+printf '%s\n' '{"ok":false}'
+EOF
+  chmod +x "$stubs"/*
+  cat >"$config/StylixPalette.qml" <<'EOF'
+pragma Singleton
+import QtQuick
+import Quickshell
+
+// Catppuccin Mocha fallback from modules/apps/quickshell/default.nix.
+Singleton {
+  readonly property color base00: "#1e1e2e"
+  readonly property color base01: "#313244"
+  readonly property color base02: "#45475a"
+  readonly property color base03: "#6c7086"
+  readonly property color base04: "#a6adc8"
+  readonly property color base05: "#cdd6f4"
+  readonly property color base06: "#f5e0dc"
+  readonly property color base07: "#b4befe"
+  readonly property color base08: "#f38ba8"
+  readonly property color base09: "#fab387"
+  readonly property color base0A: "#f9e2af"
+  readonly property color base0B: "#a6e3a1"
+  readonly property color base0C: "#94e2d5"
+  readonly property color base0D: "#89b4fa"
+  readonly property color base0E: "#cba6f7"
+  readonly property color base0F: "#f2cdcd"
+}
+EOF
+  cat >"$config/Runtime.qml" <<EOF
+pragma Singleton
+import Quickshell
+
+// Same property names as modules/apps/quickshell/default.nix runtimeQml.
+// Paths are local stubs: no secret files, no herdr socket, no network script.
+Singleton {
+  readonly property string quickshellVersion: "verify"
+  readonly property string swayVersion: "verify"
+  readonly property string hostName: "verify-quickshell"
+  readonly property string homeDirectory: "$SCRATCH"
+  readonly property string nixosVersion: "verify"
+  readonly property string herdrEndpoint: ""
+  readonly property string agentUsageScript: "$stubs/usage"
+  readonly property string codexExecutable: "/bin/false"
+  readonly property string deepseekKeyPath: ""
+  readonly property string opencodeKeyPath: ""
+  readonly property string openrouterKeyPath: ""
+  readonly property string swaymsg: "$SCRATCH/tools/bin/swaymsg"
+  readonly property string healthScript: "$stubs/health"
+  readonly property string sensorDirectory: ""
+  readonly property string sensorInput: "temp1_input"
+  readonly property string herdrHostScript: ""
+  readonly property string pavucontrol: "/bin/false"
+  readonly property string brightnessctl: "$stubs/brightnessctl"
+  readonly property string waycat: "$stubs/waycat"
+  readonly property var btopCommand: ["/bin/true"]
+}
+EOF
+}
+
+sway_env() {
+  env -u WAYLAND_DISPLAY -u SWAYSOCK -u QS_WORK_FIXTURE \
+    XDG_RUNTIME_DIR="$SCRATCH/runtime" \
+    XDG_SESSION_DESKTOP=sway \
+    WLR_BACKENDS=headless \
+    WLR_LIBINPUT_NO_DEVICES=1 \
+    WLR_RENDERER=pixman \
+    WLR_NO_HARDWARE_CURSORS=1 \
+    LIBGL_ALWAYS_SOFTWARE=1 \
+    GALLIUM_DRIVER=llvmpipe \
+    LIBGL_DRIVERS_PATH="$SCRATCH/tools/lib/dri" \
+    __EGL_VENDOR_LIBRARY_DIRS="$SCRATCH/tools/share/glvnd/egl_vendor.d" \
+    LD_LIBRARY_PATH="$SCRATCH/tools/lib" \
+    PATH="$SCRATCH/tools/bin:$PATH" \
+    "$@"
+}
+
+shell_env() {
+  # shellcheck disable=SC1091
+  source "$SCRATCH/run.env"
+  sway_env \
+    WAYLAND_DISPLAY="$WAYLAND_DISPLAY" \
+    SWAYSOCK="$SWAYSOCK" \
+    QT_QPA_PLATFORM=wayland \
+    QT_OPENGL=software \
+    "$@"
+}
+
+cmdline_of() {
+  local pid=$1
+  if [[ ! -r "/proc/$pid/cmdline" ]]; then
+    return 1
+  fi
+  tr '\0' ' ' <"/proc/$pid/cmdline"
+}
+
+signal_tree() {
+  local signal=$1
+  local pid=$2
+  local child
+  for child in $(ps -o pid= --ppid "$pid" | awk '{print $1}'); do
+    signal_tree "$signal" "$child"
+  done
+  kill "-$signal" "$pid" 2>/dev/null || true
+}
+
+stop_pidfile() {
+  local pidfile=$1
+  local marker=$2
+  local pid cmd
+  [[ -f "$pidfile" ]] || return 0
+  pid=$(cat "$pidfile")
+  [[ -n "$pid" && "$pid" =~ ^[0-9]+$ ]] || return 0
+  if [[ ! -d "/proc/$pid" ]]; then
+    rm -f "$pidfile"
+    return 0
+  fi
+  cmd=$(cmdline_of "$pid" || true)
+  if [[ "$cmd" != *"$marker"* ]]; then
+    echo "verify-quickshell: refusing to signal $pid ($cmd); marker $marker absent" >&2
+    return 1
+  fi
+  signal_tree TERM "$pid"
+  local i
+  for i in 1 2 3 4 5 6 7 8 9 10; do
+    [[ -d "/proc/$pid" ]] || break
+    sleep 0.2
+  done
+  if [[ -d "/proc/$pid" ]]; then
+    signal_tree KILL "$pid"
+  fi
+  rm -f "$pidfile"
+}
+
+stop_our_processes() {
+  local config="${CONFIG:-$SCRATCH/config}"
+  stop_pidfile "$SCRATCH/qs.pid" "$config"
+  stop_pidfile "$SCRATCH/sway.pid" "$SCRATCH/sway.conf"
+}
+
+wait_for_socket() {
+  local i socket ipc
+  for i in $(seq 1 50); do
+    socket=$(find "$SCRATCH/runtime" -maxdepth 1 -type s -name 'wayland-*' -print -quit || true)
+    ipc=$(find "$SCRATCH/runtime" -maxdepth 1 -type s -name 'sway-ipc*.sock' -print -quit || true)
+    if [[ -n "$socket" && -n "$ipc" ]]; then
+      WAYLAND_DISPLAY=$(basename "$socket")
+      SWAYSOCK=$ipc
+      return 0
+    fi
+    sleep 0.1
+  done
+  echo "verify-quickshell: headless sway did not create a wayland socket" >&2
+  return 1
+}
+
+start_sway() {
+  mkdir -p "$SCRATCH/runtime"
+  chmod 700 "$SCRATCH/runtime"
+  printf '%s\n' 'output * resolution 1920x1080' >"$SCRATCH/sway.conf"
+  sway_env setsid "$SCRATCH/tools/bin/dbus-run-session" "$SCRATCH/tools/bin/sway" -c "$SCRATCH/sway.conf" \
+    >"$SCRATCH/sway.log" 2>&1 &
+  echo $! >"$SCRATCH/sway.pid"
+  wait_for_socket
+}
+
+wait_loaded() {
+  local pid
+  pid=$(cat "$SCRATCH/qs.pid")
+  local i
+  for i in $(seq 1 40); do
+    if grep -q 'Configuration Loaded' "$SCRATCH/qs.log"; then
+      return 0
+    fi
+    if [[ ! -d "/proc/$pid" ]]; then
+      echo "verify-quickshell: quickshell exited before Configuration Loaded" >&2
+      return 1
+    fi
+    sleep 0.25
+  done
+  echo "verify-quickshell: timed out waiting for Configuration Loaded" >&2
+  return 1
+}
+
+start_quickshell() {
+  local fixture=$1
+  stop_pidfile "$SCRATCH/qs.pid" "$SCRATCH/config"
+  : >"$SCRATCH/qs.log"
+  shell_env QS_WORK_FIXTURE="$fixture" \
+    setsid "$SCRATCH/tools/bin/quickshell" --no-color -p "$SCRATCH/config" \
+    >"$SCRATCH/qs.log" 2>&1 &
+  echo $! >"$SCRATCH/qs.pid"
+  echo "$fixture" >"$SCRATCH/fixture"
+  wait_loaded
+  if ! grep -q 'Shell ID: "desk-bars"' "$SCRATCH/qs.log"; then
+    echo "verify-quickshell: shell log has no Shell ID desk-bars" >&2
+    return 1
+  fi
+}
+
+launch() {
+  require_repo
+  if [[ -f "$SCRATCH/run.env" ]]; then
+    echo "verify-quickshell: a run is already recorded; cleanup first" >&2
+    exit 1
+  fi
+  if foreign_session; then
+    echo "verify-quickshell: WAYLAND_DISPLAY or SWAYSOCK is set in this shell; refusing to attach to it" >&2
+    exit 1
+  fi
+  local others
+  others=$(other_compositors)
+  if [[ -n "$others" ]]; then
+    echo "verify-quickshell: quickshell or sway is already running; refusing to attach or kill it" >&2
+    printf '%s\n' "$others" >&2
+    exit 1
+  fi
+  if ! command -v python3 >/dev/null 2>&1 || ! command -v gcc >/dev/null 2>&1; then
+    echo "verify-quickshell: python3 and gcc must be on PATH" >&2
+    exit 1
+  fi
+  if ! have_nix; then
+    echo "verify-quickshell: nix is not available" >&2
+    exit 1
+  fi
+  local system
+  nix_setup
+  system=$(env -u LD_LIBRARY_PATH nix eval --impure --raw --expr builtins.currentSystem)
+  if [[ "$system" != "x86_64-linux" ]]; then
+    echo "verify-quickshell: currentSystem is $system; refusing to build the shell tools" >&2
+    exit 1
+  fi
+  rm -rf "$SCRATCH"
+  mkdir -p "$SCRATCH"
+  if ! nix_build_tools >"$SCRATCH/launch.log" 2>&1; then
+    echo "verify-quickshell: tool build failed; see $SCRATCH/launch.log" >&2
+    tail -n 40 "$SCRATCH/launch.log" >&2 || true
+    exit 1
+  fi
+  if ! compile_pointer >>"$SCRATCH/launch.log" 2>&1; then
+    echo "verify-quickshell: pointer helper failed to compile; see $SCRATCH/launch.log" >&2
+    tail -n 40 "$SCRATCH/launch.log" >&2 || true
+    exit 1
+  fi
+  write_scaffolding
+  if ! cmp -s "$QML_SRC/shell.qml" "$SCRATCH/config/shell.qml"; then
+    echo "verify-quickshell: copied shell.qml does not match the repository" >&2
+    exit 1
+  fi
+  local run_id
+  run_id=$(date -u +%Y%m%dT%H%M%SZ)-$$
+  if ! start_sway; then
+    stop_our_processes || true
+    echo "verify-quickshell: sway failed to start; see $SCRATCH/sway.log" >&2
+    tail -n 40 "$SCRATCH/sway.log" >&2 || true
+    exit 1
+  fi
+  cat >"$SCRATCH/run.env" <<EOF
+RUN_ID=$run_id
+MODE=live
+REPO_ROOT=$REPO_ROOT
+WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+SWAYSOCK=$SWAYSOCK
+CONFIG=$SCRATCH/config
+TOOLS=$SCRATCH/tools
+EOF
+  if ! start_quickshell flights; then
+    echo "verify-quickshell: quickshell failed to load; see $SCRATCH/qs.log" >&2
+    tail -n 40 "$SCRATCH/qs.log" >&2 || true
+    stop_our_processes || true
+    rm -f "$SCRATCH/run.env"
+    exit 1
+  fi
+  echo "verify-quickshell: ready run=$run_id mode=live"
+}
+
+png_count() {
+  python3 - "$1" "$2" "$3" "$4" "$5" <<'PY'
+import struct, sys, zlib
+from pathlib import Path
+
+path, x0, y0, x1, y1 = sys.argv[1:]
+x0, y0, x1, y1 = map(int, (x0, y0, x1, y1))
+data = Path(path).read_bytes()
+if data[:8] != b"\x89PNG\r\n\x1a\n":
+    raise SystemExit("not a png")
+pos = 8
+width = height = color = None
+idat = b""
+while pos + 8 <= len(data):
+    ln, typ = struct.unpack(">I4s", data[pos:pos + 8])
+    chunk = data[pos + 8:pos + 8 + ln]
+    pos += 12 + ln
+    if typ == b"IHDR":
+        width, height, bit, color, comp, filt, inter = struct.unpack(">IIBBBBB", chunk)
+        if bit != 8 or inter != 0 or color not in (2, 6):
+            raise SystemExit(f"unsupported png bit={bit} color={color} inter={inter}")
+    elif typ == b"IDAT":
+        idat += chunk
+    elif typ == b"IEND":
+        break
+bpp = 3 if color == 2 else 4
+raw = zlib.decompress(idat)
+rows = []
+stride = width * bpp
+i = 0
+prev = bytearray(stride)
+
+def paeth(a, b, c):
+    p = a + b - c
+    pa, pb, pc = abs(p - a), abs(p - b), abs(p - c)
+    return a if pa <= pb and pa <= pc else b if pb <= pc else c
+
+for y in range(height):
+    f = raw[i]
+    i += 1
+    row = bytearray(raw[i:i + stride])
+    i += stride
+    if f == 1:
+        for x in range(stride):
+            left = row[x - bpp] if x >= bpp else 0
+            row[x] = (row[x] + left) & 255
+    elif f == 2:
+        for x in range(stride):
+            row[x] = (row[x] + prev[x]) & 255
+    elif f == 3:
+        for x in range(stride):
+            left = row[x - bpp] if x >= bpp else 0
+            row[x] = (row[x] + ((left + prev[x]) // 2)) & 255
+    elif f == 4:
+        for x in range(stride):
+            a = row[x - bpp] if x >= bpp else 0
+            b = prev[x]
+            c = prev[x - bpp] if x >= bpp else 0
+            row[x] = (row[x] + paeth(a, b, c)) & 255
+    elif f != 0:
+        raise SystemExit(f"bad filter {f}")
+    rows.append(bytes(row))
+    prev = row
+n = 0
+for y in range(max(0, y0), min(height, y1)):
+    row = rows[y]
+    for x in range(max(0, x0), min(width, x1)):
+        pix = row[x * bpp:x * bpp + 3]
+        if pix != b"\x00\x00\x00":
+            n += 1
+print(n)
+PY
+}
+
+grim_to() {
+  local dest=$1
+  shell_env "$SCRATCH/tools/bin/grim" -t png "$dest"
+}
+
+wait_bars() {
+  local png=$1
+  local i count
+  for i in $(seq 1 20); do
+    grim_to "$png"
+    count=$(png_count "$png" 0 1050 "$SCREEN_W" "$SCREEN_H")
+    if [[ "$count" -ge 40000 ]]; then
+      return 0
+    fi
+    sleep 0.25
+  done
+  echo "verify-quickshell: bottom bar did not paint" >&2
+  return 1
+}
+
+click_work() {
+  local dest=$1
+  printf '%s\n' "$SCRATCH/pointer-click $CLICK_X $CLICK_Y c" >>"$dest/command.txt"
+  shell_env "$SCRATCH/pointer-click" "$CLICK_X" "$CLICK_Y" c >"$dest/click-stdout.txt" 2>"$dest/click-stderr.txt"
+}
+
+require_count() {
+  local file=$1 x0=$2 y0=$3 x1=$4 y1=$5 op=$6 expect=$7 label=$8 dest=$9
+  local got
+  got=$(png_count "$file" "$x0" "$y0" "$x1" "$y1")
+  printf '%s %s %s %s\n' "$label" "$got" "$op" "$expect" >>"$dest/pixels.txt"
+  case "$op" in
+    eq) [[ "$got" -eq "$expect" ]] ;;
+    gt) [[ "$got" -gt "$expect" ]] ;;
+    ge) [[ "$got" -ge "$expect" ]] ;;
+    *) return 1 ;;
+  esac
+}
+
+assert_closed_bars() {
+  local png=$1 dest=$2
+  require_count "$png" 0 0 "$SCREEN_W" 30 ge 40000 top-bar "$dest"
+  require_count "$png" 0 1050 "$SCREEN_W" "$SCREEN_H" ge 40000 bottom-bar "$dest"
+  require_count "$png" 200 200 1700 900 eq 0 center "$dest"
+  require_count "$png" 1480 250 1910 1048 eq 0 popup-closed "$dest"
+}
+
+fixture_of_pid() {
+  local pid=$1
+  tr '\0' '\n' <"/proc/$pid/environ" | awk -F= '$1=="QS_WORK_FIXTURE" { print $2 }'
+}
+
+assert_real_process() {
+  local fixture=$1 dest=$2
+  local pid cmd got
+  pid=$(cat "$SCRATCH/qs.pid")
+  cmd=$(cmdline_of "$pid")
+  printf '%s\n' "$cmd" >"$dest/quickshell-cmdline.txt"
+  [[ "$cmd" == *"$SCRATCH/config"* ]] || return 1
+  [[ "$cmd" == *"quickshell"* ]] || return 1
+  got=$(fixture_of_pid "$pid")
+  printf '%s\n' "$got" >"$dest/fixture.txt"
+  [[ "$got" == "$fixture" ]] || return 1
+  grep -q 'Configuration Loaded' "$SCRATCH/qs.log" || return 1
+  grep -q 'Shell ID: "desk-bars"' "$SCRATCH/qs.log" || return 1
+  grep -q 'readonly property string herdrEndpoint: ""' "$SCRATCH/config/Runtime.qml" || return 1
+  grep -q 'readonly property string deepseekKeyPath: ""' "$SCRATCH/config/Runtime.qml" || return 1
+  cmp -s "$QML_SRC/shell.qml" "$SCRATCH/config/shell.qml" || return 1
+}
+
+capture_log() {
+  local dest=$1
+  cp -a "$SCRATCH/qs.log" "$dest/qs.log"
+}
+
+systemd_quickshell_state() {
+  if ! command -v systemctl >/dev/null 2>&1; then
+    echo "systemctl-absent"
+    return 0
+  fi
+  systemctl --user is-active quickshell 2>/dev/null || true
+}
+
+write_session() {
+  local dest=$1
+  local qs_pid sway_pid
+  qs_pid=$(cat "$SCRATCH/qs.pid")
+  sway_pid=$(cat "$SCRATCH/sway.pid")
+  {
+    echo "wayland-display: $WAYLAND_DISPLAY"
+    echo "wayland-socket: $SCRATCH/runtime/$WAYLAND_DISPLAY"
+    echo "swaysock: $SWAYSOCK"
+    echo "quickshell-pid: $qs_pid"
+    echo "quickshell-cmdline: $(cmdline_of "$qs_pid")"
+    echo "sway-pid: $sway_pid"
+    echo "sway-cmdline: $(cmdline_of "$sway_pid")"
+    echo "foreign-wayland: absent"
+    echo "systemd-user-quickshell: $(systemd_quickshell_state)"
+    if [[ -e "$REPO_ROOT/result" || -L "$REPO_ROOT/result" ]]; then
+      echo "result-symlink: present"
+    else
+      echo "result-symlink: absent"
+    fi
+    if [[ -e /run/current-system ]]; then
+      echo "current-system: $(readlink -f /run/current-system)"
+    else
+      echo "current-system: absent"
+    fi
+  } >"$dest/session.txt"
+}
+
+finish_isolation() {
+  local dest=$1
+  git -C "$REPO_ROOT" status --porcelain >"$dest/git-status-after.txt"
+  write_session "$dest"
+  {
+    if cmp -s "$dest/git-status-before.txt" "$dest/git-status-after.txt"; then
+      echo "git-status: unchanged"
+    else
+      echo "git-status: changed"
+      diff -u "$dest/git-status-before.txt" "$dest/git-status-after.txt" || true
+    fi
+    if [[ "$SWAYSOCK" == "$SCRATCH/runtime/"* && -S "$SWAYSOCK" ]]; then
+      echo "swaysock-under-scratch: yes"
+    else
+      echo "swaysock-under-scratch: no"
+    fi
+    if [[ -S "$SCRATCH/runtime/$WAYLAND_DISPLAY" ]]; then
+      echo "wayland-under-scratch: yes"
+    else
+      echo "wayland-under-scratch: no"
+    fi
+  } >"$dest/isolation.txt"
+  local bad=0
+  cmp -s "$dest/git-status-before.txt" "$dest/git-status-after.txt" || bad=1
+  [[ "$SWAYSOCK" == "$SCRATCH/runtime/"* && -S "$SWAYSOCK" ]] || bad=1
+  [[ -S "$SCRATCH/runtime/$WAYLAND_DISPLAY" ]] || bad=1
+  grep -q 'result-symlink: absent' "$dest/session.txt" || bad=1
+  grep -q 'foreign-wayland: absent' "$dest/session.txt" || bad=1
+  if grep -q 'systemd-user-quickshell: active' "$dest/session.txt"; then
+    bad=1
+  fi
+  local cmd
+  cmd=$(cmdline_of "$(cat "$SCRATCH/sway.pid")")
+  [[ "$cmd" == *"$SCRATCH/sway.conf"* ]] || bad=1
+  return "$bad"
+}
+
+evidence_dir() {
+  local feature=$1
+  local dest="$EVIDENCE_ROOT/$RUN_ID/$feature"
+  mkdir -p "$dest"
+  printf '%s\n' "$dest"
+}
+
+write_meta() {
+  local dest=$1
+  local feature=$2
+  local entry=$3
+  {
+    echo "feature: $feature"
+    echo "entry-point: $entry"
+    echo "run: $RUN_ID"
+    echo "mode: $MODE"
+    echo "head: $(git -C "$REPO_ROOT" rev-parse HEAD)"
+    echo "date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    echo "shell: modules/apps/quickshell/shell.qml"
+    echo "click: $CLICK_X,$CLICK_Y"
+  } >"$dest/meta.txt"
+  printf '%s\n' "$feature" >"$dest/feature-id.txt"
+  printf '%s\n' "$entry" >"$dest/entry-point.txt"
+}
+
+prepare_feature() {
+  local feature=$1
+  local entry=$2
+  local dest
+  dest=$(evidence_dir "$feature")
+  write_meta "$dest" "$feature" "$entry"
+  git -C "$REPO_ROOT" status --porcelain >"$dest/git-status-before.txt"
+  : >"$dest/command.txt"
+  : >"$dest/pixels.txt"
+  printf '%s\n' "$dest"
+}
+
+worth_driving() {
+  if [[ "${MODE:-}" == "live" ]]; then
+    printf '%s\n' \
+      work-fixture-flights \
+      work-fixture-empty \
+      shell-isolated-session \
+      qml-shell-entrypoint
+  fi
+}
+
+doctor() {
+  require_repo
+  load_run
+  local status=ok
+  local qs_pid="" sway_pid="" fixture="" shell_line=""
+  if [[ ! -f "$SCRATCH/qs.pid" || ! -f "$SCRATCH/sway.pid" ]]; then
+    status=fail
+  else
+    qs_pid=$(cat "$SCRATCH/qs.pid")
+    sway_pid=$(cat "$SCRATCH/sway.pid")
+    if [[ ! -d "/proc/$qs_pid" || ! -d "/proc/$sway_pid" ]]; then
+      status=fail
+    fi
+  fi
+  if [[ "$status" == "ok" ]]; then
+    local qs_cmd sway_cmd
+    qs_cmd=$(cmdline_of "$qs_pid" || true)
+    sway_cmd=$(cmdline_of "$sway_pid" || true)
+    if [[ "$qs_cmd" != *"$SCRATCH/config"* || "$sway_cmd" != *"$SCRATCH/sway.conf"* ]]; then
+      status=fail
+    fi
+    if [[ ! -S "$SCRATCH/runtime/$WAYLAND_DISPLAY" || ! -S "$SWAYSOCK" ]]; then
+      status=fail
+    fi
+    if ! grep -q 'Configuration Loaded' "$SCRATCH/qs.log" || ! grep -q 'Shell ID: "desk-bars"' "$SCRATCH/qs.log"; then
+      status=fail
+    fi
+    fixture=$(fixture_of_pid "$qs_pid" || true)
+    shell_line=$(grep -F 'Shell ID:' "$SCRATCH/qs.log" | head -n 1 || true)
+  fi
+  local others="" line pid cmd
+  while IFS= read -r line; do
+    [[ -n "$line" ]] || continue
+    pid=${line%% *}
+    cmd=$(cmdline_of "$pid" || true)
+    if [[ "$cmd" != *"$SCRATCH"* ]]; then
+      others+="$line"$'\n'
+    fi
+  done < <(other_compositors)
+  if [[ -n "$others" ]]; then
+    status=fail
+  fi
+  echo "doctor: $status"
+  echo "run: $RUN_ID"
+  echo "mode: $MODE"
+  echo "repo: $REPO_ROOT"
+  echo "head: $(git -C "$REPO_ROOT" rev-parse HEAD)"
+  echo "system: $(uname -m)-linux"
+  echo "wayland-display: ${WAYLAND_DISPLAY:-unset}"
+  echo "swaysock: ${SWAYSOCK:-unset}"
+  echo "quickshell-pid: ${qs_pid:-none}"
+  echo "sway-pid: ${sway_pid:-none}"
+  echo "fixture: ${fixture:-none}"
+  echo "shell-log: ${shell_line:-missing}"
+  echo "prototype: not used"
+  echo "systemd-user-quickshell: $(systemd_quickshell_state)"
+  if [[ -n "$others" ]]; then
+    echo "other-compositors: present"
+    printf '%s\n' "$others" | sed 's/^/  /'
+  else
+    echo "other-compositors: none"
+  fi
+  echo "worth-driving:"
+  if [[ "$status" == "ok" ]]; then
+    worth_driving | sed 's/^/  /'
+  fi
+  [[ "$status" == "ok" ]]
+}
+
+step_flights_reload() {
+  local dest=$1
+  printf '%s\n' "quickshell --no-color -p $SCRATCH/config  # QS_WORK_FIXTURE=flights" >>"$dest/command.txt"
+  start_quickshell flights
+  assert_real_process flights "$dest"
+}
+
+step_empty_reload() {
+  local dest=$1
+  printf '%s\n' "quickshell --no-color -p $SCRATCH/config  # QS_WORK_FIXTURE=empty" >>"$dest/command.txt"
+  start_quickshell empty
+  assert_real_process empty "$dest"
+}
+
+step_shot_before() {
+  local dest=$1
+  printf '%s\n' "grim -t png before.png" >>"$dest/command.txt"
+  wait_bars "$dest/before.png"
+  assert_closed_bars "$dest/before.png" "$dest"
+}
+
+step_click() {
+  local dest=$1
+  click_work "$dest"
+  sleep 0.8
+}
+
+step_shot_after() {
+  local dest=$1
+  printf '%s\n' "grim -t png after.png" >>"$dest/command.txt"
+  grim_to "$dest/after.png"
+}
+
+step_assert_flights() {
+  local dest=$1
+  require_count "$dest/after.png" 1480 250 1910 760 gt 20000 flights-popup-upper "$dest"
+}
+
+step_assert_empty() {
+  local dest=$1
+  require_count "$dest/after.png" 1480 250 1910 760 eq 0 empty-popup-upper "$dest"
+  require_count "$dest/after.png" 1480 800 1910 1048 gt 15000 empty-popup-lower "$dest"
+}
+
+step_qml_source() {
+  local dest=$1
+  local src="$QML_SRC/shell.qml"
+  printf '%s\n' "grep ShellId and ShellRoot in modules/apps/quickshell/shell.qml" >>"$dest/command.txt"
+  grep -n -F '//@ pragma ShellId desk-bars' "$src" >"$dest/shellid.txt"
+  grep -n -F 'ShellRoot' "$src" >"$dest/shellroot.txt"
+  cmp -s "$src" "$SCRATCH/config/shell.qml"
+  printf '%s\n' "matches-running-config: yes" >"$dest/source-match.txt"
+  grep -F 'Shell ID: "desk-bars"' "$SCRATCH/qs.log" >"$dest/live-shell-id.txt"
+  grep -F 'Configuration Loaded' "$SCRATCH/qs.log" >"$dest/live-loaded.txt"
+}
+
+feature_of_step() {
+  case "$1" in
+    flights-reload | flights-before | flights-click | flights-after | flights-assert | flights-isolation) printf '%s\n' work-fixture-flights ;;
+    empty-reload | empty-before | empty-click | empty-after | empty-assert | empty-isolation) printf '%s\n' work-fixture-empty ;;
+    session-assert | session-isolation) printf '%s\n' shell-isolated-session ;;
+    qml-source | qml-isolation) printf '%s\n' qml-shell-entrypoint ;;
+    *) return 1 ;;
+  esac
+}
+
+entry_of_feature() {
+  case "$1" in
+    work-fixture-flights) printf '%s\n' "bottom-bar work chip, QS_WORK_FIXTURE=flights" ;;
+    work-fixture-empty) printf '%s\n' "bottom-bar work chip, QS_WORK_FIXTURE=empty" ;;
+    shell-isolated-session) printf '%s\n' "headless sway socket under scratch/runtime" ;;
+    qml-shell-entrypoint) printf '%s\n' "modules/apps/quickshell/shell.qml" ;;
+    *) return 1 ;;
+  esac
+}
+
+steps_of_feature() {
+  case "$1" in
+    work-fixture-flights) printf '%s\n' flights-reload flights-before flights-click flights-after flights-assert flights-isolation ;;
+    work-fixture-empty) printf '%s\n' empty-reload empty-before empty-click empty-after empty-assert empty-isolation ;;
+    shell-isolated-session) printf '%s\n' session-assert session-isolation ;;
+    qml-shell-entrypoint) printf '%s\n' qml-source qml-isolation ;;
+    *) return 1 ;;
+  esac
+}
+
+run_step_body() {
+  local step=$1
+  local feature dest
+  feature=$(feature_of_step "$step")
+  dest=$(evidence_dir "$feature")
+  case "$step" in
+    flights-reload) step_flights_reload "$dest" ;;
+    empty-reload) step_empty_reload "$dest" ;;
+    flights-before | empty-before) step_shot_before "$dest" ;;
+    flights-click | empty-click) step_click "$dest" ;;
+    flights-after | empty-after) step_shot_after "$dest" ;;
+    flights-assert) step_assert_flights "$dest" ;;
+    empty-assert) step_assert_empty "$dest" ;;
+    session-assert)
+      assert_real_process "$(cat "$SCRATCH/fixture")" "$dest"
+      write_session "$dest"
+      ;;
+    qml-source) step_qml_source "$dest" ;;
+    flights-isolation | empty-isolation | session-isolation | qml-isolation)
+      finish_isolation "$dest"
+      capture_log "$dest"
+      ;;
+    *)
+      echo "verify-quickshell: unknown step $step" >&2
+      return 1
+      ;;
+  esac
+}
+
+step_cmd() {
+  local step=${1:-}
+  if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 1
+  fi
+  require_repo
+  load_run
+  local feature
+  if ! feature=$(feature_of_step "$step"); then
+    case "$step" in
+      prototype | quickshell.prototype.html)
+        echo "verify-quickshell: refusing $step; the HTML prototype is not the shell" >&2
+        exit 1
+        ;;
+    esac
+    echo "verify-quickshell: unknown step $step" >&2
+    exit 1
+  fi
+  doctor >/dev/null
+  if [[ ! -f "$EVIDENCE_ROOT/$RUN_ID/$feature/meta.txt" ]]; then
+    prepare_feature "$feature" "$(entry_of_feature "$feature")" >/dev/null
+  fi
+  run_step_body "$step"
+}
+
+drive_cmd() {
+  local feature=${1:-}
+  if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 1
+  fi
+  case "$feature" in
+    prototype | quickshell.prototype.html | docs/quickshell/quickshell.prototype.html)
+      echo "verify-quickshell: refusing $feature; drive the real quickshell process, not the HTML prototype" >&2
+      exit 1
+      ;;
+  esac
+  require_repo
+  load_run
+  if ! steps_of_feature "$feature" >/dev/null; then
+    echo "verify-quickshell: unknown feature $feature" >&2
+    exit 1
+  fi
+  doctor >/dev/null
+  prepare_feature "$feature" "$(entry_of_feature "$feature")" >/dev/null
+  local step code=0 step_code=0
+  while IFS= read -r step; do
+    step_code=0
+    run_step_body "$step" || step_code=$?
+    if [[ "$code" -eq 0 && "$step_code" -ne 0 ]]; then
+      code=$step_code
+    fi
+  done < <(steps_of_feature "$feature")
+  if [[ "$code" -eq 0 ]]; then
+    echo "verify-quickshell: drove $feature run=$RUN_ID evidence=$EVIDENCE_ROOT/$RUN_ID/$feature"
+  else
+    echo "verify-quickshell: drive $feature failed code=$code evidence=$EVIDENCE_ROOT/$RUN_ID/$feature" >&2
+  fi
+  return "$code"
+}
+
+cleanup() {
+  require_repo
+  if [[ ! -f "$SCRATCH/run.env" ]]; then
+    echo "verify-quickshell: nothing to clean"
+    return 0
+  fi
+  # shellcheck disable=SC1091
+  source "$SCRATCH/run.env"
+  stop_our_processes
+  local evidence="$EVIDENCE_ROOT/$RUN_ID"
+  rm -rf "$SCRATCH"
+  echo "verify-quickshell: cleaned run=$RUN_ID evidence=$evidence"
+}
+
+main() {
+  local cmd=${1:-}
+  if [[ $# -eq 0 ]]; then
+    usage >&2
+    exit 1
+  fi
+  shift
+  case "$cmd" in
+    launch) launch "$@" ;;
+    doctor) doctor "$@" ;;
+    drive) drive_cmd "$@" ;;
+    step) step_cmd "$@" ;;
+    steps)
+      printf '%s\n' \
+        flights-reload flights-before flights-click flights-after flights-assert flights-isolation \
+        empty-reload empty-before empty-click empty-after empty-assert empty-isolation \
+        session-assert session-isolation \
+        qml-source qml-isolation
+      ;;
+    cleanup) cleanup "$@" ;;
+    *)
+      usage >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"

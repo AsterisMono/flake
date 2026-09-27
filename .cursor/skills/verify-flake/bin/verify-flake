@@ -1,0 +1,782 @@
+#!/usr/bin/env bash
+# Drive this personal NixOS flake the way the maintainer does.
+# Contract: .cursor/skills/verify-flake/SKILL.md
+set -euo pipefail
+
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+SKILL_DIR=$(cd "$SCRIPT_DIR/.." && pwd)
+REPO_ROOT=$(cd "$SKILL_DIR/../../.." && pwd)
+SCRATCH="$SKILL_DIR/scratch"
+EVIDENCE_ROOT="$SKILL_DIR/evidence"
+MACHINE_NAMES=(asymmetry grokbox installer parallax stylix-test)
+
+PUBLIC_RECIPES=(
+  build
+  dryrun
+  deploy
+  boot
+  rdeploy
+  elevate
+  install
+  collect-machine-info
+  build-installer-iso
+  generate-luks-password
+  prompt-luks-password
+  updatekeys
+  rewrap-secret
+  gc
+)
+
+usage() {
+  cat <<EOF
+usage: verify-flake <command>
+
+  launch
+  doctor
+  drive <feature-id>
+  step <step-id>
+  steps
+  cleanup
+
+feature ids:
+  just-recipe-list
+  flake-check-base-import
+  nix-build-toplevel-dry
+  nixos-configuration-names
+
+Refuses deploy, boot, dryrun, install, rdeploy, gc, secret rewrites, and ISO builds.
+Quickshell UI is verified by verify-quickshell, not this command.
+EOF
+}
+
+require_repo() {
+  if [[ ! -f "$REPO_ROOT/flake.nix" || ! -f "$REPO_ROOT/Justfile" ]]; then
+    echo "verify-flake: $REPO_ROOT is not the flake checkout" >&2
+    exit 1
+  fi
+}
+
+nix_setup() {
+  set +u
+  if [[ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]]; then
+    # shellcheck disable=SC1091
+    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+  fi
+  set -u
+  if [[ "${NIX_CONFIG:-}" != *flakes* ]]; then
+    if [[ -n "${NIX_CONFIG:-}" ]]; then
+      export NIX_CONFIG="${NIX_CONFIG}"$'\nexperimental-features = nix-command flakes'
+    else
+      export NIX_CONFIG=$'experimental-features = nix-command flakes'
+    fi
+  fi
+}
+
+have_nix() {
+  nix_setup
+  command -v nix >/dev/null 2>&1
+}
+
+load_run() {
+  local expected_root=$REPO_ROOT
+  if [[ ! -f "$SCRATCH/run.env" ]]; then
+    echo "verify-flake: no verification run; launch first" >&2
+    exit 1
+  fi
+  # shellcheck disable=SC1091
+  source "$SCRATCH/run.env"
+  if [[ "$REPO_ROOT" != "$expected_root" ]]; then
+    echo "verify-flake: run env repo $REPO_ROOT does not match $expected_root" >&2
+    exit 1
+  fi
+}
+
+snapshot_git_hooks() {
+  local hooks="$REPO_ROOT/.git/hooks"
+  local precommit_config="$REPO_ROOT/.pre-commit-config.yaml"
+  mkdir -p "$SCRATCH/hooks-before"
+  : >"$SCRATCH/hooks-before.list"
+  if [[ -d "$hooks" ]]; then
+    local file base
+    for file in "$hooks"/*; do
+      [[ -f "$file" ]] || continue
+      base=$(basename "$file")
+      [[ "$base" == *.sample ]] && continue
+      cp -a "$file" "$SCRATCH/hooks-before/$base"
+      printf '%s\n' "$base" >>"$SCRATCH/hooks-before.list"
+    done
+  fi
+  if [[ -e "$precommit_config" || -L "$precommit_config" ]]; then
+    echo present >"$SCRATCH/pre-commit-config.state"
+  else
+    echo absent >"$SCRATCH/pre-commit-config.state"
+  fi
+}
+
+restore_git_hooks() {
+  local hooks="$REPO_ROOT/.git/hooks"
+  local precommit_config="$REPO_ROOT/.pre-commit-config.yaml"
+  local state file base
+  if [[ -f "$SCRATCH/hooks-before.list" && -d "$hooks" ]]; then
+    shopt -s nullglob
+    for file in "$hooks"/*; do
+      [[ -f "$file" ]] || continue
+      base=$(basename "$file")
+      [[ "$base" == *.sample ]] && continue
+      if ! grep -qx "$base" "$SCRATCH/hooks-before.list"; then
+        rm -f "$file"
+      fi
+    done
+    shopt -u nullglob
+    while IFS= read -r base; do
+      [[ -n "$base" ]] || continue
+      cp -a "$SCRATCH/hooks-before/$base" "$hooks/$base"
+    done <"$SCRATCH/hooks-before.list"
+  fi
+  state=$(cat "$SCRATCH/pre-commit-config.state" 2>/dev/null || echo unknown)
+  if [[ "$state" == "absent" && (-e "$precommit_config" || -L "$precommit_config") ]]; then
+    rm -f "$precommit_config"
+  fi
+}
+
+launch() {
+  require_repo
+  if [[ -f "$SCRATCH/run.env" ]]; then
+    echo "verify-flake: a run is already recorded; cleanup first" >&2
+    exit 1
+  fi
+  mkdir -p "$SCRATCH"
+  local run_id mode reason_file
+  run_id=$(date -u +%Y%m%dT%H%M%SZ)-$$
+  reason_file="$SCRATCH/degraded-reason.txt"
+  : >"$reason_file"
+  snapshot_git_hooks
+  mode=blocked
+  if have_nix; then
+    set +e
+    (cd "$REPO_ROOT" && nix develop --command just --version >"$SCRATCH/just-version.txt" 2>"$SCRATCH/launch.log")
+    local develop_code=$?
+    set -e
+    nix --version >"$SCRATCH/nix-version.txt" 2>>"$SCRATCH/launch.log" || true
+    if [[ "$develop_code" -eq 0 ]]; then
+      mode=nix-develop
+    else
+      mode=degraded
+      {
+        echo "nix develop --command just --version exited $develop_code"
+        tail -n 40 "$SCRATCH/launch.log"
+      } >"$reason_file"
+    fi
+  else
+    mode=degraded
+    echo "nix is not on PATH and ~/.nix-profile was not sourced into a nix binary" >"$reason_file"
+    echo "nix missing" >"$SCRATCH/launch.log"
+  fi
+  if [[ "$mode" != "nix-develop" ]]; then
+    if command -v just >/dev/null 2>&1; then
+      mode=degraded
+    else
+      mode=blocked
+    fi
+  fi
+  cat >"$SCRATCH/run.env" <<EOF
+RUN_ID=$run_id
+MODE=$mode
+REPO_ROOT=$REPO_ROOT
+EOF
+  if [[ "$mode" == "blocked" ]]; then
+    echo "verify-flake: blocked run=$run_id" >&2
+    echo "verify-flake: see $reason_file" >&2
+    exit 1
+  fi
+  echo "verify-flake: ready run=$run_id mode=$mode"
+}
+
+recipe_listed() {
+  local file=$1
+  local name=$2
+  grep -Eq "^[[:space:]]+${name}([[:space:]]|#|$)" "$file"
+}
+
+summary_has() {
+  local file=$1
+  local name=$2
+  grep -Eq "(^|[[:space:]])${name}([[:space:]]|$)" "$file"
+}
+
+mutating_processes() {
+  ps -eo args= | awk '
+    /awk/ { next }
+    /nixos-rebuild/ || /nixos-anywhere/ || /nh os switch/ || /nh os boot/ { print; found = 1 }
+    /(^|[[:space:]])just (deploy|boot|dryrun|install|rdeploy|gc|updatekeys|rewrap-secret|generate-luks-password|prompt-luks-password|collect-machine-info|elevate|build-installer-iso)([[:space:]]|$)/ { print; found = 1 }
+  '
+}
+
+worth_driving() {
+  local feature
+  if [[ "$MODE" == "nix-develop" ]] || command -v just >/dev/null 2>&1; then
+    printf '%s\n' just-recipe-list
+  fi
+  if [[ "$MODE" == "nix-develop" ]]; then
+    printf '%s\n' flake-check-base-import
+    printf '%s\n' nix-build-toplevel-dry
+    printf '%s\n' nixos-configuration-names
+  fi
+}
+
+doctor() {
+  require_repo
+  load_run
+  local status=ok
+  local just_version="unavailable"
+  local nix_version="unavailable"
+  if [[ "$MODE" == "blocked" ]]; then
+    status=fail
+  elif [[ "$MODE" == "degraded" ]]; then
+    status=degraded
+  fi
+  if [[ "$MODE" == "nix-develop" ]]; then
+    set +e
+    (cd "$REPO_ROOT" && nix develop --command just --version >"$SCRATCH/doctor-just-version.txt" 2>"$SCRATCH/doctor-just.log")
+    local just_code=$?
+    set -e
+    if [[ "$just_code" -ne 0 ]]; then
+      status=fail
+      just_version="nix develop just --version exited $just_code"
+    else
+      just_version=$(tr -d '\r' <"$SCRATCH/doctor-just-version.txt")
+    fi
+  elif command -v just >/dev/null 2>&1; then
+    just_version=$(just --version 2>/dev/null || echo "just present but --version failed")
+  fi
+  if have_nix; then
+    nix_version=$(nix --version 2>/dev/null || echo "nix present but --version failed")
+  fi
+  local hits
+  hits=$(mutating_processes || true)
+  if [[ -n "$hits" ]]; then
+    status=fail
+  fi
+  local missing=""
+  local name
+  for name in "${PUBLIC_RECIPES[@]}"; do
+    if ! grep -Eq "^${name}([[:space:]]|:)" "$REPO_ROOT/Justfile"; then
+      missing+=" $name"
+    fi
+  done
+  echo "doctor: $status"
+  echo "run: $RUN_ID"
+  echo "mode: $MODE"
+  echo "nix: $nix_version"
+  echo "just: $just_version"
+  echo "system: $(uname -m)-linux"
+  echo "repo: $REPO_ROOT"
+  echo "head: $(git -C "$REPO_ROOT" rev-parse HEAD)"
+  if [[ -n "$missing" ]]; then
+    echo "justfile-deny-recipes: missing${missing}"
+  else
+    echo "justfile-deny-recipes: present-not-run"
+  fi
+  if [[ -n "$hits" ]]; then
+    echo "mutating-processes: present"
+    printf '%s\n' "$hits" | sed 's/^/  /'
+  else
+    echo "mutating-processes: none"
+  fi
+  echo "worth-driving:"
+  worth_driving | sed 's/^/  /'
+  echo "quickshell-module: modules/apps/quickshell is a separate surface; use verify-quickshell"
+  if [[ "$MODE" == "degraded" && -f "$SCRATCH/degraded-reason.txt" ]]; then
+    echo "degraded-reason: $SCRATCH/degraded-reason.txt"
+  fi
+  [[ "$status" != "fail" ]]
+}
+
+evidence_dir() {
+  local feature=$1
+  local dest="$EVIDENCE_ROOT/$RUN_ID/$feature"
+  mkdir -p "$dest"
+  printf '%s\n' "$dest"
+}
+
+write_meta() {
+  local dest=$1
+  local feature=$2
+  local entry=$3
+  {
+    echo "feature: $feature"
+    echo "entry-point: $entry"
+    echo "run: $RUN_ID"
+    echo "mode: $MODE"
+    echo "head: $(git -C "$REPO_ROOT" rev-parse HEAD)"
+    echo "date: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  } >"$dest/meta.txt"
+  printf '%s\n' "$feature" >"$dest/feature-id.txt"
+  printf '%s\n' "$entry" >"$dest/entry-point.txt"
+}
+
+write_unmet() {
+  local feature=$1
+  local message=$2
+  local dest
+  dest=$(evidence_dir "$feature")
+  write_meta "$dest" "$feature" "unmet precondition"
+  printf '%s\n' "$message" >"$dest/unmet.txt"
+  printf '2\n' >"$dest/exit-code.txt"
+  echo "verify-flake: unmet $feature" >&2
+  printf '%s\n' "$message" >&2
+}
+
+run_just_to() {
+  local stdout=$1
+  local stderr=$2
+  shift 2
+  set +e
+  if [[ "$MODE" == "nix-develop" ]]; then
+    (cd "$REPO_ROOT" && nix develop --command just "$@") >"$stdout" 2>"$stderr"
+  else
+    (cd "$REPO_ROOT" && just "$@") >"$stdout" 2>"$stderr"
+  fi
+  local code=$?
+  set -e
+  return "$code"
+}
+
+run_nix_to() {
+  local stdout=$1
+  local stderr=$2
+  shift 2
+  nix_setup
+  set +e
+  (cd "$REPO_ROOT" && nix "$@") >"$stdout" 2>"$stderr"
+  local code=$?
+  set -e
+  return "$code"
+}
+
+assert_public_recipes_in_list() {
+  local file=$1
+  local name
+  for name in "${PUBLIC_RECIPES[@]}"; do
+    if ! recipe_listed "$file" "$name"; then
+      echo "recipe $name missing from $file" >&2
+      return 1
+    fi
+  done
+}
+
+assert_public_recipes_in_summary() {
+  local file=$1
+  local name
+  for name in "${PUBLIC_RECIPES[@]}"; do
+    if ! summary_has "$file" "$name"; then
+      echo "recipe $name missing from summary $file" >&2
+      return 1
+    fi
+  done
+}
+
+write_isolation() {
+  local dest=$1
+  local before=$2
+  local after=$3
+  local hits
+  hits=$(mutating_processes || true)
+  {
+    if [[ -e "$REPO_ROOT/result" || -L "$REPO_ROOT/result" ]]; then
+      echo "result-symlink: present"
+    else
+      echo "result-symlink: absent"
+    fi
+    if [[ -e /run/current-system ]]; then
+      echo "current-system: $(readlink -f /run/current-system)"
+    else
+      echo "current-system: absent"
+    fi
+    if [[ -n "$before" && -f "$before" && -f "$after" ]]; then
+      if cmp -s "$before" "$after"; then
+        echo "git-status: unchanged"
+      else
+        echo "git-status: changed"
+        diff -u "$before" "$after" || true
+      fi
+    fi
+    echo "mutating-processes:"
+    if [[ -n "$hits" ]]; then
+      printf '%s\n' "$hits"
+    else
+      echo none
+    fi
+  } >"$dest/isolation.txt"
+  local bad=0
+  if [[ -e "$REPO_ROOT/result" || -L "$REPO_ROOT/result" ]]; then
+    bad=1
+  fi
+  if [[ -n "$hits" ]]; then
+    bad=1
+  fi
+  if [[ -n "$before" && -f "$before" && -f "$after" ]] && ! cmp -s "$before" "$after"; then
+    bad=1
+  fi
+  return "$bad"
+}
+
+prepare_feature() {
+  local feature=$1
+  local entry=$2
+  local dest
+  dest=$(evidence_dir "$feature")
+  write_meta "$dest" "$feature" "$entry"
+  git -C "$REPO_ROOT" status --porcelain >"$dest/git-status-before.txt"
+  printf '%s\n' "$dest"
+}
+
+finish_isolation() {
+  local dest=$1
+  git -C "$REPO_ROOT" status --porcelain >"$dest/git-status-after.txt"
+  write_isolation "$dest" "$dest/git-status-before.txt" "$dest/git-status-after.txt"
+}
+
+require_feature_mode() {
+  local feature=$1
+  case "$feature" in
+    flake-check-base-import | nix-build-toplevel-dry | nixos-configuration-names)
+      if [[ "$MODE" != "nix-develop" ]]; then
+        write_unmet "$feature" "nix develop is not ready (mode=$MODE). See $SCRATCH/degraded-reason.txt. This drive did not pass. No toplevel was built and no machine was switched."
+        return 2
+      fi
+      ;;
+    just-recipe-list)
+      if [[ "$MODE" != "nix-develop" ]] && ! command -v just >/dev/null 2>&1; then
+        write_unmet "$feature" "just is not available outside nix develop, and nix develop is not ready."
+        return 2
+      fi
+      ;;
+  esac
+}
+
+step_just_default() {
+  local dest=$1
+  local code=0
+  printf '%s\n' "just" >>"$dest/command.txt"
+  run_just_to "$dest/default-stdout.txt" "$dest/default-stderr.txt" || code=$?
+  printf '%s\n' "$code" >"$dest/default-exit-code.txt"
+  if [[ "$code" -ne 0 ]]; then
+    echo "just exited $code" >"$dest/failure.txt"
+    return 1
+  fi
+  if ! grep -q "Available recipes:" "$dest/default-stdout.txt"; then
+    echo "default just output has no recipe list" >"$dest/failure.txt"
+    return 1
+  fi
+  assert_public_recipes_in_list "$dest/default-stdout.txt" || {
+    echo "default just output is missing a public recipe" >"$dest/failure.txt"
+    return 1
+  }
+}
+
+step_just_list() {
+  local dest=$1
+  local code=0
+  printf '%s\n' "just --list" >>"$dest/command.txt"
+  run_just_to "$dest/list-stdout.txt" "$dest/list-stderr.txt" --list || code=$?
+  printf '%s\n' "$code" >"$dest/list-exit-code.txt"
+  if [[ "$code" -ne 0 ]]; then
+    echo "just --list exited $code" >"$dest/failure.txt"
+    return 1
+  fi
+  assert_public_recipes_in_list "$dest/list-stdout.txt" || {
+    echo "just --list is missing a public recipe" >"$dest/failure.txt"
+    return 1
+  }
+  if [[ -f "$dest/default-stdout.txt" ]]; then
+    if cmp -s "$dest/default-stdout.txt" "$dest/list-stdout.txt"; then
+      echo "default and just --list stdout match" >"$dest/list-diff.txt"
+    else
+      diff -u "$dest/default-stdout.txt" "$dest/list-stdout.txt" >"$dest/list-diff.txt" || true
+      echo "bare just and just --list stdout differ" >"$dest/failure.txt"
+      return 1
+    fi
+  else
+    echo "default-stdout.txt absent; diff skipped" >"$dest/list-diff.txt"
+  fi
+}
+
+step_just_summary() {
+  local dest=$1
+  local code=0
+  printf '%s\n' "just --summary" >>"$dest/command.txt"
+  run_just_to "$dest/summary-stdout.txt" "$dest/summary-stderr.txt" --summary || code=$?
+  printf '%s\n' "$code" >"$dest/summary-exit-code.txt"
+  if [[ "$code" -ne 0 ]]; then
+    echo "just --summary exited $code" >"$dest/failure.txt"
+    return 1
+  fi
+  assert_public_recipes_in_summary "$dest/summary-stdout.txt" || {
+    echo "just --summary is missing a public recipe" >"$dest/failure.txt"
+    return 1
+  }
+}
+
+step_check_base_import() {
+  local dest=$1
+  local code=0
+  local system attr
+  nix_setup
+  system=$(nix eval --impure --raw --expr builtins.currentSystem)
+  if [[ "$system" != "x86_64-linux" ]]; then
+    write_unmet flake-check-base-import "currentSystem is $system; machine configurations in this flake are x86_64-linux. Refusing to cross-build the check."
+    return 2
+  fi
+  attr=".#checks.${system}.nixos-configurations-import-base"
+  printf '%s\n' "nix build $attr --no-link --print-out-paths -L" >>"$dest/command.txt"
+  run_nix_to "$dest/stdout.txt" "$dest/stderr.txt" build "$attr" --no-link --print-out-paths -L || code=$?
+  printf '%s\n' "$code" >"$dest/exit-code.txt"
+  if [[ "$code" -ne 0 ]]; then
+    echo "nix build of nixos-configurations-import-base exited $code" >"$dest/failure.txt"
+    return 1
+  fi
+  local store_path
+  store_path=$(tail -n 1 "$dest/stdout.txt")
+  printf '%s\n' "$store_path" >"$dest/store-path.txt"
+  if [[ "$store_path" != /nix/store/*-nixos-configurations-import-base ]]; then
+    echo "unexpected store path: $store_path" >"$dest/failure.txt"
+    return 1
+  fi
+  if [[ ! -e "$store_path" ]]; then
+    echo "store path does not exist: $store_path" >"$dest/failure.txt"
+    return 1
+  fi
+}
+
+step_toplevel_installer() {
+  local dest=$1
+  local code=0
+  local attr=".#nixosConfigurations.installer.config.system.build.toplevel"
+  if [[ -e /run/current-system ]]; then
+    readlink -f /run/current-system >"$dest/current-system-before.txt"
+  else
+    echo absent >"$dest/current-system-before.txt"
+  fi
+  printf '%s\n' "nix build $attr --no-link --print-out-paths -L" >>"$dest/command.txt"
+  run_nix_to "$dest/stdout.txt" "$dest/stderr.txt" build "$attr" --no-link --print-out-paths -L || code=$?
+  printf '%s\n' "$code" >"$dest/exit-code.txt"
+  if [[ -e /run/current-system ]]; then
+    readlink -f /run/current-system >"$dest/current-system-after.txt"
+  else
+    echo absent >"$dest/current-system-after.txt"
+  fi
+  if ! cmp -s "$dest/current-system-before.txt" "$dest/current-system-after.txt"; then
+    echo "current-system changed during the toplevel build" >"$dest/failure.txt"
+    return 1
+  fi
+  if [[ "$code" -ne 0 ]]; then
+    echo "installer toplevel build exited $code; no switch was attempted" >>"$dest/failure.txt"
+    return 1
+  fi
+  local store_path
+  store_path=$(tail -n 1 "$dest/stdout.txt")
+  printf '%s\n' "$store_path" >"$dest/store-path.txt"
+  if [[ "$store_path" != /nix/store/* ]]; then
+    echo "unexpected store path: $store_path" >"$dest/failure.txt"
+    return 1
+  fi
+  if [[ "$store_path" != *installer* ]]; then
+    echo "store path does not name installer: $store_path" >"$dest/failure.txt"
+    return 1
+  fi
+  if [[ ! -e "$store_path" ]]; then
+    echo "store path does not exist: $store_path" >"$dest/failure.txt"
+    return 1
+  fi
+}
+
+step_machine_names() {
+  local dest=$1
+  local code=0
+  printf '%s\n' "nix eval .#nixosConfigurations --apply builtins.attrNames --json" >>"$dest/command.txt"
+  run_nix_to "$dest/stdout.txt" "$dest/stderr.txt" eval .#nixosConfigurations --apply builtins.attrNames --json || code=$?
+  printf '%s\n' "$code" >"$dest/exit-code.txt"
+  if [[ "$code" -ne 0 ]]; then
+    echo "nix eval of nixosConfigurations names exited $code; no system was built or switched" >"$dest/failure.txt"
+    return 1
+  fi
+  local expected
+  expected=$(printf '%s\n' "${MACHINE_NAMES[@]}")
+  set +e
+  python3 - "$dest/stdout.txt" "$dest/names.txt" "$expected" <<'PY'
+import json, sys
+raw = open(sys.argv[1], encoding="utf-8").read().strip()
+got = json.loads(raw.splitlines()[-1])
+if not isinstance(got, list) or not all(isinstance(name, str) for name in got):
+    raise SystemExit("attrNames did not return a list of strings")
+open(sys.argv[2], "w", encoding="utf-8").write("\n".join(got) + "\n")
+expect = [line for line in sys.argv[3].splitlines() if line]
+if sorted(got) != sorted(expect):
+    raise SystemExit(f"names {sorted(got)} != {sorted(expect)}")
+PY
+  code=$?
+  set -e
+  if [[ "$code" -ne 0 ]]; then
+    echo "configuration names did not match asymmetry grokbox installer parallax stylix-test" >"$dest/failure.txt"
+    return 1
+  fi
+}
+
+run_step_body() {
+  local step=$1
+  local feature dest
+  feature=$(feature_of_step "$step")
+  dest=$(evidence_dir "$feature")
+  case "$step" in
+    just-default) step_just_default "$dest" ;;
+    just-list) step_just_list "$dest" ;;
+    just-summary) step_just_summary "$dest" ;;
+    just-isolation | check-isolation | toplevel-isolation | names-isolation) finish_isolation "$dest" ;;
+    check-base-import) step_check_base_import "$dest" ;;
+    toplevel-installer) step_toplevel_installer "$dest" ;;
+    machine-names) step_machine_names "$dest" ;;
+    *)
+      echo "verify-flake: unknown step $step" >&2
+      return 1
+      ;;
+  esac
+}
+
+feature_of_step() {
+  case "$1" in
+    just-default | just-list | just-summary | just-isolation) printf '%s\n' just-recipe-list ;;
+    check-base-import | check-isolation) printf '%s\n' flake-check-base-import ;;
+    toplevel-installer | toplevel-isolation) printf '%s\n' nix-build-toplevel-dry ;;
+    machine-names | names-isolation) printf '%s\n' nixos-configuration-names ;;
+    *) return 1 ;;
+  esac
+}
+
+entry_of_feature() {
+  case "$1" in
+    just-recipe-list) printf '%s\n' "bare just" ;;
+    flake-check-base-import) printf '%s\n' "nix build checks.x86_64-linux.nixos-configurations-import-base" ;;
+    nix-build-toplevel-dry) printf '%s\n' "nix build nixosConfigurations.installer toplevel --no-link" ;;
+    nixos-configuration-names) printf '%s\n' "nix eval nixosConfigurations attrNames" ;;
+    *) return 1 ;;
+  esac
+}
+
+steps_of_feature() {
+  case "$1" in
+    just-recipe-list) printf '%s\n' just-default just-list just-summary just-isolation ;;
+    flake-check-base-import) printf '%s\n' check-base-import check-isolation ;;
+    nix-build-toplevel-dry) printf '%s\n' toplevel-installer toplevel-isolation ;;
+    nixos-configuration-names) printf '%s\n' machine-names names-isolation ;;
+    *) return 1 ;;
+  esac
+}
+
+step_cmd() {
+  local step=${1:-}
+  if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 1
+  fi
+  require_repo
+  load_run
+  local feature
+  if ! feature=$(feature_of_step "$step"); then
+    case "$step" in
+      deploy | boot | dryrun | install | rdeploy | gc | updatekeys | rewrap-secret | generate-luks-password | prompt-luks-password | collect-machine-info | elevate | build-installer-iso)
+        echo "verify-flake: refusing $step; that recipe is out of scope" >&2
+        exit 1
+        ;;
+    esac
+    echo "verify-flake: unknown step $step" >&2
+    exit 1
+  fi
+  doctor >/dev/null
+  require_feature_mode "$feature"
+  if [[ ! -f "$EVIDENCE_ROOT/$RUN_ID/$feature/meta.txt" ]]; then
+    prepare_feature "$feature" "$(entry_of_feature "$feature")" >/dev/null
+  fi
+  run_step_body "$step"
+}
+
+drive_cmd() {
+  local feature=${1:-}
+  if [[ $# -ne 1 ]]; then
+    usage >&2
+    exit 1
+  fi
+  case "$feature" in
+    deploy | boot | dryrun | install | rdeploy | gc | updatekeys | rewrap-secret | generate-luks-password | prompt-luks-password | collect-machine-info | elevate | build-installer-iso)
+      echo "verify-flake: refusing $feature; that recipe mutates a machine, a disk, or secret recipients" >&2
+      exit 1
+      ;;
+  esac
+  require_repo
+  load_run
+  if ! steps_of_feature "$feature" >/dev/null; then
+    echo "verify-flake: unknown feature $feature" >&2
+    exit 1
+  fi
+  doctor >/dev/null
+  require_feature_mode "$feature"
+  prepare_feature "$feature" "$(entry_of_feature "$feature")" >/dev/null
+  : >"$EVIDENCE_ROOT/$RUN_ID/$feature/command.txt"
+  local step code=0 step_code=0
+  while IFS= read -r step; do
+    step_code=0
+    run_step_body "$step" || step_code=$?
+    if [[ "$code" -eq 0 && "$step_code" -ne 0 ]]; then
+      code=$step_code
+    fi
+  done < <(steps_of_feature "$feature")
+  if [[ "$code" -eq 0 ]]; then
+    echo "verify-flake: drove $feature run=$RUN_ID evidence=$EVIDENCE_ROOT/$RUN_ID/$feature"
+  else
+    echo "verify-flake: drive $feature failed code=$code evidence=$EVIDENCE_ROOT/$RUN_ID/$feature" >&2
+  fi
+  return "$code"
+}
+
+cleanup() {
+  require_repo
+  if [[ ! -f "$SCRATCH/run.env" ]]; then
+    echo "verify-flake: nothing to clean"
+    return 0
+  fi
+  # shellcheck disable=SC1091
+  source "$SCRATCH/run.env"
+  restore_git_hooks
+  local evidence="$EVIDENCE_ROOT/$RUN_ID"
+  rm -rf "$SCRATCH"
+  echo "verify-flake: cleaned run=$RUN_ID evidence=$evidence"
+}
+
+main() {
+  local cmd=${1:-}
+  if [[ $# -eq 0 ]]; then
+    usage >&2
+    exit 1
+  fi
+  shift
+  case "$cmd" in
+    launch) launch "$@" ;;
+    doctor) doctor "$@" ;;
+    drive) drive_cmd "$@" ;;
+    step) step_cmd "$@" ;;
+    steps)
+      printf '%s\n' \
+        just-default just-list just-summary just-isolation \
+        check-base-import check-isolation \
+        toplevel-installer toplevel-isolation \
+        machine-names names-isolation
+      ;;
+    cleanup) cleanup "$@" ;;
+    *)
+      usage >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"
