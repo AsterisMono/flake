@@ -22,25 +22,34 @@ Authoritative sources:
   docs/quickshell/0001-v1-core-shell.md, 0002-v2-work-in-flight.md
 
 Phase 1 is this document's regions and behaviour. Phase 2 is the default
-material: Clearlooks 2 soft plastic. ?theme=glass restores the Stylix /
-Catppuccin Mocha glass reading from Theme.qml (bar 0.72 occupied / 0.50
-empty, popup 0.40, OSD 0.85). Clearlooks does not use backdrop-filter.
+material: Clearlooks 2 / GNOME 2 panel grammar, not a recolor of the glass
+rails. ?theme=glass restores the Stylix / Catppuccin Mocha glass reading
+from Theme.qml (bar 0.72 occupied / 0.50 empty, popup 0.40, OSD 0.85).
+Clearlooks does not use backdrop-filter.
 
 Reference lock for the Clearlooks pass:
-  Primary: Clearlooks 2.20 widget chrome (design brief + widget close-up).
-  Preserve: opaque vertical gradients, 1px hilight/shadow bevels, Tango
-    aluminium text (#2e3436 / #555753 / #888a85), glossy blue selection
-    (#86abd9 → #3465a4) for selected/active only, DejaVu Sans.
-  Borrow: the late-afternoon sky as wallpaper atmosphere only.
-  Reject: smoked glass as the default material, Adwaita-flat, Compiz,
-    Crystal candy, and modern capsule chrome.
+  Primary: Fedora GNOME 2 panel (thin beveled strips, applet buttons that
+    are flat until prelight and sunken when open, a recessed workspace
+    switcher, task buttons) plus Clearlooks 2.20 widgets (raised buttons,
+    inset wells, glossy blue list selection).
+  Icons: filled drawings in the Tango palette. Not the Lucide stroke set,
+    and not the shipped Tango or Crystal icon themes.
+  Type: DejaVu Sans, the Bitstream Vera continuation.
+  Wallpaper: a generated blue field for Clearlooks. The late-afternoon sky
+    stays on ?theme=glass only.
+  Reject: smoked glass as the default, Adwaita-flat, Compiz, Crystal candy,
+    and modern capsule chrome.
 
-Sky: the generated wallpaper is not in the repository. The page paints a
-CSS stand-in. Provenance prompt, kept from the earlier prototype: wide
-16:9 photograph of a quiet late-afternoon blue sky, naturally detailed
-clouds, muted cornflower/blue-grey, warm ivory edges and dusty peach
-lower clouds; calm center, cloud texture at both edges, no land, objects,
-text or UI.
+Compromises: the icons are original filled drawings, not Tango assets.
+The live shell's applets stay, so the panel is busier than stock
+Applications / Places / System. There is no Metacity.
+
+Sky, glass theme only: the generated wallpaper is not in the repository.
+The page paints a CSS stand-in. Provenance prompt, kept from the earlier
+prototype: wide 16:9 photograph of a quiet late-afternoon blue sky,
+naturally detailed clouds, muted cornflower/blue-grey, warm ivory edges
+and dusty peach lower clouds; calm center, cloud texture at both edges,
+no land, objects, text or UI.
 
 Prototype dock (the "Prototype" palette) is not shell chrome. Hide it
 with ?dock=0. Open a panel with ?popup=work|notifications|clock|identity|
@@ -208,22 +217,9 @@ disconnected|incompatible.
   .bar-button.leading { box-shadow: inset 1px 0 rgba(46, 52, 54, .16); }
   html[data-theme="glass"] .bar-button.leading { box-shadow: inset 1px 0 rgba(205, 214, 244, .10); }
   .bar-button.active { color: var(--on-selected); }
-  html[data-theme="clearlooks"] .bar-button.active::before {
-    content: "";
-    position: absolute; inset: 3px 2px; border-radius: 3px; z-index: 0;
-    background: var(--select);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.75), inset 0 -1px 0 #1f4e86, 0 1px 0 rgba(0,0,0,.10);
-  }
-  html[data-theme="clearlooks"] .bar-button.active.attention::before {
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.75), inset 0 -2px var(--attention), 0 1px 0 rgba(0,0,0,.10);
-  }
   html[data-theme="glass"] .bar-button.active { background: var(--select); box-shadow: inset 0 -2px var(--accent); }
   html[data-theme="glass"] .bar-button.attention:not(.active) { background: var(--attention-fill); box-shadow: inset 0 -2px var(--attention); }
   html[data-theme="glass"] .bar-button.active.attention { box-shadow: inset 0 -2px var(--attention); }
-  html[data-theme="clearlooks"] .bar-button.attention:not(.active) {
-    background: linear-gradient(to bottom, rgba(252,233,79,0), rgba(237,212,0,.20));
-    box-shadow: inset 0 -2px var(--attention);
-  }
   .bar-button > * { position: relative; z-index: 1; }
   .bar-button.attention:not(.active) { color: var(--attention); }
   .bar-button.active .tone-text,
@@ -593,6 +589,396 @@ disconnected|incompatible.
   @media (prefers-reduced-motion: reduce) {
     * { transition: none !important; }
   }
+
+  /* Clearlooks: GNOME 2 panel grammar. Glass rules above stay untouched. */
+  html[data-theme="clearlooks"] {
+    --bar-h: 28px;
+    --font: "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", sans-serif;
+    --mono: "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] body { font-size: 12px; }
+  html[data-theme="clearlooks"] .wallpaper {
+    background-color: #1d568f;
+    background-image:
+      radial-gradient(circle at 78% 16%, rgba(255,255,255,.55) 0 10px, rgba(255,255,255,0) 12px),
+      radial-gradient(circle at 86% 28%, rgba(255,255,255,.42) 0 22px, rgba(190,220,245,.2) 23px, rgba(255,255,255,0) 28px),
+      radial-gradient(circle at 70% 24%, rgba(255,255,255,.28) 0 36px, rgba(255,255,255,0) 42px),
+      radial-gradient(circle at 92% 46%, rgba(255,255,255,.38) 0 14px, rgba(255,255,255,0) 18px),
+      radial-gradient(circle at 64% 38%, rgba(255,255,255,.22) 0 18px, rgba(255,255,255,0) 22px),
+      linear-gradient(180deg, #8ec0e6 0%, #4e90c9 36%, #2b6dad 68%, #1a4f86 100%);
+  }
+  html[data-theme="clearlooks"] .topbar,
+  html[data-theme="clearlooks"] .taskbar {
+    background: linear-gradient(to bottom, #f6f4f1 0%, #e6e2db 46%, #d2cdc4 100%);
+    color: #2e3436;
+    border: 0;
+    font-size: 11px;
+  }
+  html[data-theme="clearlooks"] .topbar {
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #8d8982, 0 1px 0 #5e5b56;
+  }
+  html[data-theme="clearlooks"] .taskbar {
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #8d8982, 0 -1px 0 #5e5b56;
+  }
+  html[data-theme="clearlooks"] .sep {
+    width: 0; flex-basis: 0; background: none;
+    border-left: 1px solid #9a968f;
+    border-right: 1px solid #fff;
+    margin: 5px 4px;
+  }
+  html[data-theme="clearlooks"] .cluster.left { gap: 2px; padding-left: 4px; }
+  html[data-theme="clearlooks"] .cluster.right { gap: 0; }
+  html[data-theme="clearlooks"] .metrics { gap: 7px; }
+  html[data-theme="clearlooks"] .metric,
+  html[data-theme="clearlooks"] .clock-read,
+  html[data-theme="clearlooks"] .clock-date,
+  html[data-theme="clearlooks"] .task-title,
+  html[data-theme="clearlooks"] .task-ws,
+  html[data-theme="clearlooks"] .work-parts,
+  html[data-theme="clearlooks"] .badge,
+  html[data-theme="clearlooks"] .vol-read { font-family: "DejaVu Sans", sans-serif; }
+  html[data-theme="clearlooks"] .metric { gap: 3px; font-size: 11px; color: #2e3436; }
+  html[data-theme="clearlooks"] .clock-date { font-size: 11px; }
+  html[data-theme="clearlooks"] .bar-button {
+    align-self: center;
+    height: 22px;
+    margin: 0 1px;
+    padding: 0 5px;
+    gap: 4px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: transparent;
+    box-shadow: none;
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .bar-button.pad-3 { padding: 0 7px; }
+  html[data-theme="clearlooks"] .bar-button.leading { box-shadow: none; }
+  html[data-theme="clearlooks"] .bar-button:hover:not(:disabled):not(.active) {
+    border-color: #a39e96;
+    background: linear-gradient(to bottom, #fff 0%, #f4f1eb 40%, #e0dbd3 100%);
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #c9c3ba;
+  }
+  html[data-theme="clearlooks"] .bar-button:active:not(:disabled),
+  html[data-theme="clearlooks"] .bar-button.active {
+    border-color: #6f6b65;
+    background: linear-gradient(to bottom, #c4bfb7 0%, #ddd8d0 100%);
+    box-shadow: inset 0 1px 3px rgba(40, 36, 28, .45), inset 0 0 0 1px rgba(255,255,255,.2);
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .bar-button.active .tone-text,
+  html[data-theme="clearlooks"] .bar-button.active .tone-attention,
+  html[data-theme="clearlooks"] .bar-button.active .tone-accent,
+  html[data-theme="clearlooks"] .bar-button.active .muted,
+  html[data-theme="clearlooks"] .bar-button.active .dim,
+  html[data-theme="clearlooks"] .bar-button.active .clock-read,
+  html[data-theme="clearlooks"] .bar-button.active .metric,
+  html[data-theme="clearlooks"] .bar-button.active .badge { color: #2e3436; }
+  html[data-theme="clearlooks"] .bar-button.attention:not(.active) {
+    border-color: #c2a24a;
+    background: linear-gradient(to bottom, #fff8dc 0%, #f3d98a 100%);
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #ddc57a;
+    color: #5c4308;
+  }
+  html[data-theme="clearlooks"] .tray { padding-right: 2px; }
+  html[data-theme="clearlooks"] .tray .bar-button { padding: 0 3px; }
+  html[data-theme="clearlooks"] .work-slot {
+    margin-right: 3px;
+    padding-left: 4px;
+    border-left: 1px solid #9a968f;
+    box-shadow: inset 1px 0 0 #fff;
+  }
+  html[data-theme="clearlooks"] .workspaces {
+    align-self: center;
+    height: 22px;
+    margin: 0 4px 0 3px;
+    padding: 2px;
+    gap: 1px;
+    background: linear-gradient(to bottom, #b5b1aa, #eeeae4);
+    border: 1px solid #6e6a63;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.38), 0 1px 0 #fff;
+  }
+  html[data-theme="clearlooks"] .ws {
+    width: 18px; height: 16px; margin: 0; padding: 0;
+    border-radius: 2px;
+    border: 1px solid #b0aaa2;
+    background: linear-gradient(to bottom, #f8f6f3, #e3ded6);
+    box-shadow: inset 0 1px 0 #fff;
+    color: #555753;
+    font: 10px/1 "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .ws:hover:not(.active) {
+    border-color: #8d8880;
+    background: linear-gradient(to bottom, #fff, #ece7e0);
+  }
+  html[data-theme="clearlooks"] .ws.active {
+    color: #fff;
+    border-color: #1e4e84;
+    background: linear-gradient(to bottom, #c5def6 0%, #6ea4d8 36%, #3465a4 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.75), inset 0 -1px 0 #1c4a7e;
+  }
+  html[data-theme="clearlooks"] .ws.attention:not(.active) {
+    border-color: #a48428;
+    background: linear-gradient(to bottom, #fff3c4, #e6c45a);
+    color: #5c4308;
+  }
+  html[data-theme="clearlooks"] .task-area { align-items: center; gap: 3px; margin: 0 4px; }
+  html[data-theme="clearlooks"] .task,
+  html[data-theme="clearlooks"] .overflow-btn {
+    height: 22px;
+    border: 1px solid #8f8b84;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #fbfaf8 0%, #ece7e0 58%, #ddd7ce 100%);
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #c8c2b8;
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .task {
+    flex: 1 1 132px; min-width: 104px; max-width: 210px;
+    padding: 0 7px; gap: 5px;
+  }
+  html[data-theme="clearlooks"] .overflow-btn { min-width: 26px; margin: 0; padding: 0 6px; }
+  html[data-theme="clearlooks"] .task:hover:not(.active),
+  html[data-theme="clearlooks"] .overflow-btn:hover:not(.active) {
+    background: linear-gradient(to bottom, #fff, #f3efe8 50%, #e4ded6);
+  }
+  html[data-theme="clearlooks"] .task.active {
+    color: #fff;
+    border-color: #1d4c82;
+    background: linear-gradient(to bottom, #d7e8f8 0%, #7eb0de 28%, #3f78b8 100%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.8), inset 0 -1px 0 #1b4878, inset 0 2px 3px rgba(16, 40, 72, .28);
+  }
+  html[data-theme="clearlooks"] .task.active .task-title,
+  html[data-theme="clearlooks"] .task.active .task-ws { color: #fff; }
+  html[data-theme="clearlooks"] .task.attention:not(.active) {
+    border-color: #b08a20;
+    background: linear-gradient(to bottom, #fff6d0, #f0d56a);
+    color: #5c4308;
+  }
+  html[data-theme="clearlooks"] .appmark {
+    width: 16px; height: 16px; flex-basis: 16px; background: none; border-radius: 0;
+  }
+  html[data-theme="clearlooks"] .appmark svg { width: 16px; height: 16px; display: block; }
+  html[data-theme="clearlooks"] .icon,
+  html[data-theme="clearlooks"] .icon * { stroke: none; stroke-width: 0; }
+  html[data-theme="clearlooks"] .icon { width: 16px; height: 16px; fill: none; }
+  html[data-theme="clearlooks"] .icon.sm { width: 14px; height: 14px; }
+  html[data-theme="clearlooks"] .icon.lg { width: 32px; height: 32px; }
+  html[data-theme="clearlooks"] .popup {
+    background: linear-gradient(to bottom, #f3f1ee 0%, #e4e0d9 100%);
+    border: 1px solid #6a6660;
+    border-radius: 6px 6px 4px 4px;
+    box-shadow:
+      inset 1px 1px 0 #fff,
+      inset -1px -1px 0 #cfc9c0,
+      1px 1px 0 #8a8680,
+      3px 5px 14px rgba(20, 24, 32, .32);
+    padding: 8px 10px 10px;
+    font-family: "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .popup h2,
+  html[data-theme="clearlooks"] .popup h2.reading,
+  html[data-theme="clearlooks"] .popup h2.notices-title,
+  html[data-theme="clearlooks"] .kicker,
+  html[data-theme="clearlooks"] .section-title,
+  html[data-theme="clearlooks"] .field-label,
+  html[data-theme="clearlooks"] .line,
+  html[data-theme="clearlooks"] .balance,
+  html[data-theme="clearlooks"] .quota-label,
+  html[data-theme="clearlooks"] .quota-note,
+  html[data-theme="clearlooks"] .quota-pct,
+  html[data-theme="clearlooks"] .agent .meta,
+  html[data-theme="clearlooks"] .source-line,
+  html[data-theme="clearlooks"] .notice-top,
+  html[data-theme="clearlooks"] .cal-week,
+  html[data-theme="clearlooks"] .day,
+  html[data-theme="clearlooks"] .times,
+  html[data-theme="clearlooks"] .osd-label,
+  html[data-theme="clearlooks"] .choice,
+  html[data-theme="clearlooks"] .push {
+    font-family: "DejaVu Sans", sans-serif;
+    letter-spacing: 0;
+  }
+  html[data-theme="clearlooks"] .popup h2,
+  html[data-theme="clearlooks"] .popup h2.reading { font-weight: 700; font-size: 13px; }
+  html[data-theme="clearlooks"] .kicker { font-size: 11px; color: #555753; }
+  html[data-theme="clearlooks"] .icon-btn {
+    width: 18px; height: 18px; border-radius: 3px;
+    border: 1px solid #7d7972;
+    background: linear-gradient(to bottom, #fff, #e0dbd3);
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #c8c2b8;
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .icon-btn:hover { background: linear-gradient(to bottom, #fff, #ece7df); }
+  html[data-theme="clearlooks"] .icon-btn:active,
+  html[data-theme="clearlooks"] .icon-btn.on {
+    background: linear-gradient(to bottom, #cfc9c0, #e8e3db);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.32);
+  }
+  html[data-theme="clearlooks"] .choice:not(.selected),
+  html[data-theme="clearlooks"] .push {
+    min-height: 24px;
+    border: 1px solid #8a8680;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #fff 0%, #f2efe9 42%, #d7d2ca 100%);
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #c2bdb4;
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .choice:not(.selected):hover,
+  html[data-theme="clearlooks"] .push:hover { background: linear-gradient(to bottom, #fff, #f7f4ef 40%, #e4dfd7); }
+  html[data-theme="clearlooks"] .choice:not(.selected):active,
+  html[data-theme="clearlooks"] .push:active {
+    background: linear-gradient(to bottom, #d0cbc3, #e6e1d9);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+  }
+  html[data-theme="clearlooks"] .choice.selected {
+    background: linear-gradient(to bottom, #d4e7f8 0%, #7eb0de 22%, #3d76b6 100%);
+    color: #fff;
+    border-color: #1d4c82;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.78), inset 0 -1px 0 #1a4674;
+  }
+  html[data-theme="clearlooks"] .line {
+    border-bottom: 0;
+    box-shadow: inset 0 -1px 0 #cfc9c0;
+    padding: 3px 1px;
+  }
+  html[data-theme="clearlooks"] .work .account,
+  html[data-theme="clearlooks"] .work .section-title {
+    margin-left: 8px; margin-right: 8px;
+  }
+  html[data-theme="clearlooks"] .work .account {
+    padding: 8px 8px 2px;
+    background: linear-gradient(to bottom, #f7f5f2, #ece8e1);
+    border: 1px solid #b0aaa2;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 0 #fff;
+  }
+  html[data-theme="clearlooks"] .popup-scroll,
+  html[data-theme="clearlooks"] .work .popup-scroll {
+    background: #fff;
+    border: 1px solid #9a968f;
+    border-radius: 3px;
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,.16);
+    margin: 0 8px 8px;
+  }
+  html[data-theme="clearlooks"] .notices .popup-scroll {
+    margin: 0; border-radius: 0; border-left: 0; border-right: 0;
+  }
+  html[data-theme="clearlooks"] .agent { padding: 6px 8px; border-bottom-color: #e6e6e6; }
+  html[data-theme="clearlooks"] .agent:hover { background: #e8f0fa; }
+  html[data-theme="clearlooks"] .notice { padding: 8px 10px; }
+  html[data-theme="clearlooks"] .day { border-radius: 3px; }
+  html[data-theme="clearlooks"] .day.today {
+    border-radius: 3px;
+    background: linear-gradient(to bottom, #c5def6, #3465a4);
+    color: #fff;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.55);
+  }
+  html[data-theme="clearlooks"] .track,
+  html[data-theme="clearlooks"] .gauge {
+    height: 10px; border-radius: 5px;
+    background: linear-gradient(to bottom, #b7b3ac, #f4f1eb);
+    border: 1px solid #8a8680;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.28);
+  }
+  html[data-theme="clearlooks"] .track > i,
+  html[data-theme="clearlooks"] .gauge > i {
+    background: linear-gradient(to bottom, #d5e8f8, #5d94d0 45%, #2f629f);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+    border-radius: 4px;
+  }
+  html[data-theme="clearlooks"] .meter .groove {
+    height: 8px; top: 7px; border-radius: 4px;
+    background: linear-gradient(to bottom, #b5b1aa, #f6f3ee);
+    border: 1px solid #7d7972;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.32);
+  }
+  html[data-theme="clearlooks"] .meter .fill {
+    background: linear-gradient(to bottom, #d5e8f8, #3d74b4);
+  }
+  html[data-theme="clearlooks"] .meter .thumb {
+    width: 14px; height: 16px; top: 3px; margin-left: -7px; border-radius: 3px;
+    background: linear-gradient(to bottom, #fff, #d5d0c8);
+    border: 1px solid #6a6660;
+    box-shadow: inset 0 1px 0 #fff, 0 1px 0 rgba(0,0,0,.12);
+  }
+  html[data-theme="clearlooks"] .art {
+    background: linear-gradient(to bottom, #f7f5f2, #e0dbd3);
+    border-color: #8a8680;
+    box-shadow: inset 0 1px 0 #fff, inset 1px 1px 3px rgba(0,0,0,.12);
+  }
+  html[data-theme="clearlooks"] .banner {
+    background: linear-gradient(to bottom, #f7f5f2, #e4e0d9);
+    border-color: #6a6660;
+    box-shadow: inset 1px 1px 0 #fff, 2px 3px 8px rgba(0,0,0,.28);
+  }
+  html[data-theme="clearlooks"] .osd-card {
+    background: linear-gradient(to bottom, #f7f5f2, #e0dbd3);
+    border-color: #6a6660;
+    border-radius: 6px;
+    box-shadow: inset 1px 1px 0 #fff, 2px 3px 10px rgba(0,0,0,.3);
+  }
+  html[data-theme="clearlooks"] .osd-label { letter-spacing: 0; text-transform: none; font-size: 12px; color: #2e3436; }
+  html[data-theme="clearlooks"] .osd-value { font-family: "DejaVu Sans", sans-serif; font-size: 18px; }
+  html[data-theme="clearlooks"] .dock button,
+  html[data-theme="clearlooks"] .dock select {
+    background: linear-gradient(to bottom, #fff, #e4dfd7);
+    border-color: #8a8680;
+    box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #c8c2b8;
+    border-radius: 4px;
+  }
+  html[data-theme="clearlooks"] .dock button.on {
+    outline: none;
+    color: #fff;
+    border-color: #1d4c82;
+    background: linear-gradient(to bottom, #c5def6, #3465a4);
+  }
+  html[data-theme="clearlooks"] .gnome-menu {
+    display: flex; gap: 2px; padding: 1px 4px 2px;
+    background: linear-gradient(to bottom, #f7f5f2, #e4dfd7);
+    border-bottom: 1px solid #c8c2b8;
+    font: 12px/1.6 "DejaVu Sans", sans-serif;
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .gnome-menu span { padding: 0 7px; border-radius: 3px; }
+  html[data-theme="clearlooks"] .gnome-toolbar {
+    display: flex; align-items: center; gap: 1px;
+    padding: 2px 4px;
+    background: linear-gradient(to bottom, #f4f1eb, #d9d3ca);
+    border-bottom: 1px solid #9a968f;
+    box-shadow: inset 0 1px 0 #fff;
+  }
+  html[data-theme="clearlooks"] .gnome-toolbar button {
+    height: 22px; padding: 0 6px; gap: 4px;
+    display: inline-flex; align-items: center;
+    border: 1px solid transparent; border-radius: 3px;
+    color: #2e3436; font: 11px "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .gnome-toolbar button:hover {
+    border-color: #9a968f;
+    background: linear-gradient(to bottom, #fff, #e6e1d8);
+    box-shadow: inset 0 1px 0 #fff;
+  }
+  html[data-theme="clearlooks"] .titlebar {
+    background: linear-gradient(to bottom, #efece7, #cfc9c0 58%, #bdb6ac);
+    border-bottom: 1px solid #8a8680;
+    box-shadow: inset 0 1px 0 #fff;
+    font: 700 12px "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .win-btn {
+    border-color: #6a6660;
+    background: linear-gradient(to bottom, #f7f5f2, #d5d0c8);
+  }
+  html[data-theme="clearlooks"] .sample-tabs {
+    background: linear-gradient(to bottom, #d9d3ca, #ece7e0);
+    border-bottom: 1px solid #9a968f;
+  }
+  html[data-theme="clearlooks"] .sample-status {
+    font-family: "DejaVu Sans", sans-serif;
+    background: linear-gradient(to bottom, #f4f1eb, #e0dbd3);
+    box-shadow: inset 0 1px 0 #fff;
+  }
+  html[data-theme="glass"] .gnome-menu,
+  html[data-theme="glass"] .gnome-toolbar { display: none; }
 </style>
 </head>
 <body>
@@ -663,6 +1049,7 @@ function esc(value) {
 }
 
 function svg(name, cls) {
+  if (state.theme === "clearlooks") return tangoIcon(name, cls);
   const paths = {
     bell: "M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4",
     bellOff: "M3 3l18 18M6 6c-1 2 0 8-3 11h13m-6 4h4M10 2c7-1 8 6 8 10",
@@ -705,11 +1092,98 @@ function svg(name, cls) {
   return `<svg class="icon${cls ? " " + cls : ""}" viewBox="0 0 24 24" aria-hidden="true">${extra}<path d="${d}"/></svg>`;
 }
 
+function tangoIcon(name, cls) {
+  const ink = "#2e3436";
+  const alum = "#555753";
+  const alum2 = "#888a85";
+  const paper = "#eeeeec";
+  const butter = "#fce94f";
+  const butter2 = "#edd400";
+  const orange = "#f57900";
+  const green = "#73d216";
+  const green2 = "#4e9a06";
+  const sky = "#3465a4";
+  const sky2 = "#729fcf";
+  const sky3 = "#204a87";
+  const plum = "#75507b";
+  const red = "#cc0000";
+  const glyphs = {
+    bell: `<path fill="${alum2}" d="M8 1.2c.5 0 .9.4.9.9v.35A3.7 3.7 0 0 1 12.2 6v2.15l1.15 1.7c.28.4 0 .95-.5.95H3.15c-.5 0-.78-.55-.5-.95L3.8 8.15V6A3.7 3.7 0 0 1 7.1 2.45V2.1c0-.5.4-.9.9-.9z"/><path fill="${paper}" opacity=".55" d="M6.3 3.7c.5-.35 1.1-.55 1.7-.55 1.3 0 2.4.75 2.95 1.85-.55-.95-1.5-1.5-2.6-1.5-.55 0-1 .12-1.45.32z"/><path fill="${alum}" d="M6.15 12.35a1.85 1.85 0 0 0 3.7 0z"/>`,
+    bellOff: `<path fill="${alum2}" d="M8 1.2c.5 0 .9.4.9.9v.35A3.7 3.7 0 0 1 12.2 6v2.15l1.15 1.7c.28.4 0 .95-.5.95H3.15c-.5 0-.78-.55-.5-.95L3.8 8.15V6A3.7 3.7 0 0 1 7.1 2.45V2.1c0-.5.4-.9.9-.9z"/><path fill="${alum}" d="M6.15 12.35a1.85 1.85 0 0 0 3.7 0z"/><path fill="${red}" d="M2.3 3.15 3.7 1.75 13.9 11.95 12.5 13.35z"/>`,
+    close: `<path fill="${ink}" d="M3.05 4.25 4.25 3.05 8 6.8l3.75-3.75 1.2 1.2L9.2 8l3.75 3.75-1.2 1.2L8 9.2l-3.75 3.75-1.2-1.2L6.8 8z"/>`,
+    check: `<path fill="${green2}" d="M2.2 8.15 6.05 12.1 13.9 3.35 12.45 2.05 5.95 9.35 3.5 6.85z"/>`,
+    volume: `<path fill="${alum}" d="M1.4 5.7h2.5L7.6 2.7v10.6L3.9 10.3H1.4z"/><path fill="${sky}" d="M9.3 5.35c1.45.75 2.3 1.9 2.3 2.7s-.85 1.95-2.3 2.7V9.4c.7-.4 1.1-.9 1.1-1.35s-.4-.95-1.1-1.35z"/><path fill="${sky2}" d="M9.7 3.15c2.35 1.15 3.7 2.9 3.7 4.9s-1.35 3.75-3.7 4.9V11.7c1.65-.85 2.55-2.15 2.55-3.65S11.35 5.25 9.7 4.4z"/>`,
+    muted: `<path fill="${alum}" d="M1.4 5.7h2.5L7.6 2.7v10.6L3.9 10.3H1.4z"/><path fill="${red}" d="M10.1 5.2 11.3 4l3.5 3.5L13.6 8.7 14.8 9.9 11.3 13.4 10.1 12.2 11.3 11 10.1 9.8 11.3 8.6z"/>`,
+    up: `<path fill="${green2}" d="M8 1.8 13.4 9.4H2.6z"/><path fill="${green}" opacity=".55" d="M8 3.3 11.5 8.3H4.5z"/>`,
+    down: `<path fill="${sky}" d="M8 14.2 2.6 6.6h10.8z"/><path fill="${sky2}" opacity=".65" d="M8 12.6 4.6 7.8h6.8z"/>`,
+    temp: `<path fill="${alum}" d="M6.15 1.5h3.7v7.6a3.15 3.15 0 1 1-3.7 0z"/><rect x="6.9" y="2.2" width="2.2" height="6.4" rx=".4" fill="${paper}"/><rect x="7.15" y="6.3" width="1.7" height="4.7" fill="${red}"/><circle cx="8" cy="12.15" r="1.85" fill="${red}"/>`,
+    memory: `<rect x="3" y="3.1" width="10" height="7.6" rx=".8" fill="${alum}"/><rect x="4.1" y="4.2" width="7.8" height="5.4" rx=".4" fill="${alum2}"/><rect x="5.1" y="1.3" width="1.2" height="2.1" fill="${butter2}"/><rect x="7.4" y="1.3" width="1.2" height="2.1" fill="${butter2}"/><rect x="9.7" y="1.3" width="1.2" height="2.1" fill="${butter2}"/><rect x="5.1" y="12.6" width="1.2" height="2.1" fill="${butter2}"/><rect x="7.4" y="12.6" width="1.2" height="2.1" fill="${butter2}"/><rect x="9.7" y="12.6" width="1.2" height="2.1" fill="${butter2}"/>`,
+    eye: `<path fill="${paper}" d="M1.1 8C2.7 5.1 5 3.6 8 3.6S13.3 5.1 14.9 8C13.3 10.9 11 12.4 8 12.4S2.7 10.9 1.1 8z"/><circle cx="8" cy="8" r="2.25" fill="${sky}"/><circle cx="8" cy="8" r="1.05" fill="${ink}"/><circle cx="8.6" cy="7.35" r=".4" fill="#fff"/>`,
+    eyeOff: `<path fill="${paper}" d="M1.1 8C2.7 5.1 5 3.6 8 3.6S13.3 5.1 14.9 8C13.3 10.9 11 12.4 8 12.4S2.7 10.9 1.1 8z"/><circle cx="8" cy="8" r="2.25" fill="${sky}"/><path fill="${red}" d="M2.4 3.2 3.8 1.8 14 12 12.6 13.4z"/>`,
+    play: `<path fill="${green2}" d="M4.6 2.5v11L13.2 8z"/><path fill="${green}" opacity=".45" d="M6 4.2v7.2L11.4 8z"/>`,
+    pause: `<rect x="3.6" y="2.8" width="2.8" height="10.4" rx=".45" fill="${green2}"/><rect x="9.6" y="2.8" width="2.8" height="10.4" rx=".45" fill="${green2}"/>`,
+    music: `<ellipse cx="5" cy="12.2" rx="2.15" ry="1.65" fill="${plum}"/><rect x="6.7" y="2.3" width="1.45" height="9.7" fill="${plum}"/><path fill="${plum}" d="M6.7 2.2h6.4l.7 1.7H6.7z"/><ellipse cx="11.5" cy="10.3" rx="2.15" ry="1.65" fill="${plum}"/><rect x="13.15" y="3.3" width="1.35" height="6.9" fill="${plum}"/>`,
+    alert: `<path fill="${butter}" d="M8 1.3 15.1 14.4H.9z"/><path fill="${butter2}" d="M8 3.15 13.5 13.2H2.5z"/><rect x="7.25" y="6" width="1.5" height="4" rx=".3" fill="${ink}"/><rect x="7.25" y="11" width="1.5" height="1.45" rx=".3" fill="${ink}"/>`,
+    battery: `<rect x="1.2" y="4.1" width="12.1" height="7.8" rx="1.1" fill="${alum}"/><rect x="2.2" y="5.1" width="10.1" height="5.8" rx=".6" fill="${paper}"/><rect x="2.6" y="5.5" width="6.4" height="5" rx=".4" fill="${green}"/><rect x="13.2" y="6.3" width="1.6" height="3.4" rx=".4" fill="${alum}"/>`,
+    plug: `<rect x="5.7" y=".9" width="1.45" height="3.3" rx=".2" fill="${alum}"/><rect x="8.85" y=".9" width="1.45" height="3.3" rx=".2" fill="${alum}"/><path fill="${alum2}" d="M3.9 4.2h8.2v3.1a4.1 4.1 0 0 1-8.2 0z"/><rect x="7.15" y="10.7" width="1.7" height="3.5" rx=".3" fill="${alum}"/>`,
+    leaf: `<path fill="${green}" d="M2.6 13.4C2.8 6.8 7 2.8 13.8 2.2 13.2 8.8 9 13.2 2.6 13.4z"/><path fill="${green2}" d="M4.2 12.2c2.2-2.4 4.3-4.2 7.6-5.4-1.4 2.4-3 4.4-5.4 6z"/>`,
+    bolt: `<path fill="${butter}" d="M9.3 1 3 8.7h4.3L6.2 15 13 6.8H8.5z"/><path fill="${butter2}" opacity=".7" d="M8.7 2.5 4.6 8.1h3.1l-.7 3.8 4.6-5.4H8.3z"/>`,
+    chart: `<rect x="1.8" y="9.1" width="2.7" height="4.7" rx=".3" fill="${sky}"/><rect x="6.6" y="5.2" width="2.7" height="8.6" rx=".3" fill="${green2}"/><rect x="11.4" y="7.2" width="2.7" height="6.6" rx=".3" fill="${orange}"/><rect x="1.4" y="14" width="13.2" height="1.1" rx=".2" fill="${alum2}"/>`,
+    calendar: `<rect x="1.8" y="2.5" width="12.4" height="11.6" rx="1" fill="${paper}"/><path fill="${red}" d="M1.8 3.4c0-.5.4-.9.9-.9h10.6c.5 0 .9.4.9.9V5.8H1.8z"/><rect x="4.2" y="1.1" width="1.4" height="2.5" rx=".3" fill="${alum}"/><rect x="10.4" y="1.1" width="1.4" height="2.5" rx=".3" fill="${alum}"/><rect x="3.6" y="7.3" width="2.1" height="1.7" rx=".2" fill="${sky2}"/><rect x="6.9" y="7.3" width="2.1" height="1.7" rx=".2" fill="#d3d7cf"/><rect x="10.2" y="7.3" width="2.1" height="1.7" rx=".2" fill="#d3d7cf"/><rect x="3.6" y="10" width="2.1" height="1.7" rx=".2" fill="#d3d7cf"/>`,
+    sliders: `<rect x="1.4" y="3.1" width="13.2" height="1.7" rx=".8" fill="${alum2}"/><rect x="1.4" y="7.15" width="13.2" height="1.7" rx=".8" fill="${alum2}"/><rect x="1.4" y="11.2" width="13.2" height="1.7" rx=".8" fill="${alum2}"/><rect x="3" y="2.2" width="2.5" height="3.5" rx=".6" fill="${sky}"/><rect x="8.2" y="6.25" width="2.5" height="3.5" rx=".6" fill="${sky}"/><rect x="5.5" y="10.3" width="2.5" height="3.5" rx=".6" fill="${sky}"/>`,
+    trash: `<rect x="3.6" y="2.3" width="8.8" height="1.5" rx=".3" fill="${alum2}"/><rect x="6.2" y=".9" width="3.6" height="1.7" rx=".3" fill="${alum}"/><path fill="#babdb6" d="M2.9 4.3h10.2l-.85 10.2H3.75z"/><rect x="5.7" y="6" width="1.15" height="6.2" rx=".2" fill="${alum2}"/><rect x="9.15" y="6" width="1.15" height="6.2" rx=".2" fill="${alum2}"/>`,
+    brightness: `<circle cx="8" cy="8" r="3.05" fill="${butter}"/><g fill="${butter2}"><rect x="7.25" y=".7" width="1.5" height="2.3" rx=".3"/><rect x="7.25" y="13" width="1.5" height="2.3" rx=".3"/><rect x=".7" y="7.25" width="2.3" height="1.5" rx=".3"/><rect x="13" y="7.25" width="2.3" height="1.5" rx=".3"/><rect x="2.35" y="2.7" width="2.2" height="1.45" rx=".3" transform="rotate(-45 3.45 3.42)"/><rect x="11.45" y="11.8" width="2.2" height="1.45" rx=".3" transform="rotate(-45 12.55 12.52)"/><rect x="11.15" y="2.55" width="2.2" height="1.45" rx=".3" transform="rotate(45 12.25 3.27)"/><rect x="2.15" y="11.7" width="2.2" height="1.45" rx=".3" transform="rotate(45 3.25 12.42)"/></g>`,
+    clock: `<circle cx="8" cy="8" r="6.3" fill="${alum}"/><circle cx="8" cy="8" r="5.35" fill="${paper}"/><path fill="${ink}" d="M7.4 4.1h1.25V8.1l2.7 1.65-.7 1.12-3.25-2z"/><circle cx="8" cy="8" r=".7" fill="${red}"/>`,
+    prev: `<path fill="${alum}" d="M10.2 2.8 4.2 8l6 5.2z"/><rect x="2.3" y="2.7" width="1.7" height="10.6" rx=".3" fill="${alum}"/>`,
+    next: `<path fill="${alum}" d="M5.8 2.8 11.8 8l-6 5.2z"/><rect x="12" y="2.7" width="1.7" height="10.6" rx=".3" fill="${alum}"/>`,
+    agentWorking: `<circle cx="8" cy="8" r="6.1" fill="${green2}"/><path fill="#fff" d="M6.5 4.7v6.6L12 8z"/>`,
+    agentIdle: `<circle cx="8" cy="8" r="6.1" fill="${alum2}"/><rect x="4.4" y="7.2" width="7.2" height="1.7" rx=".4" fill="#fff"/>`,
+    agentAttention: `<circle cx="8" cy="8" r="6.1" fill="${orange}"/><rect x="7.25" y="4.1" width="1.5" height="4.5" rx=".3" fill="${ink}"/><rect x="7.25" y="9.5" width="1.5" height="1.5" rx=".3" fill="${ink}"/>`,
+    blocked: `<path fill="${orange}" d="M8 1.3 15.1 14.4H.9z"/><rect x="7.25" y="6" width="1.5" height="4" rx=".3" fill="${ink}"/><rect x="7.25" y="11" width="1.5" height="1.45" rx=".3" fill="${ink}"/>`,
+    ready: `<circle cx="8" cy="8" r="6.1" fill="${green2}"/><path fill="#fff" d="M4.3 8.15 6.7 10.6 11.8 5.2 10.7 4.15 6.65 8.45 5.35 7.15z"/>`,
+    wifi: `<circle cx="8" cy="12.5" r="1.25" fill="${sky}"/><path fill="${sky}" d="M4.15 9.15a5.1 5.1 0 0 1 7.7 0l-1.15 1.15a3.45 3.45 0 0 0-5.4 0z"/><path fill="${sky2}" d="M1.9 6.35a8.1 8.1 0 0 1 12.2 0L12.9 7.55a6.3 6.3 0 0 0-9.8 0z"/>`,
+    shield: `<path fill="${sky3}" d="M8 1.2 14 3.3v4.4c0 3.5-2.4 5.8-6 7.1-3.6-1.3-6-3.6-6-7.1V3.3z"/><path fill="${sky2}" d="M8 2.5 12.6 4.2v3.2c0 2.5-1.7 4.3-4.6 5.4V2.5z"/>`,
+    document: `<path fill="${paper}" d="M3 1.3h6.2L13.2 5.2V14.7H3z"/><path fill="${sky2}" d="M9.2 1.3V5.2h4z"/><rect x="4.4" y="7" width="6.4" height="1.1" fill="#d3d7cf"/><rect x="4.4" y="9.1" width="5.2" height="1.1" fill="#d3d7cf"/>`,
+    folder: `<path fill="${butter}" d="M1.3 4.2h5.1l1.2 1.5h7.1v7.6H1.3z"/><path fill="${butter2}" d="M1.3 6.4h13.4v6.9H1.3z"/>`,
+    save: `<rect x="1.8" y="1.6" width="12.4" height="12.8" rx="1" fill="${sky}"/><rect x="3.8" y="1.6" width="6.2" height="4.2" fill="${paper}"/><rect x="3.6" y="8.2" width="8.8" height="4.8" fill="#fff"/><rect x="8.5" y="2.2" width="1.3" height="2.4" fill="${red}"/>`
+  };
+  const inner = glyphs[name] || glyphs.alert;
+  return `<svg class="icon filled${cls ? " " + cls : ""}" viewBox="0 0 16 16" aria-hidden="true">${inner}</svg>`;
+}
+
 function cat() {
-  return `<svg class="cat" viewBox="0 0 30 18" aria-hidden="true"><path d="M4 11c0-3 2.2-5 5-5h3L14 3l2 3h2l2-3 2 3c3 0 5 2 5 5 0 3-3 5-8 5H9c-4 0-5-2-5-5z"/><circle cx="18" cy="9" r="1" fill="#2e3436"/></svg>`;
+  if (state.theme !== "clearlooks") {
+    return `<svg class="cat" viewBox="0 0 30 18" aria-hidden="true"><path d="M4 11c0-3 2.2-5 5-5h3L14 3l2 3h2l2-3 2 3c3 0 5 2 5 5 0 3-3 5-8 5H9c-4 0-5-2-5-5z"/><circle cx="18" cy="9" r="1" fill="#2e3436"/></svg>`;
+  }
+  return `<svg class="cat" viewBox="0 0 22 16" aria-hidden="true"><path fill="#555753" d="M2.4 9.4c0-2.5 2.1-4.4 4.8-4.4h1.3L9.8 1.8l1.7 3.2h1.2l1.7-3.2 1.3 3.2c2.7.1 4.6 2 4.6 4.4 0 2.7-2.5 4.5-6.6 4.5H7.6c-3.6 0-5.2-1.8-5.2-4.5z"/><path fill="#d3d7cf" d="M6.6 8.8c.3 1.7 1.6 2.8 3.4 2.8h2.2c1.5 0 2.6-.7 3-1.8-.5 1.7-2.1 3-4.2 3-2.3 0-4-1.3-4.4-4z"/><circle cx="8.6" cy="8.1" r=".85" fill="#2e3436"/><circle cx="14.2" cy="8.1" r=".85" fill="#2e3436"/><path fill="#ef2929" d="M10.7 9.7h1.3l-.65 1.15z"/></svg>`;
+}
+
+function appGlyph(kind) {
+  const frames = {
+    terminal: `<rect x="1" y="2" width="14" height="12" rx="1.4" fill="#2e3436"/><rect x="2" y="3.1" width="12" height="2" fill="#555753"/><rect x="3.2" y="7.2" width="4.2" height="1.25" rx=".3" fill="#8ae234"/><rect x="3.2" y="9.5" width="6.4" height="1.25" rx=".3" fill="#8ae234"/>`,
+    globe: `<circle cx="8" cy="8" r="6.2" fill="#204a87"/><circle cx="8" cy="8" r="5" fill="#3465a4"/><rect x="3" y="7.3" width="10" height="1.5" fill="#8eb6de"/><rect x="7.25" y="3" width="1.5" height="10" fill="#8eb6de"/><ellipse cx="8" cy="8" rx="2.2" ry="5" fill="none" stroke="#d3e4f5" stroke-width="1"/>`,
+    folder: `<path fill="#fce94f" d="M1.2 4.4h5l1.2 1.4H14.8v7.4H1.2z"/><path fill="#edd400" d="M1.2 6.5h13.6V13H1.2z"/>`,
+    gem: `<path fill="#75507b" d="M8 1.4 14 6.2 8 14.6 2 6.2z"/><path fill="#ad7fa8" d="M8 1.4 11.6 6.2H4.4z"/><path fill="#5c3566" d="M4.4 6.2 8 14.6 2 6.2z"/>`,
+    bubble: `<path fill="#3465a4" d="M2 2.4h10.6a1.4 1.4 0 0 1 1.4 1.4v6.2a1.4 1.4 0 0 1-1.4 1.4H6.2L3.2 14V11.4H2A1.4 1.4 0 0 1 .6 10V3.8A1.4 1.4 0 0 1 2 2.4z"/><rect x="3" y="4.6" width="7.2" height="1.15" rx=".3" fill="#fff"/><rect x="3" y="6.7" width="5" height="1.15" rx=".3" fill="#d3e4f5"/>`,
+    hash: `<rect x="1.2" y="1.2" width="13.6" height="13.6" rx="2.2" fill="#75507b"/><path fill="#fff" d="M6.1 3.2h1.4l-.5 2h2.2l.5-2h1.4l-.5 2h1.7v1.3h-2l-.5 2.2h1.8v1.3H9.1l-.5 2.2H7.2l.5-2.2H5.5l-.5 2.2H3.6l.5-2.2H2.4V8.7h2l.5-2.2H3.1V5.2h2.1zM7.4 6.5l-.5 2.2h2.2l.5-2.2z"/>`,
+    lock: `<rect x="3.2" y="7" width="9.6" height="7.2" rx="1.1" fill="#c4a000"/><path fill="none" stroke="#8f5902" stroke-width="1.6" d="M5.4 7V5.1a2.6 2.6 0 0 1 5.2 0V7"/><circle cx="8" cy="10.2" r="1.1" fill="#fff"/>`,
+    note: `<ellipse cx="5" cy="12.2" rx="2.15" ry="1.65" fill="#75507b"/><rect x="6.7" y="2.3" width="1.45" height="9.7" fill="#75507b"/><path fill="#75507b" d="M6.7 2.2h6.4l.7 1.7H6.7z"/><ellipse cx="11.5" cy="10.3" rx="2.15" ry="1.65" fill="#75507b"/><rect x="13.15" y="3.3" width="1.35" height="6.9" fill="#75507b"/>`,
+    page: `<path fill="#eeeeec" d="M3 1.3h6.2L13.2 5.2V14.7H3z"/><path fill="#729fcf" d="M9.2 1.3V5.2h4z"/>`
+  };
+  const body = frames[kind] || frames.page;
+  return `<svg class="appglyph" viewBox="0 0 16 16" aria-hidden="true">${body}</svg>`;
 }
 
 function appMark(app) {
+  if (state.theme === "clearlooks") {
+    const kinds = {
+      kitty: "terminal", alacritty: "terminal", foot: "terminal", ghostty: "terminal",
+      firefox: "globe", obsidian: "gem", telegram: "bubble", thunar: "folder",
+      slack: "hash", "1password": "lock", herdr: "page", sway: "page",
+      Music: "note", Messages: "bubble"
+    };
+    return appGlyph(kinds[app] || "page");
+  }
   const marks = { kitty: ">_", alacritty: ">_", foot: ">_", ghostty: ">_", firefox: "Ff", obsidian: "◆", telegram: "Tg", thunar: "▤", slack: "#", "1password": "⌕", herdr: "h", sway: "S", Music: "♪", Messages: "M" };
   return marks[app] || (app ? app.charAt(0).toUpperCase() : "·");
 }
@@ -1088,7 +1562,7 @@ function renderBars() {
     <span class="sep" aria-hidden="true"></span>
     <div class="task-area" id="task-area">
       ${tasks.map((w) => `<button type="button" class="bar-button task ${w.id === state.focusedId ? "active" : ""} ${w.urgent ? "attention" : ""}" data-action="task" data-id="${w.id}" title="${esc(w.title)}">
-        <span class="appmark">${esc(appMark(w.app))}</span>
+        <span class="appmark">${appMark(w.app)}</span>
         <span class="task-title ellipsis ${w.urgent ? "tone-attention" : w.id === state.focusedId ? "tone-text" : "muted"}">${esc(w.title)}</span>
         <span class="task-ws">${esc(w.ws)}</span>
       </button>`).join("")}
@@ -1234,7 +1708,7 @@ function windowsHTML() {
       <div class="head-row"><h2>All windows · ${list.length}</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
     </div>
     ${list.map((w) => `<button type="button" class="agent" data-action="task" data-id="${w.id}">
-      <div class="meta"><span class="appmark">${esc(appMark(w.app))}</span><span class="ellipsis" style="flex:1;color:${w.id === state.focusedId ? "var(--text)" : "var(--muted)"}">${esc(w.title)}</span><span>${esc(w.ws)}</span></div>
+      <div class="meta"><span class="appmark">${appMark(w.app)}</span><span class="ellipsis" style="flex:1;color:${w.id === state.focusedId ? "var(--text)" : "var(--muted)"}">${esc(w.title)}</span><span>${esc(w.ws)}</span></div>
     </button>`).join("")}
     <p class="note" style="padding-top:8px">Middle-click a row to ask the compositor to close it.</p>`;
 }
@@ -1291,7 +1765,7 @@ function noticeHTML(record, banner) {
   ).join("");
   return `<article class="notice ${record.urgency === "critical" ? "critical" : ""} ${banner ? "" : ""}">
     <div class="notice-top">
-      <span class="appmark">${esc(appMark(record.app))}</span>
+      <span class="appmark">${appMark(record.app)}</span>
       <span class="app ellipsis">${esc(record.app || "System")}</span>
       <time data-time="${record.time}">${esc(relative(record.time))}</time>
       <button type="button" class="icon-btn" data-action="${banner ? "hide-banner" : "dismiss"}" data-id="${record.id}" aria-label="Close">${svg("close")}</button>
@@ -1408,6 +1882,12 @@ function renderDesktop() {
     <div class="titlebar">
       <span class="grow ellipsis">shell.qml — flake</span>
       <button type="button" class="win-btn" data-action="sample" aria-label="Close sample window">×</button>
+    </div>
+    <div class="gnome-menu"><span>File</span><span>Edit</span><span>View</span><span>Search</span><span>Tools</span><span>Documents</span><span>Help</span></div>
+    <div class="gnome-toolbar">
+      <button type="button">${svg("document")}New</button>
+      <button type="button">${svg("folder")}Open</button>
+      <button type="button">${svg("save")}Save</button>
     </div>
     <div class="sample-tabs"><span class="sample-tab on">shell.qml</span><span class="sample-tab">Theme.qml</span></div>
     <div class="sample-body">
