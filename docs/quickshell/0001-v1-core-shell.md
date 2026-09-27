@@ -22,7 +22,7 @@ V1 must be useful and complete without herdr. This is not a one-for-one widget p
 
 ## Archived design
 
-- [Interactive HTML prototype](quickshell.prototype.html): rebuilt from the live QML on 2026-09-27 and kept in sync with `modules/apps/quickshell.prototype.html`. Open it in a browser. The default material is Clearlooks 2 with GNOME 2 panel grammar: Applications, Places, and System on the top left, a sparse tray on the top right, a window list and workspace pager on the bottom. Notifications are balloons plus a tray menu, not a side rail. `?theme=glass` restores the Stylix glass reading and the denser bar. `?popup=work` or `?popup=notifications` opens those panels. `?dock=0` hides the prototype palette. Return thread, the old notification-layout switcher, and job-progress controls are not in this file.
+- [Interactive HTML prototype](quickshell.prototype.html): rebuilt from the live QML on 2026-09-27 and kept in sync with `modules/apps/quickshell.prototype.html`. Open it in a browser. The default material is Clearlooks 2 with GNOME 2 panel grammar: clock, identity, launchers, media, and work counts on the top left, a sparse tray on the top right, and numbered workspaces on the bottom left ahead of the window list. Notifications are balloons plus a tray menu, not a side rail. `?theme=glass` restores the Stylix glass reading and the denser bar. `?popup=work` or `?popup=notifications` opens those panels. `?dock=0` hides the prototype palette. Return thread, the old notification-layout switcher, and job-progress controls are not in this file.
 
 Clearlooks is a prototype material only. The live shell still reads its colours from Stylix through `Theme.qml`.
 

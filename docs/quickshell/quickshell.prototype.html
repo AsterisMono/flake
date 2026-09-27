@@ -28,13 +28,13 @@ from Theme.qml (bar 0.72 occupied / 0.50 empty, popup 0.40, OSD 0.85).
 Clearlooks does not use backdrop-filter.
 
 Reference lock for the Clearlooks pass:
-  Layout: GNOME 2 dual panels. Top is Applications / Places / System plus
-    a sparse tray (volume, battery, bell, clock, session). The middle of
-    the top panel stays empty. Bottom is a window list and a tiny pager.
-    Health, media, and work-in-flight open from those menus as applet
-    menus or a Metacity-framed dialog, not as bar chips or a right-rail
-    Center. Toasts are notification-daemon balloons. History is the bell's
-    dropdown menu.
+  Layout: GNOME 2 dual panels without an Applications / Places / System
+    row. Top left holds the clock, the NixOS identity, quick-launch icons,
+    now playing, a system-monitor icon, and the work-in-flight counts.
+    The middle stays empty. The right tray is network, volume, battery,
+    the bell, and session. Bottom is Show Desktop, numbered workspaces
+    1–8, then the window list. Toasts are balloons. History is the bell
+    menu. Work, health, and media open as framed dialogs or applet menus.
   Chrome: beveled strips, raised and sunken controls, inset wells, glossy
     blue selection.
   Icons: filled drawings in the Tango palette. Not the Lucide stroke set,
@@ -1039,7 +1039,8 @@ disconnected|incompatible.
     background-position: center;
   }
   html[data-theme="clearlooks"] .task-ws { display: none; }
-  html[data-theme="clearlooks"] .workspaces { margin-left: auto; margin-right: 4px; }
+  html[data-theme="clearlooks"] .workspaces { margin: 0 2px; }
+  html[data-theme="clearlooks"] .ws { font-size: 11px; width: 20px; }
   html[data-theme="clearlooks"] .popup.menu {
     width: 250px;
     padding: 3px 0;
@@ -1692,35 +1693,44 @@ function renderClearlooksBars() {
   const now = new Date();
   const waiting = workVisible() && workCounts().waiting;
   const top = document.getElementById("topbar");
+  const workHtml = workVisible() ? `<button type="button" class="bar-button ${state.popup === "work" ? "active" : ""} ${waiting ? "attention" : ""}" id="btn-work" data-popup="work" title="Work in flight">${workParts(true).map((part) => `<span class="work-part ${part.tone}">${svg(part.icon, "sm")}<span>${esc(part.text)}</span></span>`).join("")}</button>` : "";
   top.innerHTML = `
     <div class="cluster left">
-      <button type="button" class="bar-button menu-label ${state.popup === "applications" ? "active" : ""}" id="btn-applications" data-popup="applications">Applications</button>
-      <button type="button" class="bar-button menu-label ${state.popup === "places" ? "active" : ""}" id="btn-places" data-popup="places">Places</button>
-      <button type="button" class="bar-button menu-label ${state.popup === "system" ? "active" : ""} ${waiting ? "attention" : ""}" id="btn-system" data-popup="system">System</button>
+      <button type="button" class="bar-button clock-applet ${state.popup === "clock" ? "active" : ""}" id="btn-clock" data-popup="clock" title="Calendar"><span id="clock-text">${esc(DAYS[now.getDay()] + " " + MONTHS[now.getMonth()] + " " + now.getDate() + ", " + clockTime(now))}</span></button>
+      <button type="button" class="bar-button ${state.popup === "identity" ? "active" : ""}" id="btn-identity" data-popup="identity" title="NixOS 26.05.20260918.sample">NixOS 26.05</button>
       <span class="sep" aria-hidden="true"></span>
       <button type="button" class="bar-button quick" data-action="launch" data-app="kitty" title="Terminal">${appGlyph("terminal")}</button>
       <button type="button" class="bar-button quick" data-action="launch" data-app="firefox" title="Web Browser">${appGlyph("globe")}</button>
       <button type="button" class="bar-button quick" data-action="launch" data-app="thunar" title="File Manager">${appGlyph("folder")}</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button type="button" class="bar-button ${state.popup === "media" ? "active" : ""}" id="btn-media" data-popup="media" title="Now playing">
+        ${svg(state.playing ? "pause" : "play", "sm")}
+        <span class="media-text">Near Light</span>
+      </button>
+      <button type="button" class="bar-button ${state.popup === "health" ? "active" : ""}" id="btn-health" data-popup="health" title="System Monitor">${cat()}</button>
+      ${workHtml}
     </div>
     <div class="cluster right">
       <button type="button" class="bar-button" data-action="tray" data-tray="Network" title="Network · enp5s0">${svg("wifi")}</button>
       <button type="button" class="bar-button ${state.popup === "audio" ? "active" : ""}" id="btn-audio" data-popup="audio" title="Volume">${svg(audioIcon())}</button>
       <button type="button" class="bar-button ${state.popup === "power" ? "active" : ""}" id="btn-power" data-popup="power" title="Battery">${svg("battery")}</button>
       <button type="button" class="bar-button ${state.popup === "notifications" ? "active" : ""} ${unreadCount() ? "attention" : ""}" id="btn-bell" data-popup="notifications" aria-label="Notifications">${svg(state.dnd ? "bellOff" : "bell")}</button>
-      <button type="button" class="bar-button clock-applet ${state.popup === "clock" ? "active" : ""}" id="btn-clock" data-popup="clock" title="Calendar"><span id="clock-text">${esc(DAYS[now.getDay()] + " " + MONTHS[now.getMonth()] + " " + now.getDate() + ", " + clockTime(now))}</span></button>
       <button type="button" class="bar-button ${state.popup === "session" ? "active" : ""}" id="btn-session" data-popup="session" title="Session">${svg("session")}</button>
     </div>`;
 
   const bottom = document.getElementById("taskbar");
   const names = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const urgentWs = new Set(state.windows.filter((w) => w.urgent).map((w) => w.ws));
-  const rough = Math.max(1, Math.floor((innerWidth - 220) / 150));
+  const rough = Math.max(1, Math.floor((innerWidth - 240) / 150));
   const overflow = state.windows.length > rough;
-  const capacity = Math.max(1, Math.floor((innerWidth - 200 - (overflow ? 36 : 0)) / 150));
+  const capacity = Math.max(1, Math.floor((innerWidth - 230 - (overflow ? 36 : 0)) / 150));
   const tasks = visibleWindows(capacity);
   const showOverflow = state.windows.length > tasks.length;
   bottom.innerHTML = `
     <button type="button" class="bar-button show-desktop" data-action="show-desktop" title="Show Desktop" aria-label="Show Desktop"><i></i></button>
+    <div class="workspaces" id="workspaces">
+      ${names.map((name) => `<button type="button" class="bar-button ws ${state.workspace === name ? "active" : ""} ${urgentWs.has(name) ? "attention" : ""}" data-action="workspace" data-ws="${name}" title="Workspace ${name}" aria-label="Workspace ${name}">${name}</button>`).join("")}
+    </div>
     <span class="grabber" aria-hidden="true"></span>
     <div class="task-area" id="task-area">
       ${tasks.map((w) => `<button type="button" class="bar-button task ${w.id === state.focusedId ? "active" : ""} ${w.urgent ? "attention" : ""}" data-action="task" data-id="${w.id}" title="${esc(w.title)} · workspace ${esc(w.ws)}">
@@ -1728,11 +1738,7 @@ function renderClearlooksBars() {
         <span class="task-title ellipsis ${w.urgent ? "tone-attention" : ""}">${esc(w.title)}</span>
       </button>`).join("")}
     </div>
-    ${showOverflow ? `<button type="button" class="bar-button overflow-btn ${state.popup === "windows" ? "active" : ""}" id="btn-windows" data-popup="windows" aria-label="All windows">…</button>` : ""}
-    <span class="grabber" aria-hidden="true"></span>
-    <div class="workspaces" id="workspaces">
-      ${names.map((name) => `<button type="button" class="bar-button ws ${state.workspace === name ? "active" : ""} ${urgentWs.has(name) ? "attention" : ""}" data-action="workspace" data-ws="${name}" title="Workspace ${name}" aria-label="Workspace ${name}"></button>`).join("")}
-    </div>`;
+    ${showOverflow ? `<button type="button" class="bar-button overflow-btn ${state.popup === "windows" ? "active" : ""}" id="btn-windows" data-popup="windows" aria-label="All windows">…</button>` : ""}`;
   document.body.classList.toggle("occupied", occupied());
   document.body.classList.toggle("empty", !occupied());
 }
@@ -2090,42 +2096,6 @@ function noticesHTML() {
     </div>`;
 }
 
-function applicationsHTML() {
-  return `<div class="menu-head">Applications</div>
-    ${menuItem("Terminal", `data-action="launch" data-app="kitty"`, appGlyph("terminal"))}
-    ${menuItem("Text Editor", `data-action="launch" data-app="obsidian"`, appGlyph("gem"))}
-    ${menuItem("Web Browser", `data-action="launch" data-app="firefox"`, appGlyph("globe"))}
-    ${menuItem("File Manager", `data-action="launch" data-app="thunar"`, appGlyph("folder"))}
-    ${menuItem("Messaging", `data-action="launch" data-app="telegram"`, appGlyph("bubble"))}
-    <div class="menu-sep"></div>
-    ${menuItem("Music Player…", `data-popup="media"`, svg("music"))}`;
-}
-
-function placesHTML() {
-  const rows = [
-    ["Home Folder", "folder"],
-    ["Desktop", "folder"],
-    ["Documents", "folder"],
-    ["Music", "folder"],
-    ["Pictures", "folder"]
-  ];
-  return rows.map(([label]) => menuItem(label, `data-action="place" data-place="${esc(label)}"`, appGlyph("folder"))).join("")
-    + `<div class="menu-sep"></div>`
-    + menuItem("Computer", `data-action="place" data-place="Computer"`, appGlyph("globe"))
-    + menuItem("Network", `data-action="place" data-place="Network"`, svg("wifi"))
-    + `<div class="menu-sep"></div>`
-    + menuItem("Search for Files…", `data-action="place" data-place="Search for Files"`, svg("eye"));
-}
-
-function systemHTML() {
-  const waiting = workVisible() && workCounts().waiting;
-  return `${menuItem("System Monitor…", `data-popup="health"`, svg("chart"))}
-    ${menuItem("Power Management…", `data-popup="power"`, svg("battery"))}
-    ${menuItem(waiting ? "Work in flight…" : "Work in flight…", `data-popup="work"`, svg(waiting ? "agentAttention" : "agentWorking"))}
-    <div class="menu-sep"></div>
-    ${menuItem("About this computer", `data-popup="identity"`, svg("shield"))}`;
-}
-
 function sessionHTML() {
   return `${menuItem("Log Out…", `data-action="session" data-session="Log out"`, svg("session"))}
     ${menuItem("Shut Down…", `data-action="session" data-session="Shut down"`, svg("session"))}
@@ -2141,15 +2111,8 @@ function windowsMenuHTML() {
 }
 
 function popupHTML() {
-  if (state.theme === "clearlooks") {
-    switch (state.popup) {
-      case "applications": return applicationsHTML();
-      case "places": return placesHTML();
-      case "system": return systemHTML();
-      case "session": return sessionHTML();
-      case "windows": return windowsMenuHTML();
-      default: break;
-    }
+  if (state.theme === "clearlooks" && (state.popup === "session" || state.popup === "windows")) {
+    return state.popup === "session" ? sessionHTML() : windowsMenuHTML();
   }
   switch (state.popup) {
     case "clock": return calendarHTML();
@@ -2221,7 +2184,7 @@ function renderPopup() {
   }
   el.hidden = false;
   catcher.hidden = false;
-  const clearlooksMenus = ["applications", "places", "system", "session", "clock", "audio", "power", "notifications", "windows"];
+  const clearlooksMenus = ["session", "clock", "audio", "power", "notifications", "windows"];
   const clearlooksDialogs = ["work", "health", "identity", "media"];
   const menu = state.theme === "clearlooks" && clearlooksMenus.indexOf(state.popup) !== -1;
   const dialog = state.theme === "clearlooks" && clearlooksDialogs.indexOf(state.popup) !== -1;
@@ -2231,7 +2194,7 @@ function renderPopup() {
     + (menu ? " menu" : "")
     + (state.popup === "notifications" && menu ? " wide" : "")
     + (dialog ? " dialog" : "");
-  const menuWidths = { applications: 230, places: 220, system: 230, session: 210, clock: 260, audio: 280, power: 280, notifications: 340, windows: 300 };
+  const menuWidths = { session: 210, clock: 260, audio: 280, power: 280, notifications: 340, windows: 300 };
   const dialogWidths = { work: 440, health: 420, identity: 360, media: 400 };
   el.style.width = (menu ? menuWidths[state.popup] : dialog ? dialogWidths[state.popup] : (state.popup === "work" ? 400 : state.popup === "notifications" ? 384 : 380)) + "px";
   el.setAttribute("aria-label", state.popup);
@@ -2626,10 +2589,9 @@ setInterval(() => {
 
 render();
 const popupAnchors = {
-  clock: "btn-clock", identity: "btn-session", media: "btn-applications",
-  health: "btn-system", power: "btn-power", audio: "btn-audio",
-  windows: "btn-windows", work: "btn-system", notifications: "btn-bell",
-  applications: "btn-applications", places: "btn-places", system: "btn-system",
+  clock: "btn-clock", identity: "btn-identity", media: "btn-media",
+  health: "btn-health", power: "btn-power", audio: "btn-audio",
+  windows: "btn-windows", work: "btn-work", notifications: "btn-bell",
   session: "btn-session"
 };
 if (state.pendingPopup && popupAnchors[state.pendingPopup]) {
