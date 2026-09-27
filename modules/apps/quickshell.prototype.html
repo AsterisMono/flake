@@ -28,10 +28,15 @@ from Theme.qml (bar 0.72 occupied / 0.50 empty, popup 0.40, OSD 0.85).
 Clearlooks does not use backdrop-filter.
 
 Reference lock for the Clearlooks pass:
-  Primary: Fedora GNOME 2 panel (thin beveled strips, applet buttons that
-    are flat until prelight and sunken when open, a recessed workspace
-    switcher, task buttons) plus Clearlooks 2.20 widgets (raised buttons,
-    inset wells, glossy blue list selection).
+  Layout: GNOME 2 dual panels. Top is Applications / Places / System plus
+    a sparse tray (volume, battery, bell, clock, session). The middle of
+    the top panel stays empty. Bottom is a window list and a tiny pager.
+    Health, media, and work-in-flight open from those menus as applet
+    menus or a Metacity-framed dialog, not as bar chips or a right-rail
+    Center. Toasts are notification-daemon balloons. History is the bell's
+    dropdown menu.
+  Chrome: beveled strips, raised and sunken controls, inset wells, glossy
+    blue selection.
   Icons: filled drawings in the Tango palette. Not the Lucide stroke set,
     and not the shipped Tango or Crystal icon themes.
   Type: DejaVu Sans, the Bitstream Vera continuation.
@@ -979,6 +984,196 @@ disconnected|incompatible.
   }
   html[data-theme="glass"] .gnome-menu,
   html[data-theme="glass"] .gnome-toolbar { display: none; }
+
+  /* Clearlooks layout: GNOME 2 menus, tray, balloons. Glass keeps the rails. */
+  html[data-theme="clearlooks"] .menu-label {
+    font: 12px/1 "DejaVu Sans", sans-serif;
+    color: #2e3436;
+    padding: 0 8px;
+  }
+  html[data-theme="clearlooks"] .menu-label.active {
+    color: #fff;
+    border-color: #1d4c82;
+    background: linear-gradient(to bottom, #b7d4f2, #3d74b4);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -1px 0 #1c4a7e;
+  }
+  html[data-theme="clearlooks"] .menu-label.attention:not(.active) {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] #btn-bell.attention:not(.active) {
+    background: transparent; border-color: transparent; box-shadow: none;
+  }
+  html[data-theme="clearlooks"] .menu-label.attention::after,
+  html[data-theme="clearlooks"] #btn-bell.attention::after {
+    content: "";
+    width: 7px; height: 7px; border-radius: 4px;
+    background: #f57900;
+    border: 1px solid #8f4e00;
+    margin-left: 4px;
+  }
+  html[data-theme="clearlooks"] .quick {
+    width: 24px; padding: 0;
+  }
+  html[data-theme="clearlooks"] .quick svg { width: 16px; height: 16px; display: block; }
+  html[data-theme="clearlooks"] .clock-applet {
+    font: 12px/1 "DejaVu Sans", sans-serif;
+    color: #2e3436;
+    padding: 0 8px;
+  }
+  html[data-theme="clearlooks"] .show-desktop {
+    width: 26px; margin: 0 2px 0 3px; padding: 0;
+  }
+  html[data-theme="clearlooks"] .show-desktop i {
+    width: 12px; height: 10px; display: block;
+    border: 1px solid #6e6a63; border-radius: 1px;
+    background: linear-gradient(#fff, #d9d3ca);
+    box-shadow: inset 0 3px 0 #729fcf;
+  }
+  html[data-theme="clearlooks"] .grabber {
+    width: 10px; align-self: stretch; margin: 4px 1px;
+    background-image: radial-gradient(#6a6660 .9px, transparent 1px);
+    background-size: 4px 4px;
+    background-position: center;
+  }
+  html[data-theme="clearlooks"] .task-ws { display: none; }
+  html[data-theme="clearlooks"] .workspaces { margin-left: auto; margin-right: 4px; }
+  html[data-theme="clearlooks"] .popup.menu {
+    width: 250px;
+    padding: 3px 0;
+    border-radius: 4px;
+    background: linear-gradient(to bottom, #f8f6f3, #e4dfd8);
+  }
+  html[data-theme="clearlooks"] .popup.menu.wide { width: 320px; }
+  html[data-theme="clearlooks"] .menuitem {
+    display: flex; align-items: center; gap: 8px;
+    width: 100%; min-height: 24px; padding: 3px 10px 3px 6px;
+    background: transparent; border: 0; border-radius: 0;
+    color: #2e3436; text-align: left;
+    font: 12px/1.3 "DejaVu Sans", sans-serif;
+    box-shadow: none;
+  }
+  html[data-theme="clearlooks"] .menuitem:hover,
+  html[data-theme="clearlooks"] .menuitem.selected {
+    background: linear-gradient(to bottom, #d4e7f8, #3f78b8);
+    color: #fff;
+  }
+  html[data-theme="clearlooks"] .mi-icon {
+    width: 16px; height: 16px; flex: 0 0 16px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  html[data-theme="clearlooks"] .mi-icon svg { width: 16px; height: 16px; display: block; }
+  html[data-theme="clearlooks"] .mi-label { flex: 1; min-width: 0; }
+  html[data-theme="clearlooks"] .mi-label em {
+    display: block; font-style: normal; font-size: 11px; color: #555753;
+  }
+  html[data-theme="clearlooks"] .menuitem:hover .mi-label em,
+  html[data-theme="clearlooks"] .menuitem.selected .mi-label em { color: #e8f2fb; }
+  html[data-theme="clearlooks"] .mi-time { font-size: 10px; color: #888a85; }
+  html[data-theme="clearlooks"] .menuitem:hover .mi-time { color: #e8f2fb; }
+  html[data-theme="clearlooks"] .menu-sep {
+    height: 0; margin: 3px 8px;
+    border-top: 1px solid #b0aaa2;
+    border-bottom: 1px solid #fff;
+  }
+  html[data-theme="clearlooks"] .menu-head {
+    padding: 4px 12px 2px;
+    font: 700 11px/1.3 "DejaVu Sans", sans-serif;
+    color: #555753;
+  }
+  html[data-theme="clearlooks"] .menu-pad { padding: 4px 12px 8px; }
+  html[data-theme="clearlooks"] .menu-empty {
+    padding: 10px 12px; color: #888a85; font: 12px "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .popup.dialog {
+    padding: 0; overflow: hidden;
+  }
+  html[data-theme="clearlooks"] .popup.dialog > .head-row,
+  html[data-theme="clearlooks"] .popup.dialog .popup-head {
+    margin: 0; padding: 5px 8px;
+    background: linear-gradient(to bottom, #e7f2fb, #6ea3d8 42%, #2f629f);
+    border-bottom: 1px solid #1d4c82;
+  }
+  html[data-theme="clearlooks"] .popup.dialog h2,
+  html[data-theme="clearlooks"] .popup.dialog h2.reading {
+    color: #fff; text-align: center;
+    font: 700 12px/1.3 "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .popup.dialog .kicker { display: none; }
+  html[data-theme="clearlooks"] .popup.dialog .account { margin: 10px 12px 0; }
+  html[data-theme="clearlooks"] .popup.dialog .popup-scroll { margin: 8px 12px 12px; }
+  html[data-theme="clearlooks"] .popup.dialog > .note,
+  html[data-theme="clearlooks"] .popup.dialog > .media-row,
+  html[data-theme="clearlooks"] .popup.dialog > .line,
+  html[data-theme="clearlooks"] .popup.dialog > .push,
+  html[data-theme="clearlooks"] .popup.dialog > .meter,
+  html[data-theme="clearlooks"] .popup.dialog > .times,
+  html[data-theme="clearlooks"] .popup.dialog > .transport { margin-left: 12px; margin-right: 12px; }
+  html[data-theme="clearlooks"] .popup.dialog > .media-row { margin-top: 10px; }
+  html[data-theme="clearlooks"] .popup.dialog > .push { margin-bottom: 12px; }
+  html[data-theme="clearlooks"] .banners {
+    top: calc(var(--bar-h) + 14px);
+    right: 18px;
+    width: 340px;
+    gap: 10px;
+    align-items: stretch;
+  }
+  html[data-theme="clearlooks"] .balloon {
+    position: relative;
+    pointer-events: auto;
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 8px 8px 8px 0;
+    border-radius: 8px;
+    border: 1px solid #8a8680;
+    background: linear-gradient(to bottom, #fff, #f4f1eb);
+    box-shadow: 0 3px 10px rgba(20, 24, 32, .35);
+    color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .balloon-accent {
+    width: 8px; align-self: stretch; border-radius: 7px 0 0 7px;
+    background: linear-gradient(to bottom, #8eb6de, #3465a4);
+    flex: 0 0 8px;
+  }
+  html[data-theme="clearlooks"] .balloon.critical .balloon-accent {
+    background: linear-gradient(to bottom, #ef6a6a, #a40000);
+  }
+  html[data-theme="clearlooks"] .balloon-icon { margin-top: 2px; }
+  html[data-theme="clearlooks"] .balloon-icon svg { width: 32px; height: 32px; }
+  html[data-theme="clearlooks"] .balloon-copy { flex: 1; min-width: 0; }
+  html[data-theme="clearlooks"] .balloon-copy strong {
+    display: block; font: 700 13px/1.3 "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .balloon-copy p {
+    margin: 2px 0 0; font: 12px/1.35 "DejaVu Sans", sans-serif; color: #2e3436;
+  }
+  html[data-theme="clearlooks"] .balloon-x {
+    width: 18px; height: 18px; border: 0; background: transparent;
+    color: #555753; font: 14px/1 "DejaVu Sans", sans-serif;
+  }
+  html[data-theme="clearlooks"] .balloon-x:hover { color: #a40000; }
+  html[data-theme="clearlooks"] .balloon-tail {
+    position: absolute; top: -11px; right: 168px;
+    width: 0; height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-bottom: 12px solid #9a968f;
+  }
+  html[data-theme="clearlooks"] .balloon-tail::after {
+    content: "";
+    position: absolute; left: -9px; top: 2px;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 10px solid #fff;
+  }
+  html[data-theme="clearlooks"] .balloon-actions { display: flex; gap: 6px; margin-top: 6px; }
+  html[data-theme="clearlooks"] .balloon-actions button {
+    border: 1px solid #8a8680; border-radius: 3px;
+    background: linear-gradient(#fff, #e0dbd3);
+    box-shadow: inset 0 1px 0 #fff;
+    padding: 1px 8px; font: 11px "DejaVu Sans", sans-serif; color: #2e3436;
+  }
 </style>
 </head>
 <body>
@@ -1145,7 +1340,8 @@ function tangoIcon(name, cls) {
     shield: `<path fill="${sky3}" d="M8 1.2 14 3.3v4.4c0 3.5-2.4 5.8-6 7.1-3.6-1.3-6-3.6-6-7.1V3.3z"/><path fill="${sky2}" d="M8 2.5 12.6 4.2v3.2c0 2.5-1.7 4.3-4.6 5.4V2.5z"/>`,
     document: `<path fill="${paper}" d="M3 1.3h6.2L13.2 5.2V14.7H3z"/><path fill="${sky2}" d="M9.2 1.3V5.2h4z"/><rect x="4.4" y="7" width="6.4" height="1.1" fill="#d3d7cf"/><rect x="4.4" y="9.1" width="5.2" height="1.1" fill="#d3d7cf"/>`,
     folder: `<path fill="${butter}" d="M1.3 4.2h5.1l1.2 1.5h7.1v7.6H1.3z"/><path fill="${butter2}" d="M1.3 6.4h13.4v6.9H1.3z"/>`,
-    save: `<rect x="1.8" y="1.6" width="12.4" height="12.8" rx="1" fill="${sky}"/><rect x="3.8" y="1.6" width="6.2" height="4.2" fill="${paper}"/><rect x="3.6" y="8.2" width="8.8" height="4.8" fill="#fff"/><rect x="8.5" y="2.2" width="1.3" height="2.4" fill="${red}"/>`
+    save: `<rect x="1.8" y="1.6" width="12.4" height="12.8" rx="1" fill="${sky}"/><rect x="3.8" y="1.6" width="6.2" height="4.2" fill="${paper}"/><rect x="3.6" y="8.2" width="8.8" height="4.8" fill="#fff"/><rect x="8.5" y="2.2" width="1.3" height="2.4" fill="${red}"/>`,
+    session: `<circle cx="8" cy="8" r="6.1" fill="${red}"/><rect x="7.25" y="2.1" width="1.5" height="4.4" rx=".3" fill="#fff"/><path fill="#fff" d="M4.7 6.1a4.2 4.2 0 1 0 6.6 0l-1.3 1.2a2.7 2.7 0 1 1-4 0z"/>`
   };
   const inner = glyphs[name] || glyphs.alert;
   return `<svg class="icon filled${cls ? " " + cls : ""}" viewBox="0 0 16 16" aria-hidden="true">${inner}</svg>`;
@@ -1488,7 +1684,61 @@ function agentRow(agent) {
   return { title, context, label, icon, tone, note, pane: agent.pane };
 }
 
+function menuItem(label, attrs, icon, selected) {
+  return `<button type="button" class="menuitem${selected ? " selected" : ""}" ${attrs || ""}><span class="mi-icon">${icon || ""}</span><span class="mi-label">${esc(label)}</span></button>`;
+}
+
+function renderClearlooksBars() {
+  const now = new Date();
+  const waiting = workVisible() && workCounts().waiting;
+  const top = document.getElementById("topbar");
+  top.innerHTML = `
+    <div class="cluster left">
+      <button type="button" class="bar-button menu-label ${state.popup === "applications" ? "active" : ""}" id="btn-applications" data-popup="applications">Applications</button>
+      <button type="button" class="bar-button menu-label ${state.popup === "places" ? "active" : ""}" id="btn-places" data-popup="places">Places</button>
+      <button type="button" class="bar-button menu-label ${state.popup === "system" ? "active" : ""} ${waiting ? "attention" : ""}" id="btn-system" data-popup="system">System</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button type="button" class="bar-button quick" data-action="launch" data-app="kitty" title="Terminal">${appGlyph("terminal")}</button>
+      <button type="button" class="bar-button quick" data-action="launch" data-app="firefox" title="Web Browser">${appGlyph("globe")}</button>
+      <button type="button" class="bar-button quick" data-action="launch" data-app="thunar" title="File Manager">${appGlyph("folder")}</button>
+    </div>
+    <div class="cluster right">
+      <button type="button" class="bar-button" data-action="tray" data-tray="Network" title="Network · enp5s0">${svg("wifi")}</button>
+      <button type="button" class="bar-button ${state.popup === "audio" ? "active" : ""}" id="btn-audio" data-popup="audio" title="Volume">${svg(audioIcon())}</button>
+      <button type="button" class="bar-button ${state.popup === "power" ? "active" : ""}" id="btn-power" data-popup="power" title="Battery">${svg("battery")}</button>
+      <button type="button" class="bar-button ${state.popup === "notifications" ? "active" : ""} ${unreadCount() ? "attention" : ""}" id="btn-bell" data-popup="notifications" aria-label="Notifications">${svg(state.dnd ? "bellOff" : "bell")}</button>
+      <button type="button" class="bar-button clock-applet ${state.popup === "clock" ? "active" : ""}" id="btn-clock" data-popup="clock" title="Calendar"><span id="clock-text">${esc(DAYS[now.getDay()] + " " + MONTHS[now.getMonth()] + " " + now.getDate() + ", " + clockTime(now))}</span></button>
+      <button type="button" class="bar-button ${state.popup === "session" ? "active" : ""}" id="btn-session" data-popup="session" title="Session">${svg("session")}</button>
+    </div>`;
+
+  const bottom = document.getElementById("taskbar");
+  const names = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  const urgentWs = new Set(state.windows.filter((w) => w.urgent).map((w) => w.ws));
+  const rough = Math.max(1, Math.floor((innerWidth - 220) / 150));
+  const overflow = state.windows.length > rough;
+  const capacity = Math.max(1, Math.floor((innerWidth - 200 - (overflow ? 36 : 0)) / 150));
+  const tasks = visibleWindows(capacity);
+  const showOverflow = state.windows.length > tasks.length;
+  bottom.innerHTML = `
+    <button type="button" class="bar-button show-desktop" data-action="show-desktop" title="Show Desktop" aria-label="Show Desktop"><i></i></button>
+    <span class="grabber" aria-hidden="true"></span>
+    <div class="task-area" id="task-area">
+      ${tasks.map((w) => `<button type="button" class="bar-button task ${w.id === state.focusedId ? "active" : ""} ${w.urgent ? "attention" : ""}" data-action="task" data-id="${w.id}" title="${esc(w.title)} · workspace ${esc(w.ws)}">
+        <span class="appmark">${appMark(w.app)}</span>
+        <span class="task-title ellipsis ${w.urgent ? "tone-attention" : ""}">${esc(w.title)}</span>
+      </button>`).join("")}
+    </div>
+    ${showOverflow ? `<button type="button" class="bar-button overflow-btn ${state.popup === "windows" ? "active" : ""}" id="btn-windows" data-popup="windows" aria-label="All windows">…</button>` : ""}
+    <span class="grabber" aria-hidden="true"></span>
+    <div class="workspaces" id="workspaces">
+      ${names.map((name) => `<button type="button" class="bar-button ws ${state.workspace === name ? "active" : ""} ${urgentWs.has(name) ? "attention" : ""}" data-action="workspace" data-ws="${name}" title="Workspace ${name}" aria-label="Workspace ${name}"></button>`).join("")}
+    </div>`;
+  document.body.classList.toggle("occupied", occupied());
+  document.body.classList.toggle("empty", !occupied());
+}
+
 function renderBars() {
+  if (state.theme === "clearlooks") { renderClearlooksBars(); return; }
   const now = new Date();
   const compact = innerWidth < 1180;
   const narrow = innerWidth < 820;
@@ -1613,7 +1863,8 @@ function calendarHTML() {
 
 function identityHTML() {
   const rows = [["Host", "parallax"], ["NixOS", "26.05.20260918.sample"], ["Quickshell", "0.3.0"], ["Sway", "1.11"]];
-  return `<div class="head-row"><h2>Your desktop</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
+  const title = state.theme === "clearlooks" ? "About this computer" : "Your desktop";
+  return `<div class="head-row"><h2>${title}</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
     ${rows.map(([k, v]) => `<div class="line"><span>${esc(k)}</span><span class="muted">${esc(v)}</span></div>`).join("")}`;
 }
 
@@ -1654,13 +1905,31 @@ function healthHTML() {
     ["Network interface", "enp5s0", "tone-text"],
     ["Upload / download", "17.5 kB/s / 29.3 kB/s", "tone-text"]
   ];
-  return `<div class="head-row"><h2>System health</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
+  const title = state.theme === "clearlooks" ? "System Monitor" : "System health";
+  return `<div class="head-row"><h2>${title}</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
     ${rows.map(([k, v, tone]) => `<div class="line"><span>${esc(k)}</span><span class="${tone}">${esc(v)}</span></div>`).join("")}
     <button type="button" class="push" data-action="btop">${svg("chart", "sm")} Open system monitor ↗</button>`;
 }
 
 function powerHTML() {
   const profiles = [["saver", "Power saver", "leaf"], ["balanced", "Balanced", "plug"], ["performance", "Performance", "bolt"]];
+  if (state.theme === "clearlooks") {
+    return `<div class="menu-head">Battery · 70%</div>
+      <p class="note" style="padding:0 12px 6px">On battery · About 2 h 40 min</p>
+      <div class="menu-pad">
+        <div class="head-row"><span style="flex:1">Brightness</span><span>${Math.round(state.brightness)}%</span></div>
+        ${meter("brightness", state.brightness / 100)}
+        ${state.brightnessFailed ? `<p class="note tone-attention">The backlight did not accept that change.</p>` : ""}
+      </div>
+      <div class="menu-sep"></div>
+      <div class="menu-head">Power profile</div>
+      ${profiles.map(([id, label, icon]) => menuItem(label, `data-action="profile" data-profile="${id}" ${id === "performance" && !state.performance ? "disabled" : ""}`, svg(icon), state.profile === id)).join("")}
+      <div class="menu-sep"></div>
+      ${menuItem("Keep awake", `data-action="awake-toggle"`, svg(state.awake ? "eye" : "eyeOff"), state.awake)}
+      ${menuItem("30 minutes", `data-action="awake-30"`, "", state.awake && state.awakeMinutes === 30)}
+      ${menuItem("1 hour", `data-action="awake-60"`, "", state.awake && state.awakeMinutes === 60)}
+      ${menuItem("Until turned off", `data-action="awake-0"`, "", state.awake && state.awakeMinutes === 0)}`;
+  }
   return `<div class="head-row"><h2>Battery</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
     <p class="big">70%</p>
     <p class="sub">On battery · About 2 h 40 min</p>
@@ -1686,6 +1955,19 @@ function powerHTML() {
 }
 
 function audioHTML() {
+  if (state.theme === "clearlooks") {
+    return `<div class="menu-head">Volume</div>
+      <div class="menu-pad">
+        <div class="head-row">${svg(audioIcon())}<span style="flex:1">${state.muted ? "Muted" : esc(volumeText())}</span></div>
+        ${meter("volume", state.volume / 1.5)}
+      </div>
+      ${menuItem(state.muted ? "Unmute" : "Mute", `data-action="mute"`, svg(audioIcon()))}
+      <div class="menu-sep"></div>
+      <div class="menu-head">Output device</div>
+      ${SINKS.map((s) => menuItem(s.name, `data-action="sink" data-sink="${s.id}"`, "", state.sink === s.id)).join("")}
+      <div class="menu-sep"></div>
+      ${menuItem("Open mixer…", `data-action="mixer"`, svg("sliders"))}`;
+  }
   const name = (SINKS.find((s) => s.id === state.sink) || SINKS[0]).name;
   return `<div class="head-row"><h2>Audio output</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
     <p class="note">${esc(name)}</p>
@@ -1732,7 +2014,7 @@ function workHTML() {
   ].filter(([, rows]) => rows.length);
   const trouble = state.fixture === "incompatible" || state.fixture === "disconnected";
   return `<div class="popup-head">
-      <div class="head-row"><h2 class="reading">Agents</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
+      <div class="head-row"><h2 class="reading">${state.theme === "clearlooks" ? "Work in flight" : "Agents"}</h2><button type="button" class="icon-btn" data-action="close" aria-label="Close">${svg("close")}</button></div>
     </div>
     <div class="account">
       <p class="kicker">Account usage</p>
@@ -1781,6 +2063,19 @@ function noticeHTML(record, banner) {
 
 function noticesHTML() {
   const saved = savedNotices();
+  if (state.theme === "clearlooks") {
+    const rows = saved.slice(0, 8).map((record) => `<button type="button" class="menuitem ${record.urgency === "critical" ? "attention" : ""}" data-action="activate" data-id="${record.id}">
+        <span class="mi-icon">${appMark(record.app)}</span>
+        <span class="mi-label"><strong>${esc(record.summary)}</strong><em>${esc(record.body || record.app)}</em></span>
+        <span class="mi-time">${esc(relative(record.time))}</span>
+      </button>`).join("");
+    return `<div class="menu-head">Notifications${saved.length ? " · " + saved.length : ""}</div>
+      ${menuItem(state.dnd ? "Do Not Disturb is on" : "Do Not Disturb", `data-action="dnd"`, svg(state.dnd ? "bellOff" : "bell"), state.dnd)}
+      <div class="menu-sep"></div>
+      ${rows || `<div class="menu-empty">No notifications</div>`}
+      <div class="menu-sep"></div>
+      ${menuItem("Clear", `data-action="clear"`, svg("trash"))}`;
+  }
   const now = new Date();
   return `<div class="popup-head">
       <p class="kicker">${esc(noticeDate(now))}</p>
@@ -1795,7 +2090,67 @@ function noticesHTML() {
     </div>`;
 }
 
+function applicationsHTML() {
+  return `<div class="menu-head">Applications</div>
+    ${menuItem("Terminal", `data-action="launch" data-app="kitty"`, appGlyph("terminal"))}
+    ${menuItem("Text Editor", `data-action="launch" data-app="obsidian"`, appGlyph("gem"))}
+    ${menuItem("Web Browser", `data-action="launch" data-app="firefox"`, appGlyph("globe"))}
+    ${menuItem("File Manager", `data-action="launch" data-app="thunar"`, appGlyph("folder"))}
+    ${menuItem("Messaging", `data-action="launch" data-app="telegram"`, appGlyph("bubble"))}
+    <div class="menu-sep"></div>
+    ${menuItem("Music Player…", `data-popup="media"`, svg("music"))}`;
+}
+
+function placesHTML() {
+  const rows = [
+    ["Home Folder", "folder"],
+    ["Desktop", "folder"],
+    ["Documents", "folder"],
+    ["Music", "folder"],
+    ["Pictures", "folder"]
+  ];
+  return rows.map(([label]) => menuItem(label, `data-action="place" data-place="${esc(label)}"`, appGlyph("folder"))).join("")
+    + `<div class="menu-sep"></div>`
+    + menuItem("Computer", `data-action="place" data-place="Computer"`, appGlyph("globe"))
+    + menuItem("Network", `data-action="place" data-place="Network"`, svg("wifi"))
+    + `<div class="menu-sep"></div>`
+    + menuItem("Search for Files…", `data-action="place" data-place="Search for Files"`, svg("eye"));
+}
+
+function systemHTML() {
+  const waiting = workVisible() && workCounts().waiting;
+  return `${menuItem("System Monitor…", `data-popup="health"`, svg("chart"))}
+    ${menuItem("Power Management…", `data-popup="power"`, svg("battery"))}
+    ${menuItem(waiting ? "Work in flight…" : "Work in flight…", `data-popup="work"`, svg(waiting ? "agentAttention" : "agentWorking"))}
+    <div class="menu-sep"></div>
+    ${menuItem("About this computer", `data-popup="identity"`, svg("shield"))}`;
+}
+
+function sessionHTML() {
+  return `${menuItem("Log Out…", `data-action="session" data-session="Log out"`, svg("session"))}
+    ${menuItem("Shut Down…", `data-action="session" data-session="Shut down"`, svg("session"))}
+    <div class="menu-sep"></div>
+    ${menuItem("About this computer", `data-popup="identity"`, svg("shield"))}`;
+}
+
+function windowsMenuHTML() {
+  const list = orderedWindows();
+  return `<div class="menu-head">All windows · ${list.length}</div>` + list.map((w) =>
+    `<button type="button" class="menuitem${w.id === state.focusedId ? " selected" : ""}" data-action="task" data-id="${w.id}"><span class="mi-icon">${appMark(w.app)}</span><span class="mi-label">${esc(w.title)}</span><span class="mi-time">${esc(w.ws)}</span></button>`
+  ).join("");
+}
+
 function popupHTML() {
+  if (state.theme === "clearlooks") {
+    switch (state.popup) {
+      case "applications": return applicationsHTML();
+      case "places": return placesHTML();
+      case "system": return systemHTML();
+      case "session": return sessionHTML();
+      case "windows": return windowsMenuHTML();
+      default: break;
+    }
+  }
   switch (state.popup) {
     case "clock": return calendarHTML();
     case "identity": return identityHTML();
@@ -1813,10 +2168,35 @@ function popupHTML() {
 function placePopup() {
   const el = document.getElementById("popup");
   if (!state.popup) return;
-  const bottom = state.popup === "windows" || state.popup === "work";
-  const anchor = state.anchorId ? document.getElementById(state.anchorId) : null;
   const width = el.offsetWidth;
   const margin = 8;
+  if (state.theme === "clearlooks") {
+    const dialogs = ["work", "health", "identity", "media"];
+    if (dialogs.indexOf(state.popup) !== -1) {
+      el.style.left = Math.max(margin, (innerWidth - width) / 2) + "px";
+      el.style.right = "auto";
+      el.style.bottom = "auto";
+      el.style.top = "64px";
+      return;
+    }
+    const anchor = state.anchorId ? document.getElementById(state.anchorId) : null;
+    const up = state.popup === "windows";
+    let x = anchor ? anchor.getBoundingClientRect().left : margin;
+    if (anchor && x + width > innerWidth - margin) x = anchor.getBoundingClientRect().right - width;
+    x = Math.max(margin, Math.min(x, innerWidth - width - margin));
+    el.style.left = x + "px";
+    el.style.right = "auto";
+    if (up) {
+      el.style.top = "auto";
+      el.style.bottom = "30px";
+    } else {
+      el.style.bottom = "auto";
+      el.style.top = "30px";
+    }
+    return;
+  }
+  const bottom = state.popup === "windows" || state.popup === "work";
+  const anchor = state.anchorId ? document.getElementById(state.anchorId) : null;
   let x = anchor ? anchor.getBoundingClientRect().left + anchor.offsetWidth / 2 - width / 2 : (innerWidth - width) / 2;
   x = Math.max(margin, Math.min(x, innerWidth - width - margin));
   el.style.left = x + "px";
@@ -1841,19 +2221,52 @@ function renderPopup() {
   }
   el.hidden = false;
   catcher.hidden = false;
-  el.className = "popup" + (state.popup === "work" ? " work" : "") + (state.popup === "notifications" ? " notices" : "");
-  el.style.width = (state.popup === "work" ? 400 : state.popup === "notifications" ? 384 : 380) + "px";
+  const clearlooksMenus = ["applications", "places", "system", "session", "clock", "audio", "power", "notifications", "windows"];
+  const clearlooksDialogs = ["work", "health", "identity", "media"];
+  const menu = state.theme === "clearlooks" && clearlooksMenus.indexOf(state.popup) !== -1;
+  const dialog = state.theme === "clearlooks" && clearlooksDialogs.indexOf(state.popup) !== -1;
+  el.className = "popup"
+    + (state.popup === "work" ? " work" : "")
+    + (state.popup === "notifications" && !menu ? " notices" : "")
+    + (menu ? " menu" : "")
+    + (state.popup === "notifications" && menu ? " wide" : "")
+    + (dialog ? " dialog" : "");
+  const menuWidths = { applications: 230, places: 220, system: 230, session: 210, clock: 260, audio: 280, power: 280, notifications: 340, windows: 300 };
+  const dialogWidths = { work: 440, health: 420, identity: 360, media: 400 };
+  el.style.width = (menu ? menuWidths[state.popup] : dialog ? dialogWidths[state.popup] : (state.popup === "work" ? 400 : state.popup === "notifications" ? 384 : 380)) + "px";
   el.setAttribute("aria-label", state.popup);
   el.innerHTML = popupHTML();
   placePopup();
   const banners = document.getElementById("banners");
-  banners.classList.toggle("aside", state.popup === "notifications");
+  banners.classList.toggle("aside", state.theme !== "clearlooks" && state.popup === "notifications");
+}
+
+function balloonHTML(record, tailed) {
+  const actions = (record.actions || []).map((action) =>
+    `<button type="button" data-action="invoke" data-id="${record.id}" data-invoke="${esc(action.id)}">${esc(action.text)}</button>`
+  ).join("");
+  return `<article class="balloon ${record.urgency === "critical" ? "critical" : ""}">
+    ${tailed ? `<span class="balloon-tail" aria-hidden="true"></span>` : ""}
+    <span class="balloon-accent"></span>
+    <span class="balloon-icon">${appMark(record.app)}</span>
+    <div class="balloon-copy">
+      <strong>${esc(record.summary)}</strong>
+      ${record.body ? `<p>${esc(record.body)}</p>` : ""}
+      ${actions ? `<div class="balloon-actions">${actions}</div>` : ""}
+    </div>
+    <button type="button" class="balloon-x" data-action="hide-banner" data-id="${record.id}" aria-label="Close">×</button>
+  </article>`;
 }
 
 function renderBanners() {
   const el = document.getElementById("banners");
-  el.classList.toggle("aside", state.popup === "notifications");
   const records = state.banners.map(findNotice).filter(Boolean);
+  if (state.theme === "clearlooks") {
+    el.classList.remove("aside");
+    el.innerHTML = records.map((record, index) => balloonHTML(record, index === 0)).join("");
+    return;
+  }
+  el.classList.toggle("aside", state.popup === "notifications");
   el.innerHTML = records.map((record) => `<div class="banner">${noticeHTML(record, true)}</div>`).join("");
 }
 
@@ -2043,7 +2456,21 @@ document.addEventListener("click", (event) => {
   if (action === "close") closePopup();
   else if (action === "workspace") focusWorkspace(actionEl.dataset.ws);
   else if (action === "task") focusWindow(Number(actionEl.dataset.id));
-  else if (action === "tray") state.status = actionEl.dataset.tray + " keeps its own menu. This prototype does not open one.";
+  else if (action === "tray") state.status = actionEl.dataset.tray + " stays in the tray. This page does not open a network menu.";
+  else if (action === "launch") {
+    const win = state.windows.find((item) => item.app === actionEl.dataset.app);
+    if (win) { focusWindow(win.id); return; }
+    state.status = "Would launch " + actionEl.dataset.app + ". Nothing was started.";
+  }
+  else if (action === "place") {
+    state.status = actionEl.dataset.place + " is not a folder on this page.";
+    closePopup();
+  }
+  else if (action === "show-desktop") {
+    state.sample = false;
+    state.status = "Show desktop. The sample window is hidden.";
+  }
+  else if (action === "session") state.status = actionEl.dataset.session + " was not run. This page is not a session.";
   else if (action === "month") state.monthOffset += Number(actionEl.dataset.delta);
   else if (action === "today") state.monthOffset = 0;
   else if (action === "media-toggle") state.playing = !state.playing;
@@ -2183,7 +2610,9 @@ setInterval(() => {
   const clock = document.getElementById("clock-text");
   const date = document.getElementById("clock-date");
   const now = new Date();
-  if (clock) clock.textContent = clockTime(now);
+  if (clock) clock.textContent = state.theme === "clearlooks"
+    ? DAYS[now.getDay()] + " " + MONTHS[now.getMonth()] + " " + now.getDate() + ", " + clockTime(now)
+    : clockTime(now);
   if (date) date.textContent = innerWidth < 1180 ? "" : clockDate(now) + " · ";
   document.querySelectorAll("[data-time]").forEach((el) => { el.textContent = relative(Number(el.dataset.time)); });
   const nowMs = Date.now();
@@ -2196,8 +2625,25 @@ setInterval(() => {
 }, 1000);
 
 render();
-if (state.pendingPopup && ["clock", "identity", "media", "health", "power", "audio", "windows", "work", "notifications"].includes(state.pendingPopup)) {
-  openPopup(state.pendingPopup, "btn-" + (state.pendingPopup === "notifications" ? "bell" : state.pendingPopup === "clock" ? "clock" : state.pendingPopup));
+const popupAnchors = {
+  clock: "btn-clock", identity: "btn-session", media: "btn-applications",
+  health: "btn-system", power: "btn-power", audio: "btn-audio",
+  windows: "btn-windows", work: "btn-system", notifications: "btn-bell",
+  applications: "btn-applications", places: "btn-places", system: "btn-system",
+  session: "btn-session"
+};
+if (state.pendingPopup && popupAnchors[state.pendingPopup]) {
+  openPopup(state.pendingPopup, popupAnchors[state.pendingPopup]);
+}
+if (query.get("balloons") === "1" && state.theme === "clearlooks") {
+  addRecord({ app: "System", summary: "Software updates available", body: "Click the notification icon to show the available updates." }, true);
+  addRecord({ app: "herdr", summary: "Review the tenant migration diff", body: "codex reports done. Ready for your review." }, true);
+  addRecord({ app: "Messages", summary: "Icon test", body: "Testing a stacked balloon." }, true);
+  state.banners.forEach((id) => {
+    const record = findNotice(id);
+    if (record) record.bannerDeadline = 0;
+  });
+  renderBanners();
 }
 </script>
 </body>
