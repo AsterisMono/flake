@@ -125,22 +125,18 @@ EOF
 }
 
 compile_pointer() {
-  local pc
-  pc=$(find "$SCRATCH/tools" -name 'wayland-client.pc' -print -quit)
-  if [[ -z "$pc" ]]; then
-    echo "verify-quickshell: wayland-client.pc missing from the tool env" >&2
-    return 1
-  fi
   if ! command -v gcc >/dev/null 2>&1; then
     echo "verify-quickshell: gcc is not on PATH; the pointer helper cannot be built" >&2
     return 1
   fi
-  PKG_CONFIG_PATH=$(dirname "$pc") \
-    "$SCRATCH/tools/bin/pkg-config" --exists wayland-client
-  # shellcheck disable=SC2046
-  PKG_CONFIG_PATH=$(dirname "$pc") gcc -O2 -I"$SCRIPT_DIR" -o "$SCRATCH/pointer-click" \
+  if [[ ! -f "$SCRATCH/tools/include/wayland-client.h" || ! -e "$SCRATCH/tools/lib/libwayland-client.so" ]]; then
+    echo "verify-quickshell: wayland headers or libwayland-client missing from the tool env" >&2
+    return 1
+  fi
+  gcc -O2 -I"$SCRIPT_DIR" -I"$SCRATCH/tools/include" -L"$SCRATCH/tools/lib" \
+    -o "$SCRATCH/pointer-click" \
     "$SCRIPT_DIR/pointer-click.c" "$SCRIPT_DIR/vpointer.c" \
-    $("$SCRATCH/tools/bin/pkg-config" --cflags --libs wayland-client)
+    -lwayland-client
 }
 
 write_scaffolding() {
