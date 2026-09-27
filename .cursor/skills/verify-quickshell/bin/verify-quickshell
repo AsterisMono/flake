@@ -320,7 +320,11 @@ start_sway() {
   mkdir -p "$SCRATCH/runtime"
   chmod 700 "$SCRATCH/runtime"
   printf '%s\n' 'output * resolution 1920x1080' >"$SCRATCH/sway.conf"
-  sway_env setsid "$SCRATCH/tools/bin/dbus-run-session" "$SCRATCH/tools/bin/sway" -c "$SCRATCH/sway.conf" \
+  # Nix's dbus does not install /etc/dbus-1/session.conf on this host.
+  # Point the session bus at the config shipped with the tool env.
+  sway_env setsid "$SCRATCH/tools/bin/dbus-run-session" \
+    --config-file "$SCRATCH/tools/share/dbus-1/session.conf" \
+    "$SCRATCH/tools/bin/sway" -c "$SCRATCH/sway.conf" \
     >"$SCRATCH/sway.log" 2>&1 &
   echo $! >"$SCRATCH/sway.pid"
   wait_for_socket
