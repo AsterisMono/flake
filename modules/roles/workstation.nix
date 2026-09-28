@@ -22,6 +22,7 @@
     flatpak
     gdm
     git
+    kanshi
     keyring
     kitty
     neovim

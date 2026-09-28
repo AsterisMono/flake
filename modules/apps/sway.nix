@@ -299,6 +299,7 @@ _: {
         xarchiver
         xfce4-screenshooter
         autotiling
+        # Inspect a layout by hand. Workstation monitor plans live in kanshi.
         wdisplays
       ];
 

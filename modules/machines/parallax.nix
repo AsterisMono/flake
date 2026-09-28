@@ -70,34 +70,69 @@
       # to logind's default action.
       systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
-    homeModule = {
-      wayland.windowManager.sway.config = {
-        output = {
-          "Invalid Vendor Codename - RTK HDMI 0x01010101".disable = "";
-          "MKG MK-165Q32s 24G97P73LKZ4" = {
-            mode = "2560x1440@165.003Hz";
-            position = "0 0";
-            scale = "1";
-            transform = "90";
-          };
-          "Samsung Electric Company Odyssey G70D H1AK500000" = {
-            mode = "3840x2160@143.988Hz";
-            position = "1440 416";
-            scale = "1.333333";
-          };
+    # Kanshi matches a profile only when its outputs are exactly the connected
+    # heads. The RTK port is not a display: disable it when it is the only head,
+    # and again when it shows up beside the desk. Workspace 1 stays on the
+    # Odyssey; one swaymsg keeps that assignment ordered before the focus.
+    homeModule =
+      { lib, pkgs, ... }:
+      let
+        swaymsg = lib.getExe' pkgs.unstable.swayfx "swaymsg";
+        portrait = {
+          criteria = "MKG MK-165Q32s 24G97P73LKZ4";
+          status = "enable";
+          mode = "2560x1440@165.003Hz";
+          position = "0,0";
+          scale = 1.0;
+          transform = "90";
         };
-        startup = [
+        primary = {
+          criteria = "Samsung Electric Company Odyssey G70D H1AK500000";
+          status = "enable";
+          mode = "3840x2160@143.988Hz";
+          position = "1440,416";
+          scale = 1.333333;
+        };
+        rtk = {
+          criteria = "Invalid Vendor Codename - RTK HDMI 0x01010101";
+          status = "disable";
+        };
+        placePrimary = ''${swaymsg} 'workspace 1 output "${primary.criteria}", focus output "${primary.criteria}"'';
+        profiles = [
           {
-            command = ''swaymsg focus output "Samsung Electric Company Odyssey G70D H1AK500000"'';
+            name = "desk-rtk";
+            outputs = [
+              portrait
+              primary
+              rtk
+            ];
+            exec = placePrimary;
+          }
+          {
+            name = "desk";
+            outputs = [
+              portrait
+              primary
+            ];
+            exec = placePrimary;
+          }
+          {
+            name = "rtk";
+            outputs = [ rtk ];
           }
         ];
-        workspaceOutputAssign = [
+      in
+      {
+        services.kanshi.settings = map (
+          profile:
           {
-            workspace = "1";
-            output = "Samsung Electric Company Odyssey G70D H1AK500000";
+            profile.name = profile.name;
+            profile.outputs = profile.outputs;
           }
-        ];
+          // lib.optionalAttrs (profile ? exec) {
+            profile.exec = profile.exec;
+          }
+        ) profiles;
       };
-    };
   };
 }

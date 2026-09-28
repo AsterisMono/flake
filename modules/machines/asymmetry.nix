@@ -56,11 +56,19 @@
         };
       };
     homeModule = {
-      wayland.windowManager.sway.config.output."China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4 Unknown" =
+      services.kanshi.settings = [
         {
-          mode = "2880x1800@120Hz";
-          scale = "1.75";
-        };
+          profile.name = "panel";
+          profile.outputs = [
+            {
+              criteria = "China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4 Unknown";
+              status = "enable";
+              mode = "2880x1800@120Hz";
+              scale = 1.75;
+            }
+          ];
+        }
+      ];
     };
   };
 }
