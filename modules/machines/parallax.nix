@@ -97,42 +97,38 @@
           criteria = "Invalid Vendor Codename - RTK HDMI 0x01010101";
           status = "disable";
         };
-        placePrimary = ''${swaymsg} 'workspace 1 output "${primary.criteria}", focus output "${primary.criteria}"'';
-        profiles = [
-          {
-            name = "desk-rtk";
-            outputs = [
-              portrait
-              primary
-              rtk
-            ];
-            exec = placePrimary;
-          }
-          {
-            name = "desk";
-            outputs = [
-              portrait
-              primary
-            ];
-            exec = placePrimary;
-          }
-          {
-            name = "rtk";
-            outputs = [ rtk ];
-          }
-        ];
+        placePrimary = "${swaymsg} 'workspace 1 output \"${primary.criteria}\", focus output \"${primary.criteria}\"'";
       in
       {
-        services.kanshi.settings = map (
-          profile:
+        services.kanshi.settings = [
           {
-            profile.name = profile.name;
-            profile.outputs = profile.outputs;
+            profile = {
+              name = "desk-rtk";
+              outputs = [
+                portrait
+                primary
+                rtk
+              ];
+              exec = placePrimary;
+            };
           }
-          // lib.optionalAttrs (profile ? exec) {
-            profile.exec = profile.exec;
+          {
+            profile = {
+              name = "desk";
+              outputs = [
+                portrait
+                primary
+              ];
+              exec = placePrimary;
+            };
           }
-        ) profiles;
+          {
+            profile = {
+              name = "rtk";
+              outputs = [ rtk ];
+            };
+          }
+        ];
       };
   };
 }
