@@ -70,34 +70,42 @@
       # to logind's default action.
       systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
-    homeModule = {
-      wayland.windowManager.sway.config = {
-        output = {
-          "Invalid Vendor Codename - RTK HDMI 0x01010101".disable = "";
-          "MKG MK-165Q32s 24G97P73LKZ4" = {
-            mode = "2560x1440@165.003Hz";
-            position = "0 0";
-            scale = "1";
-            transform = "90";
-          };
-          "Samsung Electric Company Odyssey G70D H1AK500000" = {
-            mode = "3840x2160@143.988Hz";
-            position = "1440 416";
-            scale = "1.333333";
-          };
+    # Kanshi matches this profile only when both heads are connected.
+    # Workspace 1 stays on the Odyssey; one swaymsg assigns it before focusing.
+    homeModule =
+      { lib, pkgs, ... }:
+      let
+        swaymsg = lib.getExe' pkgs.unstable.swayfx "swaymsg";
+        portrait = {
+          criteria = "MKG MK-165Q32s 24G97P73LKZ4";
+          status = "enable";
+          mode = "2560x1440@165.003Hz";
+          position = "0,0";
+          scale = 1.0;
+          transform = "90";
         };
-        startup = [
+        primary = {
+          criteria = "Samsung Electric Company Odyssey G70D H1AK500000";
+          status = "enable";
+          mode = "3840x2160@143.988Hz";
+          position = "1440,416";
+          scale = 1.333333;
+        };
+        placePrimary = "${swaymsg} 'workspace 1 output \"${primary.criteria}\", focus output \"${primary.criteria}\"'";
+      in
+      {
+        services.kanshi.settings = [
           {
-            command = ''swaymsg focus output "Samsung Electric Company Odyssey G70D H1AK500000"'';
-          }
-        ];
-        workspaceOutputAssign = [
-          {
-            workspace = "1";
-            output = "Samsung Electric Company Odyssey G70D H1AK500000";
+            profile = {
+              name = "desk";
+              outputs = [
+                portrait
+                primary
+              ];
+              exec = placePrimary;
+            };
           }
         ];
       };
-    };
   };
 }
