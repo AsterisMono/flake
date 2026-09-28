@@ -87,7 +87,7 @@
         primary = {
           criteria = "Samsung Electric Company Odyssey G70D H1AK500000";
           status = "enable";
-          mode = "3840x2160@143.988Hz";
+          mode = "3840x2160@120Hz";
           position = "1440,416";
           scale = 1.333333;
         };
