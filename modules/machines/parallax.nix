@@ -70,10 +70,8 @@
       # to logind's default action.
       systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
-    # Kanshi matches a profile only when its outputs are exactly the connected
-    # heads. The RTK port is not a display: disable it when it is the only head,
-    # and again when it shows up beside the desk. Workspace 1 stays on the
-    # Odyssey; one swaymsg keeps that assignment ordered before the focus.
+    # Kanshi matches this profile only when both heads are connected.
+    # Workspace 1 stays on the Odyssey; one swaymsg assigns it before focusing.
     homeModule =
       { lib, pkgs, ... }:
       let
@@ -93,25 +91,10 @@
           position = "1440,416";
           scale = 1.333333;
         };
-        rtk = {
-          criteria = "Invalid Vendor Codename - RTK HDMI 0x01010101";
-          status = "disable";
-        };
         placePrimary = "${swaymsg} 'workspace 1 output \"${primary.criteria}\", focus output \"${primary.criteria}\"'";
       in
       {
         services.kanshi.settings = [
-          {
-            profile = {
-              name = "desk-rtk";
-              outputs = [
-                portrait
-                primary
-                rtk
-              ];
-              exec = placePrimary;
-            };
-          }
           {
             profile = {
               name = "desk";
@@ -120,12 +103,6 @@
                 primary
               ];
               exec = placePrimary;
-            };
-          }
-          {
-            profile = {
-              name = "rtk";
-              outputs = [ rtk ];
             };
           }
         ];
