@@ -1,0 +1,814 @@
+#!/usr/bin/env bash
+# Drive the desk-bars Quickshell in an isolated headless Wayland session.
+# The HTML files under docs/quickshell and modules/apps are not the app.
+set -euo pipefail
+
+readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+readonly QS_SRC="$REPO_ROOT/modules/apps/quickshell"
+readonly STATE_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/verify-quickshell"
+readonly CURRENT_LINK="$STATE_ROOT/current"
+readonly HM_USER="nvirellia"
+
+if ! command -v nix >/dev/null 2>&1 && [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+  # shellcheck disable=SC1091
+  source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+usage() {
+  cat <<'EOF'
+usage: verify-quickshell <launch|doctor|drive|evidence|cleanup> [args]
+
+  launch [--config scaffold|module] [--machine <name>] [--fixture <name>] [--outputs <n>]
+  doctor
+  drive desk-bars
+  drive workspaces-and-tasks
+  drive status-popups --kind clock|audio|power
+  drive notification-center
+  drive work-in-flight
+  evidence
+  cleanup
+
+Default launch builds a scaffold config from modules/apps/quickshell plus the
+Catppuccin fallback palette in default.nix, and sets QS_WORK_FIXTURE=flights.
+--config module builds programs.quickshell.configs.desk from a machine that
+imports quickshell (default machine: stylix-test). Account-usage scripts and
+secret paths are rewritten to a local stub unless
+VERIFY_QUICKSHELL_LIVE_ACCOUNTS=1, which is refused here because it reads
+secret files and may call account APIs.
+
+Evidence stays under $XDG_STATE_HOME/verify-quickshell/runs/<id>/evidence.
+EOF
+}
+
+die() {
+  printf 'verify-quickshell: %s\n' "$*" >&2
+  exit 1
+}
+
+run_nix() {
+  command nix --extra-experimental-features 'nix-command flakes' "$@"
+}
+
+run_dir() {
+  if [[ -n ${VERIFY_QUICKSHELL_RUN:-} && -d $VERIFY_QUICKSHELL_RUN ]]; then
+    printf '%s\n' "$VERIFY_QUICKSHELL_RUN"
+    return
+  fi
+  [[ -f $CURRENT_LINK ]] || die "no run is active; run launch first"
+  local id
+  id="$(<"$CURRENT_LINK")"
+  [[ -d $STATE_ROOT/runs/$id ]] || die "active run $id is missing"
+  printf '%s\n' "$STATE_ROOT/runs/$id"
+}
+
+load_meta() {
+  local run
+  run="$(run_dir)"
+  # shellcheck disable=SC1091
+  source "$run/meta.env"
+}
+
+qml_escape() {
+  local value=$1
+  value=${value//\\/\\\\}
+  value=${value//\"/\\\"}
+  printf '%s\n' "$value"
+}
+
+write_palette() {
+  local dest=$1
+  local parsed=$2
+  {
+    printf '%s\n' "pragma Singleton"
+    printf '%s\n' "import QtQuick"
+    printf '%s\n' "import Quickshell"
+    printf '%s\n' "Singleton {"
+    while read -r slot hex; do
+      [[ -n $slot ]] || continue
+      printf '  readonly property color %s: "%s"\n' "$slot" "$hex"
+    done <"$parsed"
+    printf '%s\n' "}"
+  } >"$dest"
+}
+
+parse_palette() {
+  local src=$1 dest=$2
+  awk '
+    $0 ~ /defaultPalette = \{/ { capture = 1; next }
+    capture && $0 ~ /^[[:space:]]*\};/ { exit }
+    capture && $1 ~ /^base[0-9A-F][0-9A-F]$/ && $2 == "=" {
+      hex = $3
+      gsub(/[";]/, "", hex)
+      print $1, hex
+    }
+  ' "$src" >"$dest"
+  local count
+  count="$(wc -l <"$dest" | tr -d ' ')"
+  [[ $count -eq 16 ]] || die "expected 16 base16 slots in $src, parsed $count"
+}
+
+write_stubs() {
+  local run=$1
+  cat >"$run/scratch/health-stub.sh" <<'EOF'
+#!/bin/sh
+# Verification scaffold. Exit non-zero so the shell keeps health "unavailable"
+# instead of painting zeros from a sampler that is not quickshell-health.
+echo "verify-quickshell scaffold: health sampler not executed" >&2
+exit 1
+EOF
+  cat >"$run/scratch/usage-stub.sh" <<'EOF'
+#!/bin/sh
+# Verification stub. Does not read secret files and does not open a network
+# connection. Prints the same not-ok object the panel already understands.
+printf '%s\n' '{"ok":false}'
+EOF
+  chmod +x "$run/scratch/health-stub.sh" "$run/scratch/usage-stub.sh"
+}
+
+assemble_scaffold() {
+  local run=$1 swaymsg=$2
+  local config=$run/config
+  rm -rf "$config"
+  mkdir -p "$config" "$run/scratch"
+  cp -a "$QS_SRC/." "$config/"
+  rm -f "$config/default.nix"
+  parse_palette "$QS_SRC/default.nix" "$run/scratch/palette.txt"
+  write_palette "$config/StylixPalette.qml" "$run/scratch/palette.txt"
+  write_stubs "$run"
+  local home
+  home="$(qml_escape "$run/scratch/home")"
+  mkdir -p "$run/scratch/home"
+  cat >"$config/Runtime.qml" <<EOF
+pragma Singleton
+import Quickshell
+
+// Verification scaffold, not the Home Manager generated Runtime.qml.
+// quickshellVersion stays "scaffold" so a session can be told apart from
+// a module build. Secret paths point at files that are never created.
+Singleton {
+  readonly property string quickshellVersion: "scaffold"
+  readonly property string swayVersion: "scaffold"
+  readonly property string hostName: "verify-quickshell"
+  readonly property string homeDirectory: "$(qml_escape "$run/scratch/home")"
+  readonly property string nixosVersion: "scaffold"
+  readonly property string herdrEndpoint: ""
+  readonly property string agentUsageScript: "$(qml_escape "$run/scratch/usage-stub.sh")"
+  readonly property string codexExecutable: "/nonexistent/codex"
+  readonly property string deepseekKeyPath: "$(qml_escape "$run/scratch/missing-deepseek")"
+  readonly property string opencodeKeyPath: "$(qml_escape "$run/scratch/missing-opencode")"
+  readonly property string openrouterKeyPath: "$(qml_escape "$run/scratch/missing-openrouter")"
+  readonly property string swaymsg: "$(qml_escape "$swaymsg")"
+  readonly property string healthScript: "$(qml_escape "$run/scratch/health-stub.sh")"
+  readonly property string sensorDirectory: ""
+  readonly property string sensorInput: "temp1_input"
+  readonly property string herdrHostScript: ""
+  readonly property string pavucontrol: "/bin/true"
+  readonly property string brightnessctl: "/bin/true"
+  readonly property string waycat: "/bin/true"
+  readonly property var btopCommand: ["/bin/true"]
+}
+EOF
+  # home is unused when the escape is inlined above; keep the directory.
+  : "$home"
+  cat >"$run/evidence/launch/config-provenance.txt" <<EOF
+config_source=scaffold
+machine=
+fixture=${fixture:-}
+herdr_endpoint=blank
+account_usage=stub
+health_sampler=stub-exit-1
+palette=defaultPalette from modules/apps/quickshell/default.nix
+swaymsg=$swaymsg
+note=Scaffold proves the QML tree can run. It does not prove Home Manager wiring, Stylix palette injection, or the packaged quickshell-health script.
+EOF
+}
+
+rewrite_runtime_line() {
+  local file=$1 prop=$2 value=$3
+  local escaped tmp
+  escaped="$(qml_escape "$value")"
+  tmp="$(mktemp)"
+  awk -v prop="$prop" -v value="$escaped" '
+    $0 ~ ("readonly property string " prop ":") {
+      print "          readonly property string " prop ": \"" value "\""
+      found = 1
+      next
+    }
+    { print }
+    END { if (!found) exit 2 }
+  ' "$file" >"$tmp"
+  mv "$tmp" "$file"
+}
+
+assemble_module() {
+  local run=$1 machine=$2
+  command -v nix >/dev/null 2>&1 || die "--config module needs nix on PATH"
+  [[ -f $REPO_ROOT/modules/machines/$machine.nix ]] || die "no modules/machines/$machine.nix"
+  mkdir -p "$run/evidence/launch" "$run/scratch"
+  local out
+  if ! out="$(run_nix build --no-link --print-out-paths \
+    "$REPO_ROOT#nixosConfigurations.${machine}.config.home-manager.users.${HM_USER}.programs.quickshell.configs.desk" \
+    2>"$run/evidence/launch/module-build.err")"; then
+    die "module config build failed; see $run/evidence/launch/module-build.err"
+  fi
+  printf '%s\n' "$out" >"$run/evidence/launch/module-out-path.txt"
+  rm -rf "$run/config"
+  mkdir -p "$run/config"
+  cp -a "$out/." "$run/config/"
+  write_stubs "$run"
+  if [[ ${VERIFY_QUICKSHELL_LIVE_ACCOUNTS:-} == 1 ]]; then
+    die "VERIFY_QUICKSHELL_LIVE_ACCOUNTS=1 reads secret files and may call account APIs. This harness does not do that."
+  fi
+  rewrite_runtime_line "$run/config/Runtime.qml" agentUsageScript "$run/scratch/usage-stub.sh"
+  rewrite_runtime_line "$run/config/Runtime.qml" deepseekKeyPath "$run/scratch/missing-deepseek"
+  rewrite_runtime_line "$run/config/Runtime.qml" opencodeKeyPath "$run/scratch/missing-opencode"
+  rewrite_runtime_line "$run/config/Runtime.qml" openrouterKeyPath "$run/scratch/missing-openrouter"
+  rewrite_runtime_line "$run/config/Runtime.qml" herdrEndpoint ""
+  cat >"$run/evidence/launch/config-provenance.txt" <<EOF
+config_source=module
+machine=$machine
+user=$HM_USER
+store_path=$out
+fixture=${fixture:-}
+herdr_endpoint=rewritten-blank
+account_usage=rewritten-stub
+health_sampler=packaged
+note=The desk config derivation was built from the machine. Herdr endpoint and account-usage paths were rewritten so this session cannot open the herdr socket or read secret files. Glass, Stylix, and quickshell-health come from the module output.
+EOF
+}
+
+write_sway_config() {
+  local dest=$1
+  cat >"$dest" <<'EOF'
+# Isolated verification compositor. Stock sway, not SwayFX: layer_effects blur
+# from modules/apps/sway.nix is not applied here.
+xwayland disable
+output * resolution 1920x1080 position 0 0 scale 1
+default_border none
+font pango:sans 11
+bar {
+    mode invisible
+}
+EOF
+}
+
+cmd_launch() {
+  local config_mode=scaffold machine=stylix-test fixture=flights outputs=1
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      --config)
+        config_mode=${2:-}
+        shift 2
+        ;;
+      --machine)
+        machine=${2:-}
+        shift 2
+        ;;
+      --fixture)
+        fixture=${2-}
+        shift 2
+        ;;
+      --outputs)
+        outputs=${2:-}
+        shift 2
+        ;;
+      *)
+        die "unknown argument: $1"
+        ;;
+    esac
+  done
+  [[ $outputs =~ ^[12]$ ]] || die "--outputs must be 1 or 2"
+  case $config_mode in
+    scaffold | module) ;;
+    *) die "--config must be scaffold or module" ;;
+  esac
+  [[ -d $QS_SRC ]] || die "missing $QS_SRC"
+  command -v nix >/dev/null 2>&1 || die "nix is not on PATH. Quickshell is not packaged by this Ubuntu image; the harness takes it from the flake's nixpkgs input. Refusing to treat docs/quickshell/*.html as the shell."
+  command -v tmux >/dev/null 2>&1 || die "tmux is not on PATH"
+
+  local id run
+  id="$(date -u +%Y%m%dT%H%M%SZ)-$$"
+  run="$STATE_ROOT/runs/$id"
+  mkdir -p "$run/evidence/launch" "$run/scratch"
+  # Keep the runtime directory short. quickshell's IPC socket is created under
+  # $XDG_RUNTIME_DIR and the sockaddr path limit is 108 bytes.
+  local runtime="/tmp/verify-qs-$id"
+  rm -rf "$runtime"
+  mkdir -p "$runtime"
+  chmod 700 "$runtime"
+  printf '%s\n' "$id" >"$CURRENT_LINK"
+
+  {
+    printf 'run_id=%q\n' "$id"
+    printf 'repo=%q\n' "$REPO_ROOT"
+    printf 'config_mode=%q\n' "$config_mode"
+    printf 'machine=%q\n' "$machine"
+    printf 'fixture=%q\n' "$fixture"
+    printf 'tmux_session=%q\n' "verify-quickshell-$id"
+    printf 'xdg_runtime=%q\n' "$runtime"
+    printf 'wayland_display=%q\n' "wayland-1"
+    printf 'outputs=%q\n' "$outputs"
+  } >"$run/meta.env"
+
+  if [[ -n ${WAYLAND_DISPLAY:-} && $WAYLAND_DISPLAY != wayland-1 ]]; then
+    printf 'parent_wayland=%s\n' "$WAYLAND_DISPLAY" >"$run/evidence/launch/foreign-wayland.txt"
+  fi
+  if [[ -e /run/current-system ]]; then
+    printf 'nixos\n' >"$run/evidence/launch/host-class.txt"
+  else
+    printf 'foreign\n' >"$run/evidence/launch/host-class.txt"
+  fi
+
+  write_sway_config "$run/scratch/sway.conf"
+  cat >"$run/scratch/session.sh" <<'EOS'
+#!/usr/bin/env bash
+set -euo pipefail
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+run="$(<"$VERIFY_QUICKSHELL_RUN_FILE")"
+# shellcheck disable=SC1091
+source "$run/meta.env"
+log="$run/evidence/launch/session.log"
+exec > >(tee -a "$log") 2>&1
+printf 'session tools: quickshell=%s sway=%s\n' "$(command -v quickshell)" "$(command -v sway)"
+
+if [[ $config_mode == scaffold ]]; then
+  "$VERIFY_QUICKSHELL_BIN" _assemble-scaffold "$run" "$(command -v swaymsg)"
+else
+  # Module output was copied before the session started.
+  [[ -f $run/config/shell.qml ]] || { printf 'module config missing\n'; exit 1; }
+fi
+
+mkdir -p "$xdg_runtime"
+chmod 700 "$xdg_runtime"
+export XDG_RUNTIME_DIR="$xdg_runtime"
+export WAYLAND_DISPLAY="$wayland_display"
+export WLR_BACKENDS=headless
+export WLR_HEADLESS_OUTPUTS="${outputs:-1}"
+export WLR_RENDERER=pixman
+export WLR_LIBINPUT_NO_DEVICES=1
+export LIBGL_ALWAYS_SOFTWARE=1
+export QT_QPA_PLATFORM=wayland
+export QT_QUICK_BACKEND=software
+export QSG_RHI_BACKEND=sw
+export QS_WORK_FIXTURE="$fixture"
+if [[ -x /usr/bin/dbus-daemon && -f /etc/dbus-1/session.conf ]]; then
+  /usr/bin/dbus-daemon --session --address="unix:path=$xdg_runtime/bus" --fork --nopidfile
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=$xdg_runtime/bus"
+  printf 'dbus=host %s\n' "$DBUS_SESSION_BUS_ADDRESS"
+elif command -v dbus-daemon >/dev/null 2>&1; then
+  dbus_prefix="$(dirname "$(dirname "$(command -v dbus-daemon)")")"
+  dbus_conf="$dbus_prefix/share/dbus-1/session.conf"
+  [[ -f $dbus_conf ]] || { printf 'dbus session.conf missing at %s\n' "$dbus_conf"; exit 1; }
+  dbus-daemon --config-file="$dbus_conf" --address="unix:path=$xdg_runtime/bus" --fork --nopidfile
+  export DBUS_SESSION_BUS_ADDRESS="unix:path=$xdg_runtime/bus"
+  printf 'dbus=nix %s\n' "$DBUS_SESSION_BUS_ADDRESS"
+else
+  printf 'dbus-daemon missing; notification ownership will fail\n'
+fi
+
+if [[ -n ${NOTO_FONT_DIR:-} ]]; then
+  cat >"$run/scratch/fonts.conf" <<EOF
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <include ignore_missing="yes">/etc/fonts/fonts.conf</include>
+  <dir>${NOTO_FONT_DIR}</dir>
+</fontconfig>
+EOF
+  export FONTCONFIG_FILE="$run/scratch/fonts.conf"
+fi
+
+sway -c "$run/scratch/sway.conf" >"$run/evidence/launch/sway.log" 2>&1 &
+sway_pid=$!
+printf '%s\n' "$sway_pid" >"$run/scratch/sway.pid"
+
+sock=""
+for _ in $(seq 1 50); do
+  sock="$(find "$xdg_runtime" -maxdepth 1 -name 'sway-ipc.*' -print -quit 2>/dev/null || true)"
+  if [[ -n $sock ]] && swaymsg -s "$sock" -t get_outputs >/dev/null 2>&1; then
+    break
+  fi
+  if ! kill -0 "$sway_pid" 2>/dev/null; then
+    printf 'sway exited\n'
+    exit 1
+  fi
+  sleep 0.2
+done
+[[ -n $sock ]] || { printf 'sway socket did not appear\n'; exit 1; }
+export SWAYSOCK="$sock"
+printf '%s\n' "$SWAYSOCK" >"$run/scratch/swaysock"
+printf 'SWAYSOCK=%s\n' "$SWAYSOCK" >>"$run/meta.env"
+swaymsg -t get_outputs >"$run/evidence/launch/outputs.txt" || true
+if grep -q 'Error(s) loading config' "$run/evidence/launch/sway.log"; then
+  printf 'sway rejected its config\n'
+  exit 1
+fi
+
+qs_bin="$(command -v quickshell)"
+qs_help="$("$qs_bin" --help 2>&1 || true)"
+printf '%s\n' "$qs_help" >"$run/evidence/launch/quickshell-help.txt"
+path_flag=(-p "$run/config")
+if ! grep -q -- '-p,' <<<"$qs_help" && ! grep -q -- '--path' <<<"$qs_help"; then
+  printf 'quickshell has no -p/--path in --help; refusing to guess a config flag\n'
+  exit 1
+fi
+QS_WORK_FIXTURE="$fixture" "$qs_bin" "${path_flag[@]}" >"$run/evidence/launch/quickshell.log" 2>&1 &
+qs_pid=$!
+printf '%s\n' "$qs_pid" >"$run/scratch/quickshell.pid"
+
+ready=0
+for _ in $(seq 1 240); do
+  if ! kill -0 "$qs_pid" 2>/dev/null; then
+    printf 'quickshell exited before the bars reserved space\n'
+    exit 1
+  fi
+  if swaymsg -t get_tree -r >"$run/evidence/launch/tree-ready.json" 2>/dev/null; then
+    count="$(python3 -c '
+import json
+tree=json.load(open("'"$run/evidence/launch/tree-ready.json"'"))
+ok=0
+for out in tree.get("nodes", []):
+    name=out.get("name") or ""
+    if name.startswith("__"):
+        continue
+    height=out.get("rect", {}).get("height", 0)
+    for ws in out.get("nodes", []):
+        if str(ws.get("name") or "").startswith("__"):
+            continue
+        rect=ws.get("rect") or {}
+        if rect.get("y")==30 and rect.get("height")==height-60:
+            ok+=1
+            break
+print(ok)
+')"
+    if [[ $count == "${outputs:-1}" ]]; then
+      ready=1
+      break
+    fi
+  fi
+  sleep 0.25
+done
+[[ $ready == 1 ]] || { printf 'bars did not reserve 30px on each edge within 60s\n'; exit 1; }
+lswt >"$run/evidence/launch/lswt-ready.txt" 2>&1 || true
+printf 'lswt lists toplevels only; layer namespaces are not in that listing\n' >>"$run/evidence/launch/lswt-ready.txt"
+printf 'ready\n' >"$run/ready"
+printf 'session ready pid=%s\n' "$qs_pid"
+
+while kill -0 "$sway_pid" 2>/dev/null && kill -0 "$qs_pid" 2>/dev/null; do
+  sleep 1
+done
+printf 'session process exited\n'
+rm -f "$run/ready"
+exit 1
+EOS
+  chmod +x "$run/scratch/session.sh"
+
+  if [[ $config_mode == module ]]; then
+    fixture=$fixture assemble_module "$run" "$machine"
+  fi
+
+  local noto=""
+  if noto="$(run_nix build --inputs-from "$REPO_ROOT" --no-link --print-out-paths 'nixpkgs#noto-fonts' 2>"$run/evidence/launch/fonts.err")"; then
+    printf 'NOTO_FONT_DIR=%q\n' "$noto/share/fonts" >>"$run/meta.env"
+  else
+    printf 'noto-fonts build failed; Qt fallback fonts will be used\n' >>"$run/evidence/launch/fonts.err"
+  fi
+
+  local session="verify-quickshell-$id"
+  printf '%s\n' "$run" >"$run/scratch/run-path"
+  cat >"$run/scratch/enter.sh" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+export VERIFY_QUICKSHELL_RUN_FILE=$(printf '%q' "$run/scratch/run-path")
+export VERIFY_QUICKSHELL_BIN=$(printf '%q' "$REPO_ROOT/.cursor/skills/verify-quickshell/bin/verify-quickshell")
+exec nix --extra-experimental-features 'nix-command flakes' shell --inputs-from $(printf '%q' "$REPO_ROOT") \\
+  nixpkgs#quickshell nixpkgs#sway nixpkgs#grim nixpkgs#lswt nixpkgs#wlrctl nixpkgs#tesseract nixpkgs#libnotify nixpkgs#foot nixpkgs#jq nixpkgs#dbus nixpkgs#imagemagick \\
+  --command $(printf '%q' "$run/scratch/session.sh")
+EOF
+  chmod +x "$run/scratch/enter.sh"
+  tmux new-session -d -s "$session" -c "$REPO_ROOT" -- "$run/scratch/enter.sh"
+
+  local i
+  for i in $(seq 1 3600); do
+    if [[ -f $run/ready ]]; then
+      break
+    fi
+    if ! tmux has-session -t "=$session" 2>/dev/null; then
+      printf 'session ended before ready; see %s\n' "$run/evidence/launch/session.log" >&2
+      exit 1
+    fi
+    sleep 1
+  done
+  [[ -f $run/ready ]] || die "timed out waiting for bars"
+  # meta.env gained SWAYSOCK from the session. Reload for the printed path.
+  printf '%s\n' "$run"
+}
+
+cmd__assemble_scaffold() {
+  local run=$1 swaymsg=$2
+  # shellcheck disable=SC1091
+  source "$run/meta.env"
+  fixture=$fixture assemble_scaffold "$run" "$swaymsg"
+}
+
+with_session_env() {
+  load_meta
+  local run
+  run="$(run_dir)"
+  export XDG_RUNTIME_DIR=$xdg_runtime
+  export WAYLAND_DISPLAY=$wayland_display
+  if [[ -f $run/scratch/swaysock ]]; then
+    export SWAYSOCK
+    SWAYSOCK="$(<"$run/scratch/swaysock")"
+  fi
+  if [[ -S $xdg_runtime/bus ]]; then
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=$xdg_runtime/bus"
+  fi
+}
+
+cmd_doctor() {
+  local run evidence
+  run="$(run_dir)"
+  evidence="$run/evidence/doctor"
+  mkdir -p "$evidence"
+  load_meta
+  {
+    printf 'run=%s\n' "$run"
+    printf 'config_mode=%s\n' "$config_mode"
+    printf 'machine=%s\n' "$machine"
+    printf 'fixture=%s\n' "${fixture:-}"
+    printf 'host_class=%s\n' "$(cat "$run/evidence/launch/host-class.txt" 2>/dev/null || echo unknown)"
+    printf 'xdg_runtime=%s\n' "$xdg_runtime"
+    printf 'wayland_display=%s\n' "$wayland_display"
+    if [[ -f $run/scratch/quickshell.pid ]]; then
+      local pid
+      pid="$(<"$run/scratch/quickshell.pid")"
+      if kill -0 "$pid" 2>/dev/null; then
+        printf 'quickshell_pid=%s alive\n' "$pid"
+      else
+        printf 'quickshell_pid=%s dead\n' "$pid"
+      fi
+    fi
+    if [[ -f $run/evidence/launch/config-provenance.txt ]]; then
+      cat "$run/evidence/launch/config-provenance.txt"
+    fi
+  } | tee "$evidence/doctor.txt"
+
+  [[ -f $run/ready ]] || die "session is not ready"
+  [[ -d $xdg_runtime ]] || die "runtime dir missing"
+  # Refuse to drive whatever Wayland session the parent happened to have.
+  if [[ -n ${WAYLAND_DISPLAY_PARENT:-} ]]; then
+    die "internal: parent display leaked"
+  fi
+  local pid
+  pid="$(<"$run/scratch/quickshell.pid")"
+  kill -0 "$pid" 2>/dev/null || die "quickshell pid $pid is not running"
+  local environ_runtime
+  environ_runtime="$(tr '\0' '\n' </proc/"$pid"/environ | awk -F= '$1=="XDG_RUNTIME_DIR"{print $2}')"
+  [[ $environ_runtime == "$xdg_runtime" ]] || die "quickshell is not using this run's XDG_RUNTIME_DIR ($environ_runtime)"
+  with_session_env
+  command -v swaymsg >/dev/null 2>&1 || die "swaymsg is not on PATH"
+  swaymsg -t get_tree -r >"$evidence/tree.json"
+  local insets
+  insets="$(python3 -c '
+import json
+tree=json.load(open("'"$evidence/tree.json"'"))
+ok=0
+for out in tree.get("nodes", []):
+    name=out.get("name") or ""
+    if name.startswith("__"):
+        continue
+    height=out.get("rect", {}).get("height", 0)
+    for ws in out.get("nodes", []):
+        if str(ws.get("name") or "").startswith("__"):
+            continue
+        rect=ws.get("rect") or {}
+        if rect.get("y")==30 and rect.get("height")==height-60:
+            ok+=1
+            break
+print(ok)
+')"
+  printf '%s\n' "$insets" >"$evidence/bar-insets.txt"
+  [[ $insets == "${outputs:-1}" ]] || die "expected ${outputs:-1} output(s) with 30px bars, found $insets"
+  printf 'doctor=ok\n'
+}
+
+focused_id() {
+  swaymsg -t get_tree -r | jq -r 'first(.. | objects | select(.focused? == true) | .id) // "none"'
+}
+
+assert_no_herdr_socket() {
+  local pid=$1 dest=$2
+  if [[ -r /proc/$pid/fd ]]; then
+    ls -l /proc/"$pid"/fd >"$dest" 2>/dev/null || true
+    if grep -q 'herdr.sock' "$dest"; then
+      die "quickshell has herdr.sock open; fixture mode must not attach to herdr"
+    fi
+  fi
+}
+
+ocr_image() {
+  local image=$1 dest=$2
+  command -v magick >/dev/null 2>&1 || die "magick is not on PATH"
+  command -v tesseract >/dev/null 2>&1 || die "tesseract is not on PATH"
+  # The bars are 40% glass over a black headless frame. Stretch contrast or
+  # tesseract reads an empty page.
+  magick "$image" -colorspace Gray -auto-level -threshold 30% -resize 200% "$image.boost.png"
+  tesseract "$image.boost.png" stdout --psm 6 >"$dest" 2>"$dest.err"
+}
+
+cmd_drive() {
+  local feature=${1:-}
+  [[ -n $feature ]] || die "drive needs a feature id"
+  shift || true
+  cmd_doctor >/dev/null
+  local run evidence
+  run="$(run_dir)"
+  evidence="$run/evidence/$feature"
+  mkdir -p "$evidence"
+  with_session_env
+  load_meta
+  case $feature in
+    desk-bars)
+      swaymsg -t get_tree -r >"$evidence/tree.json"
+      cp "$run/evidence/doctor/bar-insets.txt" "$evidence/bar-insets.txt" 2>/dev/null || true
+      grim "$evidence/bars.png"
+      ocr_image "$evidence/bars.png" "$evidence/bars.ocr.txt"
+      file "$evidence/bars.png" >"$evidence/bars.file.txt"
+      grep -q 'PNG' "$evidence/bars.file.txt" || die "screenshot is not a PNG"
+      grep -E -q 'Sep|scaffold' "$evidence/bars.ocr.txt" || die "bar OCR did not show the clock or the scaffold identity; see $evidence/bars.ocr.txt"
+      printf 'drove desk-bars evidence=%s\n' "$evidence"
+      ;;
+    workspaces-and-tasks)
+      local before
+      before="$(focused_id)"
+      printf '%s\n' "$before" >"$evidence/focused-before.txt"
+      swaymsg 'exec foot --title "Verify task"' >"$evidence/swaymsg.txt"
+      local i seen=0
+      for i in $(seq 1 40); do
+        swaymsg -t get_tree -r >"$evidence/tree.json"
+        if jq -e '.. | objects | select(.name? == "Verify task")' "$evidence/tree.json" >/dev/null; then
+          seen=1
+          break
+        fi
+        sleep 0.25
+      done
+      [[ $seen == 1 ]] || die "foot window titled Verify task did not appear"
+      sleep 0.6
+      grim "$evidence/tasks.png"
+      ocr_image "$evidence/tasks.png" "$evidence/tasks.ocr.txt"
+      grep -q 'Verify task' "$evidence/tasks.ocr.txt" || die "task title was not read from the bottom bar; see $evidence/tasks.ocr.txt"
+      swaymsg '[title="Verify task"] kill' || true
+      printf 'drove workspaces-and-tasks evidence=%s\n' "$evidence"
+      ;;
+    status-popups)
+      local kind=clock
+      while [[ $# -gt 0 ]]; do
+        case $1 in
+          --kind)
+            kind=${2:-}
+            shift 2
+            ;;
+          *) die "unknown argument: $1" ;;
+        esac
+      done
+      case $kind in
+        clock | audio | power) ;;
+        *) die "--kind must be clock, audio, or power" ;;
+      esac
+      evidence="$run/evidence/status-popups-$kind"
+      mkdir -p "$evidence"
+      cat >"$evidence/blocker.txt" <<EOF
+kind=$kind
+blocker=no absolute pointer
+wlrctl 0.2.2, the build in this flake's nixpkgs, only emits relative pointer motion.
+ydotoold needs /dev/uinput, which this VM does not provide.
+The clock, audio, and power controls are clicks on the top bar. This drive does not invent a click.
+A passing run would show quickshell-popup and, for clock, the text September or "Back to today"; for audio, "Output device" or "Open mixer"; for power, "Keep awake" or "Power profile".
+EOF
+      die "status-popups --kind $kind is not drivable here; see $evidence/blocker.txt"
+      ;;
+    notification-center)
+      cat >"$evidence/blocker.txt" <<'EOF'
+blocker=no absolute pointer
+notify-send on the private bus is possible, but opening the bell is a click on the last top-bar control.
+wlrctl 0.2.2 cannot address that pixel, and this VM has no /dev/uinput for ydotoold.
+Do not send a logout action to work around this.
+EOF
+      die "notification-center is not drivable here; see $evidence/blocker.txt"
+      ;;
+    work-in-flight)
+      [[ ${fixture:-} == flights ]] || die "work-in-flight drive requires launch --fixture flights (got ${fixture:-empty})"
+      local before pid
+      before="$(focused_id)"
+      printf '%s\n' "$before" >"$evidence/focused-before.txt"
+      grim "$evidence/summary.png"
+      ocr_image "$evidence/summary.png" "$evidence/summary.ocr.txt"
+      grep -E -q 'working' "$evidence/summary.ocr.txt" || die "summary OCR missing working; see $evidence/summary.ocr.txt"
+      grep -E -q 'need you' "$evidence/summary.ocr.txt" || die "summary OCR missing need you; see $evidence/summary.ocr.txt"
+      local after
+      after="$(focused_id)"
+      printf '%s\n' "$after" >"$evidence/focused-after.txt"
+      [[ $before == "$after" ]] || die "reading the summary changed the focused window ($before -> $after)"
+      pid="$(<"$run/scratch/quickshell.pid")"
+      assert_no_herdr_socket "$pid" "$evidence/fds.txt"
+      cat >"$evidence/panel-blocker.txt" <<'EOF'
+panel=not-driven
+reason=wlrctl 0.2.2 from this flake's nixpkgs only emits relative pointer motion, and ydotoold cannot open /dev/uinput on this VM. The work panel is opened by a click on the bottom-right summary. This drive proves the summary text instead.
+EOF
+      printf 'drove work-in-flight evidence=%s\n' "$evidence"
+      ;;
+    *)
+      die "unknown feature '$feature'"
+      ;;
+  esac
+}
+
+cmd_evidence() {
+  local run
+  run="$(run_dir)"
+  printf '%s\n' "$run/evidence"
+  find "$run/evidence" -type f | sort
+}
+
+kill_if_our_runtime() {
+  local pid=$1 runtime=$2
+  [[ -r /proc/$pid/environ ]] || return 0
+  local env_runtime
+  env_runtime="$(tr '\0' '\n' </proc/"$pid"/environ | awk -F= '$1=="XDG_RUNTIME_DIR"{print $2}')"
+  [[ $env_runtime == "$runtime" ]] || return 0
+  kill "$pid" 2>/dev/null || true
+}
+
+cmd_cleanup() {
+  local run=""
+  if [[ -f $CURRENT_LINK ]]; then
+    run="$STATE_ROOT/runs/$(<"$CURRENT_LINK")"
+  elif [[ -n ${VERIFY_QUICKSHELL_RUN:-} ]]; then
+    run=$VERIFY_QUICKSHELL_RUN
+  else
+    printf 'verify-quickshell: no active run\n'
+    return 0
+  fi
+  if [[ -f $run/meta.env ]]; then
+    # shellcheck disable=SC1091
+    source "$run/meta.env"
+    if [[ -n ${tmux_session:-} ]] && tmux has-session -t "=$tmux_session" 2>/dev/null; then
+      tmux kill-session -t "=$tmux_session"
+    fi
+    if [[ -n ${xdg_runtime:-} ]]; then
+      local pid
+      for pid in $(ps -eo pid=); do
+        kill_if_our_runtime "$pid" "$xdg_runtime" || true
+      done
+      rm -rf "$xdg_runtime"
+    fi
+  fi
+  rm -rf "$run/scratch" "$run/config" "$run/ready"
+  rm -f "$CURRENT_LINK"
+  if [[ -d $run/evidence ]]; then
+    printf 'evidence kept at %s\n' "$run/evidence"
+  fi
+}
+
+need_session_tools() {
+  command -v grim >/dev/null 2>&1 && command -v swaymsg >/dev/null 2>&1 && command -v magick >/dev/null 2>&1 && command -v tesseract >/dev/null 2>&1
+}
+
+main() {
+  local cmd=${1:-}
+  [[ -n $cmd ]] || {
+    usage
+    exit 2
+  }
+  if [[ $cmd == doctor || $cmd == drive ]]; then
+    if ! need_session_tools; then
+      [[ ${VERIFY_QUICKSHELL_TOOLS:-} == 1 ]] && die "nix shell did not provide grim, swaymsg, magick, and tesseract"
+      local run
+      run="$(run_dir)"
+      exec env VERIFY_QUICKSHELL_TOOLS=1 VERIFY_QUICKSHELL_RUN="$run" \
+        nix --extra-experimental-features 'nix-command flakes' shell --inputs-from "$REPO_ROOT" \
+        nixpkgs#quickshell nixpkgs#sway nixpkgs#grim nixpkgs#lswt nixpkgs#wlrctl nixpkgs#tesseract nixpkgs#libnotify nixpkgs#foot nixpkgs#jq nixpkgs#dbus nixpkgs#imagemagick \
+        --command "$REPO_ROOT/.cursor/skills/verify-quickshell/bin/verify-quickshell" "$@"
+    fi
+  fi
+  shift || true
+  case $cmd in
+    launch) cmd_launch "$@" ;;
+    doctor) cmd_doctor "$@" ;;
+    drive) cmd_drive "$@" ;;
+    evidence) cmd_evidence "$@" ;;
+    cleanup) cmd_cleanup "$@" ;;
+    _assemble-scaffold) cmd__assemble_scaffold "$@" ;;
+    -h | --help | help) usage ;;
+    *)
+      usage
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"

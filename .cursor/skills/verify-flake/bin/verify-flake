@@ -1,0 +1,446 @@
+#!/usr/bin/env bash
+# Verification harness for this repository's Nix flake CLI.
+# Safe ceiling: list recipes, evaluate the import-base check, build a toplevel
+# or the installer ISO. Never activates a system and never touches secrets.
+set -euo pipefail
+
+readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../../.." && pwd)"
+readonly STATE_ROOT="${XDG_STATE_HOME:-$HOME/.local/state}/verify-flake"
+readonly CURRENT_LINK="$STATE_ROOT/current"
+readonly REFUSED=(
+  deploy
+  boot
+  dryrun
+  install
+  rdeploy
+  gc
+  updatekeys
+  rewrap-secret
+  generate-luks-password
+  prompt-luks-password
+  collect-machine-info
+  elevate
+)
+
+usage() {
+  cat <<'EOF'
+usage: verify-flake <launch|doctor|drive|evidence|cleanup> [args]
+
+  launch
+  doctor
+  drive list-operations
+  drive import-base
+  drive toplevel --machine <name>
+  drive installer-iso
+  evidence
+  cleanup
+
+Evidence is written under $XDG_STATE_HOME/verify-flake/runs/<id>/evidence and
+is kept by cleanup. Scratch, tmux, and result links this run created are removed.
+EOF
+}
+
+if ! command -v nix >/dev/null 2>&1 && [[ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]]; then
+  # shellcheck disable=SC1091
+  source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
+run_nix() {
+  command nix --extra-experimental-features 'nix-command flakes' "$@"
+}
+
+die() {
+  printf 'verify-flake: %s\n' "$*" >&2
+  exit 1
+}
+
+run_dir() {
+  if [[ -n ${VERIFY_FLAKE_RUN:-} && -d $VERIFY_FLAKE_RUN ]]; then
+    printf '%s\n' "$VERIFY_FLAKE_RUN"
+    return
+  fi
+  [[ -f $CURRENT_LINK ]] || die "no run is active; run launch first"
+  local id
+  id="$(<"$CURRENT_LINK")"
+  [[ -d $STATE_ROOT/runs/$id ]] || die "active run $id is missing"
+  printf '%s\n' "$STATE_ROOT/runs/$id"
+}
+
+evidence_dir() {
+  local run
+  run="$(run_dir)"
+  printf '%s\n' "$run/evidence"
+}
+
+host_class() {
+  if [[ -e /run/current-system && -f /etc/os-release ]] && grep -q '^ID=nixos$' /etc/os-release; then
+    printf 'nixos\n'
+  else
+    printf 'foreign\n'
+  fi
+}
+
+profile_snapshot() {
+  if [[ -L /run/current-system ]]; then
+    readlink -f /run/current-system
+  else
+    printf 'absent\n'
+  fi
+}
+
+system_name() {
+  run_nix eval --impure --raw --expr builtins.currentSystem
+}
+
+refuse_if_named() {
+  local name=$1
+  local item
+  for item in "${REFUSED[@]}"; do
+    if [[ $name == "$item" ]]; then
+      die "refusing '$name': AGENTS.md requires explicit authorization, and this harness never deploys, boots, installs, dry-runs, collects host keys, rewrites secrets, or garbage-collects"
+    fi
+  done
+}
+
+snapshot_hooks() {
+  local dest=$1
+  mkdir -p "$dest"
+  if [[ -d $REPO_ROOT/.git/hooks ]]; then
+    cp -a "$REPO_ROOT/.git/hooks/." "$dest/"
+  fi
+}
+
+restore_hooks() {
+  local before=$1
+  local hooks=$REPO_ROOT/.git/hooks
+  [[ -d $hooks ]] || return 0
+  local name
+  shopt -s nullglob
+  for path in "$hooks"/*; do
+    name="$(basename "$path")"
+    if [[ ! -e $before/$name ]]; then
+      rm -f "$path"
+    fi
+  done
+  shopt -u nullglob
+  if [[ -d $before ]]; then
+    cp -a "$before/." "$hooks/"
+  fi
+}
+
+cmd_launch() {
+  [[ -f $REPO_ROOT/flake.nix && -f $REPO_ROOT/Justfile ]] || die "launch must run from this flake checkout"
+  command -v nix >/dev/null 2>&1 || die "nix is not on PATH. This harness does not install Nix. On a maintainer machine, enter the checkout and retry; on a foreign VM, install Nix with flakes enabled and do not activate a configuration."
+
+  local id run
+  id="$(date -u +%Y%m%dT%H%M%SZ)-$$"
+  run="$STATE_ROOT/runs/$id"
+  mkdir -p "$run/evidence/launch" "$run/scratch/hooks-before" "$run/scratch/result"
+  printf '%s\n' "$id" >"$CURRENT_LINK"
+  VERIFY_FLAKE_RUN=$run
+
+  {
+    printf 'run_id=%q\n' "$id"
+    printf 'repo=%q\n' "$REPO_ROOT"
+    printf 'host_class=%q\n' "$(host_class)"
+    printf 'profile_at_launch=%q\n' "$(profile_snapshot)"
+    printf 'tmux_session=%q\n' "verify-flake-$id"
+  } >"$run/meta.env"
+
+  profile_snapshot >"$run/evidence/launch/profile-before.txt"
+  git -C "$REPO_ROOT" status --short >"$run/evidence/launch/git-status-before.txt" || true
+  snapshot_hooks "$run/scratch/hooks-before"
+  # nix develop's pre-commit shellHook rewrites .git/hooks. Remember the
+  # checkout's hooks so cleanup can put them back.
+  cp -a "$run/scratch/hooks-before/." "$run/evidence/launch/hooks-before/" 2>/dev/null || true
+
+  if ! run_nix --version >"$run/evidence/launch/nix-version.txt" 2>"$run/evidence/launch/nix-version.err"; then
+    die "nix --version failed; see $run/evidence/launch/nix-version.err"
+  fi
+
+  if ! run_nix flake metadata --json >"$run/evidence/launch/metadata.json" 2>"$run/evidence/launch/metadata.err"; then
+    die "nix flake metadata failed; the flake did not load. see $run/evidence/launch/metadata.err"
+  fi
+
+  # Realize the development shell once. The shellHook may install git hooks;
+  # cleanup restores the snapshot taken above.
+  if ! run_nix develop "$REPO_ROOT" --command true >"$run/evidence/launch/develop.out" 2>"$run/evidence/launch/develop.err"; then
+    die "nix develop --command true failed; see $run/evidence/launch/develop.err"
+  fi
+
+  printf 'ready\n' >"$run/ready"
+  printf '%s\n' "$run"
+}
+
+cmd_doctor() {
+  local run evidence
+  run="$(run_dir)"
+  evidence="$(evidence_dir)/doctor"
+  mkdir -p "$evidence"
+  # shellcheck disable=SC1091
+  source "$run/meta.env"
+
+  {
+    printf 'run=%s\n' "$run"
+    printf 'repo=%s\n' "$REPO_ROOT"
+    printf 'host_class=%s\n' "$(host_class)"
+    printf 'profile_now=%s\n' "$(profile_snapshot)"
+    printf 'profile_at_launch=%s\n' "$profile_at_launch"
+    if command -v nix >/dev/null 2>&1; then
+      run_nix --version | head -n 1
+    else
+      printf 'nix=missing\n'
+    fi
+    if [[ -f /etc/os-release ]]; then
+      # ID and PRETTY_NAME only; do not dump the whole file into a decision.
+      grep -E '^(ID|PRETTY_NAME|VERSION_ID)=' /etc/os-release || true
+    fi
+    printf 'uname=%s\n' "$(uname -srm)"
+  } | tee "$evidence/doctor.txt"
+
+  [[ -f $run/ready ]] || die "launch has not finished"
+  command -v nix >/dev/null 2>&1 || die "nix disappeared from PATH after launch"
+  [[ -f $REPO_ROOT/flake.nix && -f $REPO_ROOT/Justfile && -f $REPO_ROOT/modules/checks.nix ]] || die "checkout is missing flake.nix, Justfile, or modules/checks.nix"
+  [[ $(profile_snapshot) == "$profile_at_launch" ]] || die "system profile changed since launch ($(profile_snapshot) != $profile_at_launch); refusing to drive"
+  if [[ -e $REPO_ROOT/result || -e $REPO_ROOT/result-1 ]]; then
+    die "a result symlink is already in the checkout; move it aside before driving so this run cannot be confused with it"
+  fi
+  printf 'doctor=ok host_class=%s\n' "$(host_class)"
+}
+
+capture_drive() {
+  local feature=$1
+  shift
+  local run evidence session quoted
+  run="$(run_dir)"
+  evidence="$(evidence_dir)/$feature"
+  # shellcheck disable=SC1091
+  source "$run/meta.env"
+  session=$tmux_session
+  mkdir -p "$evidence" "$run/scratch"
+  rm -f "$evidence/exit-code.txt" "$evidence/stdout.txt" "$evidence/stderr.txt"
+  quoted="$(printf '%q ' "$@")"
+  printf '%s\n' "$quoted" >"$evidence/command.txt"
+  profile_snapshot >"$evidence/profile-before.txt"
+
+  # The child script defines run_nix itself. Callers pass run_nix as argv0
+  # of the driven command so the same flag set is used inside tmux.
+  cat >"$run/scratch/drive.sh" <<EOF
+#!/usr/bin/env bash
+set -euo pipefail
+# tmux on this VM injects its own libncurses ahead of Nix closures.
+unset LD_LIBRARY_PATH
+unset LD_PRELOAD
+run_nix() { command nix --extra-experimental-features 'nix-command flakes' "\$@"; }
+cd $(printf '%q' "$REPO_ROOT")
+set +e
+$quoted > $(printf '%q' "$evidence/stdout.txt") 2> $(printf '%q' "$evidence/stderr.txt")
+code=\$?
+set -e
+printf '%s\n' "\$code" > $(printf '%q' "$evidence/exit-code.txt")
+EOF
+  chmod +x "$run/scratch/drive.sh"
+
+  command -v tmux >/dev/null 2>&1 || die "tmux is not on PATH; drives run in a session named $session"
+  if tmux has-session -t "=$session" 2>/dev/null; then
+    tmux kill-session -t "=$session"
+  fi
+  tmux new-session -d -s "$session" -c "$REPO_ROOT" -- "$run/scratch/drive.sh"
+
+  local i
+  for i in $(seq 1 7200); do
+    if [[ -f $evidence/exit-code.txt ]]; then
+      break
+    fi
+    if ! tmux has-session -t "=$session" 2>/dev/null && [[ ! -f $evidence/exit-code.txt ]]; then
+      printf 'tmux session exited without an exit code\n' >>"$evidence/stderr.txt"
+      printf '1\n' >"$evidence/exit-code.txt"
+      break
+    fi
+    sleep 1
+  done
+  if [[ ! -f $evidence/exit-code.txt ]]; then
+    printf 'timed out after 7200s\n' >>"$evidence/stderr.txt"
+    printf '124\n' >"$evidence/exit-code.txt"
+    tmux kill-session -t "=$session" 2>/dev/null || true
+  fi
+  if tmux has-session -t "=$session" 2>/dev/null; then
+    tmux kill-session -t "=$session"
+  fi
+  profile_snapshot >"$evidence/profile-after.txt"
+  if [[ -e $REPO_ROOT/result ]]; then
+    printf 'result symlink appeared\n' >"$evidence/result-link.txt"
+  else
+    printf 'absent\n' >"$evidence/result-link.txt"
+  fi
+  git -C "$REPO_ROOT" status --short >"$evidence/git-status-after.txt" || true
+}
+
+assert_profile_unchanged() {
+  local evidence=$1
+  local before after
+  before="$(<"$evidence/profile-before.txt")"
+  after="$(<"$evidence/profile-after.txt")"
+  [[ $before == "$after" ]] || die "system profile changed during the drive ($before -> $after); a verification build must not activate"
+  [[ $(<"$evidence/result-link.txt") == absent ]] || die "drive created $REPO_ROOT/result; builds must pass --no-link"
+}
+
+cmd_drive() {
+  local feature=${1:-}
+  [[ -n $feature ]] || die "drive needs a feature id"
+  refuse_if_named "$feature"
+  shift
+  cmd_doctor >/dev/null
+  local run
+  run="$(run_dir)"
+  case $feature in
+    list-operations)
+      [[ $# -eq 0 ]] || die "list-operations takes no arguments"
+      capture_drive list-operations run_nix develop "$REPO_ROOT" --command just --list
+      local evidence code
+      evidence="$(evidence_dir)/list-operations"
+      code="$(<"$evidence/exit-code.txt")"
+      [[ $code == 0 ]] || die "just --list exited $code; see $evidence/stderr.txt"
+      grep -q 'build' "$evidence/stdout.txt" || die "recipe list is missing build"
+      grep -q 'deploy' "$evidence/stdout.txt" || die "recipe list is missing deploy"
+      grep -q 'build-installer-iso' "$evidence/stdout.txt" || die "recipe list is missing build-installer-iso"
+      # The list names deploy; the harness must not have run it.
+      grep -q 'nh os switch' "$evidence/stdout.txt" && die "recipe list unexpectedly executed a switch" || true
+      if grep -q 'switching profile' "$evidence/stderr.txt"; then
+        die "stderr shows a profile switch"
+      fi
+      assert_profile_unchanged "$evidence"
+      printf 'drove list-operations exit=0 evidence=%s\n' "$evidence"
+      ;;
+    import-base)
+      [[ $# -eq 0 ]] || die "import-base takes no arguments"
+      local system
+      system="$(system_name)"
+      capture_drive import-base run_nix build --no-link --print-out-paths --print-build-logs \
+        "$REPO_ROOT#checks.${system}.nixos-configurations-import-base"
+      local evidence code out
+      evidence="$(evidence_dir)/import-base"
+      code="$(<"$evidence/exit-code.txt")"
+      [[ $code == 0 ]] || die "import-base check failed (exit $code); see $evidence/stderr.txt. A failing assert names configurations that do not import base."
+      out="$(tail -n 1 "$evidence/stdout.txt")"
+      [[ -f $out ]] || die "check output path does not exist: $out"
+      printf '%s\n' "$out" >"$evidence/out-path.txt"
+      assert_profile_unchanged "$evidence"
+      printf 'drove import-base out=%s evidence=%s\n' "$out" "$evidence"
+      ;;
+    toplevel)
+      local machine=""
+      while [[ $# -gt 0 ]]; do
+        case $1 in
+          --machine)
+            machine=${2:-}
+            shift 2
+            ;;
+          *)
+            die "unknown argument: $1"
+            ;;
+        esac
+      done
+      [[ -n $machine ]] || die "toplevel requires --machine <name>"
+      [[ $machine =~ ^[A-Za-z0-9._-]+$ ]] || die "machine name is not a safe attribute"
+      [[ -f $REPO_ROOT/modules/machines/$machine.nix ]] || die "no modules/machines/$machine.nix"
+      capture_drive toplevel run_nix build --no-link --print-out-paths --print-build-logs \
+        "$REPO_ROOT#nixosConfigurations.${machine}.config.system.build.toplevel"
+      local evidence code out
+      evidence="$(evidence_dir)/toplevel"
+      code="$(<"$evidence/exit-code.txt")"
+      [[ $code == 0 ]] || die "toplevel build failed (exit $code); see $evidence/stderr.txt"
+      out="$(tail -n 1 "$evidence/stdout.txt")"
+      [[ -d $out ]] || die "toplevel path is not a directory: $out"
+      [[ -x $out/sw/bin/sh || -e $out/etc ]] || die "toplevel does not look like a NixOS system: $out"
+      printf '%s\n' "$out" >"$evidence/out-path.txt"
+      printf '%s\n' "$machine" >"$evidence/machine.txt"
+      assert_profile_unchanged "$evidence"
+      printf 'drove toplevel machine=%s out=%s evidence=%s\n' "$machine" "$out" "$evidence"
+      ;;
+    installer-iso)
+      [[ $# -eq 0 ]] || die "installer-iso takes no arguments"
+      capture_drive installer-iso run_nix build --no-link --print-out-paths --print-build-logs \
+        "$REPO_ROOT#nixosConfigurations.installer.config.system.build.isoImage"
+      local evidence code out
+      evidence="$(evidence_dir)/installer-iso"
+      code="$(<"$evidence/exit-code.txt")"
+      [[ $code == 0 ]] || die "installer ISO build failed (exit $code); see $evidence/stderr.txt"
+      out="$(tail -n 1 "$evidence/stdout.txt")"
+      [[ -d $out ]] || die "ISO output is not a directory: $out"
+      compgen -G "$out/"'*.iso' >/dev/null || die "ISO output directory has no .iso: $out"
+      printf '%s\n' "$out" >"$evidence/out-path.txt"
+      assert_profile_unchanged "$evidence"
+      printf 'drove installer-iso out=%s evidence=%s\n' "$out" "$evidence"
+      ;;
+    *)
+      refuse_if_named "$feature"
+      die "unknown feature '$feature'. Mapped features: list-operations, import-base, toplevel, installer-iso"
+      ;;
+  esac
+}
+
+cmd_evidence() {
+  local run
+  run="$(run_dir)"
+  printf '%s\n' "$run/evidence"
+  find "$run/evidence" -type f | sort
+}
+
+cmd_cleanup() {
+  local run=""
+  if [[ -f $CURRENT_LINK ]]; then
+    local id
+    id="$(<"$CURRENT_LINK")"
+    run="$STATE_ROOT/runs/$id"
+  elif [[ -n ${VERIFY_FLAKE_RUN:-} ]]; then
+    run=$VERIFY_FLAKE_RUN
+  else
+    printf 'verify-flake: no active run\n'
+    return 0
+  fi
+  if [[ -f $run/meta.env ]]; then
+    # shellcheck disable=SC1091
+    source "$run/meta.env"
+    if [[ -n ${tmux_session:-} ]] && tmux has-session -t "=$tmux_session" 2>/dev/null; then
+      tmux kill-session -t "=$tmux_session"
+    fi
+  fi
+  if [[ -d $run/scratch/hooks-before ]]; then
+    restore_hooks "$run/scratch/hooks-before"
+  fi
+  # Only remove result links inside this run's scratch directory.
+  if [[ -d $run/scratch/result ]]; then
+    find "$run/scratch/result" -maxdepth 1 -type l -delete
+  fi
+  rm -rf "$run/scratch" "$run/runtime" "$run/ready"
+  rm -f "$CURRENT_LINK"
+  if [[ -d $run/evidence ]]; then
+    printf 'evidence kept at %s\n' "$run/evidence"
+  else
+    printf 'no evidence directory at %s\n' "$run"
+  fi
+}
+
+main() {
+  local cmd=${1:-}
+  [[ -n $cmd ]] || {
+    usage
+    exit 2
+  }
+  shift || true
+  case $cmd in
+    launch) cmd_launch "$@" ;;
+    doctor) cmd_doctor "$@" ;;
+    drive) cmd_drive "$@" ;;
+    evidence) cmd_evidence "$@" ;;
+    cleanup) cmd_cleanup "$@" ;;
+    -h | --help | help) usage ;;
+    *)
+      usage
+      exit 2
+      ;;
+  esac
+}
+
+main "$@"
