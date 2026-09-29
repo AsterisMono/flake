@@ -10,7 +10,6 @@
   # This aspect only composes and turns on the agent features; each one keeps its
   # own module.
   flake.modules.aspects.agents.imports = with inputs.self.modules.aspects; [
-    codex-wrappers
     herdr
   ];
 
@@ -59,27 +58,14 @@
 
   flake.modules.homeManager.agents =
     {
-      lib,
       pkgs,
       ...
     }:
     let
       llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
-      # Upstream installs the v2 binary as `opencode2` so it can coexist with
-      # v1 `opencode`. Expose it under the plain name as a real command, so
-      # every consumer sees it: shells, scripts, and agent runners such as
-      # paseo all resolve `opencode` through PATH.
-      opencode = pkgs.writeShellScriptBin "opencode" ''
-        exec ${lib.getExe llmAgents.opencode2} "$@"
-      '';
     in
     {
       programs = {
-        codex-wrappers = {
-          csh.enable = true;
-          ocsh.enable = true;
-        };
-
         herdr = {
           enable = true;
           reviewr.enable = true;
@@ -92,23 +78,18 @@
         };
       };
 
-      home.packages = [
-        opencode
-      ]
-      ++ [ llmAgents."grok-bot" ]
-      ++ (with llmAgents; [
-        codex
-        cursor-agent
-        opencode2
-        dsh
-        pi
-        paseo-desktop
-      ])
-      ++ (with pkgs; [
-        bubblewrap
-        jq
-        python3
-        selfPackages.zed-delta
-      ]);
+      home.packages =
+        (with llmAgents; [
+          llmAgents."grok-bot"
+          codex
+          opencode
+          pi
+          paseo-desktop
+        ])
+        ++ (with pkgs; [
+          bubblewrap
+          jq
+          python3
+        ]);
     };
 }
