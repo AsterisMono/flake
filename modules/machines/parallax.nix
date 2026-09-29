@@ -82,7 +82,7 @@
           mode = "2560x1440@165.003Hz";
           position = "0,0";
           scale = 1.0;
-          transform = "90";
+          transform = "270";
         };
         primary = {
           criteria = "Samsung Electric Company Odyssey G70D H1AK500000";
