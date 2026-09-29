@@ -96,9 +96,9 @@ in
         };
         icons = {
           enable = true;
-          package = pkgs.tela-icon-theme;
-          dark = "Tela-dark";
-          light = "Tela-dark";
+          package = pkgs.papirus-icon-theme;
+          dark = "Papirus-Dark";
+          light = "Papirus-Dark";
         };
         /*
           Stylix uses these as the primary fonts for application targets and
