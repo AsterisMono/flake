@@ -26,6 +26,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:denful/import-tree";
+    importPnpmLock = {
+      url = "git+https://tangled.org/scrumplex.net/importPnpmLock.nix?rev=4bd9cc54e6a5431930b4d09898e1ef49cb2ed241";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        systems.follows = "systems";
+      };
+    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";

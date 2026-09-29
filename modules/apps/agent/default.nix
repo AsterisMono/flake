@@ -90,6 +90,7 @@
           bubblewrap
           jq
           python3
+          selfPackages.deepseek-harness-desktop
         ]);
     };
 }

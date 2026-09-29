@@ -373,6 +373,30 @@
         "type": "github"
       }
     },
+    "importPnpmLock": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "systems": [
+          "systems"
+        ]
+      },
+      "locked": {
+        "lastModified": 1786037097,
+        "narHash": "sha256-k3Z/oMLgS4OdCRJlakczcM1Rq2O+l67g0EChInZOYWk=",
+        "ref": "refs/heads/main",
+        "rev": "4bd9cc54e6a5431930b4d09898e1ef49cb2ed241",
+        "revCount": 28,
+        "type": "git",
+        "url": "https://tangled.org/scrumplex.net/importPnpmLock.nix"
+      },
+      "original": {
+        "rev": "4bd9cc54e6a5431930b4d09898e1ef49cb2ed241",
+        "type": "git",
+        "url": "https://tangled.org/scrumplex.net/importPnpmLock.nix"
+      }
+    },
     "lanzaboote": {
       "inputs": {
         "crane": "crane",
@@ -752,6 +776,7 @@
         "git-hooks": "git-hooks",
         "home-manager": "home-manager",
         "import-tree": "import-tree",
+        "importPnpmLock": "importPnpmLock",
         "lanzaboote": "lanzaboote",
         "llm-agents": "llm-agents",
         "niri": "niri",
