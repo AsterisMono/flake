@@ -364,12 +364,10 @@
           }
         ];
 
-        # Noctalia's wallpaper, or the dedicated overview backdrop, sits in
-        # niri's backdrop instead of on a workspace.
+        # https://docs.noctalia.dev/noctalia/compositor-settings/niri/
         layer-rules = [
           {
             matches = [
-              { namespace = "^noctalia-wallpaper"; }
               { namespace = "^noctalia-backdrop"; }
             ];
             place-within-backdrop = true;
