@@ -68,8 +68,11 @@
     # Workspace 1 stays on the Odyssey.
     homeModule = {
       programs.niri.settings = {
+        # Matched by connector name, the same identifiers the kernel params
+        # below use; the EDID descriptions the kanshi profiles used did not
+        # match in niri.
         outputs = {
-          "MKG MK-165Q32s 24G97P73LKZ4" = {
+          "DP-3" = {
             mode = {
               width = 2560;
               height = 1440;
@@ -83,7 +86,7 @@
             transform.rotation = 270;
             variable-refresh-rate = "on-demand";
           };
-          "Samsung Electric Company Odyssey G70D H1AK500000" = {
+          "HDMI-A-1" = {
             mode = {
               width = 3840;
               height = 2160;
@@ -98,7 +101,7 @@
             focus-at-startup = true;
           };
         };
-        workspaces."1".open-on-output = "Samsung Electric Company Odyssey G70D H1AK500000";
+        workspaces."1".open-on-output = "HDMI-A-1";
       };
     };
   };
