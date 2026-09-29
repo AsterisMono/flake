@@ -11,7 +11,30 @@
   };
 
   flake.modules.nixos.noctalia =
-    { pkgs, ... }:
+    {
+      config,
+      pkgs,
+      ...
+    }:
+    let
+      secretPaths = config.constants.resources.userSecretPaths;
+
+      # The CLI reads its keys from the environment. Wrap it so the sops
+      # secret files are exported into ai-usagebar processes only, not into
+      # everything the shell launches.
+      aiUsagebar = pkgs.symlinkJoin {
+        name = "ai-usagebar-secrets";
+        paths = [ inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default ];
+        nativeBuildInputs = [ pkgs.makeWrapper ];
+        postBuild = ''
+          for program in ai-usagebar ai-usagebar-tui; do
+            wrapProgram "$out/bin/$program" \
+              --run 'if [ -r ${secretPaths.deepseek_api_key} ]; then export DEEPSEEK_API_KEY="$(cat ${secretPaths.deepseek_api_key})"; fi' \
+              --run 'if [ -r ${secretPaths.openrouter_management_key} ]; then export OPENROUTER_API_KEY="$(cat ${secretPaths.openrouter_management_key})"; fi'
+          done
+        '';
+      };
+    in
     {
       imports = [ inputs.noctalia.nixosModules.default ];
 
@@ -19,7 +42,7 @@
         # Noctalia drives external monitor brightness through ddcutil.
         pkgs.ddcutil
         # The community ai-usagebar plugin's bar widget and panel.
-        inputs.ai-usagebar.packages.${pkgs.stdenv.hostPlatform.system}.default
+        aiUsagebar
       ];
 
       # Noctalia publishes prebuilt binaries on its own cache; following
@@ -48,5 +71,17 @@
         # state-dir settings still override it at runtime.
         settings = ./noctalia.toml;
       };
+
+      # Both ai-usagebar rows are balance readings; the keys arrive through
+      # the wrapper's environment.
+      xdg.configFile."ai-usagebar/config.toml".text = ''
+        [deepseek]
+        enabled = true
+        headline = "amount"
+
+        [openrouter]
+        enabled = true
+        headline = "amount"
+      '';
     };
 }
