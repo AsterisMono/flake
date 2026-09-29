@@ -23,6 +23,9 @@
       services.displayManager.defaultSession = lib.mkDefault "niri";
 
       services.dbus.packages = [ pkgs.tumbler ];
+
+      # Noctalia provides its own polkit agent.
+      systemd.user.services.niri-flake-polkit.enable = false;
     };
 
   flake.modules.homeManager.niri =
@@ -277,6 +280,9 @@
         cursor.hide-when-typing = true;
         prefer-no-csd = true;
 
+        # Keep the overview flat; the backdrop is enough.
+        overview.workspace-shadow.enable = false;
+
         # The desktop shell owns the important hotkeys now; do not advertise
         # unbound actions at startup.
         hotkey-overlay = {
@@ -307,17 +313,27 @@
 
         window-rules = [
           {
-            # Noctalia's default surface radius.
             geometry-corner-radius = {
-              top-left = 12.0;
-              top-right = 12.0;
-              bottom-right = 12.0;
-              bottom-left = 12.0;
+              top-left = 8.0;
+              top-right = 8.0;
+              bottom-right = 8.0;
+              bottom-left = 8.0;
             };
             clip-to-geometry = true;
           }
           {
             matches = [ { title = "^Authentication Required$"; } ];
+            open-floating = true;
+          }
+          {
+            # Telegram opens its media viewer as a second toplevel from the
+            # same process as the chat window.
+            matches = [
+              {
+                app-id = "^org\\.telegram\\.desktop$";
+                title = "(?i)^(媒体查看器|media viewer)$";
+              }
+            ];
             open-floating = true;
           }
           {
@@ -372,9 +388,12 @@
           [ ]
           [
             (inputs.niri.lib.kdl.leaf "match" { app-id = "^kitty$"; })
-            # Kitty uses client-side decorations, so without this niri paints
-            # the border as a solid rectangle behind the window, which shows
-            # through its 0.8 opacity as a glow.
+            (inputs.niri.lib.kdl.leaf "match" {
+              app-id = "^(firefox|org\\.mozilla\\.firefox)$";
+            })
+            # Both windows use client-side decorations, so without this niri
+            # paints the border as a solid rectangle behind them, which shows
+            # through their transparency as a glow.
             (inputs.niri.lib.kdl.leaf "draw-border-with-background" false)
             (inputs.niri.lib.kdl.node "background-effect"
               [ ]
