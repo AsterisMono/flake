@@ -261,8 +261,20 @@
           # Keep window gaps level with the corner radius; niri's 16 px default
           # is wider than this shell's surfaces.
           gaps = 12.0;
+          # niri-flake defaults to "windows decide", which lets two columns add
+          # up wider than the screen; niri's own default splits it in half.
+          default-column-width = {
+            proportion = 0.5;
+          };
           # Noctalia's wallpaper layer is placed in the backdrop below.
           background-color = "transparent";
+          # The ring marks the focused window; the border keeps its themed
+          # Stylix colours and just gets a thinner frame.
+          focus-ring = {
+            enable = true;
+            width = 2.0;
+          };
+          border.width = 2.0;
         };
 
         cursor.hide-when-typing = true;
@@ -351,6 +363,28 @@
           }
         ];
       };
+
+      # niri-flake's settings schema does not expose background effects yet, so
+      # append a KDL document to the settings-rendered one. The rendered
+      # document enters as an option default (priority 1500), so this must use
+      # the same priority to be merged with it instead of replacing it. Kitty
+      # is semitransparent from Stylix and only speaks the KDE blur protocol,
+      # which niri does not implement, so niri blurs its background here.
+      programs.niri.config = lib.mkOptionDefault [
+        (inputs.niri.lib.kdl.node "window-rule"
+          [ ]
+          [
+            (inputs.niri.lib.kdl.leaf "match" { app-id = "^kitty$"; })
+            (inputs.niri.lib.kdl.node "background-effect"
+              [ ]
+              [
+                (inputs.niri.lib.kdl.leaf "blur" true)
+                (inputs.niri.lib.kdl.leaf "xray" false)
+              ]
+            )
+          ]
+        )
+      ];
 
       home = {
         packages = with pkgs; [
