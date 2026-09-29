@@ -66,27 +66,15 @@
       systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
     # Workspace 1 stays on the Odyssey.
-    homeModule = {
-      programs.niri.settings = {
-        # Matched by connector name, the same identifiers the kernel params
-        # below use; the EDID descriptions the kanshi profiles used did not
-        # match in niri. Refresh stays unset so niri picks the highest rate the
-        # link advertises for the resolution.
-        outputs = {
-          "DP-3" = {
-            mode = {
-              width = 2560;
-              height = 1440;
-            };
-            position = {
-              x = 0;
-              y = 0;
-            };
-            scale = 1.0;
-            transform.rotation = 270;
-            variable-refresh-rate = "on-demand";
-          };
-          "DP-1" = {
+    homeModule =
+      { lib, ... }:
+      {
+        programs.niri.settings = {
+          # Matched by connector name, the same identifiers the kernel params
+          # below use; the EDID descriptions the kanshi profiles used did not
+          # match in niri. Refresh stays unset so niri picks the highest rate
+          # the link advertises for the resolution.
+          outputs."DP-1" = {
             mode = {
               width = 3840;
               height = 2160;
@@ -100,9 +88,35 @@
             variable-refresh-rate = "on-demand";
             focus-at-startup = true;
           };
+          workspaces."1".open-on-output = "DP-1";
         };
-        workspaces."1".open-on-output = "DP-1";
+
+        # niri-flake's output schema has no per-output `layout` override, so
+        # the portrait monitor's whole output block is raw KDL: one window
+        # fills its width instead of the global half.
+        programs.niri.config = lib.mkOptionDefault [
+          (inputs.niri.lib.kdl.node "output" "DP-3" [
+            (inputs.niri.lib.kdl.leaf "mode" "2560x1440")
+            (inputs.niri.lib.kdl.leaf "scale" 1.0)
+            (inputs.niri.lib.kdl.leaf "transform" "270")
+            (inputs.niri.lib.kdl.leaf "position" {
+              x = 0;
+              y = 0;
+            })
+            (inputs.niri.lib.kdl.leaf "variable-refresh-rate" { on-demand = true; })
+            (inputs.niri.lib.kdl.node "layout"
+              [ ]
+              [
+                (inputs.niri.lib.kdl.node "default-column-width"
+                  [ ]
+                  [
+                    (inputs.niri.lib.kdl.leaf "proportion" 1.0)
+                  ]
+                )
+              ]
+            )
+          ])
+        ];
       };
-    };
   };
 }
