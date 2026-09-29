@@ -24,6 +24,7 @@ _: {
           "video"
           "networkmanager"
           "input"
+          "podman"
         ];
         shell = pkgs.fish;
         initialHashedPassword = nvirellia.hashedPassword;
