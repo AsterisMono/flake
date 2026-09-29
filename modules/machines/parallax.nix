@@ -50,7 +50,7 @@
       };
     nixosModule = {
       boot.kernelParams = [
-        "video=HDMI-A-1:3840x2160@60"
+        "video=DP-1:3840x2160@60"
         "video=DP-3:2560x1440@60,rotate=90"
       ];
       swapDevices = [
@@ -70,13 +70,13 @@
       programs.niri.settings = {
         # Matched by connector name, the same identifiers the kernel params
         # below use; the EDID descriptions the kanshi profiles used did not
-        # match in niri.
+        # match in niri. Refresh stays unset so niri picks the highest rate the
+        # link advertises for the resolution.
         outputs = {
           "DP-3" = {
             mode = {
               width = 2560;
               height = 1440;
-              refresh = 165.003;
             };
             position = {
               x = 0;
@@ -86,7 +86,7 @@
             transform.rotation = 270;
             variable-refresh-rate = "on-demand";
           };
-          "HDMI-A-1" = {
+          "DP-1" = {
             mode = {
               width = 3840;
               height = 2160;
@@ -101,7 +101,7 @@
             focus-at-startup = true;
           };
         };
-        workspaces."1".open-on-output = "HDMI-A-1";
+        workspaces."1".open-on-output = "DP-1";
       };
     };
   };
