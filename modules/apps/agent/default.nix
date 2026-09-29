@@ -12,7 +12,6 @@
   flake.modules.aspects.agents.imports = with inputs.self.modules.aspects; [
     codex-wrappers
     herdr
-    skills
   ];
 
   # NixOS provisions the token so the unprivileged Home Manager consumer reads
