@@ -26,12 +26,14 @@ Do not deploy on your own initiative, for a remote machine (use `just rdeploy <m
 ## Switch
 
 ```sh
-pkexec --keep-cwd nixos-rebuild switch --flake .
+pkexec --keep-cwd /run/current-system/sw/bin/env PATH="$PATH" nixos-rebuild switch --flake .
 ```
 
-- Run it from the repository root. `--keep-cwd` is required: without it `pkexec` changes to the target user's home directory (`/root`) and `.` is no longer the checkout. Equivalent: `pkexec nixos-rebuild switch --flake "$PWD"`.
+- Run it from the repository root. `--keep-cwd` is required: without it `pkexec` changes to the target user's home directory (`/root`) and `.` is no longer the checkout.
+- Pass the session `PATH` through `env`. `pkexec` replaces the environment with a safe list that contains no `git`, and Nix resolves `git` from `PATH` to fetch flake inputs that are not yet in the privileged fetcher cache. Without this the switch aborts with `executing "git": No such file or directory` while fetching a transitive input such as `smithay`.
 - Elevate with `pkexec`, not `sudo` or `nixos-rebuild --sudo`, and do not substitute `nh` or the `just deploy` recipe, which runs `nh`.
-- Expect the polkit authentication dialog; the whole command then runs as root. `pkexec` resolves `nixos-rebuild` through your `PATH` before sanitizing the environment, and the `nixos-rebuild-ng` wrapper supplies its own tools, so the reduced privileged environment is sufficient.
+- Expect the polkit authentication dialog; the whole command then runs as root. The `nixos-rebuild-ng` wrapper supplies its own tools, so the rest of the reduced privileged environment is sufficient.
+- If the command reports `pkexec must be setuid root`, a sandbox is blocking setuid escalation; rerun it unsandboxed.
 
 ## Report
 
