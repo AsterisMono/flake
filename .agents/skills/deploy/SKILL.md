@@ -1,0 +1,39 @@
+---
+name: deploy
+description: Apply this checkout to the running machine by switching the local NixOS configuration with a privileged `nixos-rebuild switch --flake .`. Use when the user explicitly asks to deploy, or when a completed configuration change (package, version, or setting) needs to be applied and the user confirms it.
+---
+
+# Deploy the local machine
+
+Build and activate this checkout on the machine you are running on. Elevate through `pkexec`; never use `nh`, and never target a remote host from this skill.
+
+## When to run
+
+Deploy only with one of these triggers:
+
+- The user explicitly asks to deploy, apply, or switch to the current configuration. That request is the authorization; still state the machine and command before running it.
+- A task the user requested is finished and only takes effect after activation — a package version bump, a new package, a configuration change. Ask the user whether to deploy it now and wait for agreement.
+
+Do not deploy on your own initiative, for a remote machine (use `just rdeploy <machine> <target>` or the [install-machine](../install-machine/SKILL.md) skill), while the change is incomplete or fails to evaluate, or as a way to reach unrelated privileged operations such as `boot`, `gc`, or secret rewrites.
+
+## Prepare
+
+1. `hostname` must match the machine this checkout configures; the command builds and activates the local system only.
+2. Stage new files with `git add`. Nix evaluates a flake from the git tree and ignores untracked files, so an unstaged new module would silently not apply.
+3. Format with `nixfmt`, lint with `statix`, and evaluate the local configuration. Never switch to a configuration that does not evaluate.
+4. Commit the completed change at its atomic point (see [AGENTS.md](../../../AGENTS.md)) so the deployed revision is identifiable; `nixos-rebuild` otherwise warns about a dirty tree.
+
+## Switch
+
+```sh
+pkexec --keep-cwd nixos-rebuild switch --flake .
+```
+
+- Run it from the repository root. `--keep-cwd` is required: without it `pkexec` changes to the target user's home directory (`/root`) and `.` is no longer the checkout. Equivalent: `pkexec nixos-rebuild switch --flake "$PWD"`.
+- Elevate with `pkexec`, not `sudo` or `nixos-rebuild --sudo`, and do not substitute `nh` or the `just deploy` recipe, which runs `nh`.
+- Expect the polkit authentication dialog; the whole command then runs as root. `pkexec` resolves `nixos-rebuild` through your `PATH` before sanitizing the environment, and the `nixos-rebuild-ng` wrapper supplies its own tools, so the reduced privileged environment is sufficient.
+
+## Report
+
+- Report the generation that was activated (`nixos-rebuild list-generations`) and which changes are now live.
+- A successful switch proves evaluation and activation, not runtime behavior. State what still needs verification, especially services, drivers, hardware, and secrets.
