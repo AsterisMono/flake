@@ -16,7 +16,8 @@
 #
 # Only the desktop assembly is new here; this file documents the on-disk layout
 # and the five load-bearing details, each verified against the unmodified
-# upstream application.
+# upstream application. Note 6 is this package's one deliberate deviation from
+# that application.
 # Desktop assembly notes.
 #
 # Layout, relative to the output root:
@@ -31,7 +32,7 @@
 #   resources/runtime/primary-runtime/          interpreters + Python libraries
 #   resources/icon.png                          window/taskbar icon
 #
-# Four details are load-bearing; each was verified experimentally against the
+# Five details are load-bearing; each was verified experimentally against the
 # unmodified upstream application.
 #
 #  1. The Electron binary must NOT be named 'electron'. Electron treats an
@@ -137,6 +138,30 @@
 #     WebAssembly build is not installed by the offline pnpm install, sharp only
 #     falls back to it when the native addon fails to load, and it gives up
 #     native text rendering and tiled output.
+#
+#  6. The window menu bar is not drawn. This is the one deliberate deviation
+#     from upstream, and it changes drawing only: the application menu stays
+#     installed. Linux draws that menu as a native bar across the top of every
+#     window -- the localized "Application / Edit" strip. The bar carries About,
+#     Check for Updates and Quit, and the Edit menu's roles; the roles have their
+#     usual mouse equivalents and Quit is also on the window controls, so the
+#     pointer paths it costs are About and the manual update check (scheduled
+#     checks are unaffected). Removing the menu instead would cost more than the
+#     bar: the Edit roles, the Quit role's Ctrl+Q and a hidden F12 devtools toggle
+#     all come from that one template, and keyboard.ts toggles
+#     setIgnoreMenuShortcuts against a menu it expects to exist.
+#     hide-menu-bar.patch therefore wraps the bundled refreshApplicationMenu
+#     instead: it hides each window's bar for the windows that exist each time
+#     the menu is (re)built, and, through one 'browser-window-created' hook, for
+#     every window created afterwards. The menu and each window's visibility flag
+#     are main-process state, so the renderer and the Host observe nothing else.
+#     The hunk is applied by appLib above with the standard patch phase (the
+#     `patches` mechanism), not by hand, so it carries that mechanism's -p1
+#     convention and its failure mode: an upstream restructuring that breaks the
+#     context stops the build instead of silently reinstating the bar. Verified by
+#     screenshotting the built package under Xvfb with an isolated home: the
+#     unmodified build draws the bar on its welcome window and this assembly does
+#     not, while F12 still toggles devtools in both, so the menu itself survived.
 { inputs, ... }:
 {
   perSystem =
@@ -148,6 +173,7 @@
     }:
     let
       inherit (pkgsUnstable)
+        applyPatches
         bubblewrap
         copyDesktopItems
         electron_44
@@ -391,6 +417,20 @@
       pnpmRoot = "${outPath}/node_modules/pnpm";
       skillOfficeAssets = "${outPath}/packages/skill/skill-office/assets";
 
+      # The desktop shell's lib tree with this package's one source change applied
+      # (note 6). applyPatches is the standard patch phase over a tree this
+      # derivation does not unpack itself: it copies the tree, runs patchPhase
+      # with `patches`, and installs the result, so the hunk is applied by the
+      # same machinery as any nixpkgs `patches = [...]`, with its -p1 default and
+      # a failed build when the context no longer matches. Its output holds the
+      # tree's contents at the root, which is why hide-menu-bar.patch names
+      # main.js rather than lib/main.js.
+      appLib = applyPatches {
+        name = "deepseek-harness-desktop-lib";
+        src = "${appRoot}/lib";
+        patches = [ ./hide-menu-bar.patch ];
+      };
+
       # nixpkgs's Electron ships its payload under libexec/electron.
       electronDir = "${electron.unwrapped}/libexec/electron";
 
@@ -544,9 +584,11 @@
           rm -f "$resources/default_app.asar"
 
           # 2. The Electron shell at app.getAppPath(), plus its production modules.
+          #    lib comes from appLib, which has this package's one source change
+          #    already applied (note 6); everything else is upstream's own tree.
           app="$resources/app"
           mkdir -p "$app/lib"
-          cp -a ${appRoot}/lib/. "$app/lib/"
+          cp -a ${appLib}/. "$app/lib/"
           cp -a ${appRoot}/renderer "$app/renderer"
           cp -a ${appRoot}/resources "$app/resources"
           cp ${appRoot}/package.json "$app/package.json"

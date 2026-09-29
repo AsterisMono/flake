@@ -1,0 +1,32 @@
+Hide the window menu bar in the desktop shell's bundled main process, keeping
+the application menu that owns every accelerator. See note 6 in default.nix.
+
+Applied to the shell's lib tree by appLib (applyPatches), whose output holds
+that tree's contents at the root -- hence main.js rather than lib/main.js under
+the patch phase's default -p1. The context is the refreshApplicationMenu
+definition as the bundler emits it: if upstream restructures the menu assembly,
+the hunk fails, which stops the build instead of shipping the bar this package
+claims to have removed.
+
+--- a/main.js
++++ b/main.js
+@@ -11424,11 +11424,19 @@
+ 		visible: false,
+ 		accelerator: "F12"
+ 	}];
++	// Patched by this package: the menu is still installed, its bar is not drawn.
++	const hideWindowMenuBar = (window) => {
++		if (process.platform !== "darwin" && !window.isDestroyed()) window.setMenuBarVisibility(false);
++	};
++	app.on("browser-window-created", (_event, window) => {
++		hideWindowMenuBar(window);
++	});
+ 	const refreshApplicationMenu = () => {
+ 		Menu.setApplicationMenu(Menu.buildFromTemplate(process.platform === "win32" ? devToolsItems : [{
+ 			label: darwin ? app.name : currentDesktopLocale().messages.application,
+ 			submenu: [...applicationItems(), ...devToolsItems]
+ 		}, ...platformMenus()]));
++		for (const window of BrowserWindow.getAllWindows()) hideWindowMenuBar(window);
+ 		tray?.relabel();
+ 	};
+ 	refreshApplicationMenu();
