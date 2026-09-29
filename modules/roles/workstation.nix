@@ -9,7 +9,6 @@
     plymouth
     podman
     power
-    sleep
     stylix
     u2f
     zswap
@@ -22,19 +21,18 @@
     flatpak
     gdm
     git
-    kanshi
     keyring
     kitty
     neovim
     netbird-desktop
+    niri
+    noctalia
     obsidian
     sing-box
     splayer-next
     starship
-    sway
+    udiskie
     unix-tools
-    vicinae
-    quickshell
     xpipe
     zed
 

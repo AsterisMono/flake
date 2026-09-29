@@ -13,7 +13,7 @@
       programs.noctalia-greeter = {
         enable = true;
         settings = {
-          session.default = "Sway (UWSM)";
+          session.default = "Niri";
           user.default = config.constants.nvirellia.username;
           idle.timeout = 300;
           keyboard = {

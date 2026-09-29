@@ -41,4 +41,4 @@ A **host** is a physical or virtual machine; a **machine** is the repository com
 - Format changed Nix files with `nixfmt`. Keep formatting and lint rules in `nixfmt` and `statix`; encode objective repository-wide invariants as flake checks when practical.
 - Choose checks proportionate to the change. Documentation-only work needs document and skill validation. Report the checks actually performed, affected machines where relevant, and outstanding manual or hardware verification; do not treat past test records as new results.
 
-Last updated at: `1d4281e70e15bc7e08c0093e428c6f2335362347`.
+Last updated at: `9fbb620ae152dc09edd0bcbf59ecadefe904e395`.

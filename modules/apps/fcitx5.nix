@@ -25,15 +25,6 @@ _: {
       };
     };
 
-    # Patch systemd targets
-    systemd.user.services.fcitx5-daemon = {
-      Unit = {
-        PartOf = [ "sway-session.target" ];
-        After = [ "sway-session.target" ];
-      };
-      Install.WantedBy = [ "sway-session.target" ];
-    };
-
     xdg.dataFile."fcitx5/rime/default.custom.yaml".text = ''
       patch:
         __include: rime_ice_suggestion:/

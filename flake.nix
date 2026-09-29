@@ -4,10 +4,6 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    catppuccin-zed = {
-      url = "github:catppuccin/zed";
-      flake = false;
-    };
     disko = {
       url = "github:nix-community/disko";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,6 +27,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     llm-agents.url = "github:numtide/llm-agents.nix";
+    niri.url = "github:sodiboo/niri-flake";
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
@@ -46,9 +43,14 @@
         systems.follows = "systems";
       };
     };
+    noctalia.url = "github:noctalia-dev/noctalia";
     noctalia-greeter = {
       url = "github:noctalia-dev/noctalia-greeter";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+    rose-pine-zed = {
+      url = "github:rose-pine/zed";
+      flake = false;
     };
     sfd-nix.url = "git+https://forge.asnk.io/sugar/sfd-nix";
     sops-nix = {

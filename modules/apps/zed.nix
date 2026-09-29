@@ -1,6 +1,6 @@
 { inputs, ... }: {
-  flake-file.inputs.catppuccin-zed = {
-    url = "github:catppuccin/zed";
+  flake-file.inputs.rose-pine-zed = {
+    url = "github:rose-pine/zed";
     flake = false;
   };
 
@@ -21,9 +21,8 @@
         ];
       };
 
-      catppuccin = builtins.fromJSON (
-        builtins.readFile (inputs.catppuccin-zed + "/themes/catppuccin-mauve.json")
-      );
+      rosePine =
+        variant: builtins.fromJSON (builtins.readFile (inputs.rose-pine-zed + "/themes/${variant}.json"));
 
       # The glass this desktop already had, as the alpha each Zed style key
       # carries. These are the effective values of the theme this replaces, not
@@ -33,7 +32,8 @@
       # transparent. Everything else is unchanged, so only the palette moves:
       # the window and the two bars keep a translucent base, the editor and the
       # panels take that tint, and the interactive tints stay where they were
-      # tuned. Every key here exists in the Catppuccin theme.
+      # tuned. The Rosé Pine themes define every key here except `hidden` and
+      # `pane.focused_border`, which keep their inherited values.
       glassAlpha = {
         background = "cf";
         border = "66";
@@ -121,9 +121,15 @@
           };
         };
 
-      glassyTheme = catppuccin // {
-        themes = map glassTheme catppuccin.themes;
-      };
+      glassyTheme =
+        variant:
+        let
+          theme = rosePine variant;
+        in
+        theme
+        // {
+          themes = map glassTheme theme.themes;
+        };
     in
     {
       programs.zed-editor = {
@@ -141,7 +147,10 @@
           "terraform"
         ];
 
-        themes.catppuccin = builtins.toJSON glassyTheme;
+        themes = {
+          rose-pine-moon = builtins.toJSON (glassyTheme "rose-pine-moon");
+          rose-pine-dawn = builtins.toJSON (glassyTheme "rose-pine-dawn");
+        };
 
         userSettings = {
           agent_servers = {
@@ -242,8 +251,8 @@
             scrollbar.show = "never";
           };
           theme = {
-            dark = "Catppuccin Mocha";
-            light = "Catppuccin Latte";
+            dark = "Rosé Pine Moon";
+            light = "Rosé Pine Dawn";
             mode = "dark";
           };
           title_bar.show_user_picture = false;

@@ -47,11 +47,6 @@
 
         nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
         hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-
-        hardware.sensors.cpuTemperature = {
-          hwmonPathAbs = "/sys/devices/pci0000:00/0000:00:18.3/hwmon";
-          inputFilename = "temp1_input";
-        };
       };
     nixosModule = {
       boot.kernelParams = [
@@ -66,46 +61,45 @@
         }
       ];
       # Hibernating to a swapfile needs a resume device and offset this machine
-      # does not have, so only suspend is available. The power key falls back
-      # to logind's default action.
+      # does not have, so only suspend is available. Niri handles the power key
+      # by sleeping.
       systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
-    # Kanshi matches this profile only when both heads are connected.
-    # Workspace 1 stays on the Odyssey; one swaymsg assigns it before focusing.
-    homeModule =
-      { lib, pkgs, ... }:
-      let
-        swaymsg = lib.getExe' pkgs.unstable.swayfx "swaymsg";
-        portrait = {
-          criteria = "MKG MK-165Q32s 24G97P73LKZ4";
-          status = "enable";
-          mode = "2560x1440@165.003Hz";
-          position = "0,0";
-          scale = 1.0;
-          transform = "270";
-        };
-        primary = {
-          criteria = "Samsung Electric Company Odyssey G70D H1AK500000";
-          status = "enable";
-          mode = "3840x2160@120Hz";
-          position = "1440,416";
-          scale = 1.333333;
-        };
-        placePrimary = "${swaymsg} 'workspace 1 output \"${primary.criteria}\", focus output \"${primary.criteria}\"'";
-      in
-      {
-        services.kanshi.settings = [
-          {
-            profile = {
-              name = "desk";
-              outputs = [
-                portrait
-                primary
-              ];
-              exec = placePrimary;
+    # Workspace 1 stays on the Odyssey.
+    homeModule = {
+      programs.niri.settings = {
+        outputs = {
+          "MKG MK-165Q32s 24G97P73LKZ4" = {
+            mode = {
+              width = 2560;
+              height = 1440;
+              refresh = 165.003;
             };
-          }
-        ];
+            position = {
+              x = 0;
+              y = 0;
+            };
+            scale = 1.0;
+            transform.rotation = 270;
+            variable-refresh-rate = "on-demand";
+          };
+          "Samsung Electric Company Odyssey G70D H1AK500000" = {
+            mode = {
+              width = 3840;
+              height = 2160;
+              refresh = 120.0;
+            };
+            position = {
+              x = 1440;
+              y = 416;
+            };
+            scale = 1.333333;
+            variable-refresh-rate = "on-demand";
+            focus-at-startup = true;
+          };
+        };
+        workspaces."1".open-on-output = "Samsung Electric Company Odyssey G70D H1AK500000";
       };
+    };
   };
 }

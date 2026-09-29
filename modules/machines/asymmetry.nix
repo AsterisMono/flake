@@ -49,26 +49,18 @@
           npu.enable = true;
           updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
         };
-
-        hardware.sensors.cpuTemperature = {
-          hwmonPathAbs = "/sys/devices/platform/coretemp.0/hwmon";
-          inputFilename = "temp1_input";
-        };
       };
     homeModule = {
-      services.kanshi.settings = [
+      programs.niri.settings.outputs."China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4 Unknown" =
         {
-          profile.name = "panel";
-          profile.outputs = [
-            {
-              criteria = "China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4 Unknown";
-              status = "enable";
-              mode = "2880x1800@120Hz";
-              scale = 1.75;
-            }
-          ];
-        }
-      ];
+          mode = {
+            width = 2880;
+            height = 1800;
+            refresh = 120.0;
+          };
+          scale = 1.75;
+          variable-refresh-rate = "on-demand";
+        };
     };
   };
 }

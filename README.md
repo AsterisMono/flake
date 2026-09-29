@@ -1,6 +1,6 @@
 # Personal NixOS flake
 
-This repository manages personal NixOS workstations and servers, including their Home Manager environments. The workstation setup combines SwayFX, a custom Quickshell desktop shell, development tools, and coding agents. Disk layouts and an installer ISO support provisioning over SSH; sops-nix provides secrets at activation time.
+This repository manages personal NixOS workstations and servers, including their Home Manager environments. The workstation setup combines the Niri compositor with the Noctalia desktop shell, development tools, and coding agents. Disk layouts and an installer ISO support provisioning over SSH; sops-nix provides secrets at activation time.
 
 It is intended for the maintainer's machines and for people comfortable adapting a NixOS configuration. The machine definitions target `x86_64-linux` and include personal accounts, hardware, disk paths, network settings, and trusted keys. Adopting the configuration requires replacing those values and supplying your own secrets and recipients.
 
@@ -35,4 +35,4 @@ Boot the target from the resulting ISO and connect it to the network with `nmtui
 
 Follow [machine preparation](.agents/skills/init-machine/SKILL.md), then the [installation procedure](.agents/skills/install-machine/SKILL.md). Preparation records hardware facts, selects the disk layout, and enrolls secret recipients when needed. Installation erases the selected disk; confirm the target and device before proceeding. The procedure also covers encrypted disks and Secure Boot.
 
-Last updated at: `1d4281e70e15bc7e08c0093e428c6f2335362347`.
+Last updated at: `9fbb620ae152dc09edd0bcbf59ecadefe904e395`.

@@ -14,7 +14,6 @@
       greetd.u2f.enable = true;
       login.u2f.enable = true;
       sudo.u2f.enable = true;
-      swaylock.u2f.enable = true;
     };
 
     environment.etc."u2f-mappings".text =

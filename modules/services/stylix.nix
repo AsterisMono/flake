@@ -87,7 +87,7 @@ in
           url = "https://r2.requiem.garden/yanhao-fang-s20ggpkor58-unsplash.jpg";
           hash = "sha256-8AcfgbsdVHbEQ6s+UJgZrCPvAYQD6y84L25jZQ+9AeM=";
         };
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
         polarity = "dark";
         cursor = {
           name = "macOS";
@@ -136,38 +136,10 @@ in
       };
     };
 
-  flake.modules.homeManager.stylix =
-    {
-      config,
-      lib,
-      options,
-      ...
-    }:
-    let
-      # `colors.withHashtag` carries derived keys (`base00-hex`, `base00-dec-r`)
-      # and slots beyond the sixteen, so the shell's palette is taken by name
-      # rather than by copying the whole set.
-      base16Slots = lib.filterAttrs (
-        name: _: builtins.match "base0[0-9A-F]" name != null
-      ) config.lib.stylix.colors.withHashtag;
-    in
-    {
-      # Quickshell draws its own surfaces, so this target has nothing of its own
-      # to write: the shell renders from the base16 primitives and Theme.qml
-      # names the roles. The target hands the palette over, and the shell keeps
-      # its own default so that disabling the target leaves a complete theme.
-      options.stylix.targets.quickshell.enable = config.lib.stylix.mkEnableTarget "Quickshell" true;
-
-      config = {
-        stylix.targets = {
-          firefox.enable = false;
-          zed.enable = false;
-        };
-      }
-      // lib.optionalAttrs (options.programs ? quickshell) {
-        programs.quickshell.palette = lib.mkIf (
-          config.stylix.enable && config.stylix.targets.quickshell.enable
-        ) base16Slots;
-      };
+  flake.modules.homeManager.stylix = _: {
+    stylix.targets = {
+      firefox.enable = false;
+      zed.enable = false;
     };
+  };
 }

@@ -13,8 +13,8 @@
       kitty
       ly
       neovim
-      sway
-      quickshell
+      niri
+      noctalia
 
       nvirellia
     ];
@@ -27,7 +27,7 @@
       {
         imports = [ (modulesPath + "/virtualisation/qemu-vm.nix") ];
 
-        environment.sessionVariables.WLR_RENDERER_ALLOW_SOFTWARE = "1";
+        environment.sessionVariables.LIBGL_ALWAYS_SOFTWARE = "1";
 
         networking.hostName = "stylix-test";
         nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
@@ -45,13 +45,16 @@
         };
       };
     homeModule = { lib, ... }: {
-      wayland.windowManager.sway.config.startup = lib.mkForce [
+      programs.niri.settings.spawn-at-startup = lib.mkForce [
         {
-          command = "autotiling";
-          always = true;
+          argv = [
+            "kitty"
+            "--title"
+            "Stylix · Neovim"
+            "nvim"
+          ];
         }
-        { command = "kitty --title 'Stylix · Neovim' nvim"; }
-        { command = "firefox"; }
+        { argv = [ "firefox" ]; }
       ];
     };
   };
