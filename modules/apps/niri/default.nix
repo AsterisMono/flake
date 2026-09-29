@@ -282,7 +282,7 @@
 
         # niri-flake enables XWayland integration by default but installs no
         # binary; point it at the package.
-        xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
+        xwayland-satellite.path = lib.getExe pkgs.unstable.xwayland-satellite;
 
         spawn-at-startup = [
           {
