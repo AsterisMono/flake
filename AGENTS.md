@@ -6,7 +6,7 @@ A **host** is a physical or virtual machine; a **machine** is the repository com
 
 ## Scope and safety
 
-- Preserve unrelated work. Create commits only when requested, with a concise, lowercase, imperative subject: `<scope>: <description>`.
+- Preserve unrelated work. Commit each completed logical change at its natural atomic point instead of waiting for a request; do not fold unrelated edits or unfinished work into one commit. Use a concise, lowercase, imperative subject: `<scope>: <description>`.
 - Inspect a Justfile recipe before invoking it. Bare `just` only lists recipes. Remote, privileged, machine-mutating, disk, deployment, garbage-collection, and key-rewrite operations require explicit authorization, including `deploy`, `boot`, `dryrun`, `install`, `rdeploy`, `collect-machine-info`, `generate-luks-password`, `gc`, `rewrap-secret`, and `updatekeys`.
 - Treat `modules/secrets/`, `.sops.yaml`, password hashes, key material, and personal identity constants as sensitive. Do not decrypt, print, rotate, or edit secret payloads unless the task explicitly requires it. Never create plaintext secret files; edit encrypted documents with `sops`.
 - Keep changes in the existing feature categories. Before adding a new category under `modules/`, propose its boundary and obtain approval.
@@ -41,4 +41,4 @@ A **host** is a physical or virtual machine; a **machine** is the repository com
 - Format changed Nix files with `nixfmt`. Keep formatting and lint rules in `nixfmt` and `statix`; encode objective repository-wide invariants as flake checks when practical.
 - Choose checks proportionate to the change. Documentation-only work needs document and skill validation. Report the checks actually performed, affected machines where relevant, and outstanding manual or hardware verification; do not treat past test records as new results.
 
-Last updated at: `9fbb620ae152dc09edd0bcbf59ecadefe904e395`.
+Last updated at: `55e49ced2418f89c17c61acd3c30b6e09a7ba4ad`.
