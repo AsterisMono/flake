@@ -271,6 +271,8 @@
           };
           # Noctalia's wallpaper layer is placed in the backdrop below.
           background-color = "transparent";
+          # Center a lone column instead of pinning it to the left edge.
+          always-center-single-column = true;
           # The border keeps its themed Stylix colours and is the only focus
           # indicator.
           focus-ring.enable = false;
@@ -280,8 +282,8 @@
         cursor.hide-when-typing = true;
         prefer-no-csd = true;
 
-        # Keep the overview flat; the backdrop is enough.
-        overview.workspace-shadow.enable = false;
+        # Lift the overview's workspaces off the backdrop.
+        overview.workspace-shadow.enable = true;
 
         # The desktop shell owns the important hotkeys now; do not advertise
         # unbound actions at startup.
