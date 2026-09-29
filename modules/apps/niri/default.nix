@@ -268,12 +268,9 @@
           };
           # Noctalia's wallpaper layer is placed in the backdrop below.
           background-color = "transparent";
-          # The ring marks the focused window; the border keeps its themed
-          # Stylix colours and just gets a thinner frame.
-          focus-ring = {
-            enable = true;
-            width = 2.0;
-          };
+          # The border keeps its themed Stylix colours and is the only focus
+          # indicator.
+          focus-ring.enable = false;
           border.width = 2.0;
         };
 
@@ -375,6 +372,10 @@
           [ ]
           [
             (inputs.niri.lib.kdl.leaf "match" { app-id = "^kitty$"; })
+            # Kitty uses client-side decorations, so without this niri paints
+            # the border as a solid rectangle behind the window, which shows
+            # through its 0.8 opacity as a glow.
+            (inputs.niri.lib.kdl.leaf "draw-border-with-background" false)
             (inputs.niri.lib.kdl.node "background-effect"
               [ ]
               [
