@@ -1,0 +1,195 @@
+config_version = 14
+
+[bar]
+order = [ "Status" ]
+
+    [bar.Status]
+    background_opacity = 0.79999998211860657
+    end = [ "group:g3", "group:g1", "group:g2", "bar", "battery", "tray", "notifications", "session" ]
+    start = [ "wallhaven", "workspaces", "media" ]
+
+        [bar.Status.monitor.DP-3]
+        center = []
+        position = "bottom"
+        start = [ "workspaces", "media" ]
+
+        [[bar.Status.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        border_width = 1.0
+        enabled = true
+        fill = "surface_variant"
+        id = "g1"
+        members = [ "network", "network_tx", "network_rx" ]
+        opacity = 1.0
+        padding = 12.0
+
+        [[bar.Status.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        border_width = 1.0
+        enabled = true
+        fill = "surface_variant"
+        id = "g2"
+        members = [ "volume", "brightness" ]
+        opacity = 1.0
+        padding = 12.0
+
+        [[bar.Status.capsule_group]]
+        accordion = false
+        accordion_direction = "end"
+        border_width = 1.0
+        enabled = true
+        fill = "surface_variant"
+        id = "g3"
+        members = [ "cpu", "ram", "temp" ]
+        opacity = 1.0
+        padding = 12.0
+
+[dock]
+auto_hide = true
+background_opacity = 0.79999998211860657
+enabled = true
+reserve_space = false
+
+[idle]
+behavior_order = [ "screen-off", "lock-and-suspend" ]
+pre_action_fade_seconds = 5
+
+    [idle.behavior.lock-and-suspend]
+    action = "lock_and_suspend"
+    enabled = true
+    timeout = 900.0
+
+    [idle.behavior.screen-off]
+    action = "screen_off"
+    enabled = true
+    timeout = 600.0
+
+[lockscreen]
+allow_empty_password = true
+
+[lockscreen_widgets]
+schema_version = 2
+widget_order = [ "lockscreen-login-box@DP-1", "lockscreen-login-box@DP-3" ]
+
+    [lockscreen_widgets.grid]
+    cell_size = 16
+    major_interval = 4
+    visible = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-1"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 1440.0001220703125
+    cy = 1438.0
+    output = "DP-1"
+    placement_height = 1620.0
+    placement_width = 2880.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-1".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+    [lockscreen_widgets.widget."lockscreen-login-box@DP-3"]
+    box_height = 196.0
+    box_width = 810.0
+    cx = 720.0
+    cy = 2378.0
+    output = "DP-3"
+    placement_height = 2560.0
+    placement_width = 1440.0
+    rotation = 0.0
+    type = "login_box"
+
+        [lockscreen_widgets.widget."lockscreen-login-box@DP-3".settings]
+        background_color = "surface_variant"
+        background_opacity = 0.88
+        background_radius = 12.0
+        center_password_text = false
+        input_opacity = 1.0
+        input_radius = 6.0
+        layout = "regular"
+        show_caps_lock = true
+        show_keyboard_layout = true
+        show_login_button = true
+        show_media = true
+        show_session_buttons = true
+        show_unlock_hint = true
+        show_weather = true
+
+[osd.kinds]
+keyboard_layout = false
+
+[plugins]
+enabled = [ "felipeartur/ai-usagebar", "noctalia/screen_recorder", "noctalia/wallhaven" ]
+
+[shell]
+corner_radius_scale = 0.7500000111758709
+lang = "zh-Hans"
+niri_overview_type_to_launch_enabled = true
+polkit_agent = true
+
+    [shell.launcher]
+    app_grid = true
+    fetch_exchange_rates = false
+
+    [shell.screenshot]
+    annotate = true
+
+[theme]
+builtin = "Noctalia"
+community_palette = "Rose Pine Moon"
+mode = "dark"
+shell_mode = "dark"
+source = "community"
+wallpaper_scheme = "m3-content"
+
+[wallpaper.default]
+path = "/home/nvirellia/Pictures/wallhaven-5ypmx8.png"
+
+[wallpaper.last]
+path = "/home/nvirellia/Pictures/wallhaven-5ypmx8.png"
+
+[wallpaper.monitors.DP-1]
+path = "/home/nvirellia/Pictures/wallhaven-5ypmx8.png"
+
+[wallpaper.monitors.DP-3]
+path = "/home/nvirellia/Pictures/wallhaven-5ypmx8.png"
+
+[widget.bar]
+type = "felipeartur/ai-usagebar:bar"
+
+[widget.brightness]
+capsule = true
+
+[widget.media]
+hide_when_no_media = true
+show_progress = true
+
+[widget.network]
+show_label = false
+
+[widget.sysmon]
+stat = "swap_pct"
+
+[widget.volume]
+capsule = true
+capsule_padding = 12
+
+[widget.wallhaven]
+type = "noctalia/wallhaven:wallhaven"
