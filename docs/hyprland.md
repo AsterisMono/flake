@@ -6,7 +6,7 @@ Bindings use the familiar Sway window controls from before commit `b0903cf`, wit
 
 | Shortcut | Action |
 | --- | --- |
-| `Super+H/J/K/L` or arrows | Focus a window left/down/up/right |
+| `Super+H/J/K/L` or arrows | Focus left/down/up/right; left/right traverse grouped windows before leaving the group |
 | Add `Shift` | Move the window in that direction |
 | `Super+1…9/0` | Select workspace 1…9/10; selecting the current workspace returns to the previous one |
 | Add `Shift` | Send the window to that workspace without following it |
@@ -29,6 +29,10 @@ Bindings use the familiar Sway window controls from before commit `b0903cf`, wit
 
 Volume, microphone mute, media and brightness keys use Noctalia and work while locked and in resize mode. Closing a laptop lid asks Noctalia to lock and suspend. Three-finger horizontal swipes retain Sway's workspace gesture.
 
+Floating windows snap to nearby window and monitor edges while dragging. Closing a window returns focus to the most recently used window. Noctalia launches applications as independent systemd user services; its runtime settings can override the declarative base, so keep the corresponding launcher setting enabled in the GUI too.
+
+Firefox picture-in-picture windows float, appear across workspaces, keep their aspect ratio when resized with the mouse, and remember their size for the compositor session. Focused Tencent Meeting windows inhibit idle; fullscreen mpv and gaming windows do so too. These are fallbacks, not meeting-state detection: an unfocused meeting relies on the application's own inhibitor or Noctalia's manual idle inhibitor. Noctalia notification layers and 1Password windows are excluded from screen sharing. XDPH screen sharing is limited to 60 fps, without changing display refresh rates or Noctalia's recording settings.
+
 Hyprland groups approximate Sway's containers: their tab/stack title style applies to all groups, and they do not provide Sway's parent-container focus (`Super+A` is unbound). The special scratchpad workspace shows its floating windows together, whereas Sway cycles individual scratchpad windows. The historical Sway override already replaced `Super+V`'s vertical split with the clipboard. Niri's column, overview, workspace-cycle and wheel bindings are not retained. Hyprland's conflicting defaults yield to the existing keys; pseudotiling is unbound by choice. Hyprland does not provide Niri's automatic touchpad disabling when an external mouse is connected.
 
-Parallax retains DP-1 at 3840×2160@120, scale 1.333333, position 1440×416, with workspace 1 assigned to it. DP-3 remains at 2560×1440, scale 1, rotated 270° and positioned at 0×0. Asymmetry retains its internal display at 2880×1800@120 and scale 1.75. These settings, VRR, suspend, fractional scaling, screenshot exclusion for 1Password and the shell's interactions need verification on the actual hosts after activation.
+Parallax retains DP-1 at 3840×2160@120, scale 1.333333, position 1440×416, with workspace 1 assigned to it. DP-3 remains at 2560×1440, scale 1, rotated 270° and positioned at 0×0. Asymmetry retains its internal display at 2880×1800@120 and scale 1.75. These settings, VRR, suspend, fractional scaling, picture-in-picture and meeting window matching, capture exclusions and the shell's interactions need verification on the actual hosts after activation.

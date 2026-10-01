@@ -142,6 +142,7 @@ enabled = [ "felipeartur/ai-usagebar", "noctalia/screen_recorder", "noctalia/wal
 [shell]
 corner_radius_scale = 0.7500000111758709
 lang = "zh-Hans"
+launch_apps_as_systemd_services = true
 polkit_agent = true
 
     [shell.launcher]

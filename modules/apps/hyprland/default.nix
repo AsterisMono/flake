@@ -81,6 +81,7 @@ _: {
               gaps_out = 12;
               border_size = 2;
               resize_on_border = true;
+              snap.enabled = true;
             };
             dwindle = {
               # Like Sway autotiling, split the focused window along its
@@ -103,6 +104,7 @@ _: {
             input = {
               kb_options = "ctrl:nocaps";
               follow_mouse = 0;
+              focus_on_close = 2;
               touchpad = {
                 disable_while_typing = true;
                 natural_scroll = true;
@@ -114,6 +116,7 @@ _: {
             binds = {
               workspace_back_and_forth = true;
               allow_workspace_cycles = true;
+              movefocus_cycles_groupfirst = true;
             };
             misc = {
               disable_hyprland_logo = true;
@@ -140,6 +143,24 @@ _: {
               float = true;
             }
             {
+              name = "firefox-picture-in-picture";
+              match = {
+                class = "(?i)^(firefox|org[.]mozilla[.]firefox)$";
+                title = "^(Picture-in-Picture|画中画)$";
+              };
+              float = true;
+              pin = true;
+              keep_aspect_ratio = true;
+              persistent_size = true;
+            }
+            {
+              name = "meeting-idle-inhibit";
+              match.class = "(?i)^(wemeet(app)?|com[.]tencent[.]wemeet)$";
+              # A focused meeting window inhibits idle; a background client
+              # alone must not prevent the laptop from suspending forever.
+              idle_inhibit = "focus";
+            }
+            {
               name = "noctalia-settings";
               match.class = "^dev\\.noctalia\\.Noctalia$";
               float = true;
@@ -158,11 +179,13 @@ _: {
               name = "gaming-vrr";
               match.class = "^(steam|steam_app_.*|gamescope)$";
               content = "game";
+              idle_inhibit = "fullscreen";
             }
             {
               name = "video-vrr";
               match.class = "^mpv$";
               content = "video";
+              idle_inhibit = "fullscreen";
             }
           ];
 
@@ -175,6 +198,11 @@ _: {
               ignore_alpha = 0.5;
               blur = true;
               blur_popups = true;
+            }
+            {
+              name = "noctalia-notification-privacy";
+              match.namespace = "^noctalia-notification$";
+              no_screen_share = true;
             }
           ];
 
@@ -210,6 +238,11 @@ _: {
       stylix.targets.hyprland.hyprpaper.enable = false;
       xdg.configFile."uwsm/env".source =
         "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+      xdg.configFile."hypr/xdph.conf".text = ''
+        screencopy {
+          max_fps = 60
+        }
+      '';
 
       home = {
         packages = with pkgs; [
