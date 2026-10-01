@@ -39,6 +39,11 @@
       '';
     in
     {
+      # UDP replies injected through the tun arrive on a different interface
+      # than the route to their source. Allow that asymmetry while still
+      # rejecting packets whose source has no route.
+      networking.firewall.checkReversePath = "loose";
+
       # sing-box publishes the tun as the interface resolver through
       # systemd-resolved (dns_mode "hijack" -> SetLinkDNS with domain "~."), so
       # without resolved nothing points the system at the tun and DNS keeps
