@@ -1,5 +1,5 @@
 { inputs, ... }: {
-  machines.grokbox = {
+  machines.hydra = {
     system = "x86_64-linux";
     imports = with inputs.self.modules.aspects; [
       base
@@ -9,7 +9,7 @@
       substituter-cn
       sing-box
       netbird
-      grokbot
+      hydra
     ];
     diskoConfig = inputs.self.diskoConfigurations.workstation-legacy;
     hardware =
@@ -25,7 +25,7 @@
         ];
 
         networking = {
-          hostName = "grokbox";
+          hostName = "hydra";
           domain = "lotus.local";
         };
         boot.initrd.availableKernelModules = [ "nvme" ];

@@ -27,10 +27,6 @@
     programs.ssh = {
       enable = true;
       enableDefaultConfig = false;
-      settings."grokbox" = {
-        HostName = "10.0.0.21";
-        User = "root";
-      };
     };
 
     programs.direnv = {

@@ -1,6 +1,6 @@
 keys:
   - &noa age155rf8ggpnmdmcpwkd4gj3qy8j05wdtz7cwf96k50um6xly40h3wqc8pthy
-  - &grokbox age1fca2dlmqukt48zg89lrd0k2s5q8w52f9z3tyrfzcr2r2sj8gegxssldpzp
+  - &hydra age1fca2dlmqukt48zg89lrd0k2s5q8w52f9z3tyrfzcr2r2sj8gegxssldpzp
   - &asymmetry age1r6yhequnuznq8chh6l6zq4mwdmf3htcffsxndg4r542qffuj4chsdzlgws
   - &parallax age1umq8y8qy5af02krxupz4lfa3tg6x2mcdhzsdatlmmttgpdyz7fqs3w69rx
 creation_rules:
@@ -15,13 +15,13 @@ creation_rules:
     key_groups:
       - age:
           - *noa
-          - *grokbox
+          - *hydra
   - path_regex: modules/secrets/sing-box\.json$
     key_groups:
       - age:
           - *noa
           - *asymmetry
-          - *grokbox
+          - *hydra
           - *parallax
   # Only the workstations decrypt this: both read it through NixOS provisioning,
   # so the document has no maintainer recipient and is write-once by design.
