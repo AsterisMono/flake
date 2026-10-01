@@ -129,42 +129,6 @@ _: {
           };
 
           curve = [
-            {
-              _args = [
-                "easeOutExpo"
-                {
-                  type = "bezier";
-                  points = [
-                    [
-                      0.16
-                      1
-                    ]
-                    [
-                      0.3
-                      1
-                    ]
-                  ];
-                }
-              ];
-            }
-            {
-              _args = [
-                "easeOutQuad"
-                {
-                  type = "bezier";
-                  points = [
-                    [
-                      0.3333333333333333
-                      0.6666666666666666
-                    ]
-                    [
-                      0.6666666666666666
-                      1
-                    ]
-                  ];
-                }
-              ];
-            }
             # Critical damping: c = 2 * sqrt(m * k). Match Niri's default
             # stiffness without adding bounce; spring timing ignores speed.
             {
@@ -196,35 +160,23 @@ _: {
               leaf = "global";
               enabled = true;
               speed = 1.5; # 150 ms for the remaining fixed-duration effects.
-              bezier = "easeOutQuad";
+              bezier = "default";
             }
-            # Keep geometry and opacity in sync. The exponential opening
-            # curve approximates Niri; the quadratic closing curve matches it.
+            # Use the default popin scale; fadeIn/fadeOut inherit the same
+            # 150 ms and built-in curve from global, keeping opacity in sync.
             {
               leaf = "windowsIn";
               enabled = true;
               speed = 1.5;
-              bezier = "easeOutExpo";
-              style = "popin 50%";
-            }
-            {
-              leaf = "fadeIn";
-              enabled = true;
-              speed = 1.5;
-              bezier = "easeOutExpo";
+              bezier = "default";
+              style = "popin";
             }
             {
               leaf = "windowsOut";
               enabled = true;
               speed = 1.5;
-              bezier = "easeOutQuad";
-              style = "popin 80%";
-            }
-            {
-              leaf = "fadeOut";
-              enabled = true;
-              speed = 1.5;
-              bezier = "easeOutQuad";
+              bezier = "default";
+              style = "popin";
             }
             {
               leaf = "windowsMove";
