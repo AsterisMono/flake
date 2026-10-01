@@ -129,27 +129,45 @@ _: {
           };
 
           curve = [
-            # Critical damping: c = 2 * sqrt(m * k). Match Niri's default
-            # stiffness without adding bounce; spring timing ignores speed.
+            # HyDE's macOS preset, with its default duration scale of 1.
+            # https://github.com/HyDE-Project/HyDE/blob/master/Configs/.local/share/hypr/lua/animations/macos.lua
             {
               _args = [
-                "windowMotion"
+                "macOpen"
                 {
                   type = "spring";
                   mass = 1;
-                  stiffness = 800;
-                  dampening = 56.5685424949238;
+                  stiffness = 110;
+                  dampening = 16;
                 }
               ];
             }
             {
               _args = [
-                "workspaceMotion"
+                "macBounce"
                 {
                   type = "spring";
                   mass = 1;
-                  stiffness = 1000;
-                  dampening = 63.24555320336759;
+                  stiffness = 80;
+                  dampening = 10;
+                }
+              ];
+            }
+            {
+              _args = [
+                "macSmooth"
+                {
+                  type = "bezier";
+                  points = [
+                    [
+                      0.25
+                      0.1
+                    ]
+                    [
+                      0.25
+                      1.0
+                    ]
+                  ];
                 }
               ];
             }
@@ -159,37 +177,75 @@ _: {
             {
               leaf = "global";
               enabled = true;
-              speed = 2; # 200 ms for the remaining fixed-duration effects.
+              speed = 8; # 800 ms, also matching the built-in fallback.
               bezier = "default";
             }
-            # Keep the opening/closing scale; fadeIn/fadeOut inherit the same
-            # 200 ms and built-in curve from global, keeping opacity in sync.
+            # Spring timing ignores speed; keep the preset's API values.
+            {
+              leaf = "windows";
+              enabled = true;
+              speed = 8;
+              spring = "macOpen";
+              style = "popin 90%";
+            }
             {
               leaf = "windowsIn";
               enabled = true;
-              speed = 2;
-              bezier = "default";
-              style = "popin 50%";
+              speed = 8;
+              spring = "macOpen";
+              style = "popin 90%";
             }
             {
               leaf = "windowsOut";
               enabled = true;
-              speed = 2;
-              bezier = "default";
-              style = "popin 80%";
+              speed = 7;
+              spring = "macBounce";
+              style = "popin 90%";
             }
             {
               leaf = "windowsMove";
               enabled = true;
-              speed = 1; # Required by the API; the spring controls timing.
-              spring = "windowMotion";
+              speed = 5;
+              bezier = "macSmooth";
+              style = "slide";
+            }
+            {
+              leaf = "fade";
+              enabled = true;
+              speed = 8;
+              bezier = "default";
             }
             {
               leaf = "workspaces";
               enabled = true;
+              speed = 6;
+              bezier = "macSmooth";
+              style = "slidefade 20%";
+            }
+            {
+              leaf = "border";
+              enabled = true;
               speed = 1;
-              spring = "workspaceMotion";
-              style = "slide";
+              bezier = "default";
+            }
+            {
+              leaf = "borderangle";
+              enabled = true;
+              speed = 30;
+              bezier = "default";
+              style = "once";
+            }
+            {
+              leaf = "zoomFactor";
+              enabled = true;
+              speed = 7;
+              bezier = "default";
+            }
+            {
+              leaf = "monitorAdded";
+              enabled = true;
+              speed = 7;
+              bezier = "default";
             }
           ];
 
