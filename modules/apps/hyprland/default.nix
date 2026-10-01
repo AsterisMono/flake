@@ -128,6 +128,119 @@ _: {
             };
           };
 
+          curve = [
+            {
+              _args = [
+                "easeOutExpo"
+                {
+                  type = "bezier";
+                  points = [
+                    [
+                      0.16
+                      1
+                    ]
+                    [
+                      0.3
+                      1
+                    ]
+                  ];
+                }
+              ];
+            }
+            {
+              _args = [
+                "easeOutQuad"
+                {
+                  type = "bezier";
+                  points = [
+                    [
+                      0.3333333333333333
+                      0.6666666666666666
+                    ]
+                    [
+                      0.6666666666666666
+                      1
+                    ]
+                  ];
+                }
+              ];
+            }
+            # Critical damping: c = 2 * sqrt(m * k). Match Niri's default
+            # stiffness without adding bounce; spring timing ignores speed.
+            {
+              _args = [
+                "windowMotion"
+                {
+                  type = "spring";
+                  mass = 1;
+                  stiffness = 800;
+                  dampening = 56.5685424949238;
+                }
+              ];
+            }
+            {
+              _args = [
+                "workspaceMotion"
+                {
+                  type = "spring";
+                  mass = 1;
+                  stiffness = 1000;
+                  dampening = 63.24555320336759;
+                }
+              ];
+            }
+          ];
+
+          animation = [
+            {
+              leaf = "global";
+              enabled = true;
+              speed = 1.5; # 150 ms for the remaining fixed-duration effects.
+              bezier = "easeOutQuad";
+            }
+            # Keep geometry and opacity in sync. The exponential opening
+            # curve approximates Niri; the quadratic closing curve matches it.
+            {
+              leaf = "windowsIn";
+              enabled = true;
+              speed = 1.5;
+              bezier = "easeOutExpo";
+              style = "popin 50%";
+            }
+            {
+              leaf = "fadeIn";
+              enabled = true;
+              speed = 1.5;
+              bezier = "easeOutExpo";
+            }
+            {
+              leaf = "windowsOut";
+              enabled = true;
+              speed = 1.5;
+              bezier = "easeOutQuad";
+              style = "popin 80%";
+            }
+            {
+              leaf = "fadeOut";
+              enabled = true;
+              speed = 1.5;
+              bezier = "easeOutQuad";
+            }
+            {
+              leaf = "windowsMove";
+              enabled = true;
+              speed = 1; # Required by the API; the spring controls timing.
+              spring = "windowMotion";
+            }
+            {
+              leaf = "workspaces";
+              enabled = true;
+              speed = 1;
+              spring = "workspaceMotion";
+              style = "slide";
+            }
+          ];
+
           window_rule = [
             {
               name = "authentication";
