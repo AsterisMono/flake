@@ -64,7 +64,7 @@
       # does not have, so only suspend is available.
       systemd.sleep.settings.Sleep.AllowHibernation = false;
     };
-    # Workspace 1 stays on the Odyssey.
+    # Workspace 1 stays on the Odyssey; the portrait side display starts at 10.
     homeModule = {
       wayland.windowManager.hyprland.settings = {
         config.cursor.default_monitor = "DP-1";
@@ -89,6 +89,11 @@
           {
             workspace = "1";
             monitor = "DP-1";
+            default = true;
+          }
+          {
+            workspace = "10";
+            monitor = "DP-3";
             default = true;
           }
         ];
