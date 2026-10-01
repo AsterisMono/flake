@@ -80,6 +80,11 @@ _: {
           # Firefox stops forcing those backgrounds. The pref covers sidebar
           # browsers as well, which is what lets Sidebery join in.
           "browser.tabs.allow_transparent_browser" = true;
+          "browser.aboutaddons.novaThemesPickerEnabled" = false;
+          "browser.newtabpage.activity-stream.nova.enabled" = false;
+          "browser.nova.enabled" = false;
+          "pdfjs.enableNova" = false;
+          "sidebar.revamp" = false;
         };
         RequestedLocales = "zh-cn,zh,zh-tw,zh-hk,en-us,en";
       };
@@ -92,6 +97,15 @@ _: {
           }
           #sidebar-header {
             display: none;
+          }
+          #sidebar-button {
+            display: none;
+          }
+          #back-button {
+            padding-inline-start: var(--toolbar-padding-inline);
+          }
+          #sidebar-box {
+            padding-inline-start: 0 !important;
           }
 
           /* Glass chrome. Firefox paints the window and the chrome with theme
