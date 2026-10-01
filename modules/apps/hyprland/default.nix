@@ -159,24 +159,24 @@ _: {
             {
               leaf = "global";
               enabled = true;
-              speed = 1.5; # 150 ms for the remaining fixed-duration effects.
+              speed = 2; # 200 ms for the remaining fixed-duration effects.
               bezier = "default";
             }
-            # Use the default popin scale; fadeIn/fadeOut inherit the same
-            # 150 ms and built-in curve from global, keeping opacity in sync.
+            # Keep the opening/closing scale; fadeIn/fadeOut inherit the same
+            # 200 ms and built-in curve from global, keeping opacity in sync.
             {
               leaf = "windowsIn";
               enabled = true;
-              speed = 1.5;
+              speed = 2;
               bezier = "default";
-              style = "popin";
+              style = "popin 50%";
             }
             {
               leaf = "windowsOut";
               enabled = true;
-              speed = 1.5;
+              speed = 2;
               bezier = "default";
-              style = "popin";
+              style = "popin 80%";
             }
             {
               leaf = "windowsMove";
