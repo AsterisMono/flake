@@ -103,7 +103,8 @@ _: {
             };
             input = {
               kb_options = "ctrl:nocaps";
-              follow_mouse = 0;
+              follow_mouse = 2;
+              float_switch_override_focus = 0;
               focus_on_close = 2;
               touchpad = {
                 disable_while_typing = true;

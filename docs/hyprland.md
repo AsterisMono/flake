@@ -31,7 +31,7 @@ Animations follow [HyDE's Fast preset](https://github.com/HyDE-Project/HyDE/blob
 
 Volume, microphone mute, media and brightness keys use Noctalia and work while locked and in resize mode. Closing a laptop lid asks Noctalia to lock and suspend. Three-finger horizontal swipes retain Sway's workspace gesture.
 
-Floating windows snap to nearby window and monitor edges while dragging. Closing a window returns focus to the most recently used window. Noctalia launches applications as independent systemd user services; its runtime settings can override the declarative base, so keep the corresponding launcher setting enabled in the GUI too.
+Hovering tiled or floating windows sends pointer events, including scrolling, to that window without changing keyboard focus; clicking changes keyboard focus. Floating windows snap to nearby window and monitor edges while dragging. Closing a window returns focus to the most recently used window. Noctalia launches applications as independent systemd user services; its runtime settings can override the declarative base, so keep the corresponding launcher setting enabled in the GUI too.
 
 Firefox picture-in-picture windows float, appear across workspaces, keep their aspect ratio when resized with the mouse, and remember their size for the compositor session. Focused Tencent Meeting windows inhibit idle; fullscreen mpv and gaming windows do so too. These are fallbacks, not meeting-state detection: an unfocused meeting relies on the application's own inhibitor or Noctalia's manual idle inhibitor. Noctalia notification layers and 1Password windows are excluded from screen sharing. XDPH screen sharing is limited to 60 fps, without changing display refresh rates or Noctalia's recording settings.
 
