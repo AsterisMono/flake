@@ -1,8 +1,5 @@
 config_version = 14
 
-[backdrop]
-enabled = true
-
 [bar]
 order = [ "Status" ]
 
