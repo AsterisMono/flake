@@ -129,42 +129,38 @@ _: {
           };
 
           curve = [
-            # HyDE's macOS preset, with its default duration scale of 1.
-            # https://github.com/HyDE-Project/HyDE/blob/master/Configs/.local/share/hypr/lua/animations/macos.lua
+            # HyDE's Fast preset at duration scale 1; only its used curves.
+            # https://github.com/HyDE-Project/HyDE/blob/master/Configs/.local/share/hypr/lua/animations/fast.lua
             {
               _args = [
-                "macOpen"
-                {
-                  type = "spring";
-                  mass = 1;
-                  stiffness = 110;
-                  dampening = 16;
-                }
-              ];
-            }
-            {
-              _args = [
-                "macBounce"
-                {
-                  type = "spring";
-                  mass = 1;
-                  stiffness = 80;
-                  dampening = 10;
-                }
-              ];
-            }
-            {
-              _args = [
-                "macSmooth"
+                "md3_decel"
                 {
                   type = "bezier";
                   points = [
                     [
-                      0.25
-                      0.1
+                      0.05
+                      0.7
                     ]
                     [
-                      0.25
+                      0.1
+                      1.0
+                    ]
+                  ];
+                }
+              ];
+            }
+            {
+              _args = [
+                "easeOutExpo"
+                {
+                  type = "bezier";
+                  points = [
+                    [
+                      0.16
+                      1.0
+                    ]
+                    [
+                      0.3
                       1.0
                     ]
                   ];
@@ -180,71 +176,38 @@ _: {
               speed = 8; # 800 ms, also matching the built-in fallback.
               bezier = "default";
             }
-            # Spring timing ignores speed; keep the preset's API values.
+            # Opening, closing and movement share the same 300 ms curve.
             {
               leaf = "windows";
               enabled = true;
-              speed = 8;
-              spring = "macOpen";
-              style = "popin 90%";
-            }
-            {
-              leaf = "windowsIn";
-              enabled = true;
-              speed = 8;
-              spring = "macOpen";
-              style = "popin 90%";
-            }
-            {
-              leaf = "windowsOut";
-              enabled = true;
-              speed = 7;
-              spring = "macBounce";
-              style = "popin 90%";
-            }
-            {
-              leaf = "windowsMove";
-              enabled = true;
-              speed = 5;
-              bezier = "macSmooth";
-              style = "slide";
+              speed = 3;
+              bezier = "md3_decel";
+              style = "popin 60%";
             }
             {
               leaf = "fade";
               enabled = true;
-              speed = 8;
-              bezier = "default";
+              speed = 2.5;
+              bezier = "md3_decel";
             }
             {
               leaf = "workspaces";
               enabled = true;
-              speed = 6;
-              bezier = "macSmooth";
-              style = "slidefade 20%";
+              speed = 3.5;
+              bezier = "easeOutExpo";
+              style = "slide";
+            }
+            {
+              leaf = "specialWorkspace";
+              enabled = true;
+              speed = 3;
+              bezier = "md3_decel";
+              style = "slidevert";
             }
             {
               leaf = "border";
               enabled = true;
-              speed = 1;
-              bezier = "default";
-            }
-            {
-              leaf = "borderangle";
-              enabled = true;
-              speed = 30;
-              bezier = "default";
-              style = "once";
-            }
-            {
-              leaf = "zoomFactor";
-              enabled = true;
-              speed = 7;
-              bezier = "default";
-            }
-            {
-              leaf = "monitorAdded";
-              enabled = true;
-              speed = 7;
+              speed = 10;
               bezier = "default";
             }
           ];
