@@ -38,7 +38,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     llm-agents.url = "github:numtide/llm-agents.nix";
-    niri.url = "github:sodiboo/niri-flake";
     nix-flatpak.url = "github:gmodena/nix-flatpak/?ref=latest";
     nix-index-database = {
       url = "github:nix-community/nix-index-database";

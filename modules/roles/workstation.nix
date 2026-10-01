@@ -25,7 +25,7 @@
     kitty
     neovim
     netbird-desktop
-    niri
+    hyprland
     noctalia
     obsidian
     sing-box

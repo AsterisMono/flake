@@ -51,16 +51,15 @@
         };
       };
     homeModule = {
-      programs.niri.settings.outputs."China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4 Unknown" =
+      wayland.windowManager.hyprland.settings.monitor = [
         {
-          mode = {
-            width = 2880;
-            height = 1800;
-            refresh = 120.0;
-          };
+          output = "desc:China Star Optoelectronics Technology Co., Ltd MNE007ZA3-4";
+          mode = "2880x1800@120";
+          position = "auto";
           scale = 1.75;
-          variable-refresh-rate = "on-demand";
-        };
+          vrr = 3;
+        }
+      ];
     };
   };
 }

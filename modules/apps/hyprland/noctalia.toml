@@ -145,7 +145,6 @@ enabled = [ "felipeartur/ai-usagebar", "noctalia/screen_recorder", "noctalia/wal
 [shell]
 corner_radius_scale = 0.7500000111758709
 lang = "zh-Hans"
-niri_overview_type_to_launch_enabled = true
 polkit_agent = true
 
     [shell.launcher]

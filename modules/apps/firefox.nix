@@ -75,7 +75,7 @@ _: {
           "gfx.webrender.all" = true;
           "media.hardware-video-decoding.force-enabled" = true;
           # Firefox paints an opaque backplate behind the window and another
-          # one behind the sidebar's browser, and niri only blurs what a window
+          # one behind the sidebar's browser, and Hyprland only blurs what a window
           # leaves transparent, so the chrome can only become glass once
           # Firefox stops forcing those backgrounds. The pref covers sidebar
           # browsers as well, which is what lets Sidebery join in.
@@ -96,7 +96,7 @@ _: {
 
           /* Glass chrome. Firefox paints the window and the chrome with theme
            * colours before the toolbox, the bars and the sidebar draw on top,
-           * and niri blurs only what a window leaves transparent. Clearing
+           * and Hyprland blurs only what a window leaves transparent. Clearing
            * the window and the containers between the bars therefore opens the
            * blur, while the bars themselves keep one tint each so the chrome
            * reads as a single material over the wallpaper instead of a stack

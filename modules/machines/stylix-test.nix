@@ -13,7 +13,7 @@
       kitty
       ly
       neovim
-      niri
+      hyprland
       noctalia
 
       nvirellia
@@ -45,16 +45,14 @@
         };
       };
     homeModule = { lib, ... }: {
-      programs.niri.settings.spawn-at-startup = lib.mkForce [
-        {
-          argv = [
-            "kitty"
-            "--title"
-            "Stylix · Neovim"
-            "nvim"
-          ];
-        }
-        { argv = [ "firefox" ]; }
+      wayland.windowManager.hyprland.settings.on._args = lib.mkForce [
+        "hyprland.start"
+        (lib.generators.mkLuaInline ''
+          function()
+            hl.exec_cmd("uwsm app -- kitty --title 'Stylix · Neovim' nvim")
+            hl.exec_cmd("uwsm app -- firefox")
+          end
+        '')
       ];
     };
   };
