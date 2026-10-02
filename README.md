@@ -4,6 +4,8 @@ This repository manages personal NixOS workstations and servers, including their
 
 The desktop retains the Rose Pine Moon theme and uses Sway-style window controls. See [desktop bindings and migration notes](docs/hyprland.md).
 
+Machines can also host coding agents for remote desktop and phone clients with the standalone [Paseo daemon](docs/paseo-daemon.md).
+
 It is intended for the maintainer's machines and for people comfortable adapting a NixOS configuration. The machine definitions target `x86_64-linux` and include personal accounts, hardware, disk paths, network settings, and trusted keys. Adopting the configuration requires replacing those values and supplying your own secrets and recipients.
 
 ## Get started
@@ -37,4 +39,4 @@ Boot the target from the resulting ISO and connect it to the network with `nmtui
 
 Follow [machine preparation](.agents/skills/init-machine/SKILL.md), then the [installation procedure](.agents/skills/install-machine/SKILL.md). Preparation records hardware facts, selects the disk layout, and enrolls secret recipients when needed. Installation erases the selected disk; confirm the target and device before proceeding. The procedure also covers encrypted disks and Secure Boot.
 
-Last updated at: `a4b3079eb8073ba5d5c4908658692336024a65c4`.
+Last updated at: `5c242ff9297ffa60135be49f6f8f222ac910fe8e`.
