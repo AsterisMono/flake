@@ -63,6 +63,18 @@
     }:
     let
       llmAgents = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system};
+      # Keep the server exports in the runtime closure until llm-agents PR #10061 lands.
+      paseoDesktop = llmAgents.paseo-desktop.overrideAttrs (oldAttrs: {
+        installPhase =
+          builtins.replaceStrings
+            [ ''"packages/desktop/dist/preload.js",'' ]
+            [
+              ''
+                "packages/desktop/dist/preload.js",
+                "packages/server/dist/server/server/exports.js",''
+            ]
+            oldAttrs.installPhase;
+      });
     in
     {
       programs = {
