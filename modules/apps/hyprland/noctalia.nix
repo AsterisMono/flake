@@ -30,13 +30,23 @@
           for program in ai-usagebar ai-usagebar-tui; do
             wrapProgram "$out/bin/$program" \
               --run 'if [ -r ${secretPaths.deepseek_api_key} ]; then export DEEPSEEK_API_KEY="$(cat ${secretPaths.deepseek_api_key})"; fi' \
-              --run 'if [ -r ${secretPaths.openrouter_management_key} ]; then export OPENROUTER_API_KEY="$(cat ${secretPaths.openrouter_management_key})"; fi'
+              --run 'if [ -r ${secretPaths.openrouter_management_key} ]; then openrouter_usagebar_key="$(cat ${secretPaths.openrouter_management_key})"; if [ -n "$openrouter_usagebar_key" ] && [ "$openrouter_usagebar_key" != "REPLACE_WITH_OPENROUTER_MANAGEMENT_KEY" ]; then export OPENROUTER_API_KEY="$openrouter_usagebar_key"; fi; unset openrouter_usagebar_key; fi'
           done
         '';
       };
     in
     {
       imports = [ inputs.noctalia.nixosModules.default ];
+
+      sops.secrets.openrouter_management_key = {
+        format = "yaml";
+        key = "openrouter_management_key";
+        sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
+        path = secretPaths.openrouter_management_key;
+        owner = config.constants.nvirellia.username;
+        group = config.users.users.${config.constants.nvirellia.username}.group;
+        mode = "0400";
+      };
 
       environment.systemPackages = [
         # Noctalia drives external monitor brightness through ddcutil.
@@ -72,8 +82,8 @@
         settings = ./noctalia.toml;
       };
 
-      # Both ai-usagebar rows are balance readings; the keys arrive through
-      # the wrapper's environment.
+      # Both rows report balances. The wrapper only loads a configured
+      # OpenRouter management key; the ordinary inference key belongs to Pi.
       xdg.configFile."ai-usagebar/config.toml".text = ''
         [deepseek]
         enabled = true

@@ -63,11 +63,13 @@ five seconds, and stops the whole service cgroup, including agent and terminal
 processes. `Type=simple` records process startup, not API readiness.
 
 The service imports `agent-providers` and uses the same harness list as the
-workstation: Codex, Cursor Agent, OpenCode, and Pi, with Bubblewrap, jq, and
+workstation: Codex, Pi, and the backup Cursor Agent, with Bubblewrap, jq, and
 Python. Its PATH also includes Paseo, Bash, Git, SSH, Nix, and ripgrep.
 Additional provider or project tools belong in the consuming aspect's
 `systemd.services.paseo-daemon.path`. It does not inherit a desktop user's shell
-environment, credentials, or Home Manager packages.
+environment or Home Manager packages. It provisions its own authentication
+files from the shared encrypted [provider document](agent-providers.md) using
+systemd credentials. The host must be an authorized document recipient.
 
 Systemd creates the home with mode `0700`; the service uses umask `0077`.
 `ProtectHome=true` hides `/home`, `/root`, and `/run/user`, `ProtectSystem=full`
@@ -88,11 +90,14 @@ sudo -u paseo -H paseo --home /var/lib/paseo/.paseo provider diagnostic codex --
 
 Use `journalctl -u paseo-daemon.service` for startup failures. The daemon also
 writes `$PASEO_HOME/daemon.log`; redact credentials, pairing offers, and user code
-before sharing either log. Authenticate each provider as the `paseo` account
-using that provider's login flow. Its credentials must be available on this
-host. If adding declaratively provisioned credentials, use NixOS activation and
-runtime sops secret paths beside the consumer, following [repository secret
-guidance](../AGENTS.md); never put credential values in Nix configuration.
+before sharing either log. `ExecStartPre` provisions writable Codex and Cursor
+login caches and renders Pi's DeepSeek/OpenRouter authentication as `paseo`, using
+four `LoadCredential` files: Codex JSON, Cursor JSON, DeepSeek API key, and
+OpenRouter API key. Subsequent startup preserves refreshed login caches unless
+their encrypted seed changes. A changed secret restarts the service. Provider
+settings and token refresh stay local to its home; never put credential values
+in Nix configuration. Current Paseo v0.10.2 does not expose Cursor in its provider
+manifest; the installed Cursor CLI remains a backup.
 
 Use `sudo systemctl restart paseo-daemon.service` for package, launch-environment,
 or startup-setting changes. It interrupts running work. `paseo reload` can apply

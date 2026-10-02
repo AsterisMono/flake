@@ -12,8 +12,10 @@
       # consumer, so Home Manager can read the file without a key of its own.
       userSecretPaths = {
         deepseek_api_key = "/run/secrets/deepseek_api_key";
-        opencode_api_key = "/run/secrets/opencode_api_key";
+        openrouter_api_key = "/run/secrets/openrouter_api_key";
         openrouter_management_key = "/run/secrets/openrouter_management_key";
+        codex_auth_json = "/run/secrets/codex_auth_json";
+        cursor_auth_json = "/run/secrets/cursor_auth_json";
       };
     };
   };

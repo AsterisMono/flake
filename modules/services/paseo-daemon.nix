@@ -1,12 +1,36 @@
 { config, inputs, ... }:
+let
+  providerPackages = config.agentProviders.packages;
+in
 {
   flake.modules.aspects.paseo-daemon.imports = [ inputs.self.modules.aspects.agent-providers ];
 
   flake.modules.nixos.paseo-daemon =
-    { lib, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      utils,
+      ...
+    }:
     let
       paseoDaemon = pkgs.selfPackages.paseo-daemon;
-      agentPackages = config.agentProviders.packages pkgs;
+      agentPackages = providerPackages pkgs;
+      secretNames = [
+        "deepseek_api_key"
+        "openrouter_api_key"
+        "codex_auth_json"
+        "cursor_auth_json"
+      ];
+      initializeAuth =
+        utils.escapeSystemdExecArgs [
+          (lib.getExe pkgs.python3)
+          ../apps/agents/initialize-auth.py
+          "--home"
+          "/var/lib/paseo"
+        ]
+        # Keep systemd's credential-directory specifier unescaped.
+        + " --codex-auth %d/codex_auth_json --cursor-auth %d/cursor_auth_json --deepseek-key %d/deepseek_api_key --openrouter-key %d/openrouter_api_key";
     in
     {
       users.groups.paseo = { };
@@ -19,11 +43,19 @@
 
       environment.systemPackages = [ paseoDaemon ] ++ agentPackages;
 
+      sops.secrets = lib.genAttrs secretNames (_: {
+        restartUnits = [ "paseo-daemon.service" ];
+      });
+
       systemd.services.paseo-daemon = {
         description = "Paseo host for coding agents and terminals";
         wantedBy = [ "multi-user.target" ];
         wants = [ "network-online.target" ];
-        after = [ "network-online.target" ];
+        requires = [ "sops-install-secrets.service" ];
+        after = [
+          "network-online.target"
+          "sops-install-secrets.service"
+        ];
 
         path = [
           paseoDaemon
@@ -54,6 +86,8 @@
           StateDirectory = "paseo";
           StateDirectoryMode = "0700";
           WorkingDirectory = "/var/lib/paseo";
+          LoadCredential = map (name: "${name}:${config.sops.secrets.${name}.path}") secretNames;
+          ExecStartPre = initializeAuth;
           ExecStart = "${lib.getExe paseoDaemon} daemon run";
           Restart = "on-failure";
           RestartSec = 5;

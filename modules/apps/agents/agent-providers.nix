@@ -4,6 +4,9 @@
   lib,
   ...
 }:
+let
+  providerPackages = config.agentProviders.packages;
+in
 {
   options.agentProviders.packages = lib.mkOption {
     type = with lib.types; functionTo (listOf package);
@@ -23,7 +26,6 @@
       (with llmAgents; [
         codex
         cursor-agent
-        opencode
         pi
       ])
       ++ (with pkgs; [
@@ -35,42 +37,80 @@
     flake.modules.homeManager.agent-providers =
       { pkgs, ... }:
       {
+        key = "agent-providers";
         home.packages = config.agentProviders.packages pkgs;
       };
 
-    # Workstation credentials belong to the agents composition. Other accounts,
-    # including the Paseo service account, authenticate providers independently.
-    flake.modules.nixos.agents =
-      { config, ... }:
+    flake.modules.nixos.agent-providers =
       {
-        sops.secrets.deepseek_api_key = {
-          format = "yaml";
-          key = "deepseek_api_key";
-          sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
-          path = config.constants.resources.userSecretPaths.deepseek_api_key;
-          owner = config.constants.nvirellia.username;
-          group = config.users.users.${config.constants.nvirellia.username}.group;
-          mode = "0400";
-        };
+        config,
+        pkgs,
+        utils,
+        ...
+      }:
+      let
+        username = config.constants.nvirellia.username;
+        # Workstations use the personal account; headless machines use root.
+        account = if config.users.users ? ${username} then username else "root";
+        user = config.users.users.${account};
+        cursorDirectory =
+          if config.home-manager.users ? ${account} then
+            "${config.home-manager.users.${account}.xdg.configHome}/cursor"
+          else
+            "${user.home}/.config/cursor";
+        secretPaths = config.constants.resources.userSecretPaths;
+        secretNames = [
+          "deepseek_api_key"
+          "openrouter_api_key"
+          "codex_auth_json"
+          "cursor_auth_json"
+        ];
+      in
+      {
+        # Workstations and the daemon can compose this same feature together.
+        key = "agent-providers";
+        environment.systemPackages = providerPackages pkgs;
 
-        sops.secrets.openrouter_management_key = {
+        sops.secrets = lib.genAttrs secretNames (name: {
           format = "yaml";
-          key = "openrouter_management_key";
+          key = name;
           sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
-          path = config.constants.resources.userSecretPaths.openrouter_management_key;
-          owner = config.constants.nvirellia.username;
-          group = config.users.users.${config.constants.nvirellia.username}.group;
+          path = secretPaths.${name};
+          owner = account;
+          inherit (user) group;
           mode = "0400";
-        };
+          restartUnits = [ "agent-provider-auth.service" ];
+        });
 
-        sops.secrets.opencode_api_key = {
-          format = "yaml";
-          key = "opencode_api_key";
-          sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
-          path = config.constants.resources.userSecretPaths.opencode_api_key;
-          owner = config.constants.nvirellia.username;
-          group = config.users.users.${config.constants.nvirellia.username}.group;
-          mode = "0400";
+        systemd.services.agent-provider-auth = {
+          description = "Initialize coding agent credentials";
+          wantedBy = [ "multi-user.target" ];
+          requires = [ "sops-install-secrets.service" ];
+          after = [ "sops-install-secrets.service" ];
+          unitConfig.RequiresMountsFor = [ user.home ];
+          serviceConfig = {
+            Type = "oneshot";
+            User = account;
+            Group = user.group;
+            RemainAfterExit = true;
+            UMask = "0077";
+            ExecStart = utils.escapeSystemdExecArgs [
+              (lib.getExe pkgs.python3)
+              ./initialize-auth.py
+              "--home"
+              user.home
+              "--codex-auth"
+              secretPaths.codex_auth_json
+              "--cursor-auth"
+              secretPaths.cursor_auth_json
+              "--cursor-dir"
+              cursorDirectory
+              "--deepseek-key"
+              secretPaths.deepseek_api_key
+              "--openrouter-key"
+              secretPaths.openrouter_api_key
+            ];
+          };
         };
       };
   };
