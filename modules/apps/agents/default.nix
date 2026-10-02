@@ -84,7 +84,8 @@
           codex
           opencode
           pi
-          paseo-desktop
+          paseoDesktop
+          omp
         ])
         ++ (with pkgs; [
           bubblewrap
