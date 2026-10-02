@@ -23,20 +23,9 @@ creation_rules:
           - *asymmetry
           - *hydra
           - *parallax
-  # Only the workstations decrypt this: both read it through NixOS provisioning,
-  # so the document has no maintainer recipient and is write-once by design.
-  - path_regex: ^modules/secrets/deepseek\.yaml$
-    key_groups:
-      - age:
-          - *asymmetry
-          - *parallax
-  - path_regex: ^modules/secrets/openrouter\.yaml$
-    key_groups:
-      - age:
-          - *noa
-          - *asymmetry
-          - *parallax
-  - path_regex: ^modules/secrets/opencode\.yaml$
+  # Both workstations read the provider credentials through NixOS provisioning;
+  # the maintainer can edit all credentials in this shared document.
+  - path_regex: ^modules/secrets/agent-providers\.yaml$
     key_groups:
       - age:
           - *noa

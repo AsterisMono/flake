@@ -28,7 +28,7 @@
       sops.secrets.deepseek_api_key = {
         format = "yaml";
         key = "deepseek_api_key";
-        sopsFile = config.constants.resources.getSecretPath "deepseek.yaml";
+        sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
         path = config.constants.resources.userSecretPaths.deepseek_api_key;
         owner = config.constants.nvirellia.username;
         group = config.users.users.${config.constants.nvirellia.username}.group;
@@ -38,7 +38,7 @@
       sops.secrets.openrouter_management_key = {
         format = "yaml";
         key = "openrouter_management_key";
-        sopsFile = config.constants.resources.getSecretPath "openrouter.yaml";
+        sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
         path = config.constants.resources.userSecretPaths.openrouter_management_key;
         owner = config.constants.nvirellia.username;
         group = config.users.users.${config.constants.nvirellia.username}.group;
@@ -48,7 +48,7 @@
       sops.secrets.opencode_api_key = {
         format = "yaml";
         key = "opencode_api_key";
-        sopsFile = config.constants.resources.getSecretPath "opencode.yaml";
+        sopsFile = config.constants.resources.getSecretPath "agent-providers.yaml";
         path = config.constants.resources.userSecretPaths.opencode_api_key;
         owner = config.constants.nvirellia.username;
         group = config.users.users.${config.constants.nvirellia.username}.group;
