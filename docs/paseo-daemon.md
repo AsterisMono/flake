@@ -62,10 +62,12 @@ with a persistent home at `/var/lib/paseo` and `PASEO_HOME` at
 five seconds, and stops the whole service cgroup, including agent and terminal
 processes. `Type=simple` records process startup, not API readiness.
 
-The service supplies Codex and OpenCode, plus Paseo, Bash, Git, SSH, Nix, and
-ripgrep in its PATH. Additional provider or project tools belong in the
-consuming aspect's `systemd.services.paseo-daemon.path`. It does not inherit a
-desktop user's shell environment, credentials, or Home Manager packages.
+The service imports `agent-providers` and uses the same harness list as the
+workstation: Codex, Cursor Agent, OpenCode, and Pi, with Bubblewrap, jq, and
+Python. Its PATH also includes Paseo, Bash, Git, SSH, Nix, and ripgrep.
+Additional provider or project tools belong in the consuming aspect's
+`systemd.services.paseo-daemon.path`. It does not inherit a desktop user's shell
+environment, credentials, or Home Manager packages.
 
 Systemd creates the home with mode `0700`; the service uses umask `0077`.
 `ProtectHome=true` hides `/home`, `/root`, and `/run/user`, `ProtectSystem=full`

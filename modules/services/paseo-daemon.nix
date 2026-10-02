@@ -1,13 +1,12 @@
-{ inputs, ... }:
+{ config, inputs, ... }:
 {
+  flake.modules.aspects.paseo-daemon.imports = [ inputs.self.modules.aspects.agent-providers ];
+
   flake.modules.nixos.paseo-daemon =
     { lib, pkgs, ... }:
     let
       paseoDaemon = pkgs.selfPackages.paseo-daemon;
-      agentPackages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-        codex
-        opencode
-      ];
+      agentPackages = config.agentProviders.packages pkgs;
     in
     {
       users.groups.paseo = { };
