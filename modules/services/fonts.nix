@@ -44,7 +44,7 @@ in
         inter
 
         fira-code
-        maple-mono.NormalNL-NF
+        maple-mono.NF-CN
         nerd-fonts.fira-code
 
         nerd-fonts.symbols-only
