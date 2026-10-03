@@ -11,6 +11,8 @@ let
       makeDesktopItem,
       gtk3,
       webkitgtk_4_1,
+      glib-networking,
+      gst_all_1,
       xdg-utils,
       desktop-file-utils,
       coreutils,
@@ -49,6 +51,11 @@ let
       buildInputs = [
         gtk3
         webkitgtk_4_1
+        glib-networking
+        gst_all_1.gstreamer
+        gst_all_1.gst-plugins-base
+        gst_all_1.gst-plugins-good
+        gst_all_1.gst-libav
       ];
 
       postPatch = ''
